@@ -1,0 +1,57 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using FairyGUI;
+
+public class TTTSC : MonoBehaviour {
+	GComponent _main;
+	GList _list;
+
+
+
+	// Use this for initialization
+	void Start () {
+		UIObjectFactory.SetPackageItemExtension("ui://Main/ListCom", typeof(ListCom));
+
+		_main = GameObject.Find ("UIPanel").GetComponent<UIPanel> ().ui;
+		_list = _main.GetChild ("n0").asList;
+		_list.onClickItem.Add (clickCom);
+		_list.itemRenderer = renderer;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+		if (Input.GetKeyDown (KeyCode.A)) {
+			//Debug.Log (_list.container.position);
+			Debug.Log (_list.container.LocalToGlobal(Vector3.zero));
+			//Debug.Log (_list.GetChildAt (0).position);
+
+
+
+		}
+	}
+
+	void renderer(){
+			GButton item = obj.asButton;
+			string name = PlayerData.getInstance ().ownedTowers [index].tbase.tname;
+			item.GetChild("name").asTextField.text = name;
+			//Be carefull, RenderListItem is calling repeatedly, dont call 'Add' here!
+			//		item.onClick.Set(delegate(EventContext context) {
+			//			
+			//		});
+	}
+	void clickCom(EventContext context){
+		GComponent item = (GComponent)context.data;
+		int idx = _list.GetChildIndex (item);
+		Debug.Log (item.position);
+		genCom (_list.container.LocalToGlobal(item.position));
+	}
+
+	void genCom(Vector2 globalPos){
+		ListCom cp = (ListCom)UIPackage.CreateObject ("Main", "ListCom").asCom;
+		_main.AddChild (cp);
+		cp.position =  (_main.GlobalToLocal(globalPos));
+		cp.TweenMove (new Vector2(1000,1000),1.0f);
+	}
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="bgivdlw2" jpegQuality="80" compressPNG="true">
+  <resources>
+    <component id="s4ak0" name="Main.xml" path="/" exported="true"/>
+    <component id="s4ak1" name="ListCom.xml" path="/"/>
+  </resources>
+  <publish name="Main" path="/Users/chenyexuan/unityProjects/CS520_UITest/Assets/Resources/FairyGUI"/>
+</packageDescription>
