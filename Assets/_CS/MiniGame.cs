@@ -36,6 +36,7 @@ public class MiniGame : MonoBehaviour{
     {
 
     }
+
     void Update()
     {
         SomeTick(Time.deltaTime * spdRate);

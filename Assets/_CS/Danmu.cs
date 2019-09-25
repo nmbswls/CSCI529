@@ -133,4 +133,6 @@ public class Danmu : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         ((ShootDanmuMiniGame)MiniGame.GetInstance()).recycleDanmu(this);
     }
+
+
 }

@@ -17,6 +17,10 @@ public class ShootDanmuView
 
     public List<OperatorView> operators;
 
+    public CardContainerLayout cardContainer;
+
+    public Text Xianchan;
+
 }
 
 public class OperatorView
@@ -24,6 +28,8 @@ public class OperatorView
     public Image ActiveButton;
     public Image Outline;
 }
+
+
 
 public enum ENM_HitMode
 {
@@ -37,13 +43,21 @@ public class ShootDanmuMiniGame : MiniGame
 
     public int hot = 0;
     public int maxHot = 100;
+
+    [HideInInspector]
+    public int xianchangzhi = 0;
+
+
     public ENM_HitMode mode = ENM_HitMode.ZAN;
 
     public List<Danmu> danmus = new List<Danmu>();
+
+    public GameObject cardPrefab;
     public GameObject danmuPrefab;
 
     public GameObjectPool pool = new GameObjectPool();
 
+    List<MiniCardInfo> cards = new List<MiniCardInfo>();
 
     public RectTransform field;
     private int width = 0;
@@ -77,31 +91,44 @@ public class ShootDanmuMiniGame : MiniGame
         hot = 0;
         view.hotZhu.fillAmount = 0;
 
+        cards.Clear();
         mode = ENM_HitMode.ZAN;
-        view.operators[0].Outline.gameObject.SetActive(true);
+        //view.operators[0].Outline.gameObject.SetActive(true);
+        xianchangzhi = 0;
 
 
     }
+
+
+    private void AddNewCard()
+    {
+
+        view.cardContainer.AddCard();
+
+    }
+
     private void BindView()
     {
         view.viewRoot = GameObject.Find("MiniGamePanel").transform;
-        view.container = view.viewRoot.transform.Find("OperatorsContainer");
+        //view.container = view.viewRoot.transform.Find("OperatorsContainer");
         Transform hotView = view.viewRoot.transform.Find("Score");
         view.hotZhu = hotView.GetChild(0).GetComponent<Image>();
         view.hotValue = hotView.GetChild(2).GetComponent<Text>();
         view.hotHead = hotView.GetChild(1).GetComponent<Image>();
 
-        view.Special = view.viewRoot.transform.Find("Special").GetComponent<Image>();
+        view.cardContainer = view.viewRoot.transform.Find("OperatorsContainer").GetComponent<CardContainerLayout>();
 
         view.hotAnimator = hotView.GetComponent<Animator>();
         view.operators = new List<OperatorView>();
-        foreach(Transform child in view.container)
-        {
-            OperatorView ov = new OperatorView();
-            ov.ActiveButton = child.GetChild(1).GetComponent<Image>();
-            ov.Outline = child.GetChild(0).GetComponent<Image>();
-            view.operators.Add(ov);
-        }
+
+        view.Xianchan = view.viewRoot.Find("Xianchang").GetComponent<Text>();
+        //foreach(Transform child in view.container)
+        //{
+        //    OperatorView ov = new OperatorView();
+        //    ov.ActiveButton = child.GetChild(1).GetComponent<Image>();
+        //    ov.Outline = child.GetChild(0).GetComponent<Image>();
+        //    view.operators.Add(ov);
+        //}
     }
     private void RegisterEvent()
     {
@@ -120,13 +147,13 @@ public class ShootDanmuMiniGame : MiniGame
                 };
             }
         }
-        {
-            AddClickFunc(view.Special.gameObject, delegate (PointerEventData eventData) {
-                Debug.Log("use");
-                view.Special.GetComponent<Animator>().SetTrigger("Disappear");
-                useSpecial();
-            }); 
-        }
+        //{
+        //    AddClickFunc(view.Special.gameObject, delegate (PointerEventData eventData) {
+        //        Debug.Log("use");
+        //        view.Special.GetComponent<Animator>().SetTrigger("Disappear");
+        //        useSpecial();
+        //    }); 
+        //}
 
     }
 
@@ -154,6 +181,15 @@ public class ShootDanmuMiniGame : MiniGame
         view.operators[newMode].Outline.gameObject.SetActive(true);
     }
 
+    private void AutoDisappear(Danmu danmu)
+    {
+        recycleDanmu(danmu);
+        danmus.Remove(danmu);
+
+        xianchangzhi += 3;
+        view.Xianchan.text = xianchangzhi+"";
+
+    }
 
     public override void SomeTick(float dTime)
     {
@@ -162,8 +198,8 @@ public class ShootDanmuMiniGame : MiniGame
             danmus[i].Tick(dTime);
             if (danmus[i].NeedDestroy)
             {
-                recycleDanmu(danmus[i]);
-                danmus.RemoveAt(i);
+                AutoDisappear(danmus[i]);
+
             }
         }
 
@@ -176,6 +212,18 @@ public class ShootDanmuMiniGame : MiniGame
             //Debug.Log("gen");
         }
 
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            AddNewCard();
+        }
+
+        if (xianchangzhi > 100)
+        {
+
+            xianchangzhi = 0;
+            view.Xianchan.text = xianchangzhi + "";
+            AddNewCard();
+        }
     }
 
     public void genDanmu()
@@ -198,7 +246,7 @@ public class ShootDanmuMiniGame : MiniGame
 
 
         danmu.init(getRandomDanmu());
-        danmuGo.transform.parent = field;
+        danmuGo.transform.SetParent(field);
         danmu.rect.anchoredPosition = new Vector3(width + 30, -posY, 0);
         danmu.view.textField.fontSize = Random.Range(22,28);
 
