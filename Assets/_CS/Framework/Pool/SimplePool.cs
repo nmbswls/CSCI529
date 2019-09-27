@@ -19,6 +19,18 @@ public class GameObjectPool
         return prefab;
     }
 
+
+	public void CachePoolPrefab(string path, GameObject prefab, bool force){
+		if (path == string.Empty || prefab == null) {
+			return;
+		}
+		if (!force && prefabPaths.ContainsKey (path)) {
+			return;
+		}
+		prefabPaths [path] = prefab;
+	}
+
+
     public const int MIN_POOL_SIZE = 3;
 
 
@@ -112,8 +124,6 @@ public class GameObjectPool
         {
             return;
         }
-       
-
         prefabPoolMap[prefab] = new Pool(prefab, qty);
     }
 
