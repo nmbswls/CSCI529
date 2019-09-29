@@ -8,7 +8,7 @@ public class ResLoader : ModuleBase, IResLoader
 
 
 
-	string lastLoadSyncPath = string.Empty;
+    string lastLoadSyncPath = string.Empty;
 	string lastLoadAsyncPath = string.Empty;
 
 
@@ -25,15 +25,19 @@ public class ResLoader : ModuleBase, IResLoader
 
 	public IEnumerator LoadLevelAsync(string scenePath, LoadSceneMode mode)
 	{
-
-		//GameEvent e = null;
-		yield break;
+        AsyncOperation async = SceneManager.LoadSceneAsync(scenePath,mode);
+        //GameEvent e = null;
+        yield break;
 	}
 
-	public void LoadLevelSync(string scenePath, LoadSceneMode mode)
+	public void LoadLevelSync(string scenePath, LoadSceneMode mode, OnSceneLoadedDlg callback = null)
 	{
-		
-	}
+        SceneManager.LoadScene(scenePath, mode);
+        if(callback != null)
+        {
+            callback += callback;
+        }
+    }
 
 
 

@@ -128,8 +128,9 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 	{
 		view.bg = root.GetChild(0).GetComponent<RawImage>();
 		view.skipButton = root.Find ("Btn_Skip").GetComponent<Button>();
-		view.nameText = root.GetChild (1).GetComponent<Text> ();
-		view.dialogContent = root.GetChild(2).GetComponent<Text>();
+
+        view.nameText = root.Find("Speaker").GetComponentInChildren<Text> ();
+		view.dialogContent = root.Find("DIalog").GetComponentInChildren<Text>();
 		view.LihuiContainer = root.Find ("LihuiContainer");
 		DialogBranchView branchView = new DialogBranchView ();
 		branchView.BindView (root.Find ("Branches"));

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TravelGameMode : MonoBehaviour {
+public class TravelGameMode : GameModeBase {
 
 
 
@@ -16,24 +16,32 @@ public class TravelGameMode : MonoBehaviour {
 	float cameraHalfHeight;
 	float cameraHalfWidth;
 
-	public SpriteRenderer activeArea;
 
 	public GameObject map;
 
 	public Camera mainCamera;
 	public GameObject playerSymbol;
 
+ 
+
+    public override void OnRelease()
+    {
+
+    }
+
+    private void BindGameObject()
+    {
+        map = GameObject.Find("Map");
+        mainCamera = Camera.main;
+        IResLoader loader = GameMain.GetInstance().GetModule<ResLoader>();
+        playerSymbol = loader.Instantiate("Travel/pawn");
+    }
 
 
-	void Start(){
-		Init ();
-	}
-	void Update(){
-		Tick (Time.deltaTime);
-	}
 
-	public void Init(){
+    public override void Init(){
 		initCameraControl ();
+        BindGameObject();
 		//playerSymbol = GameMain.GetInstance ().GetModule<ResLoader> ().Instantiate ("travel/pawn");
 
 		Vector2 startPos = new Vector2(0,0);
@@ -55,16 +63,19 @@ public class TravelGameMode : MonoBehaviour {
 		mainCamera.transform.position = startPos;
 		isMovingMap = false;
 		isContinueMovingMap = false;
-	}
+        Initialized = true;
 
-	public void Tick(float dTime){
+    }
+
+	public override void Tick(float dTime){
+        if (!Initialized) return;
 		MoveMap ();
 	}
 
 
 
 
-	public void moveMap(Vector3 dragDir){
+	public void UpdateMoveTarget(Vector3 dragDir){
 
 		Vector3 moveDir = dragDir/15f; //blend
 		moveDir.z = 0;
@@ -83,7 +94,7 @@ public class TravelGameMode : MonoBehaviour {
 			};
 
 			listener.OnDragEvent += delegate(GameObject gb,Vector3 dragDir) {
-				moveMap(dragDir);
+				UpdateMoveTarget(dragDir);
 			};
 			listener.EndDragEvent += delegate(GameObject gb,Vector3 dragDir) {
 				isContinueMovingMap = true;
@@ -124,7 +135,6 @@ public class TravelGameMode : MonoBehaviour {
 		} else {
 			mainCamera.transform.localPosition = Vector3.Lerp (mainCamera.transform.localPosition,toMove,0.5f);
 		}
-		Debug.Log (toMove);
 	}
 
 

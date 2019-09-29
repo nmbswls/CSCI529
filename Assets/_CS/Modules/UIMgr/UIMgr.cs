@@ -50,9 +50,10 @@ public class UIMgr : ModuleBase, IUIMgr
 		mUITypeMap["DialogManager"] = typeof(DialogManager);
 		mUITypeMap["HomeMenuCtrl"] = typeof(HomeMenuCtrl);
 
+        mUITypeMap["ScheduleCtrl"] = typeof(ScheduleCtrl);
 
 
-	}
+    }
 
 	public void LockUI ()
 	{

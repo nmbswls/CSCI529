@@ -76,9 +76,10 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 		}
 		view.DetailName = root.GetChild(2).GetChild(0).GetComponent<Text>();
 		view.properies = root.GetChild (2).GetChild (1).GetComponent<RadarPropertyUI> ();
-		view.InitMoney = root.GetChild(2).GetChild(3).Find("Text_p0_value").GetComponent<Text> ();
-		view.InitAttr = root.GetChild(2).GetChild(3).Find("Text_p1_value").GetComponent<Text> ();
-		view.InitSkill = root.GetChild(2).GetChild(3).Find("Text_p2_value").GetComponent<Text> ();
+
+		view.InitMoney = root.Find("Detail_left").Find("Ownings").Find("Text_p0_value").GetComponent<Text> ();
+		view.InitAttr = root.Find("Detail_left").Find("Ownings").Find("Text_p1_value").GetComponent<Text> ();
+		view.InitSkill = root.Find("Detail_left").Find("Ownings").Find("Text_p2_value").GetComponent<Text> ();
 
 		view.DetailDesp = root.GetChild (3).GetChild (2).GetComponent<Text>();
 		view.extraContainer = root.GetChild (3).GetChild (3);
