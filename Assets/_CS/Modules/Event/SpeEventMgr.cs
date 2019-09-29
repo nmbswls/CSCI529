@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SpecialEvent{
 
-
+	public string EventId;
 	public LogicNode TriggerCond;
 	public string action;
 }

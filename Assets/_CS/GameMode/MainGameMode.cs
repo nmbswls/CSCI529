@@ -30,6 +30,13 @@ public class MainGameMode : GameModeBase
 	public void NextEvent(){
 		//UnHandledEvent;
 		//HandledEventId++;
+		//get first event
+		SpecialEvent se = null;
+		//handle
+	}
+
+	public void NextTurn(){
+	
 	}
 
 	private void CheckBeginEvent(){
