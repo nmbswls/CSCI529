@@ -130,7 +130,7 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 		view.NextStage = root.Find ("NextStage").GetComponent<Button>();
 
 		view.SKillLeft = root.Find ("Text_Left").GetComponent<Text> ();
-		view.PointLeft = root.Find ("Text_Left_point").GetComponent<Text> ();
+		view.PointLeft = root.Find ("属性调整").GetChild(0).GetChild(1).GetComponent<Text> ();
 
 		view.SKillLeft.text = model.LeftSkillPoint + "";
 		view.PointLeft.text = model.LeftPoint + "";
@@ -142,7 +142,7 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 		view.DetailDesp = root.Find ("SpeDetail").GetChild (1).GetComponent<Text>();
 
 
-		Transform pRoot = root.Find ("属性调整");
+		Transform pRoot = root.Find ("属性调整").GetChild(1);
 
 		foreach (Transform child in pRoot) {
 			BasePropertyLineView vv = new BasePropertyLineView ();
