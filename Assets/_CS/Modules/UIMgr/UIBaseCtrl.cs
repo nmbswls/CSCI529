@@ -9,6 +9,8 @@ public interface IUIBaseCtrl{
 	Transform GetTransform();
 	void RegisterEvent();
 	void BindView();
+
+	void Tick(float dTime);
 }
 public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : BaseView
 {
@@ -24,7 +26,7 @@ public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : Ba
 		this.mUIMgr = mUIMgr;
 		this.nameStr = nameStr;
 		ResLoader resLoader = GameMain.GetInstance ().GetModule<ResLoader> ();
-		GameObject prefab = resLoader.LoadResourcePrefab<GameObject> ("UI/"+nameStr,false);
+		GameObject prefab = resLoader.LoadResource<GameObject> ("UI/"+nameStr,false);
 		if (prefab == null) {
 			Debug.LogError ("load "+nameStr+"main menu fail");
 			return;
@@ -39,7 +41,7 @@ public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : Ba
 		Init ();
 		BindView ();
 		RegisterEvent ();
-		return;
+		PostInit ();
 	}
 
 
@@ -55,10 +57,16 @@ public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : Ba
 	public virtual void Init(){
 	}
 
+	public virtual void PostInit(){
+	
+	}
 	public virtual void Release(){
 		if (root != null) {
 			GameObject.Destroy (root.gameObject);
 		}
+	}
+	public virtual void Tick(float dTime){
+	
 	}
 }
 

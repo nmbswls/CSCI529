@@ -96,7 +96,7 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 		//init 
 		{
 			for (int i = 0; i < 5; i++) {
-				RoleStoryAsset ret = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResourcePrefab<RoleStoryAsset> ("role"+i);
+				RoleStoryAsset ret = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<RoleStoryAsset> ("role"+i);
 				if (ret != null) {
 					view.roleList[i].name.text = ret.Name;
 					view.roleList[i].desp.text = ret.Desp;
@@ -118,10 +118,10 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 
 	public override void RegisterEvent(){
 		{
-			PointEventListener listener = view.StartGame.gameObject.GetComponent<PointEventListener>();
+			DragEventListener listener = view.StartGame.gameObject.GetComponent<DragEventListener>();
 			if (listener == null)
 			{
-				listener = view.StartGame.gameObject.AddComponent<PointEventListener>();
+				listener = view.StartGame.gameObject.AddComponent<DragEventListener>();
 				listener.OnClickEvent += delegate (PointerEventData eventData) {
 					IUIMgr m = GameMain.GetInstance().GetModule<UIMgr>();
 					m.CloseFirstPanel();
@@ -131,10 +131,10 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 		}
 
 		foreach (RoleItemView vv in view.roleList) {
-			PointerEventListernerNoDrag listener = vv.clickArea.gameObject.GetComponent<PointerEventListernerNoDrag>();
+			ClickEventListerner listener = vv.clickArea.gameObject.GetComponent<ClickEventListerner>();
 			if (listener == null)
 			{
-				listener = vv.clickArea.gameObject.AddComponent<PointerEventListernerNoDrag>();
+				listener = vv.clickArea.gameObject.AddComponent<ClickEventListerner>();
 				listener.OnClickEvent += delegate (PointerEventData eventData) {
 					switchSelectedStory(view.roleList.IndexOf(vv));
 				};
@@ -153,7 +153,7 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 		//view.properies.SetPointValues (new int[]{Random.Range(10,20),Random.Range(10,20),Random.Range(10,20),Random.Range(10,20),Random.Range(10,20)}); 
 		nowIdx = idx;
 
-		RoleStoryAsset ret = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResourcePrefab<RoleStoryAsset> ("role"+idx);
+		RoleStoryAsset ret = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<RoleStoryAsset> ("role"+idx);
 		if (ret != null) {
 			view.DetailName.text = ret.Name;
 			view.DetailDesp.text = "";

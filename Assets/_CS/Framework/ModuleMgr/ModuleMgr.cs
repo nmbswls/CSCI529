@@ -30,8 +30,15 @@ public class ModuleMgr: IModuleMgr
 		RegModuleList["CardDeck"] = typeof(CardDeckModule);
 		RegModuleList["UIMgr"] = typeof(UIMgr);
 		RegModuleList["ResLoader"] = typeof(ResLoader);
+		RegModuleList["CardDeck"] = typeof(CardDeckModule);
+		RegModuleList["LogicTree"] = typeof(LogicTree);
+		RegModuleList["DialogModule"] = typeof(DialogModule);
+	}
 
-
+	public void Tick(float dTime){
+		foreach(IModule module in mModuleList){
+			module.Tick (dTime);
+		}
 	}
 
 	public IModule CreateModule(ModuleConfig config)

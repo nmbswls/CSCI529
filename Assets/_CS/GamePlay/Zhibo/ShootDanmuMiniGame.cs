@@ -135,11 +135,11 @@ public class ShootDanmuMiniGame : MiniGame
 
         foreach(OperatorView ov in view.operators)
         {
-            PointEventListener listener = ov.ActiveButton.gameObject.GetComponent<PointEventListener>();
+            DragEventListener listener = ov.ActiveButton.gameObject.GetComponent<DragEventListener>();
             if (listener == null)
             {
                 Debug.Log("cnm");
-                listener = ov.ActiveButton.gameObject.AddComponent<PointEventListener>();
+                listener = ov.ActiveButton.gameObject.AddComponent<DragEventListener>();
                 listener.OnClickEvent += delegate (PointerEventData eventData) {
                     //view.
                     Debug.Log("c");
@@ -157,12 +157,12 @@ public class ShootDanmuMiniGame : MiniGame
 
     }
 
-    private void AddClickFunc(GameObject target, PointEventListener.OnClickDlg func)
+    private void AddClickFunc(GameObject target, DragEventListener.OnClickDlg func)
     {
-        PointEventListener listener = target.GetComponent<PointEventListener>();
+        DragEventListener listener = target.GetComponent<DragEventListener>();
         if (listener == null)
         {
-            listener = target.AddComponent<PointEventListener>();
+            listener = target.AddComponent<DragEventListener>();
             listener.OnClickEvent += func;
         }
     }

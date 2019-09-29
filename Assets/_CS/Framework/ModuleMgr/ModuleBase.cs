@@ -28,7 +28,7 @@ public class ModuleBase : IModule
 		return;
 	}
 
-	public virtual void Update(float dTime)
+	public virtual void Tick(float dTime)
 	{
 		return;
 	}

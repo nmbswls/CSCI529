@@ -98,10 +98,10 @@ public class Danmu : MonoBehaviour
 
     public void RegisterEvent()
     {
-        PointEventListener listener = view.textField.gameObject.GetComponent<PointEventListener>();
+        DragEventListener listener = view.textField.gameObject.GetComponent<DragEventListener>();
         if (listener == null)
         {
-            listener = view.textField.gameObject.AddComponent<PointEventListener>();
+            listener = view.textField.gameObject.AddComponent<DragEventListener>();
             listener.OnClickEvent += delegate (PointerEventData eventData) {
                 ((ShootDanmuMiniGame)MiniGame.GetInstance()).HitDanmu(this);
                

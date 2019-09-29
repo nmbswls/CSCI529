@@ -18,7 +18,7 @@ public interface IModule : IEventListener
 {
 	void Setup();
 
-	void Update(float dTime);
+	void Tick(float dTime);
 
 	string GetModuleName();
 

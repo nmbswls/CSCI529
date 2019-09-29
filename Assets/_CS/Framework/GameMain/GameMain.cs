@@ -13,7 +13,22 @@ public class GameMain : MonoBehaviour,IGameMain
 	private void Awake()
 	{
 		Init();
+
 	}
+
+	public void RunCoroutine(IEnumerator c){
+		StartCoroutine (c);
+	}
+
+
+	public void Update(){
+		if (Input.GetKeyDown (KeyCode.A)) {
+			
+			GetModule<UIMgr> ().ShowPanel ("DialogManager");
+		}
+		mModuleMgr.Tick (Time.deltaTime);
+	}
+
 
 	public void Init()
 	{
@@ -26,6 +41,9 @@ public class GameMain : MonoBehaviour,IGameMain
 		DefaultModuleList.ConfigList.Add(new ModuleConfig("CardDeck"));
 		DefaultModuleList.ConfigList.Add(new ModuleConfig("ResLoader"));
 		DefaultModuleList.ConfigList.Add(new ModuleConfig("UIMgr"));
+		DefaultModuleList.ConfigList.Add(new ModuleConfig("CardDeck"));
+		DefaultModuleList.ConfigList.Add (new ModuleConfig ("LogicTree"));
+		DefaultModuleList.ConfigList.Add (new ModuleConfig ("DialogModule"));
 
 		mGameMainConfig.Config.Add(DefaultModuleList);
 		LoadInitModules();

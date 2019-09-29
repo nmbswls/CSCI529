@@ -91,10 +91,10 @@ public class MiniCard : MonoBehaviour
     {
 
 
-        PointEventListener listener = view.picture.gameObject.GetComponent<PointEventListener>();
+        DragEventListener listener = view.picture.gameObject.GetComponent<DragEventListener>();
         if (listener == null)
         {
-            listener = view.picture.gameObject.AddComponent<PointEventListener>();
+            listener = view.picture.gameObject.AddComponent<DragEventListener>();
 
 
             listener.OnBeginDragEvent += delegate (PointerEventData eventData) {

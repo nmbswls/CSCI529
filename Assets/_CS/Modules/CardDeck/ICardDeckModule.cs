@@ -3,5 +3,5 @@ using System.Collections;
 
 public interface ICardDeckModule : IModule
 {
-	void GainNewCard();
+	void GainNewCard(string cid);
 }

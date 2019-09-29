@@ -36,7 +36,7 @@ public class ResLoader : ModuleBase, IResLoader
 	}
 
 
-	public T LoadResourcePrefab<T>(string path, bool cached = true) where T : Object
+	public T LoadResource<T>(string path, bool cached = true) where T : Object
 	{
 		T ret = null;
 		if (!string.IsNullOrEmpty(path))
@@ -86,7 +86,7 @@ public class ResLoader : ModuleBase, IResLoader
 
 	public GameObject Instantiate(string strPath,Transform p=null)
 	{
-		GameObject prefab = LoadResourcePrefab<GameObject>(strPath);
+		GameObject prefab = LoadResource<GameObject>(strPath);
 		if(prefab != null)
 		{
 			return Instantiate(prefab, Vector3.zero, Quaternion.identity,p);
@@ -106,7 +106,7 @@ public class ResLoader : ModuleBase, IResLoader
 
 	public GameObject Instantiate(string strPath, Vector3 localPos, Quaternion localRot)
 	{
-		GameObject prefab = LoadResourcePrefab<GameObject>(strPath);
+		GameObject prefab = LoadResource<GameObject>(strPath);
 		if(prefab != null)
 		{
 			return Instantiate(prefab, localPos,localRot);
@@ -128,7 +128,7 @@ public class ResLoader : ModuleBase, IResLoader
 		obj = mGOPool.Spawn(prefab, localPos, localRot, out isInstantiate);
 		if (isInstantiate)
 		{
-
+			obj.name = prefab.name;
 		}
 
 		if(obj != null)

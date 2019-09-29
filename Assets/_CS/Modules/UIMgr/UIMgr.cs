@@ -23,19 +23,33 @@ public class UIMgr : ModuleBase, IUIMgr
 		InitUI ();
 	}
 
+	public override void Tick(float dTime){
+		foreach (IUIBaseCtrl ctrl in mUILayerList) {
+			ctrl.Tick (dTime);
+		}
+	}
+
 	public GameObject GetUIRoot(){
 		return UIRoot;
 	}
 
 
+
 	private void InitUI(){
-		ShowPanel ("StartNewGame");
+		ShowPanel ("AdjustPanel");
 	}
 
 	private void RegisterUIPanel(){
 		
 		mUITypeMap["UIMain"] = typeof(UIMainCtrl);
 		mUITypeMap["StartNewGame"] = typeof(ChooseStoryLineCtrl);
+		mUITypeMap["CardsMgr"] = typeof(ManageCardsPanelCtrl);
+
+		mUITypeMap["AdjustPanel"] = typeof(AdjustInitCtrl);
+
+		mUITypeMap["DialogManager"] = typeof(DialogManager);
+
+
 	}
 
 	public void LockUI ()
@@ -52,6 +66,14 @@ public class UIMgr : ModuleBase, IUIMgr
 		if(lockCount==0){
 			RootCanvasGroup.blocksRaycasts = true;
 		}
+	}
+
+	public void CloseCertainPanel(IUIBaseCtrl toClose){
+		string name = toClose.nameStr;
+		if (mUIPanelMap.ContainsKey (name)) {
+			mUILayerList.Remove (toClose);
+		}
+		toClose.Release ();
 	}
 
 	public void ShowPanel (string panelStr)
