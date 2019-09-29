@@ -36,6 +36,7 @@ public class ResLoader : ModuleBase, IResLoader
 	}
 
 
+
 	public T LoadResource<T>(string path, bool cached = true) where T : Object
 	{
 		T ret = null;

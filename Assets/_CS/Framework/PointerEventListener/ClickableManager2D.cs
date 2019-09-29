@@ -11,7 +11,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 
-public class FieldClickManager2D : MonoBehaviour
+public class ClickableManager2D : MonoBehaviour
 {
 
 	public Camera m_camera;
@@ -71,7 +71,6 @@ public class FieldClickManager2D : MonoBehaviour
 					Vector3 pos = m_camera.ScreenToWorldPoint (Input.mousePosition);
 					RaycastHit[] hits = null;
 					hits = Physics.RaycastAll (pos, Vector3.forward, Mathf.Infinity);
-
 					if (hits.Length > 0) {    //检测是否射线接触物体
 						mouseDownPos = Input.mousePosition;
 						nowClickGO = hits [0].collider.gameObject;

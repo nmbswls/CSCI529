@@ -21,11 +21,12 @@ public class GameMain : MonoBehaviour,IGameMain
 	}
 
 
+	public void Start(){
+
+	}
+
 	public void Update(){
-		if (Input.GetKeyDown (KeyCode.A)) {
-			
-			GetModule<UIMgr> ().ShowPanel ("DialogManager");
-		}
+		
 		mModuleMgr.Tick (Time.deltaTime);
 	}
 
@@ -44,6 +45,11 @@ public class GameMain : MonoBehaviour,IGameMain
 		DefaultModuleList.ConfigList.Add(new ModuleConfig("CardDeck"));
 		DefaultModuleList.ConfigList.Add (new ModuleConfig ("LogicTree"));
 		DefaultModuleList.ConfigList.Add (new ModuleConfig ("DialogModule"));
+
+		DefaultModuleList.ConfigList.Add (new ModuleConfig ("RoleModule"));
+		DefaultModuleList.ConfigList.Add (new ModuleConfig ("SpeEventMgr"));
+
+		DefaultModuleList.ConfigList.Add (new ModuleConfig ("CoreManager"));
 
 		mGameMainConfig.Config.Add(DefaultModuleList);
 		LoadInitModules();
@@ -82,6 +88,7 @@ public class GameMain : MonoBehaviour,IGameMain
 		{
 			mModuleMgr.CreateModule(config);
 		}
+
 	}
 
 	public static bool HasInstance()

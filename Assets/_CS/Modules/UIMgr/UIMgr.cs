@@ -20,7 +20,7 @@ public class UIMgr : ModuleBase, IUIMgr
 		UIRoot = GameObject.Find ("UIRoot");
 		RootCanvasGroup = UIRoot.GetComponent<CanvasGroup> ();
 		RegisterUIPanel ();
-		InitUI ();
+		//InitUI ();
 	}
 
 	public override void Tick(float dTime){
@@ -48,6 +48,8 @@ public class UIMgr : ModuleBase, IUIMgr
 		mUITypeMap["AdjustPanel"] = typeof(AdjustInitCtrl);
 
 		mUITypeMap["DialogManager"] = typeof(DialogManager);
+		mUITypeMap["HomeMenuCtrl"] = typeof(HomeMenuCtrl);
+
 
 
 	}

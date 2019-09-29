@@ -66,6 +66,8 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 	public override void Init(){
 		view = new ChooseStoryLineView ();
 		model = new ChooseStoryLineModel ();
+
+		mUIMgr = GameMain.GetInstance ().GetModule<UIMgr> ();
 	}
 
 	public override void BindView(){
@@ -94,6 +96,10 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 
 
 		//init 
+
+	}
+
+	public override void PostInit(){
 		{
 			for (int i = 0; i < 5; i++) {
 				RoleStoryAsset ret = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<RoleStoryAsset> ("role"+i);
@@ -108,12 +114,6 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 			switchSelectedStory (0);
 
 		}
-
-
-
-
-
-		Debug.Log ("");
 	}
 
 	public override void RegisterEvent(){
@@ -123,9 +123,8 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 			{
 				listener = view.StartGame.gameObject.AddComponent<DragEventListener>();
 				listener.OnClickEvent += delegate (PointerEventData eventData) {
-					IUIMgr m = GameMain.GetInstance().GetModule<UIMgr>();
-					m.CloseFirstPanel();
-					m.ShowPanel("UIMain");
+					mUIMgr.CloseCertainPanel(this);
+					mUIMgr.ShowPanel("AdjustPanel");
 				};
 			}
 		}

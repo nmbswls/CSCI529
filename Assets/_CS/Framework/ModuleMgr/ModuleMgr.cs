@@ -33,6 +33,11 @@ public class ModuleMgr: IModuleMgr
 		RegModuleList["CardDeck"] = typeof(CardDeckModule);
 		RegModuleList["LogicTree"] = typeof(LogicTree);
 		RegModuleList["DialogModule"] = typeof(DialogModule);
+		RegModuleList["SpeEventMgr"] = typeof(SpeEventMgr);
+		RegModuleList["RoleModule"] = typeof(RoleModule);
+
+		RegModuleList["CoreManager"] = typeof(CoreManager);
+
 	}
 
 	public void Tick(float dTime){

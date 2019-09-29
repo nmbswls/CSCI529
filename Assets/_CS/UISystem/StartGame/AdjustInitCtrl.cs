@@ -77,6 +77,7 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 		model = new AdjustInitModel ();
 
 		model.extra = new int[5];
+		mUIMgr = GameMain.GetInstance ().GetModule<UIMgr> ();
 	}
 
 	public List<Tezhi> FakeReadTezhi(){
@@ -139,7 +140,6 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 
 		view.DetailName = root.Find ("SpeDetail").GetChild (0).GetComponent<Text>();
 		view.DetailDesp = root.Find ("SpeDetail").GetChild (1).GetComponent<Text>();
-		SetupAvailableTezhi ();
 
 
 		Transform pRoot = root.Find ("属性调整");
@@ -150,13 +150,18 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 			vv.BaseValue.text = model.bas[child.GetSiblingIndex()] + "";
 			view.baseLines.Add (vv);
 		}
-		 
-
 	}
+
+	public override void PostInit(){
+		SetupAvailableTezhi ();
+	}
+
+
 	public override void RegisterEvent(){
 
 		view.NextStage.onClick.AddListener (delegate() {
-			GameMain.GetInstance().GetModule<UIMgr>().ShowPanel("UIMain");	
+			mUIMgr.CloseCertainPanel(this);
+			mUIMgr.ShowPanel("UIMain");	
 		});
 
 		for (int i = 0; i < view.avalableList.Count; i++) {
