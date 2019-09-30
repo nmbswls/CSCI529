@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System;
+using UnityEngine.Events;
 
 public class ResLoader : ModuleBase, IResLoader
 {
@@ -11,11 +13,13 @@ public class ResLoader : ModuleBase, IResLoader
     string lastLoadSyncPath = string.Empty;
 	string lastLoadAsyncPath = string.Empty;
 
+    UnityAction<Scene, LoadSceneMode> lastCallback = null;
 
-	private GameObjectPool mGOPool = new GameObjectPool();
+
+    private GameObjectPool mGOPool = new GameObjectPool();
 	private AssetPool mAssetPool = new AssetPool();
 
-	public delegate void AsynvLoadCallback<T>(T t) where T : Object;
+	public delegate void AsynvLoadCallback<T>(T t) where T : UnityEngine.Object;
 
 	private IResMgr mResMgr = new ResMgr(); 
 
@@ -30,20 +34,25 @@ public class ResLoader : ModuleBase, IResLoader
         yield break;
 	}
 
-	public void LoadLevelSync(string scenePath, LoadSceneMode mode, OnSceneLoadedDlg callback = null)
+	public void LoadLevelSync(string scenePath, LoadSceneMode mode, UnityAction<Scene,LoadSceneMode> callback = null)
 	{
         SceneManager.LoadScene(scenePath, mode);
-        if(callback != null)
+        if(lastCallback != null)
         {
-            callback += callback;
+            SceneManager.sceneLoaded -= lastCallback;
         }
+        if (callback != null)
+        {
+            SceneManager.sceneLoaded += callback;
+        }
+        lastCallback = callback;
     }
 
 
 
-	public T LoadResource<T>(string path, bool cached = true) where T : Object
-	{
-		T ret = null;
+	public T LoadResource<T>(string path, bool cached = true) where T : UnityEngine.Object
+    {
+        T ret = null;
 		if (!string.IsNullOrEmpty(path))
 		{
 			ret = mGOPool.GetPoolPrefab(path) as T;
@@ -88,8 +97,25 @@ public class ResLoader : ModuleBase, IResLoader
 		return null;
 	}
 
+    public void ReleaseGO(string str, GameObject obj)
+    {
+        GameObject prefab = mGOPool.GetPoolPrefab(str);
+        if(prefab == null)
+        {
+            prefab = LoadResource<GameObject>(str);
+        }
+        if(prefab == null)
+        {
+            GameObject.Destroy(obj);
+        }
+        else
+        {
+            mGOPool.Release(prefab, obj);
+        }
+    }
 
-	public GameObject Instantiate(string strPath,Transform p=null)
+
+    public GameObject Instantiate(string strPath,Transform p=null)
 	{
 		GameObject prefab = LoadResource<GameObject>(strPath);
 		if(prefab != null)

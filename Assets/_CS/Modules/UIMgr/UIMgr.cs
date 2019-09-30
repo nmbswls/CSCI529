@@ -6,7 +6,9 @@ using System;
 public class UIMgr : ModuleBase, IUIMgr
 {
 
-	private GameObject UIRoot;
+	private GameObject mUIRoot;
+    private GameObject mEventSystem;
+    private Camera mCamera;
 	private CanvasGroup RootCanvasGroup;
 
 	private int lockCount = 0;
@@ -17,8 +19,17 @@ public class UIMgr : ModuleBase, IUIMgr
 	private List<IUIBaseCtrl> mUILayerList = new List<IUIBaseCtrl> ();
 
 	public override void Setup(){
-		UIRoot = GameObject.Find ("UIRoot");
-		RootCanvasGroup = UIRoot.GetComponent<CanvasGroup> ();
+		mUIRoot = GameObject.Find ("UIRoot");
+        mEventSystem = GameObject.Find("EventSystem");
+        mCamera = Camera.main;
+        if (mUIRoot == null)
+        {
+            Debug.Log("No Ui root found!");
+        }
+        GameObject.DontDestroyOnLoad(mUIRoot);
+        GameObject.DontDestroyOnLoad(mEventSystem);
+        GameObject.DontDestroyOnLoad(mCamera);
+		RootCanvasGroup = mUIRoot.GetComponent<CanvasGroup> ();
 		RegisterUIPanel ();
 		//InitUI ();
 	}
@@ -30,14 +41,11 @@ public class UIMgr : ModuleBase, IUIMgr
 	}
 
 	public GameObject GetUIRoot(){
-		return UIRoot;
+		return mUIRoot;
 	}
 
 
 
-	private void InitUI(){
-		ShowPanel ("AdjustPanel");
-	}
 
 	private void RegisterUIPanel(){
 		
@@ -50,7 +58,11 @@ public class UIMgr : ModuleBase, IUIMgr
 		mUITypeMap["DialogManager"] = typeof(DialogManager);
 		mUITypeMap["HomeMenuCtrl"] = typeof(HomeMenuCtrl);
 
-        mUITypeMap["ScheduleCtrl"] = typeof(ScheduleCtrl);
+        mUITypeMap["SchedulePanel"] = typeof(ScheduleCtrl);
+
+        mUITypeMap["ZhiboPanel"] = typeof(ZhiboUI);
+        mUITypeMap["ActBranch"] = typeof(ActBranchCtrl);
+
 
 
     }
@@ -75,9 +87,14 @@ public class UIMgr : ModuleBase, IUIMgr
 		string name = toClose.nameStr;
 		if (mUIPanelMap.ContainsKey (name)) {
 			mUILayerList.Remove (toClose);
-		}
-		toClose.Release ();
-	}
+            mUIPanelMap.Remove(name);
+            toClose.Release();
+        }
+        else
+        {
+            Debug.Log("close not exitst ui panel");
+        }
+    }
 
 	public void ShowPanel (string panelStr)
 	{
@@ -127,7 +144,16 @@ public class UIMgr : ModuleBase, IUIMgr
 		AdjustLayerOrder ();
 	}
 
-	public void showHint (string text)
+    public IUIBaseCtrl GetCtrl(string str)
+    {
+        if (mUIPanelMap.ContainsKey(str))
+        {
+            return mUIPanelMap[str];
+        }
+        return null;
+    }
+
+    public void showHint (string text)
 	{
 		throw new System.NotImplementedException ();
 	}

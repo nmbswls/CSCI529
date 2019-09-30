@@ -15,7 +15,7 @@ public class MainGameMode : GameModeBase
 
 	public override void Init(){
 		UImgr = GameMain.GetInstance ().GetModule<UIMgr> ();
-		UImgr.ShowPanel ("HomeMenuCtrl");
+		UImgr.ShowPanel ("UIMain");
 	}
 
 

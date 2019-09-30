@@ -42,10 +42,14 @@ public class Danmu : MonoBehaviour
 
     public DanmuView view = new DanmuView();
 
+    ZhiboGameMode gameMode;
 
-    public void init(string txt)
+    public void init(string txt, ZhiboGameMode gameMode)
     {
         rect = (RectTransform)transform;
+
+        this.gameMode = gameMode;
+
         anim = GetComponent<Animator>();
         NeedDestroy = false;
         spd = 160.0f;
@@ -103,7 +107,7 @@ public class Danmu : MonoBehaviour
         {
             listener = view.textField.gameObject.AddComponent<DragEventListener>();
             listener.OnClickEvent += delegate (PointerEventData eventData) {
-                ((ShootDanmuMiniGame)MiniGame.GetInstance()).HitDanmu(this);
+                gameMode.mUICtrl.HitDanmu(this);
                
             };
         }
@@ -115,8 +119,8 @@ public class Danmu : MonoBehaviour
         if (rect.anchoredPosition.x < -100) {
             NeedDestroy = true; 
         }
-
     }
+
 
     public void OnDestroy()
     {
@@ -131,7 +135,7 @@ public class Danmu : MonoBehaviour
     IEnumerator WaitDeathAnim()
     {
         yield return new WaitForSeconds(0.5f);
-        ((ShootDanmuMiniGame)MiniGame.GetInstance()).recycleDanmu(this);
+        gameMode.RecycleDanmu(this);
     }
 
 

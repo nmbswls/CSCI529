@@ -161,7 +161,8 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 
 		view.NextStage.onClick.AddListener (delegate() {
 			mUIMgr.CloseCertainPanel(this);
-			mUIMgr.ShowPanel("UIMain");	
+            GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main");
+            //mUIMgr.ShowPanel("UIMain");	
 		});
 
 		for (int i = 0; i < view.avalableList.Count; i++) {

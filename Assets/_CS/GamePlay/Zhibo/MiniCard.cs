@@ -84,7 +84,7 @@ public class MiniCard : MonoBehaviour
 
     private void BindView()
     {
-        view.picture = transform.GetChild(1).GetComponent<Image>();
+        view.picture = transform.GetChild(0).GetComponent<Image>();
     }
 
     private void RegisterEvent()

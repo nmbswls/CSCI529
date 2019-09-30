@@ -28,7 +28,8 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 	List<CardInfo> cards = new List<CardInfo>();
 	Dictionary<string, CardAsset> CardDict = new Dictionary<string, CardAsset>();
 
-	public void GainNewCard (string cid)
+
+    public void GainNewCard (string cid)
 	{
 		CardAsset aset = null;
 		CardDict.TryGetValue (cid, out aset);
@@ -40,7 +41,13 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 			InstId += 1;
 		}
 	}
-	public override void Setup(){
+
+    public List<CardInfo> GetAllCards()
+    {
+
+        return new List<CardInfo>();
+    }
+    public override void Setup(){
 		InstId = 0;
 	}
 
@@ -52,7 +59,8 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 		return c;
 	}
 
-	public CardAsset GetCardInfo(string cid){
+
+    public CardAsset GetCardInfo(string cid){
 		CardAsset ret = null;
 		CardDict.TryGetValue (cid, out ret);
 		return ret;

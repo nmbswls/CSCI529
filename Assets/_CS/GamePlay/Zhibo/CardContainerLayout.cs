@@ -6,7 +6,7 @@ public class CardContainerLayout : MonoBehaviour
     public List<MiniCard> cards = new List<MiniCard>();
 
 
-    public GameObject cardPrefab;
+    //public GameObject cardPrefab;
     [HideInInspector]
     public int CardMax = 10;
 
@@ -27,6 +27,8 @@ public class CardContainerLayout : MonoBehaviour
     {
         rt = (RectTransform)transform;
         Width = rt.rect.width;
+
+
     }
 
     public void AddCard()
@@ -37,7 +39,9 @@ public class CardContainerLayout : MonoBehaviour
         }
         bool success = false;
 
-        GameObject cardGo = ((ShootDanmuMiniGame)MiniGame.GetInstance()).pool.Spawn(cardPrefab, Vector3.zero, Quaternion.identity, out success);
+        IResLoader loader = GameMain.GetInstance().GetModule<ResLoader>();
+
+        GameObject cardGo = loader.Instantiate("Zhibo/Card");
         MiniCard card = cardGo.GetComponent<MiniCard>();
         card.init(this);
 

@@ -17,6 +17,7 @@ public interface IUIMgr : IModule
 	void Loading ();
 	void FinishLoading();
 
+    IUIBaseCtrl GetCtrl(string str);
 
 }
 
