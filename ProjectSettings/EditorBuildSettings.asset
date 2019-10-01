@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene/TestTravel.unity
     guid: 5e5ee0848a29e4b8f9233b16df2b5dea
+  - enabled: 1
+    path: Assets/Scene/RichTextTest.unity
+    guid: 4fbca3dcfd8671d4ea3860448afeb036
   m_configObjects: {}
