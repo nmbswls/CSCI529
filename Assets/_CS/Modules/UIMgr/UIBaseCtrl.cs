@@ -28,12 +28,12 @@ public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : Ba
 		ResLoader resLoader = GameMain.GetInstance ().GetModule<ResLoader> ();
 		GameObject prefab = resLoader.LoadResource<GameObject> ("UI/"+nameStr,false);
 		if (prefab == null) {
-			Debug.LogError ("load "+nameStr+"main menu fail");
+			Debug.LogError ("load "+nameStr+" main menu fail");
 			return;
 		}
 		GameObject panel = resLoader.Instantiate (prefab,mUIMgr.GetUIRoot().transform);
 		if (panel == null) {
-			Debug.LogError ("instantiate "+nameStr+"main menu fail");
+			Debug.LogError ("instantiate "+nameStr+" main menu fail");
 			return;
 		}
 		root = panel.transform;

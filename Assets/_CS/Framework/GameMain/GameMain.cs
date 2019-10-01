@@ -13,7 +13,7 @@ public class GameMain : MonoBehaviour,IGameMain
 	private void Awake()
 	{
 		Init();
-
+        GameObject.DontDestroyOnLoad(this);
 	}
 
 	public void RunCoroutine(IEnumerator c){

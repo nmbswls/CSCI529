@@ -30,7 +30,6 @@ public class ModuleMgr: IModuleMgr
 		RegModuleList["CardDeck"] = typeof(CardDeckModule);
 		RegModuleList["UIMgr"] = typeof(UIMgr);
 		RegModuleList["ResLoader"] = typeof(ResLoader);
-		RegModuleList["CardDeck"] = typeof(CardDeckModule);
 		RegModuleList["LogicTree"] = typeof(LogicTree);
 		RegModuleList["DialogModule"] = typeof(DialogModule);
 		RegModuleList["SpeEventMgr"] = typeof(SpeEventMgr);
@@ -38,7 +37,15 @@ public class ModuleMgr: IModuleMgr
 
 		RegModuleList["CoreManager"] = typeof(CoreManager);
 
-	}
+        mMapType[typeof(CardDeckModule)] = "CardDeck";
+        mMapType[typeof(UIMgr)] = "UIMgr";
+        mMapType[typeof(ResLoader)] = "ResLoader";
+        mMapType[typeof(LogicTree)] = "LogicTree";
+        mMapType[typeof(DialogModule)] = "DialogModule";
+        mMapType[typeof(SpeEventMgr)] = "SpeEventMgr";
+        mMapType[typeof(RoleModule)] = "RoleModule";
+        mMapType[typeof(CoreManager)] = "CoreManager";
+    }
 
 	public void Tick(float dTime){
 		foreach(IModule module in mModuleList){

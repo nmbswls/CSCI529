@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 public delegate void OnSceneLoadedDlg(Scene scene, LoadSceneMode mode);
 
@@ -26,10 +27,11 @@ public interface IResLoader : IModule {
 
 
 	#endregion
-	void LoadLevelSync(string scenePath, LoadSceneMode mode, OnSceneLoadedDlg callback = null);
+	void LoadLevelSync(string scenePath, LoadSceneMode mode, UnityAction<Scene, LoadSceneMode> callback = null);
 
 	IEnumerator LoadLevelAsync(string scenePath, LoadSceneMode mode);
 
+    void ReleaseGO(string str, GameObject obj);
 
 
 }

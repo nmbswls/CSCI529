@@ -22,45 +22,41 @@ public class TravelGameMode : GameModeBase {
 	public Camera mainCamera;
 	public GameObject playerSymbol;
 
- 
+    IResLoader mResLoader;
+
+
+    public void FinishTravel()
+    {
+        GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main");
+    }
 
     public override void OnRelease()
     {
-
+        mResLoader.UnloadAsset("Travel/pawn");
     }
 
     private void BindGameObject()
     {
         map = GameObject.Find("Map");
         mainCamera = Camera.main;
-        IResLoader loader = GameMain.GetInstance().GetModule<ResLoader>();
-        playerSymbol = loader.Instantiate("Travel/pawn");
+        mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
+        playerSymbol = mResLoader.Instantiate("Travel/pawn");
+        Debug.Log("finish init travel");
     }
 
 
 
     public override void Init(){
-		initCameraControl ();
         BindGameObject();
-		//playerSymbol = GameMain.GetInstance ().GetModule<ResLoader> ().Instantiate ("travel/pawn");
+        initCameraControl();
 
-		Vector2 startPos = new Vector2(0,0);
+		Vector3 startPos = new Vector3(0,0,0);
 		{
-			if (startPos.y < (cameraBound [1] + cameraHalfHeight)) {
-				startPos.y = (cameraBound [1] + cameraHalfHeight);
-			}
-			if (startPos.y > (cameraBound [3] - cameraHalfHeight)) {
-				startPos.y = (cameraBound [3] - cameraHalfHeight);
-			}
-			if (startPos.x < (cameraBound [0] + cameraHalfWidth)) {
-				startPos.x = (cameraBound [0] + cameraHalfWidth);
-			}
-			if (startPos.x > (cameraBound [2] - cameraHalfWidth)) {
-				startPos.x = (cameraBound [2] - cameraHalfWidth);
-			}
-		}
+            startPos = ClampPosInBound(startPos);
+        }
 		SetMap ();
-		mainCamera.transform.position = startPos;
+		mainCamera.transform.position = new Vector3(startPos.x, startPos.y, mainCamera.transform.position.z);
+
 		isMovingMap = false;
 		isContinueMovingMap = false;
         Initialized = true;
@@ -70,22 +66,46 @@ public class TravelGameMode : GameModeBase {
 	public override void Tick(float dTime){
         if (!Initialized) return;
 		MoveMap ();
-	}
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            FinishTravel();
+        }
+    }
 
 
+    public static float MAX_MAP_SPEED = 20f;
+    public static float MAX_DIFF = 0.01f;
+    public static float MAP_MOVE_RATE = 0.067f;
 
+    void MoveMap()
+    {
+        if (!isMovingMap && !isContinueMovingMap)
+            return;
 
-	public void UpdateMoveTarget(Vector3 dragDir){
+        toMove = ClampPosInBound(toMove);
 
-		Vector3 moveDir = dragDir/15f; //blend
+        toMove.z = mainCamera.transform.localPosition.z;
+
+        if ((toMove - mainCamera.transform.localPosition).magnitude < MAX_DIFF)
+        {
+            mainCamera.transform.localPosition = toMove;
+        }
+        else
+        {
+            mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, toMove, 0.5f);
+        }
+    }
+
+    public void UpdateMoveTarget(Vector3 dragDir){
+		Vector3 moveDir = dragDir * MAP_MOVE_RATE; //blend
 		moveDir.z = 0;
 		toMove = mainCamera.transform.localPosition - moveDir;
-
 	}
+
 
 	public void SetMap(){
 		{
-
 			ClickableEventlistener2D listener = map.AddComponent<ClickableEventlistener2D> ();
 			listener.BeginDragEvent += delegate(GameObject gb,Vector3 dragDir) {
 				isMovingMap = true;
@@ -100,7 +120,6 @@ public class TravelGameMode : GameModeBase {
 				isContinueMovingMap = true;
 				isMovingMap = false;
 			};
-
 		}
 
 	}
@@ -111,46 +130,43 @@ public class TravelGameMode : GameModeBase {
 
 
 
-	public static float MAX_MAP_SPEED = 20f;
-	void MoveMap ()
-	{
-		if(!isMovingMap && !isContinueMovingMap)
-			return;
+	
 
-		if (toMove.y < (cameraBound [1] + cameraHalfHeight)) {
-			toMove.y = (cameraBound [1] + cameraHalfHeight);
-		}
-		if (toMove.y > (cameraBound [3] - cameraHalfHeight)) {
-			toMove.y = (cameraBound [3] - cameraHalfHeight);
-		}
-		if (toMove.x < (cameraBound [0] + cameraHalfWidth)) {
-			toMove.x = (cameraBound [0] + cameraHalfWidth);
-		}
-		if (toMove.x > (cameraBound [2] - cameraHalfWidth)) {
-			toMove.x = (cameraBound [2] - cameraHalfWidth);
-		}
-		toMove.z = mainCamera.transform.localPosition.z;
-		if ((toMove - mainCamera.transform.localPosition).magnitude < 0.01f) {
-			mainCamera.transform.localPosition = toMove;
-		} else {
-			mainCamera.transform.localPosition = Vector3.Lerp (mainCamera.transform.localPosition,toMove,0.5f);
-		}
-	}
+    private Vector3 ClampPosInBound(Vector3 toClamp)
+    {
+        if (toClamp.y < (cameraBound[1] + cameraHalfHeight))
+        {
+            toClamp.y = (cameraBound[1] + cameraHalfHeight);
+        }
+        if (toClamp.y > (cameraBound[3] - cameraHalfHeight))
+        {
+            toClamp.y = (cameraBound[3] - cameraHalfHeight);
+        }
+        if (toClamp.x < (cameraBound[0] + cameraHalfWidth))
+        {
+            toClamp.x = (cameraBound[0] + cameraHalfWidth);
+        }
+        if (toClamp.x > (cameraBound[2] - cameraHalfWidth))
+        {
+            toClamp.x = (cameraBound[2] - cameraHalfWidth);
+        }
+        return toClamp;
+
+    }
 
 
-	public void initCameraControl(){
+    public void initCameraControl(){
 		SpriteRenderer activeArea = map.GetComponent<SpriteRenderer> ();
 		cameraBound[0] = -activeArea.bounds.size.x/2;
 		cameraBound[1] = -activeArea.bounds.size.y/2;
-
 		cameraBound[2] = activeArea.bounds.size.x/2;
 		cameraBound[3] = activeArea.bounds.size.y/2;
+
 		mainCamera.transform.position = new Vector3 (0,0,-10);
+
 		Vector2 cameraBoundInWorld = mainCamera.ScreenToWorldPoint (new Vector3 (mainCamera.pixelWidth, mainCamera.pixelHeight, 0));
 
 		cameraHalfHeight = cameraBoundInWorld.y;
 		cameraHalfWidth = cameraBoundInWorld.x;
-
-
 	}
 }

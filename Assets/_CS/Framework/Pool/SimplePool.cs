@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameObjectPool
 {
 
+
     Dictionary<GameObject, Pool> prefabPoolMap = new Dictionary<GameObject, Pool>();
 
     private Dictionary<string, GameObject> prefabPaths = new Dictionary<string, GameObject>();
@@ -86,10 +87,13 @@ public class GameObjectPool
 
     public void Release(GameObject prefab, GameObject obj)
     {
+        if (prefab == null) return; 
         GeneratePool(prefab, MIN_POOL_SIZE);
         Pool targetPool = prefabPoolMap[prefab];
         targetPool.Release(obj);
     }
+
+
 
     public GameObject Spawn(string pathStr, out bool isInstantiate)
     {
