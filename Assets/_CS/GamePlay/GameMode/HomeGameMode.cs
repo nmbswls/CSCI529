@@ -10,6 +10,7 @@ public class HomeGameMode : GameModeBase
     {
         UImgr = GameMain.GetInstance().GetModule<UIMgr>();
         UImgr.ShowPanel("HomeMenuCtrl");
+
     }
 
     public override void Tick(float dTime)

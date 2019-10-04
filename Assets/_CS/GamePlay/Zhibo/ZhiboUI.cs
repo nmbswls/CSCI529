@@ -17,11 +17,15 @@ public class ZhiboView : BaseView
 
     public Transform SpeObjContainer;
 
-    public CardContainerLayout cardContainer;
+    public Transform BuffContainer;
+
+    public CardContainerLayout CardContainer;
 
     public Text Xianchan;
 
     public RectTransform field;
+
+    public RectTransform SpeField;
 }
 public class OperatorView
 {
@@ -71,20 +75,26 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
         view.hotZhu.fillAmount = 0;
 
-        gameMode.Cards.Clear();
+        gameMode.state.Cards.Clear();
     }
 
 
     public void GainHotEffect(int num)
     {
-        view.hotZhu.fillAmount += num * 1.0f / gameMode.maxHot;
+        view.hotZhu.fillAmount += num * 1.0f / gameMode.state.MaxHot;
         if (num > 0)
         {
             view.hotAnimator.SetTrigger("Activate");
-            view.hotValue.text = gameMode.hot + "";
-            view.hotHead.rectTransform.anchoredPosition = new Vector2(0, 4 + Mathf.Min(gameMode.hot, gameMode.maxHot));
+            view.hotValue.text = gameMode.state.Score + "";
+            view.hotHead.rectTransform.anchoredPosition = new Vector2(0, 4 + Mathf.Min(gameMode.state.Score, gameMode.state.MaxHot));
         }
     }
+
+    public void UpdateScore(int nowScore)
+    {
+        view.hotValue.text = nowScore + "";
+    }
+
 
     public void ShowGengEffect()
     {
@@ -101,19 +111,46 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.hotValue = hotView.GetChild(2).GetComponent<Text>();
         view.hotHead = hotView.GetChild(1).GetComponent<Image>();
 
-        view.cardContainer = root.Find("CardsContainer").GetComponent<CardContainerLayout>();
+        view.CardContainer = root.Find("CardsContainer").GetComponent<CardContainerLayout>();
         view.SpeObjContainer = root.Find("SpecialObjContainer");
 
         view.hotAnimator = hotView.GetComponent<Animator>();
 
         view.Xianchan = root.Find("Xianchang").GetComponent<Text>();
+
+        view.SpeField = root.Find("SpeField") as RectTransform;
+        view.BuffContainer = root.Find("BuffContainer") as RectTransform;
     }
+
+
     public  override void RegisterEvent()
     {
 
+    }
 
-       
+    public ZhiboSpecial GenSpecial(string sType)
+    {
+        GameObject go = mResLoader.Instantiate("Zhibo/Special/"+ sType,view.SpeField);
+        if (go == null)
+        {
+            Debug.LogError("fail");
+        }
+        ZhiboSpecial ret = go.GetComponent<ZhiboSpecial>();
+        ret.Init(sType,gameMode);
+        ret.GetComponent<RectTransform>().anchoredPosition = new Vector2(Random.Range(-200,200), Random.Range(-200, 200));
+        return ret;
+    }
 
+    public ZhiboBuff GenBuff()
+    {
+        GameObject go = mResLoader.Instantiate("Zhibo/Buff", view.BuffContainer);
+        if (go == null)
+        {
+            Debug.LogError("fail");
+        }
+        ZhiboBuff ret = go.GetComponent<ZhiboBuff>();
+        ret.Init("b",1,10f, gameMode);
+        return ret;
     }
 
     private void AddClickFunc(GameObject target, DragEventListener.OnClickDlg func)
@@ -133,17 +170,11 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     public override void Tick(float dTime)
     {
 
-
-
-
-
-
-       
     }
 
     public void AddNewCard()
     {
-        view.cardContainer.AddCard();
+        view.CardContainer.AddCard();
     }
     public void ChangeXianChange(string txt)
     {
@@ -182,22 +213,10 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         if (danmu.left <= 0)
         {
             danmu.OnDestroy();
-            gameMode.danmus.Remove(danmu);
-            gameMode.gainHot(10);
+            gameMode.state.Danmus.Remove(danmu);
+            gameMode.GainHot(10);
         }
     }
-
-
-
-   
-
-
-
-
-
-
-
-
 
 
 }

@@ -45,14 +45,18 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
 	IRoleModule rm;
     IResLoader lr;
+    ICoreManager pCoreMgr;
 
-	public override void Init(){
+
+    public override void Init(){
 		view = new MainView ();
 		model = new MainModel ();
 
 		rm = GameMain.GetInstance ().GetModule<RoleModule> ();
         mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
         lr = GameMain.GetInstance().GetModule<ResLoader>();
+
+        pCoreMgr = GameMain.GetInstance().GetModule<CoreManager>();
 
         GetApps();
     }
@@ -92,12 +96,29 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.PhoneBigPic.gameObject.SetActive(false);
     }
 
+
+    public void BindCallbck()
+    {
+        ZhiboGameMode zhiboGm = pCoreMgr.GetGameMode() as ZhiboGameMode;
+        if (zhiboGm == null)
+        {
+            Debug.LogError("load gm error");
+        }
+        zhiboGm.GameFinishedCallback = delegate {
+            MainGameMode gm = pCoreMgr.GetGameMode() as MainGameMode;
+            if (gm == null)
+            {
+                Debug.LogError("load gm error");
+            }
+            gm.OnInitFunc = gm.NextTurn;
+        }; 
+    }
     public override void RegisterEvent(){
         view.NextStage.onClick.AddListener(delegate ()
         {
             ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
             mUIMgr.CloseCertainPanel(this);
-            cm.ChangeScene("Zhibo");
+            cm.ChangeScene("Zhibo", BindCallbck);
         });
 
         view.ScheduleBtn.onClick.AddListener(delegate ()

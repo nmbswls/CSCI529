@@ -35,8 +35,8 @@ public class UIMgr : ModuleBase, IUIMgr
 	}
 
 	public override void Tick(float dTime){
-		foreach (IUIBaseCtrl ctrl in mUILayerList) {
-			ctrl.Tick (dTime);
+        for(int i = mUILayerList.Count - 1; i >= 0; i--) { 
+            mUILayerList[i].Tick (dTime);
 		}
 	}
 
@@ -63,7 +63,7 @@ public class UIMgr : ModuleBase, IUIMgr
         mUITypeMap["ZhiboPanel"] = typeof(ZhiboUI);
         mUITypeMap["ActBranch"] = typeof(ActBranchCtrl);
 
-
+        mUITypeMap["HintCtrl"] = typeof(HintCtrl);
 
     }
 
@@ -92,16 +92,39 @@ public class UIMgr : ModuleBase, IUIMgr
         }
         else
         {
-            Debug.Log("close not exitst ui panel");
+            if (mUILayerList.Contains(toClose))
+            {
+                toClose.Release();
+                mUILayerList.Contains(toClose);
+                mUILayerList.Remove(toClose);
+            }
+            else
+            {
+                Debug.Log("close not exitst ui panel");
+            }
         }
     }
 
-	public void ShowPanel (string panelStr)
+    public void showHint(string text)
+    {
+        IUIBaseCtrl UICtrl = new HintCtrl();
+        if (UICtrl != null)
+        {
+            UICtrl.Setup("hint", this);
+            UICtrl.GetTransform().SetSiblingIndex(100);
+            mUILayerList.Add(UICtrl);
+        }
+
+    }
+
+    public IUIBaseCtrl ShowPanel (string panelStr)
 	{
 		string nname = panelStr;
-		if (mUIPanelMap.ContainsKey(panelStr))
+        IUIBaseCtrl UICtrl = null;
+
+        if (mUIPanelMap.ContainsKey(panelStr))
 		{
-			IUIBaseCtrl UICtrl = mUIPanelMap[panelStr];
+			UICtrl = mUIPanelMap[panelStr];
 			//更换顺序
 			mUILayerList.Remove(UICtrl);
 			mUILayerList.Add(UICtrl);
@@ -110,7 +133,7 @@ public class UIMgr : ModuleBase, IUIMgr
 		else
 		{
 			Type type = mUITypeMap[nname];
-			IUIBaseCtrl UICtrl = (IUIBaseCtrl)Activator.CreateInstance(type);
+            UICtrl = (IUIBaseCtrl)Activator.CreateInstance(type);
 			if (UICtrl != null)
 			{
 				UICtrl.Setup (panelStr,this);
@@ -119,13 +142,22 @@ public class UIMgr : ModuleBase, IUIMgr
 			}
 		}
 		AdjustLayerOrder ();
-	}
+        return UICtrl;
+    }
 
 	private void AdjustLayerOrder(){
 		for (int i = 0; i < mUILayerList.Count; i++) {
 			Transform tr = mUILayerList [i].GetTransform ();
 			if (tr != null) {
-				tr.SetSiblingIndex (i);
+                if (mUILayerList[i].Zhiding)
+                {
+                    tr.SetSiblingIndex(100);
+                }
+                else
+                {
+                    tr.SetSiblingIndex(i);
+                }
+
 			}
 		}
 	}
@@ -153,10 +185,7 @@ public class UIMgr : ModuleBase, IUIMgr
         return null;
     }
 
-    public void showHint (string text)
-	{
-		throw new System.NotImplementedException ();
-	}
+   
 
 	public void Loading ()
 	{
@@ -168,6 +197,21 @@ public class UIMgr : ModuleBase, IUIMgr
 		throw new System.NotImplementedException ();
 	}
 
+    public Vector3 GetWorldPosition(Vector2 screenPos)
+    {
+        Vector3 ret = mCamera.ScreenToWorldPoint(screenPos);
+        ret.z = 0;
+        return ret;
+    }
+
+    public Vector3 GetLocalPosition(Vector2 screenPos, RectTransform target)
+    {
+        Vector3 rootPos = GetWorldPosition(screenPos);
+        Vector4 origin = new Vector4(rootPos.x, rootPos.y, rootPos.z,1);
+        Vector3 localPos = target.worldToLocalMatrix.MultiplyVector(origin);
+        localPos.z = 0;
+        return localPos;
+    }
 
 
 }

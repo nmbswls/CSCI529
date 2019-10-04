@@ -5,42 +5,78 @@ using System.Collections.Generic;
 public class MainGameMode : GameModeBase
 {
 
-	IUIMgr UImgr;
+	IUIMgr pUIMgr;
+    IRoleModule rm;
+    ISpeEventMgr pEventMgr;
 
-	List<string> UnHandledEvent = new List<string>();
+    public OnInitDlg OnInitFunc;
 
-	public override void Tick(float dTime){
+
+    Queue<SpecialEvent> UnHandledEvent = new Queue<SpecialEvent>();
+    public override void Tick(float dTime){
 	
 	}
 
 	public override void Init(){
-		UImgr = GameMain.GetInstance ().GetModule<UIMgr> ();
-		UImgr.ShowPanel ("UIMain");
-	}
+		pUIMgr = GameMain.GetInstance ().GetModule<UIMgr> ();
+        rm = GameMain.GetInstance().GetModule<RoleModule>();
+        pEventMgr = GameMain.GetInstance().GetModule<SpeEventMgr>();
+
+
+        pUIMgr.ShowPanel("UIMain");
+        if(OnInitFunc != null)
+        {
+            OnInitFunc();
+        }
+
+    }
+
+    public void NextTurn()
+    {
+        HandleEvents(pEventMgr.CheckEvent());
+        GameMain.GetInstance().GetModule<CardDeckModule>().CheckOverdue();
+    }
+
+    public void HandleEvents(List<SpecialEvent> list)
+    {
+        UnHandledEvent.Clear();
+        foreach (SpecialEvent e in list)
+        {
+            UnHandledEvent.Enqueue(e);
+
+        }
+        HandleNextEvent();
+    }
 
 
 
-	public void BeginTurn(){
-		CheckBeginEvent ();
-		//get list
-
-		//UImgr.ShowPanel();
-	}
-
-	public void NextEvent(){
-		//UnHandledEvent;
-		//HandledEventId++;
-		//get first event
-		SpecialEvent se = null;
-		//handle
-	}
-
-	public void NextTurn(){
 	
-	}
 
-	private void CheckBeginEvent(){
 
-	}
+    public void HandleNextEvent()
+    {
+        if (UnHandledEvent.Count > 0)
+        {
+
+            SpecialEvent head = UnHandledEvent.Dequeue();
+            DialogManager dm = pUIMgr.ShowPanel("DialogManager") as DialogManager;
+            if (dm == null)
+            {
+                Debug.LogError("dialog mgr load fail");
+            }
+            dm.StartDialog(head.action,delegate(string[] args)
+            {
+                if (head.EventId == "e0")
+                {
+                    pEventMgr.AddListener("e1");
+                }
+                pEventMgr.RemoveListener(head.EventId);
+                HandleNextEvent();
+            });
+        }
+
+    }
+
+
 }
 

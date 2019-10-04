@@ -27,8 +27,6 @@ public class CardContainerLayout : MonoBehaviour
     {
         rt = (RectTransform)transform;
         Width = rt.rect.width;
-
-
     }
 
     public void AddCard()

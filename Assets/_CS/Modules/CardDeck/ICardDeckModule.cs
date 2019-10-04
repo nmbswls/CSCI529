@@ -9,4 +9,6 @@ public interface ICardDeckModule : IModule
     List<CardInfo> GetAllCards();
 
     CardAsset GetCardInfo(string cardId);
+
+    void CheckOverdue();
 }

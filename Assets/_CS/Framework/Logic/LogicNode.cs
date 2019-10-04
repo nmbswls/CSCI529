@@ -12,35 +12,47 @@ public delegate bool CheckFunc(string[] arg0);
 
 public class LogicNode
 {
-	CheckFunc func;
-	string[] arg0;
-	eLogicType type = eLogicType.SINGLE;
+	public CheckFunc func;
+	public string[] arg0;
+	public eLogicType type = eLogicType.SINGLE;
 	public bool anti = false;
 
 	public List<LogicNode> ChildNodes = new List<LogicNode>();
 	public bool Check(){
+        bool ret = false;
 		if (type == eLogicType.SINGLE) {
 			if (func == null)
-				return false;
-			return func (arg0);
+            {
+                ret = false;
+            }
+            else
+            {
+                ret = func(arg0);
+            }
 		} else if (type == eLogicType.AND) {
-			bool ret = true;
+			ret = true;
 			foreach (LogicNode child in ChildNodes) {
 				ret &= child.Check ();
 				if (!ret)
 					break;
 			}
-			return ret;
 		} else {
-			bool ret = false;
+			ret = false;
 			foreach (LogicNode child in ChildNodes) {
 				ret |= child.Check ();
 				if (ret)
 					break;
 			}
-			return ret;
 		}
-	}
+        if (anti)
+        {
+            return !ret;
+        }
+        else
+        {
+            return ret;
+        }
+    }
 
 	public LogicNode(CheckFunc func, string[] arg0){
 		this.func = func;
@@ -111,7 +123,15 @@ public class LogicNode
 					throw new UnityException("error invalid");
 				}
 				string args = str.Substring (i, j - i);
-				string[] argc = args.Split (',');
+                string[] argc = null;
+                if (args == "")
+                {
+                    argc = new string[0];
+                }
+                else
+                {
+                    argc = args.Split(',');
+                }
 				i = j;
 				LogicNode node = null;
 				if (funcDict.ContainsKey (funcName)) {

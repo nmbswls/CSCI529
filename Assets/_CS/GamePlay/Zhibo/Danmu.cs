@@ -52,7 +52,7 @@ public class Danmu : MonoBehaviour
 
         anim = GetComponent<Animator>();
         NeedDestroy = false;
-        spd = 160.0f;
+        spd = gameMode.state.DanmuSpd;
         strength = 1;
         left = 1;
         color = getRandomColor();

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public interface IUIBaseCtrl{
 	void Setup(string nameStr, IUIMgr mUIMgr);
@@ -11,6 +12,8 @@ public interface IUIBaseCtrl{
 	void BindView();
 
 	void Tick(float dTime);
+
+    bool Zhiding { get; set; }
 }
 public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : BaseView
 {
@@ -19,14 +22,30 @@ public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : Ba
 	protected T2 view;
 	protected IUIMgr mUIMgr;
 	public string nameStr{ get; set;}
-	protected Transform root = null;
+
+    private bool zhiding;
+    public bool Zhiding
+    {
+        get
+        {
+            return zhiding;
+        }
+
+        set
+        {
+            zhiding = value;
+        }
+    }
+
+    protected Transform root = null;
 
 
 	public virtual void Setup(string nameStr, IUIMgr mUIMgr){
 		this.mUIMgr = mUIMgr;
 		this.nameStr = nameStr;
 		ResLoader resLoader = GameMain.GetInstance ().GetModule<ResLoader> ();
-		GameObject prefab = resLoader.LoadResource<GameObject> ("UI/"+nameStr,false);
+        zhiding = false;
+        GameObject prefab = resLoader.LoadResource<GameObject> ("UI/"+nameStr,false);
 		if (prefab == null) {
 			Debug.LogError ("load "+nameStr+" main menu fail");
 			return;
@@ -38,7 +57,13 @@ public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : Ba
 		}
 		root = panel.transform;
 
-		Init ();
+
+        model = Activator.CreateInstance<T1>();
+        view = Activator.CreateInstance<T2>();
+        mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
+
+
+        Init();
 		BindView ();
 		RegisterEvent ();
 		PostInit ();

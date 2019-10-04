@@ -10,6 +10,16 @@ public enum eCardType{
 	STATUS
 }
 
+[System.Serializable]
+public class CardEffect
+{
+    public string effect;
+    public string x;
+    public string y;
+    public string z;
+    public string w;
+}
+
 [CreateAssetMenu(fileName="new card",menuName="Ctm/card")]
 [System.Serializable]
 public class CardAsset : ScriptableObject
@@ -29,6 +39,8 @@ public class CardAsset : ScriptableObject
 	public bool OverDueTurn;
 
 	public List<object> args = new List<object>();
+
+    public List<CardEffect> effects = new List<CardEffect>();
 
 }
 

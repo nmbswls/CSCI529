@@ -56,7 +56,7 @@ Shader "UI/EmojiFont" {
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma target 2.0
+			#pragma target 4.0
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
@@ -68,7 +68,8 @@ Shader "UI/EmojiFont" {
 				float4 vertex   : POSITION;
 				float4 color    : COLOR;
 				float2 texcoord : TEXCOORD0;
-				float2 texcoord1 : TEXCOORD1;
+				float2 uv1 : TEXCOORD1;
+                float3 texcoord2 : TEXCOORD2;
 			};
 
 			struct v2f
@@ -77,25 +78,30 @@ Shader "UI/EmojiFont" {
 				fixed4 color    : COLOR;
 				half2 texcoord  : TEXCOORD0;
 				half2 texcoord1 : TEXCOORD1;
+                float3 texcoord2 : TEXCOORD2;
 			};
 			
 			fixed4 _Color;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
+            fixed4 _jjj;
 
 			v2f vert(appdata_t IN)
 			{
 				v2f OUT;
 				OUT.vertex = UnityObjectToClipPos(float4(IN.vertex.x, IN.vertex.y, IN.vertex.z, 1.0));
-
+                //OUT.vertex = IN.vertex;
 				OUT.texcoord = IN.texcoord;
-				OUT.texcoord1 = IN.texcoord1;
+                OUT.texcoord1 = IN.uv1;
+				//OUT.texcoord1 = float2(1.0,1.0);
+                OUT.texcoord2 = IN.texcoord2;
 				
 				#ifdef UNITY_HALF_TEXEL_OFFSET
 				OUT.vertex.xy += (_ScreenParams.zw-1.0) * float2(-1,1) * OUT.vertex.w;
 				#endif
 				
 				OUT.color = IN.color * _Color;
+                //OUT.color = IN.color;
 				return OUT;
 			}
 
@@ -134,6 +140,9 @@ Shader "UI/EmojiFont" {
 					// it's a text, and render it as normal ugui text
 					color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 				}
+                //IN.texcoord=float2(0,0);
+                //color = (tex2D(_MainTex, float2(0.1,0.1)) + _TextureSampleAdd) * IN.color;
+                //color = float4(IN.texcoord1.xy,0,1);
 
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);

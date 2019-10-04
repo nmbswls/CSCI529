@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 
+public delegate void OnCompleteDlg();
 public interface ICoreManager : IModule
 {
 
@@ -9,7 +10,7 @@ public interface ICoreManager : IModule
 
     void LoadGameMode(Type t);
 
-    void ChangeScene(string sname);
+    void ChangeScene(string sname, OnCompleteDlg onComplete = null);
 
     GameModeBase GetGameMode();
 }

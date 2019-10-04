@@ -24,7 +24,7 @@ public class CoreManager : ModuleBase, ICoreManager
 
     private Dictionary<string, SceneInfo> SceneInfoDict = new Dictionary<string, SceneInfo>();
 
-
+    private Stack<GameModeBase> mGameModeStack = new Stack<GameModeBase>();
 
     public override void Setup ()
 	{
@@ -52,14 +52,9 @@ public class CoreManager : ModuleBase, ICoreManager
         ChangeScene("Home");
     }
 
-    //public void ChangeScene()
-    //{
-    //    mResLoader.LoadLevelSync("Scene/Travel",LoadSceneMode.Single,delegate(Scene scene, LoadSceneMode mode) {
-    //        LoadGameMode<TravelGameMode>();
-    //    });
-    //}
 
-    public void ChangeScene(string sname)
+
+    public void ChangeScene(string sname, OnCompleteDlg onComplete = null)
     {
         if (!SceneInfoDict.ContainsKey(sname))
         {
@@ -69,8 +64,16 @@ public class CoreManager : ModuleBase, ICoreManager
         mResLoader.LoadLevelSync("Scene/"+ SceneName, LoadSceneMode.Single, delegate (Scene scene, LoadSceneMode mode) {
             Type t = SceneInfoDict[sname].GameModeType;
             LoadGameMode(t);
+            if(onComplete != null)
+            {
+                onComplete();
+            }
+           
         });
     }
+
+
+
 
 
     public void LoadGameMode(Type t)
@@ -80,17 +83,36 @@ public class CoreManager : ModuleBase, ICoreManager
             Debug.Log("type is not a game mode");
             return;
         }
-        GameModeBase gm = (GameModeBase)Activator.CreateInstance(t);
-        if (gm == null)
+
+        GameModeBase preGm = mGameMode;
+
+        mGameMode = (GameModeBase)Activator.CreateInstance(t);
+        if (mGameMode == null)
         {
             Debug.LogError("Load Game Mode " + t.FullName + " fail");
+            return;
         }
-        if (mGameMode != null)
+
+        if (preGm != null)
         {
-            mGameMode.OnRelease();
+            preGm.OnRelease();
         }
-        mGameMode = gm;
-        gm.Init();
+        mGameMode.Init();
+
+    }
+
+
+    private bool HasLoadGameMode(Type t)
+    {
+        foreach(GameModeBase gm in mGameModeStack)
+        {
+            if (gm.GetType() == t)
+            {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     public void LoadGameMode<T>() where T : GameModeBase

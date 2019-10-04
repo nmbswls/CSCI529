@@ -15,11 +15,6 @@ EditorBuildSettings:
     path: Assets/Scene/Travel.unity
     guid: 5e5ee0848a29e4b8f9233b16df2b5dea
   - enabled: 1
-<<<<<<< HEAD
-    path: Assets/Scene/RichTextTest.unity
-    guid: 4fbca3dcfd8671d4ea3860448afeb036
-=======
     path: Assets/Scene/Zhibo.unity
     guid: 73788ad6fbb43421d90010405b723dc1
->>>>>>> b0098b6a8e2f87c6a787577104917f13cc65ec92
   m_configObjects: {}

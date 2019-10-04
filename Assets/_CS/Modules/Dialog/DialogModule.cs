@@ -56,6 +56,7 @@ public class DialogRichWord{
 }
 
 public class DialogBlock{
+    public string DialogId;
 	public List<DialogFrameBase> frames = new List<DialogFrameBase>();
 	public string NextBlock;
 }

@@ -41,46 +41,49 @@ public class RichText : Text, IPointerClickHandler
     readonly UIVertex[] m_TempVerts = new UIVertex[4];
     protected override void OnPopulateMesh(VertexHelper toFill)
     {
+        base.OnPopulateMesh(toFill);
+
         if (font == null)
             return;
 
         if (EmojiIndex == null)
         {
             EmojiIndex = new Dictionary<string, EmojiInfo>();
-
+            TextAsset emojiContent = Resources.Load<TextAsset>("emoji");
+            string[] lines = emojiContent.text.Split('\n');
+            for (int i = 1; i < lines.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(lines[i]))
+                {
+                    string[] strs = lines[i].Split(new char[] { '\t', ' ' });
+                    EmojiInfo info;
+                    info.x = float.Parse(strs[3]);
+                    info.y = float.Parse(strs[4]);
+                    info.size = float.Parse(strs[5]);
+                    info.len = 0;
+                    EmojiIndex.Add(strs[1], info);
+                }
+            }
             //load emoji data, and you can overwrite this segment code base on your project.
-            //TextAsset emojiContent = Resources.Load<TextAsset>("emoji");
-            //string[] lines = emojiContent.text.Split('\n');
-            //for (int i = 1; i < lines.Length; i++)
-            //{
-            //    if (!string.IsNullOrEmpty(lines[i]))
-            //    {
-            //        string[] strs = lines[i].Split('\t');
-            //        EmojiInfo info;
-            //        info.x = float.Parse(strs[3]);
-            //        info.y = float.Parse(strs[4]);
-            //        info.size = float.Parse(strs[5]);
-            //        info.len = 0;
-            //        EmojiIndex.Add(strs[1], info);
-            //    }
-            //}
         }
 
+
         //key是标签在字符串中的索引
+
 
         Dictionary<int, EmojiInfo> emojiDic = new Dictionary<int, EmojiInfo>();
         if (supportRichText)
         {
-            //MatchCollection matches = Regex.Matches(m_OutputText, "\\[[a-z0-9A-Z]+\\]");//把表情标签全部匹配出来
-            //for (int i = 0; i < matches.Count; i++)
-            //{
-            //    EmojiInfo info;
-            //    if (EmojiIndex.TryGetValue(matches[i].Value, out info))
-            //    {
-            //        info.len = matches[i].Length;
-            //        emojiDic.Add(matches[i].Index, info);
-            //    }
-            //}
+            MatchCollection matches = Regex.Matches(m_OutputText, "\\[[a-z0-9A-Z]+\\]");//把表情标签全部匹配出来
+            for (int i = 0; i < matches.Count; i++)
+            {
+                EmojiInfo info;
+                if (EmojiIndex.TryGetValue(matches[i].Value, out info))
+                {
+                    info.len = matches[i].Length;
+                    emojiDic.Add(matches[i].Index, info);
+                }
+            }
         }
 
         // We don't care if we the font Texture changes while we are doing our Update.
@@ -208,10 +211,10 @@ public class RichText : Text, IPointerClickHandler
                     m_TempVerts[3].position *= unitsPerPixel;
 
                     float pixelOffset = emojiDic[index].size / 32 / 2;
-                    //m_TempVerts[0].uv1 = new Vector2(emojiDic[index].x + pixelOffset, emojiDic[index].y + pixelOffset);
-                   // m_TempVerts[1].uv1 = new Vector2(emojiDic[index].x - pixelOffset + emojiDic[index].size, emojiDic[index].y + pixelOffset);
-                   // m_TempVerts[2].uv1 = new Vector2(emojiDic[index].x - pixelOffset + emojiDic[index].size, emojiDic[index].y - pixelOffset + emojiDic[index].size);
-                    //m_TempVerts[3].uv1 = new Vector2(emojiDic[index].x + pixelOffset, emojiDic[index].y - pixelOffset + emojiDic[index].size);
+                    m_TempVerts[0].uv1 = new Vector2(emojiDic[index].x + pixelOffset, emojiDic[index].y + pixelOffset);
+                    m_TempVerts[1].uv1 = new Vector2(emojiDic[index].x - pixelOffset + emojiDic[index].size, emojiDic[index].y + pixelOffset);
+                    m_TempVerts[2].uv1 = new Vector2(emojiDic[index].x - pixelOffset + emojiDic[index].size, emojiDic[index].y - pixelOffset + emojiDic[index].size);
+                    m_TempVerts[3].uv1 = new Vector2(emojiDic[index].x + pixelOffset, emojiDic[index].y - pixelOffset + emojiDic[index].size);
 
                     toFill.AddUIVertexQuad(m_TempVerts);
 

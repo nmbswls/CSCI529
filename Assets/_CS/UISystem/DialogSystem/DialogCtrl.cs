@@ -67,7 +67,7 @@ public class LihuiView{
 }
 
 public class DialogModel : BaseModel{
-	public int dialogId = -1;
+	public string dialogId = "";
 	public List<DialogFrameBase> frames = new List<DialogFrameBase>();
 	public List<string> LihuiIds = new List<string>();
 
@@ -101,26 +101,31 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 	int cursorI = 0;
 
 	public override void Init(){
-		view = new DialogView ();
-		model = new DialogModel ();
-
 		dm = GameMain.GetInstance ().GetModule<DialogModule> ();
-		DialogBlock block = dm.LoadDialog ();
-		if (block == null) {
-			
-		}
-		model.frames = block.frames;
+		
 	}
 
-	public override void PostInit(){
+    public void StartDialog(string dialogId, OnDialogEnd callback=null)
+    {
+        DialogBlock block = dm.LoadDialog(dialogId);
+        DiglogEndEvent = callback;
+        if (block == null)
+        {
+            Debug.Log("No Dialog Found");
+            mUIMgr.CloseCertainPanel(this);
+            return;
+        }
+        model.frames = block.frames;
+        model.dialogId = dialogId;
+        frameIdx = 0;
+    }
+
+    public override void PostInit(){
 		isReading = true;
-		frameIdx = 0;
+		frameIdx = -1;
 		view.dialogContent.text = "";
 		//view.bg. = null;
 		view.nameText.text = "";
-		foreach (LihuiView vv in view.LihuiList) {
-			vv.root.gameObject.SetActive (false);
-		}
 		view.branchView.root.gameObject.SetActive (false);
 	}
 
@@ -133,7 +138,7 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 		view.dialogContent = root.Find("DIalog").GetComponentInChildren<Text>();
 		view.LihuiContainer = root.Find ("LihuiContainer");
 		DialogBranchView branchView = new DialogBranchView ();
-		branchView.BindView (root.Find ("Branches"));
+		branchView.BindView (root.Find ("BranchesPanel"));
 		view.branchView = branchView;
 
 	}
@@ -167,7 +172,6 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 		if (idx < 0 || idx > realFrame.Choices.Count) {
 			return;
 		}
-		Debug.Log (idx);
 		ChooseBranchEffect (idx);
 
 	}
@@ -273,8 +277,9 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 
 				for (int i=0;i<view.LihuiList.Count;i++) {
 					Vector2 target = GetPosition (i);
-					Debug.Log (target);
-					if (!view.LihuiList [i].NeedMove) {
+                    view.LihuiList[i].root.SetSiblingIndex(i);
+
+                    if (!view.LihuiList [i].NeedMove) {
 						view.LihuiList [i].root.anchoredPosition = target;
 					} else {
 						LihuiView vv = view.LihuiList [i];
@@ -317,8 +322,13 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 
 		}else if(model.frames [frameIdx].DialogType == eDialogFrameType.END){
 			Debug.Log ("has finished");
-			finishDialog ();
-			frameIdx = -1;
+            isReading = true;
+            frameIdx = -1;
+            view.dialogContent.text = "";
+            view.nameText.text = "";
+            view.branchView.root.gameObject.SetActive(false);
+            finishDialog ();
+			
 		}else if(model.frames [frameIdx].DialogType == eDialogFrameType.SHOW_BRANCH){
 			if (isBranchFlashing) {
 
@@ -329,9 +339,18 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 
 	}
 
+    private void ClearInfo()
+    {
+        model.LihuiIds.Clear();
+        foreach(LihuiView vv in view.LihuiList)
+        {
+            GameObject.Destroy(vv.root.gameObject);
+        }
+        view.LihuiList.Clear();
+    }
 
 
-	int[] intervalMap = new int[]{0,0,200,180,100,100};
+    int[] intervalMap = new int[]{0,0,600,500,400,300};
 
 	public Vector2 GetPosition(int LihuiIdx){
 		int c = model.LihuiIds.Count;
@@ -357,7 +376,6 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 				nextAction ();
 			}
 		} else {
-			Debug.Log ("still moving");
 		}
 	}
 
@@ -392,10 +410,20 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 	}
 
 	private void finishDialog(){
-		Debug.Log("finish");
-		if(DiglogEndEvent != null){
-			DiglogEndEvent (null);
-		}
+        if(model.dialogId == "d0")
+        {
+
+            ClearInfo();
+            StartDialog("d1");
+        }
+        else
+        {
+            mUIMgr.CloseCertainPanel(this);
+            if (DiglogEndEvent != null)
+            {
+                DiglogEndEvent(null);
+            }
+        }
 
 	}
 

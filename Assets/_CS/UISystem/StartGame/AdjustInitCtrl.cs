@@ -45,11 +45,11 @@ public class AdjustInitView : BaseView{
 
 public class SpecilistView{
 
-	public Transform root;
+	public RectTransform root;
 	public bool selected;
 	public Text Name;
 	public void BindView(Transform root){
-		this.root = root;
+		this.root = (RectTransform)root;
 		this.Name = root.GetChild (0).GetComponent<Text> ();
 	}
 }
@@ -73,12 +73,11 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 {
 
 	public override void Init(){
-		view = new AdjustInitView ();
-		model = new AdjustInitModel ();
-
+		
 		model.extra = new int[5];
-		mUIMgr = GameMain.GetInstance ().GetModule<UIMgr> ();
-	}
+        SetupAvailableTezhi();
+
+    }
 
 	public List<Tezhi> FakeReadTezhi(){
 		List<Tezhi> ret = new List<Tezhi> ();
@@ -112,15 +111,6 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 
 	public void SetupAvailableTezhi(){
 		model.availabelTezhi = FakeReadTezhi();
-
-		foreach (Tezhi tezhi in model.availabelTezhi) {
-			GameObject go = GameMain.GetInstance ().GetModule<ResLoader> ().Instantiate("UI/AvailableTezhi",view.AvailableContainer);
-			SpecilistView vv = new SpecilistView ();
-			vv.BindView (go.transform);
-			vv.Name.text = tezhi.Name;
-			view.avalableList.Add (vv);
-		}
-
 	}
 
 	public override void BindView(){
@@ -150,20 +140,35 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 			vv.BaseValue.text = model.bas[child.GetSiblingIndex()] + "";
 			view.baseLines.Add (vv);
 		}
-	}
+
+        foreach (Tezhi tezhi in model.availabelTezhi)
+        {
+            GameObject go = GameMain.GetInstance().GetModule<ResLoader>().Instantiate("UI/AvailableTezhi", view.AvailableContainer);
+            SpecilistView vv = new SpecilistView();
+            vv.BindView(go.transform);
+            vv.Name.text = tezhi.Name;
+            view.avalableList.Add(vv);
+        }
+    }
 
 	public override void PostInit(){
-		SetupAvailableTezhi ();
-	}
+
+    }
 
 
 	public override void RegisterEvent(){
 
 		view.NextStage.onClick.AddListener (delegate() {
 			mUIMgr.CloseCertainPanel(this);
-            GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main");
+            GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main",delegate {
+                ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
+                MainGameMode gm = cm.GetGameMode() as MainGameMode;
+                gm.NextTurn();
+
+            });
+
             //mUIMgr.ShowPanel("UIMain");	
-		});
+        });
 
 		for (int i = 0; i < view.avalableList.Count; i++) {
 			DragEventListener listener = view.avalableList[i].root.gameObject.GetComponent<DragEventListener>();
@@ -232,11 +237,11 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 		};
 
 		listener.OnBeginDragEvent += delegate (PointerEventData eventData) {
-			vv.root.SetParent(root);
+			vv.root.SetParent(root,true);
 		};
 		listener.OnDragEvent += delegate (PointerEventData eventData) {
-			vv.root.position = eventData.position;
-		};
+			vv.root.position = mUIMgr.GetWorldPosition(eventData.position);
+        };
 		listener.OnEndDragEvent += delegate (PointerEventData eventData) {
 
 			List<RaycastResult> results = new List<RaycastResult> ();

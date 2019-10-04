@@ -7,6 +7,7 @@ public class CardInfo{
 	public uint InstId;
 	public string CardId;
 	public float GainTime;
+    public int TurnLeft;
 
 	public CardInfo(){
 	}
@@ -41,6 +42,22 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 			InstId += 1;
 		}
 	}
+
+
+
+
+    public void CheckOverdue()
+    {
+        for(int i= cards.Count - 1; i >= 0; i--)
+        {
+            cards[i].TurnLeft -= 1;
+            if (cards[i].TurnLeft <= 0)
+            {
+                cards.RemoveAt(i);
+            }
+        }
+    }
+
 
     public List<CardInfo> GetAllCards()
     {

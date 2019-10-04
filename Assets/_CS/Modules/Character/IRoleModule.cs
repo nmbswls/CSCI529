@@ -6,5 +6,16 @@ public interface IRoleModule : IModule{
 
     List<AppInfo> GetApps();
 
-    void ChangeSchedule();
+    bool ChangeSchedule(int slotIdx, string scheduleId);
+
+    List<ScheduleInfo> getAllScheduleChoises();
+
+    string[] getScheduled();
+
+    void NextTurn();
+
+    int ScheduleMax { get; set; }
+    int OverDueSchedule { get; set; }
+
+    ScheduleInfo GetInfo(string sid);
 }
