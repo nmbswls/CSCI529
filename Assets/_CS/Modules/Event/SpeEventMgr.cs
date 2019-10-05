@@ -23,6 +23,12 @@ public class SpecialEvent
     }
 }
 
+public class EventGroup
+{
+
+}
+
+
 public class SpeEventMgr : ModuleBase, ISpeEventMgr
 {
 
@@ -118,6 +124,8 @@ public class SpeEventMgr : ModuleBase, ISpeEventMgr
             string action = "d1";
             EventDict["e1"] = new SpecialEvent(eid, node, action);
         }
+
+        //EventGroup.choose(3);
 
         ListenEvents.Add("e0");
 

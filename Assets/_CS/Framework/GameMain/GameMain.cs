@@ -39,11 +39,12 @@ public class GameMain : MonoBehaviour,IGameMain
 
 		ModuleConfigList DefaultModuleList = new ModuleConfigList();
 
-		DefaultModuleList.ConfigList.Add(new ModuleConfig("CardDeck"));
 		DefaultModuleList.ConfigList.Add(new ModuleConfig("ResLoader"));
+
 		DefaultModuleList.ConfigList.Add(new ModuleConfig("UIMgr"));
-		DefaultModuleList.ConfigList.Add(new ModuleConfig("CardDeck"));
-		DefaultModuleList.ConfigList.Add (new ModuleConfig ("LogicTree"));
+        DefaultModuleList.ConfigList.Add(new ModuleConfig("CardDeck"));
+
+        DefaultModuleList.ConfigList.Add (new ModuleConfig ("LogicTree"));
 		DefaultModuleList.ConfigList.Add (new ModuleConfig ("DialogModule"));
 
 		DefaultModuleList.ConfigList.Add (new ModuleConfig ("RoleModule"));

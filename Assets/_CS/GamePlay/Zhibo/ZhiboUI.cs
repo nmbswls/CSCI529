@@ -112,6 +112,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.hotHead = hotView.GetChild(1).GetComponent<Image>();
 
         view.CardContainer = root.Find("CardsContainer").GetComponent<CardContainerLayout>();
+        view.CardContainer.Init(gameMode);
         view.SpeObjContainer = root.Find("SpecialObjContainer");
 
         view.hotAnimator = hotView.GetComponent<Animator>();
@@ -130,7 +131,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public ZhiboSpecial GenSpecial(string sType)
     {
-        GameObject go = mResLoader.Instantiate("Zhibo/Special/"+ sType,view.SpeField);
+        GameObject go = mResLoader.Instantiate("Zhibo/Special",view.SpeField);
         if (go == null)
         {
             Debug.LogError("fail");
@@ -169,13 +170,18 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public override void Tick(float dTime)
     {
-
+        if (view.CardContainer != null)
+        {
+            view.CardContainer.Tick(dTime);
+        }
     }
 
-    public void AddNewCard()
+    public bool AddNewCard(string cardId)
     {
-        view.CardContainer.AddCard();
+        return view.CardContainer.AddCard(cardId);
     }
+
+
     public void ChangeXianChange(string txt)
     {
         view.Xianchan.text = txt;

@@ -34,6 +34,8 @@ public class CardAsset : ScriptableObject
 
 	public eCardType CardType;
 
+    public int cost=0;
+
 	public bool IsConsume;
 
 	public bool OverDueTurn;

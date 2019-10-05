@@ -107,10 +107,11 @@ public class UIMgr : ModuleBase, IUIMgr
 
     public void showHint(string text)
     {
-        IUIBaseCtrl UICtrl = new HintCtrl();
+        HintCtrl UICtrl = new HintCtrl();
         if (UICtrl != null)
         {
             UICtrl.Setup("hint", this);
+            UICtrl.SetContent(text);
             UICtrl.GetTransform().SetSiblingIndex(100);
             mUILayerList.Add(UICtrl);
         }

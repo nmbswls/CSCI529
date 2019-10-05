@@ -7,8 +7,7 @@ public class CardContainerLayout : MonoBehaviour
 
 
     //public GameObject cardPrefab;
-    [HideInInspector]
-    public int CardMax = 10;
+
 
     [HideInInspector]
     public int CardNow;
@@ -23,29 +22,31 @@ public class CardContainerLayout : MonoBehaviour
 
     float MaxDegree = 20;
 
-    private void Start()
+    public ZhiboGameMode gameMode;
+
+    public void Init(ZhiboGameMode gameMode)
     {
         rt = (RectTransform)transform;
         Width = rt.rect.width;
+        this.gameMode = gameMode;
     }
 
-    public void AddCard()
+    public bool AddCard(string cardId)
     {
-        if(cards.Count>= CardMax)
-        {
-            return;
-        }
-        bool success = false;
+
 
         IResLoader loader = GameMain.GetInstance().GetModule<ResLoader>();
 
         GameObject cardGo = loader.Instantiate("Zhibo/Card");
+        if(cardGo == null)
+        {
+            return false;
+        }
         MiniCard card = cardGo.GetComponent<MiniCard>();
-        card.init(this);
-
+        card.Init(cardId,this);
         cards.Add(card);
         Adjust();
-
+        return true;
     }
 
     private void Adjust()
@@ -66,16 +67,16 @@ public class CardContainerLayout : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void Tick(float dTime)
     {
         foreach(MiniCard card in cards)
         {
-            card.Tick(Time.deltaTime);
+            card.Tick(dTime);
             if (Mathf.Abs(card.targetDegree - card.nowDegree) <= 1e-6)
             {
                 continue;
             }
-            card.nowDegree += (card.targetDegree - card.nowDegree) * Time.deltaTime * 5f;
+            card.nowDegree += (card.targetDegree - card.nowDegree) * dTime * 5f;
             card.rt.anchoredPosition = new Vector3(Mathf.Sin(card.nowDegree * Mathf.Deg2Rad) * R, Mathf.Cos(card.nowDegree * Mathf.Deg2Rad) * R - R);
             card.rt.localEulerAngles = new Vector3(0, 0, -card.nowDegree);
 
@@ -84,11 +85,26 @@ public class CardContainerLayout : MonoBehaviour
     }
 
 
+    public bool UseCard(MiniCard toUse)
+    {
+        int cardIdx = cards.IndexOf(toUse);
+        if (gameMode.TryUseCard(cardIdx))
+        {
+            removeCard(toUse);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void removeCard(MiniCard toRemove)
     {
         cards.Remove(toRemove);
         Adjust();
     }
+
 
 
 

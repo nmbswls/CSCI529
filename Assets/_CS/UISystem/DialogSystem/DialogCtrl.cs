@@ -159,7 +159,15 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 				ChooseBranch(idx);
 			});
 		}
-	}
+
+        view.skipButton.onClick.AddListener(delegate
+        {
+
+            finishDialog();
+
+        });
+
+    }
 
 	public void ChooseBranch(int idx){
 		if (frameIdx < 0 || frameIdx >= model.frames.Count) {
@@ -322,11 +330,7 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 
 		}else if(model.frames [frameIdx].DialogType == eDialogFrameType.END){
 			Debug.Log ("has finished");
-            isReading = true;
-            frameIdx = -1;
-            view.dialogContent.text = "";
-            view.nameText.text = "";
-            view.branchView.root.gameObject.SetActive(false);
+
             finishDialog ();
 			
 		}else if(model.frames [frameIdx].DialogType == eDialogFrameType.SHOW_BRANCH){
@@ -410,7 +414,14 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 	}
 
 	private void finishDialog(){
-        if(model.dialogId == "d0")
+
+        isReading = true;
+        frameIdx = -1;
+        view.dialogContent.text = "";
+        view.nameText.text = "";
+        view.branchView.root.gameObject.SetActive(false);
+
+        if (model.dialogId == "d0")
         {
 
             ClearInfo();

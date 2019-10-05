@@ -43,30 +43,47 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 		}
 	}
 
-
+    public void fakeCards()
+    {
+        GainNewCard("card0001");
+        GainNewCard("card0001");
+        GainNewCard("card0001");
+        GainNewCard("card0001");
+        GainNewCard("card0002");
+        GainNewCard("card0003");
+        GainNewCard("card0004");
+        GainNewCard("card0005");
+        GainNewCard("card0006");
+        GainNewCard("card0007");
+    }
 
 
     public void CheckOverdue()
     {
         for(int i= cards.Count - 1; i >= 0; i--)
         {
-            cards[i].TurnLeft -= 1;
-            if (cards[i].TurnLeft <= 0)
+            if (cards[i].TurnLeft > 0)
             {
-                cards.RemoveAt(i);
+                cards[i].TurnLeft -= 1;
+                if (cards[i].TurnLeft <= 0)
+                {
+                    cards.RemoveAt(i);
+                }
             }
+
         }
     }
 
 
     public List<CardInfo> GetAllCards()
     {
-
-        return new List<CardInfo>();
+        return cards;
     }
     public override void Setup(){
 		InstId = 0;
-	}
+        fakeCards();
+
+    }
 
 	public CardAsset Load(string cid){
 		CardAsset c = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<CardAsset> ("Cards/"+cid,false);
@@ -80,7 +97,11 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
     public CardAsset GetCardInfo(string cid){
 		CardAsset ret = null;
 		CardDict.TryGetValue (cid, out ret);
-		return ret;
+        if(ret == null)
+        {
+            ret = Load(cid);
+        }
+        return ret;
 	}
 
 	public List<CardInfo> SortAllCard(List<eCardType> FTypes){
@@ -90,6 +111,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 				ret.Add (cards[i]);
 			}
 		}
+
 		ret.Sort (new Comparison<CardInfo>((CardInfo c1, CardInfo c2) =>
 			{
 				if(c1.GainTime < c2.GainTime){
@@ -102,12 +124,12 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 		return ret;
 	}
 
-	public void RemoveCard(int idx){
-		cards.RemoveAt (idx);
-	}
-	public void RemoveCard(CardInfo c){
-		cards.Remove (c);
-	}
+	//public void RemoveCard(int idx){
+	//	cards.RemoveAt (idx);
+	//}
+	//public void RemoveCard(CardInfo c){
+	//	cards.Remove (c);
+	//}
 
 }
 

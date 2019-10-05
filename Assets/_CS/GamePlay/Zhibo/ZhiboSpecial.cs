@@ -28,6 +28,7 @@ public class ZhiboSpecial : MonoBehaviour
         this.gameMode = gameMode;
         BindView();
         RegisterEvent();
+        transform.localScale = Vector3.one;
     }
 
     public void BindView()
@@ -56,6 +57,7 @@ public class ZhiboSpecial : MonoBehaviour
             return;
         }
         ClickNum -= 1;
+        transform.localScale += new Vector3(0.05f,0.05f,0);
         if(ClickNum <= 0)
         {
             gameMode.HitSpecial(this);

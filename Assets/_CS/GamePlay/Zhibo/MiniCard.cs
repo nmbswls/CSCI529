@@ -6,7 +6,9 @@ using UnityEngine.EventSystems;
 public class MiniCardView
 {
 
-    public Image picture;
+    public Image Bg;
+    public Image Picture;
+    public Text Name;
 }
 public class MiniCard : MonoBehaviour
 {
@@ -34,14 +36,20 @@ public class MiniCard : MonoBehaviour
 
     float preY = 0;
 
-    public void init(CardContainerLayout container)
+    public void Init(string cardId, CardContainerLayout container)
     {
         rt = (RectTransform)transform;
         anim = GetComponent<Animator>();
+        this.container = container;
+
+        CardAsset ca = GameMain.GetInstance().GetModule<CardDeckModule>().GetCardInfo(cardId);
+
 
         BindView();
         RegisterEvent();
-        this.container = container;
+
+        view.Name.text = ca.CardName;
+
         transform.SetParent(container.transform);
         nowDegree = 20f;
         targetDegree = 20f;
@@ -62,6 +70,7 @@ public class MiniCard : MonoBehaviour
                 if (nowValue <= 0)
                 {
                     isBacking = false;
+                    nowValue = 0;
                 }
             }
             else
@@ -84,17 +93,19 @@ public class MiniCard : MonoBehaviour
 
     private void BindView()
     {
-        view.picture = transform.GetChild(0).GetComponent<Image>();
+        view.Bg = transform.Find("CardFace").GetComponent<Image>();
+        view.Picture = transform.Find("CardFace").GetComponentInChildren<Image>();
+        view.Name = transform.Find("CardFace").GetComponentInChildren<Text>();
     }
 
     private void RegisterEvent()
     {
 
 
-        DragEventListener listener = view.picture.gameObject.GetComponent<DragEventListener>();
+        DragEventListener listener = view.Picture.gameObject.GetComponent<DragEventListener>();
         if (listener == null)
         {
-            listener = view.picture.gameObject.AddComponent<DragEventListener>();
+            listener = view.Picture.gameObject.AddComponent<DragEventListener>();
 
 
             listener.OnBeginDragEvent += delegate (PointerEventData eventData) {
@@ -140,22 +151,42 @@ public class MiniCard : MonoBehaviour
 
     public void HandleScale()
     {
+        float viewValue = nowValue;
+        viewValue = viewValue < 0 ? 0 : viewValue;
+        viewValue = viewValue > maxValue ? maxValue : viewValue;
+        //nowValue = nowValue < 0 ? 0 : nowValue;
+        //nowValue = nowValue > maxValue ? maxValue : nowValue;
+        if(nowValue > maxValue)
+        {
+            SetHighLight();
+        }
+        else
+        {
+            CancelHighLight();
+        }
+        view.Picture.rectTransform.anchoredPosition = new Vector3(0, 0.4f* viewValue, 0);
+        float scaleRate = 1f + 0.3f * viewValue / maxValue;
+        view.Picture.rectTransform.localScale = new Vector3(scaleRate, scaleRate,1);
+    }
 
-        nowValue = nowValue < 0 ? 0 : nowValue;
-        nowValue = nowValue > maxValue ? maxValue : nowValue;
+    public void SetHighLight()
+    {
+        view.Bg.color = Color.red;
+    }
 
-        view.picture.rectTransform.anchoredPosition = new Vector3(0, 0.4f*nowValue,0);
-        float scaleRate = 1f + 0.3f * nowValue / maxValue;
-        view.picture.rectTransform.localScale = new Vector3(scaleRate, scaleRate,1);
+    public void CancelHighLight()
+    {
+        view.Bg.color = Color.black;
     }
 
     private void UseCard()
     {
-        anim.SetTrigger("Disappear");
-        Debug.Log("destroy");
-        isDestroying = true;
-        container.removeCard(this);
-        GetComponent<CanvasGroup>().blocksRaycasts=false;
-        GameObject.DestroyObject(this,0.5f);
+        if (container.UseCard(this))
+        {
+            anim.SetTrigger("Disappear");
+            isDestroying = true;
+            GetComponent<CanvasGroup>().blocksRaycasts = false;
+            GameObject.DestroyObject(this, 0.5f);
+        }
     }
 }
