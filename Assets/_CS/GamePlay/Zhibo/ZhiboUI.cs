@@ -10,18 +10,26 @@ public class ZhiboView : BaseView
     public Transform container;
     public Image hotZhu;
     public Image hotHead;
-    public Text hotValue;
 
-    public Image Special;
+
+    public Text hotValue;
+    public Text TiliValue;
+    public Image TiliImage;
+
     public Animator hotAnimator;
 
-    public Transform SpeObjContainer;
 
     public Transform BuffContainer;
 
     public CardContainerLayout CardContainer;
 
-    public Text Xianchan;
+    public Text ChoukaValue;
+    public Image ChoukaImage;
+
+    public float ChoukaMaxFillAmount = 0.35f;
+    public float ChoukaMinFillAmount = 0.02f;
+    public float TiliMaxFillAmount = 0.5f;
+    public float TiliMinFillAmount = 0.2f;
 
     public RectTransform field;
 
@@ -43,12 +51,14 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     private int width = 0;
     private int height = 0;
-    private int numOfGridVertical = 20;
+    private int numOfGridVertical;
+    private static float MinDanmuInterval = 0.5f;
 
 
     private int preDanmuGrid;
-    private int[] preDanmuIdx;
+    private float[] preDanmuTime;
 
+    private string DanmuFengxiang;
 
 
     IResLoader mResLoader;
@@ -70,10 +80,16 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         width = (int)view.field.rect.width;
         height = (int)view.field.rect.height;
 
-        numOfGridVertical = 20;
+        numOfGridVertical = 40;
         preDanmuGrid = -1;
+        preDanmuTime = new float[numOfGridVertical];
 
         view.hotZhu.fillAmount = 0;
+        view.TiliValue.text = "10";
+        view.TiliImage.fillAmount = view.TiliMaxFillAmount;
+
+        view.ChoukaValue.text = "0";
+        view.ChoukaImage.fillAmount = view.ChoukaMinFillAmount;
 
         gameMode.state.Cards.Clear();
     }
@@ -94,6 +110,12 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     {
         view.hotValue.text = nowScore + "";
     }
+    public void UpdateTili(float nowTili)
+    {
+        view.TiliValue.text = (int)nowTili + "";
+        view.TiliImage.fillAmount = (view.TiliMaxFillAmount - view.TiliMinFillAmount) * nowTili / 100 + view.TiliMinFillAmount;
+
+    }
 
 
     public void ShowGengEffect()
@@ -111,13 +133,22 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.hotValue = hotView.GetChild(2).GetComponent<Text>();
         view.hotHead = hotView.GetChild(1).GetComponent<Image>();
 
+        Transform lbArea = root.Find("LeftBottom");
+
+
+        view.TiliValue = lbArea.Find("Tili").GetComponent<Text>();
+        view.ChoukaValue = lbArea.Find("Chouka").GetComponent<Text>();
+
+        view.TiliImage = lbArea.Find("TiliBar").Find("Content").GetComponent<Image>();
+        view.ChoukaImage = lbArea.Find("EnegyBar").Find("Content").GetComponent<Image>();
+
+
         view.CardContainer = root.Find("CardsContainer").GetComponent<CardContainerLayout>();
         view.CardContainer.Init(gameMode);
-        view.SpeObjContainer = root.Find("SpecialObjContainer");
 
         view.hotAnimator = hotView.GetComponent<Animator>();
 
-        view.Xianchan = root.Find("Xianchang").GetComponent<Text>();
+
 
         view.SpeField = root.Find("SpeField") as RectTransform;
         view.BuffContainer = root.Find("BuffContainer") as RectTransform;
@@ -182,31 +213,54 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     }
 
 
-    public void ChangeXianChange(string txt)
+    public void ChangeChouka(float value)
     {
-        view.Xianchan.text = txt;
+        view.ChoukaValue.text = value+"";
+        view.ChoukaImage.fillAmount = (view.ChoukaMaxFillAmount - view.ChoukaMinFillAmount) * value / 100 + view.ChoukaMinFillAmount;
+
     }
 
-    public Danmu GenDanmu()
+    public Danmu GenDanmu(bool isBad)
     {
         int gridY = Random.Range(2, numOfGridVertical - 2);
-        while (gridY == preDanmuGrid)
+
+
+        int tryCount = 0;
+        while (true)
         {
-            gridY = Random.Range(2, numOfGridVertical - 2);
+            if(Time.time - preDanmuTime[gridY] < MinDanmuInterval)
+            {
+                break;
+            }
+            else
+            {
+                gridY = Random.Range(2, numOfGridVertical - 2);
+                //gridY = (gridY -2 + 3) % (numOfGridVertical - 4) + 2;
+                tryCount++;
+            }
+            if (tryCount >= 5)
+            {
+                break;
+            }
         }
+
+
         preDanmuGrid = gridY;
+
         float posY = gridY * 1.0f / numOfGridVertical * height;
-        posY += Random.Range(-3f, 3f);
+        //posY += Random.Range(-3f, 3f);
+
+        preDanmuTime[gridY] = Time.time;
 
         GameObject danmuGo = mResLoader.Instantiate("Zhibo/Danmu");
 
         Danmu danmu = danmuGo.GetComponent<Danmu>();
 
 
-        danmu.init(gameMode.getRandomDanmu(),gameMode);
+        danmu.init(gameMode.getRandomDanmu(), isBad,gameMode);
         danmuGo.transform.SetParent(view.field);
         danmu.rect.anchoredPosition = new Vector3(width + 30, -posY, 0);
-        danmu.view.textField.fontSize = Random.Range(22, 28);
+        danmu.view.textField.fontSize += Random.Range(0,6);
 
         return danmu;
     }
@@ -215,13 +269,29 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public void HitDanmu(Danmu danmu)
     {
-        danmu.left -= 1;
-        if (danmu.left <= 0)
+        if (danmu.left > 0)
         {
-            danmu.OnDestroy();
-            gameMode.state.Danmus.Remove(danmu);
-            gameMode.GainHot(10);
+            danmu.left -= 1;
+            if (!danmu.isBad)
+            {
+                gameMode.GainScore(1);
+                danmu.view.textField.color = Color.gray;
+            }
+            else
+            {
+                if (danmu.left <= 0)
+                {
+                    danmu.OnDestroy();
+                    gameMode.state.Danmus.Remove(danmu);
+                    //gameMode.GainScore(10);
+                }
+            }
         }
+    }
+
+    public CardContainerLayout GetCardContainer()
+    {
+        return view.CardContainer;
     }
 
 

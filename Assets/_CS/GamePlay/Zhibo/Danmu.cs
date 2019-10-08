@@ -37,6 +37,12 @@ public class Danmu : MonoBehaviour
     [HideInInspector]
     public bool NeedDestroy = false;
 
+    [HideInInspector]
+    public bool isBad = false;
+
+
+    bool destroying = false;
+
     public RectTransform rect;
     public Animator anim;
 
@@ -44,10 +50,10 @@ public class Danmu : MonoBehaviour
 
     ZhiboGameMode gameMode;
 
-    public void init(string txt, ZhiboGameMode gameMode)
+    public void init(string txt, bool isBad, ZhiboGameMode gameMode)
     {
         rect = (RectTransform)transform;
-
+        this.isBad = isBad;
         this.gameMode = gameMode;
 
         anim = GetComponent<Animator>();
@@ -55,12 +61,22 @@ public class Danmu : MonoBehaviour
         spd = gameMode.state.DanmuSpd;
         strength = 1;
         left = 1;
-        color = getRandomColor();
+
+        if (isBad)
+        {
+            color = Color.red;
+        }
+        else
+        {
+            color = Color.black;
+        }
+        //color = getRandomColor();
         BindView();
         RegisterEvent();
 
         anim.Play("Normal");
         view.textField.color = color;
+        destroying = false;
 
     }
 
@@ -107,8 +123,9 @@ public class Danmu : MonoBehaviour
         {
             listener = view.textField.gameObject.AddComponent<DragEventListener>();
             listener.OnClickEvent += delegate (PointerEventData eventData) {
+                if (destroying) return;
+
                 gameMode.mUICtrl.HitDanmu(this);
-               
             };
         }
     }
@@ -124,6 +141,7 @@ public class Danmu : MonoBehaviour
 
     public void OnDestroy()
     {
+        destroying = true;
         if (gameObject.activeInHierarchy)
         {
             anim.SetTrigger("Disappear");

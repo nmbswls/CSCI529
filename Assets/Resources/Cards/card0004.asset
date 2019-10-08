@@ -13,10 +13,15 @@ MonoBehaviour:
   m_Name: card0004
   m_EditorClassIdentifier: 
   CardId: card0004
-  CardName: "\u62D6\u5730"
+  CardName: "\u62BD\u5361\uFF01"
   CardDesp: 
   CardType: 0
   cost: 0
   IsConsume: 0
   OverDueTurn: 0
-  effects: []
+  effects:
+  - effect: GetChouka
+    x: 10
+    y: 
+    z: 
+    w: 

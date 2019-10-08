@@ -48,10 +48,12 @@ public class SpecilistView{
 	public RectTransform root;
 	public bool selected;
 	public Text Name;
+    public Text Cost;
 	public void BindView(Transform root){
 		this.root = (RectTransform)root;
-		this.Name = root.GetChild (0).GetComponent<Text> ();
-	}
+		this.Name = root.Find("Text").GetComponent<Text> ();
+        this.Cost = root.Find("Cost").GetComponent<Text>();
+    }
 }
 
 public class BasePropertyLineView{

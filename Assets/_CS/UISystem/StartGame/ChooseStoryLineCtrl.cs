@@ -103,7 +103,7 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 	public override void PostInit(){
 		{
 			for (int i = 0; i < 5; i++) {
-				RoleStoryAsset ret = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<RoleStoryAsset> ("role"+i);
+				RoleStoryAsset ret = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<RoleStoryAsset> ("Roles/role"+i);
 				if (ret != null) {
 					view.roleList[i].name.text = ret.Name;
 					view.roleList[i].desp.text = ret.Desp;

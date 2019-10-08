@@ -13,10 +13,17 @@ MonoBehaviour:
   m_Name: card0003
   m_EditorClassIdentifier: 
   CardId: card0003
-  CardName: "\u64E6\u5730\u677F"
+  CardName: "\u5F39\u5E55\u6765\u88AD!"
   CardDesp: 
   CardType: 0
   cost: 0
   IsConsume: 0
   OverDueTurn: 0
-  effects: []
+  ValidTime: 0
+  UseTime: 0
+  effects:
+  - effect: GenGoodDanmu
+    x: 
+    y: 
+    z: 
+    w: 

@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class ZhiboSpecial : MonoBehaviour
 {
     public string type;
     public int ClickNum = 0;
+    public int MaxHp = 5;
 
     ZhiboGameMode gameMode;
 
@@ -13,12 +15,27 @@ public class ZhiboSpecial : MonoBehaviour
     private float clickcd;
 
     private Transform ClickArea;
+
+    float timer = 0;
+    float basicScaleRate = 1f;
+    float clickScaleRate = 1f;
+    private static float ScaleInterval = 2f;
+
     public void Tick(float dTime)
     {
         if(clickcd > 0)
         {
             clickcd -= dTime;
         }
+        timer += dTime;
+        GetBasicRate();
+        transform.localScale = Vector3.one * basicScaleRate * clickScaleRate;
+    }
+
+    private void GetBasicRate()
+    {
+        float a = Mathf.Abs(1 - (timer - (int)(timer / ScaleInterval) * ScaleInterval) / ScaleInterval * 2);
+        basicScaleRate = (a * 0.3f) + 1f;
     }
 
     public void Init(string type, ZhiboGameMode gameMode)
@@ -28,6 +45,10 @@ public class ZhiboSpecial : MonoBehaviour
         this.gameMode = gameMode;
         BindView();
         RegisterEvent();
+        basicScaleRate = 1f;
+        timer = 0;
+        preTween = null;
+
         transform.localScale = Vector3.one;
     }
 
@@ -49,6 +70,23 @@ public class ZhiboSpecial : MonoBehaviour
         }
     }
 
+    private Tween preTween;
+    private void TweenChangeSize()
+    {
+        if(preTween != null)
+        {
+            preTween.Kill();
+        }
+        Tween tween = DOTween.To
+                (
+                    () => clickScaleRate,
+                    (x) => { clickScaleRate = x; },
+                    1+(MaxHp- ClickNum)*0.1f,
+                    0.2f
+                );
+        preTween = tween;
+    }
+
     public void GetHit()
     {
 
@@ -57,7 +95,8 @@ public class ZhiboSpecial : MonoBehaviour
             return;
         }
         ClickNum -= 1;
-        transform.localScale += new Vector3(0.05f,0.05f,0);
+
+        TweenChangeSize();
         if(ClickNum <= 0)
         {
             gameMode.HitSpecial(this);

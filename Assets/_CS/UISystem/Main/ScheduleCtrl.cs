@@ -212,7 +212,6 @@ public class ScheduleCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
     public void SelectSlot(ScheduleSlot vv)
     {
-        Debug.Log(view.slots.IndexOf(vv));
         if(selectedSlot != -1)
         {
             view.slots[selectedSlot].Bg.color = Color.white;

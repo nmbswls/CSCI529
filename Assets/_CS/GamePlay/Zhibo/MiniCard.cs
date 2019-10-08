@@ -9,6 +9,7 @@ public class MiniCardView
     public Image Bg;
     public Image Picture;
     public Text Name;
+    public Text TimeLeft;
 }
 public class MiniCard : MonoBehaviour
 {
@@ -54,8 +55,7 @@ public class MiniCard : MonoBehaviour
         nowDegree = 20f;
         targetDegree = 20f;
 
-        rt.anchoredPosition = new Vector3(0.34f * container.R, -0.07f*container.R);
-        rt.localEulerAngles = new Vector3(0, 0, -20f);
+        container.PutToInitPos(this);
         isBacking = false;
     }
 
@@ -81,6 +81,10 @@ public class MiniCard : MonoBehaviour
 
     }
 
+    public void UpdateView(CardInZhibo info)
+    {
+        view.TimeLeft.text = (int)(info.TimeLeft) + "";
+    }
 
     public void setTargetPosition(Vector2 position)
     {
@@ -96,6 +100,7 @@ public class MiniCard : MonoBehaviour
         view.Bg = transform.Find("CardFace").GetComponent<Image>();
         view.Picture = transform.Find("CardFace").GetComponentInChildren<Image>();
         view.Name = transform.Find("CardFace").GetComponentInChildren<Text>();
+        view.TimeLeft = transform.Find("CardFace").Find("TimeLeft").GetComponent<Text>();
     }
 
     private void RegisterEvent()
@@ -188,5 +193,13 @@ public class MiniCard : MonoBehaviour
             GetComponent<CanvasGroup>().blocksRaycasts = false;
             GameObject.DestroyObject(this, 0.5f);
         }
+    }
+
+    public void Disappaer()
+    {
+        anim.SetTrigger("Disappear");
+        isDestroying = true;
+        GetComponent<CanvasGroup>().blocksRaycasts = false;
+        GameObject.DestroyObject(this, 0.5f);
     }
 }

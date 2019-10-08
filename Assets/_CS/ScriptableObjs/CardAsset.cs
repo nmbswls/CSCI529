@@ -40,6 +40,10 @@ public class CardAsset : ScriptableObject
 
 	public bool OverDueTurn;
 
+    public float ValidTime;
+
+    public int UseTime;
+
 	public List<object> args = new List<object>();
 
     public List<CardEffect> effects = new List<CardEffect>();

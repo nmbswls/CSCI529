@@ -13,6 +13,7 @@ public class ZhiboBuff : MonoBehaviour
     public float totalLastTime;
     public float leftTime;
 
+    private static float basicAlpht = 0.8f;
     private Image icon;
     public void Init(string buffId, int buffLevel, float totalLastTime, ZhiboGameMode gameMode)
     {
@@ -46,8 +47,7 @@ public class ZhiboBuff : MonoBehaviour
     public Color GetFlashingColor()
     {
         float a = Mathf.Abs(1 - (leftTime - (int)(leftTime / FlashInterval) * FlashInterval) / FlashInterval * 2);
-        Debug.Log(a);
-        return new Color(1, 1, 1, a);
+        return new Color(1, 1, 1, a* basicAlpht);
     }
 
 }

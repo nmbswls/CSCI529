@@ -19,4 +19,11 @@ MonoBehaviour:
   cost: 0
   IsConsume: 0
   OverDueTurn: 0
-  effects: []
+  ValidTime: 0
+  UseTime: 0
+  effects:
+  - effect: AddStatus
+    x: x
+    y: 
+    z: 
+    w: 

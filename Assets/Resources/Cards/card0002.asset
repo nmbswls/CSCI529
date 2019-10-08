@@ -19,9 +19,11 @@ MonoBehaviour:
   cost: 0
   IsConsume: 1
   OverDueTurn: 0
+  ValidTime: 0
+  UseTime: 0
   effects:
-  - effect: 
-    x: 
+  - effect: SpawnGift
+    x: 3
     y: 
     z: 
     w: 
