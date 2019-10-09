@@ -11,6 +11,7 @@ public class ActBranchModel : BaseModel
 
 public class ActBranchView : BaseView
 {
+    public Text NameText;
     public Text DespText;
     public Transform ChoiceContrainer;
 
@@ -20,9 +21,13 @@ public class ActBranchView : BaseView
 public class ActBranchChoiceView
 {
     public RectTransform root;
+    public Text ChoiceText;
+
+
     public void BindEvent(Transform root)
     {
         this.root = (RectTransform)root;
+        ChoiceText = root.Find("Text").GetComponent<Text>();
 
     }
 
@@ -46,12 +51,31 @@ public class ActBranchCtrl : UIBaseCtrl<ActBranchModel, ActBranchView>
     public override void BindView()
     {
         view.ChoiceContrainer = root.Find("Branches");
+        view.NameText = root.Find("Name").GetComponent<Text>();
+        view.DespText = root.Find("Desp").GetComponent<Text>();
         foreach(Transform child in view.ChoiceContrainer)
         {
             ActBranchChoiceView vv = new ActBranchChoiceView();
             vv.BindEvent(child);
             view.choices.Add(vv);
         }
+    }
+
+    public void SetEmergency(EmergencyAsset ea)
+    {
+        view.NameText.text = ea.EmName;
+        view.DespText.text = ea.EmDesp;
+
+        for (int i=0;i<view.choices.Count;i++)
+        {
+            view.choices[i].ChoiceText.text = ea.Choices[i].Content;
+        }
+        AdjustBranches();
+    }
+
+    private void AdjustBranches()
+    {
+
     }
 
     public override void RegisterEvent()

@@ -19,9 +19,11 @@ MonoBehaviour:
   cost: 0
   IsConsume: 0
   OverDueTurn: 0
+  ValidTime: 0
+  UseTime: 0
   effects:
   - effect: GetScore
-    x: 10
+    x: 10+1.1*tili
     y: 
     z: 
     w: 

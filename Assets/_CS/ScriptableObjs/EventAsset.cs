@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-[CreateAssetMenu(fileName="new event",menuName="Ctm/e")]
+[CreateAssetMenu(fileName="new event",menuName="Ctm/event")]
 [System.Serializable]
 public class EventAsset : ScriptableObject
 {

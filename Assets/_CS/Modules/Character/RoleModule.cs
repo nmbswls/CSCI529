@@ -34,6 +34,29 @@ public class ScheduleInfo
     }
 }
 
+public class RoleStats
+{
+
+    public float meili = 10;
+    public float koucai = 10;
+    public float tili = 10;
+    public float fanying = 10;
+    public float jiyi = 10;
+
+    public RoleStats()
+    {
+
+    }
+    public RoleStats(RoleStats stats)
+    {
+        this.meili = stats.meili;
+        this.koucai = stats.koucai;
+        this.tili = stats.tili;
+        this.fanying = stats.fanying;
+        this.jiyi = stats.jiyi;
+    }
+}
+
 public class RoleModule : ModuleBase, IRoleModule
 {
 
@@ -45,7 +68,8 @@ public class RoleModule : ModuleBase, IRoleModule
     private ISpeEventMgr pEventMgr;
     private ICoreManager pCoreMgr;
 
-    
+    private RoleStats roleStats = new RoleStats();
+
 
     List<AppInfo> unlockedApps = new List<AppInfo>();
 
@@ -100,8 +124,13 @@ public class RoleModule : ModuleBase, IRoleModule
 
         pEventMgr = GameMain.GetInstance().GetModule<SpeEventMgr>();
         pCoreMgr = GameMain.GetInstance().GetModule<CoreManager>();
+
     }
 
+    public RoleStats GetStats()
+    {
+        return roleStats;
+    }
 
     public void NextTurn()
     {

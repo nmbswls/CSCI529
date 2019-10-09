@@ -18,4 +18,6 @@ public interface IRoleModule : IModule{
     int OverDueSchedule { get; set; }
 
     ScheduleInfo GetInfo(string sid);
+
+    RoleStats GetStats();
 }

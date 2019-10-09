@@ -101,9 +101,9 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         }
     }
 
-    public void UpdateScore(int nowScore)
+    public void UpdateScore(float nowScore)
     {
-        view.hotValue.text = nowScore + "";
+        view.hotValue.text = (int)nowScore + "";
     }
     public void UpdateTili(float nowTili)
     {

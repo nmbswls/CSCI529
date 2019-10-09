@@ -34,6 +34,8 @@ public class CardInZhibo
 
 public class ZhiboGameState
 {
+    public RoleStats stats;
+
     public List<ZhiboBuff> ZhiboBuffs = new List<ZhiboBuff>();
 
     public List<Danmu> Danmus = new List<Danmu>();
@@ -44,7 +46,7 @@ public class ZhiboGameState
 
     public List<ZhiboSpecial> Specials = new List<ZhiboSpecial>();
 
-    public int Score = 0;
+    public float Score = 0;
     public int MaxHot = 100;
 
     public float ChoukaValue = 0;
@@ -64,6 +66,8 @@ public class ZhiboGameState
 
     public int[] BuffAddValue = new int[5];
     public int[] BuffAddPercent = new int[5];
+
+    public List<string> ComingEmergencies = new List<string>();
 }
 public class ZhiboGameMode : GameModeBase
 {
@@ -71,6 +75,7 @@ public class ZhiboGameMode : GameModeBase
 
     IUIMgr mUIMgr;
     IResLoader mResLoader;
+    IRoleModule pRoleMgr;
     ICardDeckModule mCardMdl;
     public ZhiboUI mUICtrl;
 
@@ -96,6 +101,7 @@ public class ZhiboGameMode : GameModeBase
 
     private float choukaPerSec = 5;
 
+    private EmergencyAsset nowEmergency = null;
 
     private Dictionary<string, List<string>> DanmuDict = new Dictionary<string, List<string>>();
  
@@ -104,9 +110,11 @@ public class ZhiboGameMode : GameModeBase
         mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
         mCardMdl = GameMain.GetInstance().GetModule<CardDeckModule>();
+        pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
 
         state = new ZhiboGameState();
 
+        state.stats = new RoleStats(pRoleMgr.GetStats());
 
         mUIMgr.ShowPanel("ZhiboPanel");
         mUICtrl = mUIMgr.GetCtrl("ZhiboPanel") as ZhiboUI;
@@ -130,8 +138,9 @@ public class ZhiboGameMode : GameModeBase
 
         LoadDanmuDict();
         LoadCard();
+        InitEmergency();
 
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         {
             AddNewCard();
         }
@@ -163,6 +172,11 @@ public class ZhiboGameMode : GameModeBase
             list[idx] = list[list.Count - 1 - i];
             list[list.Count - 1 - i] = tmp;
         }
+    }
+
+    private void InitEmergency()
+    {
+
     }
 
     private void LoadDanmuDict()
@@ -201,13 +215,7 @@ public class ZhiboGameMode : GameModeBase
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            spdRate = 0.1f;
-            mUIMgr.ShowPanel("ActBranch");
-            ActBranchCtrl actrl = mUIMgr.GetCtrl("ActBranch") as ActBranchCtrl;
-            actrl.ActBranchEvent += delegate(int idx) {
-                spdRate = 1f;
-                Debug.Log(idx);
-            };
+            ShowEmergency();
         }
 
         state.AccelerateDur -= spdRate * dTime;
@@ -318,6 +326,21 @@ public class ZhiboGameMode : GameModeBase
         GetChoukaValue(choukaPerSec * dTime * spdRate);
     }
 
+
+    public void ShowEmergency()
+    {
+        spdRate = 0.1f;
+        mUIMgr.ShowPanel("ActBranch");
+        ActBranchCtrl actrl = mUIMgr.GetCtrl("ActBranch") as ActBranchCtrl;
+        EmergencyAsset ea = mResLoader.LoadResource<EmergencyAsset>("Emergencies/choufeng");
+        actrl.SetEmergency(ea);
+        actrl.ActBranchEvent += delegate (int idx) {
+            spdRate = 1f;
+            EmergencyChoice c = ea.Choices[idx];
+            Debug.Log(c.Content);
+        };
+    }
+
     public void GetChoukaValue(float v)
     {
         state.ChoukaValue += v;
@@ -326,15 +349,52 @@ public class ZhiboGameMode : GameModeBase
         //mUIMgr.showHint("获得抽卡值" + v);
     }
 
-    public void GainScoreUseFormulation(string formulation)
+    public float GetScoreFromFormulation(string formulation)
     {
+        string[] comps = formulation.Split('+');
+        float finalValue = 0;
+        foreach(string comp in comps)
+        {
+            if (comp.Contains("*"))
+            {
+                string[] ss = comp.Split('*');
+                float rate = float.Parse(ss[0]);
+                string pname = ss[1];
+                switch (pname)
+                {
+                    case "m":
+                        finalValue += state.stats.meili * rate;
+                        break;
+                    case "k":
+                        finalValue += state.stats.koucai * rate;
+                        break;
+                    case "t":
+                        finalValue += state.stats.tili * rate;
+                        break;
+                    case "f":
+                        finalValue += state.stats.fanying * rate;
+                        break;
+                    case "":
+                        finalValue += state.stats.jiyi * rate;
+                        break;
+                    default:
+                        Debug.Log("unknown property");
+                        break;
+                }
+            }
+            else
+            {
+                finalValue += int.Parse(comp);
+            }
+        }
+        return finalValue;
 
     }
 
-    public void GainScore(int v)
+    public void GainScore(float score)
     {
-        state.Score += v;
-        mUIMgr.showHint("获得热度" + v);
+        state.Score += score;
+        mUIMgr.showHint("获得热度" + (int)score);
         mUICtrl.UpdateScore(state.Score);
     }
     public void GenTili(int v)
@@ -532,7 +592,7 @@ public class ZhiboGameMode : GameModeBase
                         GenDanmu(ce.x);
                         break;
                     case "GetScore":
-                        GainScore(int.Parse(ce.x));
+                        GainScore(GetScoreFromFormulation(ce.x));
                         break;
                     case "GetChouka":
                         GetChoukaValue(int.Parse(ce.x));
