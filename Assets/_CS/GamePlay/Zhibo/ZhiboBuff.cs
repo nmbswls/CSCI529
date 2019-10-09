@@ -24,9 +24,14 @@ public class ZhiboBuff : MonoBehaviour
         this.gameMode = gameMode;
 
         BindView();
+        RegisterEvent();
     }
 
 
+    public void RegisterEvent()
+    {
+        //鼠标悬浮显示buff
+    }
     public void BindView()
     {
         icon = GetComponentInChildren<Image>();

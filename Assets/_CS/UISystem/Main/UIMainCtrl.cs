@@ -97,7 +97,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     }
 
 
-    public void BindCallbck()
+    public void BindZhiboCallbck()
     {
         ZhiboGameMode zhiboGm = pCoreMgr.GetGameMode() as ZhiboGameMode;
         if (zhiboGm == null)
@@ -118,7 +118,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         {
             ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
             mUIMgr.CloseCertainPanel(this);
-            cm.ChangeScene("Zhibo", BindCallbck);
+            cm.ChangeScene("Zhibo", BindZhiboCallbck);
         });
 
         view.ScheduleBtn.onClick.AddListener(delegate ()
@@ -171,15 +171,30 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             {
                 listener = vv.root.gameObject.AddComponent<ClickEventListerner>();
                 listener.OnClickEvent += delegate (PointerEventData eventData) {
-
-                    Debug.Log("click");
+                    OpenApp(vv);
                 };
             }
         }
 
     }
 
-	public void NextStage(){
+    public void OpenApp(AppView vv)
+    {
+        if (view.appViews.IndexOf(vv) == 2)
+        {
+            ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
+            mUIMgr.CloseCertainPanel(this);
+            cm.ChangeScene("Travel", null);
+        }
+    }
+
+
+    public void BindTravelCallbck()
+    {
+
+    }
+
+    public void NextStage(){
 		
 	}
 

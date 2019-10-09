@@ -21,5 +21,7 @@ public interface IUIMgr : IModule
 
     Vector3 GetWorldPosition(Vector2 screenPos);
     Vector3 GetLocalPosition(Vector2 screenPos, RectTransform target);
+
+    Camera GetCamera();
 }
 

@@ -62,7 +62,6 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
 
     IResLoader mResLoader;
-
     public ZhiboGameMode gameMode;
 
     public override void Init()
@@ -181,7 +180,6 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             Debug.LogError("fail");
         }
         ZhiboBuff ret = go.GetComponent<ZhiboBuff>();
-        ret.Init("b",1,10f, gameMode);
         return ret;
     }
 
@@ -215,34 +213,35 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public void ChangeChouka(float value)
     {
-        view.ChoukaValue.text = value+"";
+        view.ChoukaValue.text = (int)value+"";
         view.ChoukaImage.fillAmount = (view.ChoukaMaxFillAmount - view.ChoukaMinFillAmount) * value / 100 + view.ChoukaMinFillAmount;
 
     }
 
     public Danmu GenDanmu(bool isBad)
     {
-        int gridY = Random.Range(2, numOfGridVertical - 2);
+        List<int> DanmuSlots = new List<int>();
 
 
-        int tryCount = 0;
-        while (true)
+        for(int i=2;i< numOfGridVertical - 2; i++)
         {
-            if(Time.time - preDanmuTime[gridY] < MinDanmuInterval)
+            if (Time.time - preDanmuTime[i] > MinDanmuInterval)
             {
-                break;
-            }
-            else
-            {
-                gridY = Random.Range(2, numOfGridVertical - 2);
-                //gridY = (gridY -2 + 3) % (numOfGridVertical - 4) + 2;
-                tryCount++;
-            }
-            if (tryCount >= 5)
-            {
-                break;
+                DanmuSlots.Add(i);
             }
         }
+        int gridY;
+
+        if (DanmuSlots.Count == 0)
+        {
+            gridY = Random.Range(2, numOfGridVertical - 2);
+
+        }
+        else
+        {
+            gridY = DanmuSlots[Random.Range(0, DanmuSlots.Count)];
+        }
+
 
 
         preDanmuGrid = gridY;
@@ -274,7 +273,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             danmu.left -= 1;
             if (!danmu.isBad)
             {
-                gameMode.GainScore(1);
+                gameMode.GainScore(danmu.isBig ? 3:1);
                 danmu.view.textField.color = Color.gray;
             }
             else

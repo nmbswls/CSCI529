@@ -7,6 +7,7 @@ public class DanmuView
 {
     public Text textField;
     public Image image0;
+    public Image BadBg;
 }
 
 public enum ENM_DanmuType
@@ -19,8 +20,7 @@ public enum ENM_DanmuType
 public class Danmu : MonoBehaviour
 {
 
-    [HideInInspector]
-    public float spd;
+
 
     [HideInInspector]
     public int left = 1;
@@ -40,6 +40,9 @@ public class Danmu : MonoBehaviour
     [HideInInspector]
     public bool isBad = false;
 
+    [HideInInspector]
+    public bool isBig = false;
+
 
     bool destroying = false;
 
@@ -55,10 +58,11 @@ public class Danmu : MonoBehaviour
         rect = (RectTransform)transform;
         this.isBad = isBad;
         this.gameMode = gameMode;
+        isBig = false;
 
         anim = GetComponent<Animator>();
         NeedDestroy = false;
-        spd = gameMode.state.DanmuSpd;
+        //spd = gameMode.state.DanmuSpd;
         strength = 1;
         left = 1;
 
@@ -78,16 +82,21 @@ public class Danmu : MonoBehaviour
         view.textField.color = color;
         destroying = false;
 
+        if (isBad)
+        {
+            view.textField.color = Color.white;
+            view.BadBg.gameObject.SetActive(true);
+        }
+        else
+        {
+            view.BadBg.gameObject.SetActive(false);
+        }
     }
 
     private Color getRandomColor()
     {
-        int colorIdx = Random.Range(0, 10);
-        if (colorIdx < 5)
-        {
-            return Color.black;
-        }
-        else if (colorIdx<6)
+        int colorIdx = Random.Range(5, 10);
+        if (colorIdx<6)
         {
             return Color.blue;
         }
@@ -112,8 +121,10 @@ public class Danmu : MonoBehaviour
 
     private void BindView()
     {
-        view.textField = transform.GetChild(1).GetComponent<Text>();
-        view.image0 = transform.GetChild(0).GetComponent<Image>();
+        view.textField = transform.Find("Text").GetComponent<Text>();
+        view.image0 = transform.Find("Image").GetComponent<Image>();
+        view.BadBg = transform.Find("BadBg").GetComponent<Image>();
+
     }
 
     public void RegisterEvent()
@@ -132,7 +143,7 @@ public class Danmu : MonoBehaviour
 
     public void Tick(float dTime)
     {
-        rect.anchoredPosition += Vector2.left * spd * dTime;
+        rect.anchoredPosition += Vector2.left *  gameMode.state.DanmuSpd * dTime;
         if (rect.anchoredPosition.x < -100) {
             NeedDestroy = true; 
         }
@@ -154,6 +165,16 @@ public class Danmu : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         gameMode.RecycleDanmu(this);
+    }
+
+    public void SetAsBig()
+    {
+        view.textField.fontSize = 46;
+        view.textField.color = getRandomColor();
+        //大弹幕不能是坏的
+        isBad = false;
+        view.BadBg.gameObject.SetActive(false);
+        isBig = true;
     }
 
 

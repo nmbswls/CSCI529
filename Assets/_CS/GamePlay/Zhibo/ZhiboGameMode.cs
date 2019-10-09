@@ -89,10 +89,12 @@ public class ZhiboGameMode : GameModeBase
     private float DiscardTimer = 0;
 
     private float DanmuLeft = 0;
-    private int MaxDanmuPerFrame = 1;
+    private float DanmuSpringSpd = 20;
 
     private int BadDanmuFreq = 5;
     private int badCounter = 0;
+
+    private float choukaPerSec = 5;
 
 
     private Dictionary<string, List<string>> DanmuDict = new Dictionary<string, List<string>>();
@@ -195,7 +197,7 @@ public class ZhiboGameMode : GameModeBase
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
-            GenBuff("e");
+            //GenBuff("e");
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
@@ -254,7 +256,7 @@ public class ZhiboGameMode : GameModeBase
 
         if (buffChanged)
         {
-            CalculateBuffEff();
+            CalculateBuffExtras();
         }
 
         DiscardTimer += dTime * spdRate;
@@ -303,27 +305,30 @@ public class ZhiboGameMode : GameModeBase
         }
 
 
-
-        int nowGen = 0;
-        while (DanmuLeft > 0)
+        if(DanmuLeft > 0)
         {
-            GenDanmu();
-            DanmuLeft--;
-            nowGen++;
-            if(nowGen> MaxDanmuPerFrame)
+            int oldV = (int)DanmuLeft;
+            DanmuLeft -= dTime * DanmuSpringSpd * spdRate;
+            if(oldV != (int)DanmuLeft)
             {
-                break;
+                GenDanmu();
             }
         }
 
+        GetChoukaValue(choukaPerSec * dTime * spdRate);
     }
 
-    public void GetChoukaValue(int v)
+    public void GetChoukaValue(float v)
     {
         state.ChoukaValue += v;
         state.ChoukaValue = state.ChoukaValue < 0 ? 0 : state.ChoukaValue;
         mUICtrl.ChangeChouka(state.ChoukaValue);
         //mUIMgr.showHint("获得抽卡值" + v);
+    }
+
+    public void GainScoreUseFormulation(string formulation)
+    {
+
     }
 
     public void GainScore(int v)
@@ -339,19 +344,7 @@ public class ZhiboGameMode : GameModeBase
         mUICtrl.UpdateScore(state.Score);
     }
 
-    private void CalculateBuffEff()
-    {
-        int tiliAdd = 0;
-        int tiliAddp = 0;
-        foreach(ZhiboBuff buff in state.ZhiboBuffs)
-        {
-            if(buff.buffId == "tili")
-            {
-                tiliAdd += 10;
-            }
-        }
 
-    }
 
     private void RemoveBuff(ZhiboBuff obj)
     {
@@ -366,6 +359,10 @@ public class ZhiboGameMode : GameModeBase
         if (danmu.isBad)
         {
             GetChoukaValue(-2);
+        }
+        else if (danmu.isBig)
+        {
+            GetChoukaValue(4);
         }
         else
         {
@@ -507,7 +504,7 @@ public class ZhiboGameMode : GameModeBase
 
     private void GenSpeedUp(float duration = 5f)
     {
-        state.AccelerateRate = 1.5f;
+        state.AccelerateRate = 1.8f;
         state.AccelerateDur = state.AccelerateDur > duration ? state.AccelerateDur : duration;
     }
 
@@ -535,7 +532,7 @@ public class ZhiboGameMode : GameModeBase
                         GenSpeedUp(float.Parse(ce.x));
                         break;
                     case "GenGoodDanmu":
-                        DanmuLeft += 50;
+                        GenDanmu(ce.x);
                         break;
                     case "GetScore":
                         GainScore(int.Parse(ce.x));
@@ -547,10 +544,10 @@ public class ZhiboGameMode : GameModeBase
                         GenTili(int.Parse(ce.x));
                         break;
                     case "AddStatus":
-                        GenBuff("x");
+                        GenBuff(ce.x, int.Parse(ce.y),10);
                         break;
                     case "AddRemoveAward":
-                        GenBuff("x");
+                        GenBuff(ce.x, int.Parse(ce.y),10);
                         break;
                     case "ClearDanmu":
                         DestroyRandomly(5);
@@ -591,16 +588,67 @@ public class ZhiboGameMode : GameModeBase
     }
 
 
-
-
-    public void GenBuff(string BuffId)
+    public void GenDanmu(string fengxiang)
     {
-
-        ZhiboBuff buff = mUICtrl.GenBuff();
-        state.ZhiboBuffs.Add(buff);
-
+        DanmuLeft += 50;
     }
 
+    public void GenBuff(string BuffId, int value, float duration)
+    {
+
+
+        ZhiboBuff buff = mUICtrl.GenBuff();
+        buff.Init(BuffId, value, duration, this);
+        state.ZhiboBuffs.Add(buff);
+        CalculateBuffExtras();
+    }
+
+    private void CalculateBuffExtras()
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            state.BuffAddValue[i] = 0;
+            state.BuffAddPercent[i] = 0;
+        }
+        foreach (ZhiboBuff buff in state.ZhiboBuffs)
+        {
+            switch (buff.buffId)
+            {
+                case "p0_fix":
+                    state.BuffAddValue[0] += buff.buffLevel;
+                    break;
+                case "p0_percent":
+                    state.BuffAddPercent[0] += buff.buffLevel;
+                    break;
+                case "p1_fix":
+                    state.BuffAddValue[1] += buff.buffLevel;
+                    break;
+                case "p1_percent":
+                    state.BuffAddPercent[1] += buff.buffLevel;
+                    break;
+                case "p2_fix":
+                    state.BuffAddValue[2] += buff.buffLevel;
+                    break;
+                case "p2_percent":
+                    state.BuffAddPercent[2] += buff.buffLevel;
+                    break;
+                case "p3_fix":
+                    state.BuffAddValue[3] += buff.buffLevel;
+                    break;
+                case "p3_percent":
+                    state.BuffAddPercent[3] += buff.buffLevel;
+                    break;
+                case "p4_fix":
+                    state.BuffAddValue[4] += buff.buffLevel;
+                    break;
+                case "p4_percent":
+                    state.BuffAddPercent[4] += buff.buffLevel;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
 
     public void GenSpecial(string specialType)
@@ -627,7 +675,7 @@ public class ZhiboGameMode : GameModeBase
         bigOneCount++;
         if (bigOneCount > bigOneNext)
         {
-            danmu.view.textField.fontSize = 42;
+            danmu.SetAsBig();
             bigOneCount = 0;
             bigOneNext = Random.Range(5, 8);
         }

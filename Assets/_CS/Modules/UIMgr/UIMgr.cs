@@ -118,6 +118,10 @@ public class UIMgr : ModuleBase, IUIMgr
 
     }
 
+    public Camera GetCamera()
+    {
+        return mCamera;
+    }
     public IUIBaseCtrl ShowPanel (string panelStr)
 	{
 		string nname = panelStr;

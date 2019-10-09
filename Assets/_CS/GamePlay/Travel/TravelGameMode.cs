@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public class TravelGameState
+{
+    public List<TravelPot> Pots = new List<TravelPot>();
+}
+
+
 public class TravelGameMode : GameModeBase {
 
+    public TravelGameState state;
 
 
-	bool isMovingMap = false;
+
+    bool isMovingMap = false;
 	bool isContinueMovingMap = false;
 
 	Vector3 toMove = Vector3.zero;
@@ -18,11 +27,14 @@ public class TravelGameMode : GameModeBase {
 
 
 	public GameObject map;
+    
 
 	public Camera mainCamera;
 	public GameObject playerSymbol;
 
+    ClickableManager2D clickableManager;
     IResLoader mResLoader;
+    IUIMgr pUIMgr;
 
 
     public void FinishTravel()
@@ -37,9 +49,17 @@ public class TravelGameMode : GameModeBase {
 
     private void BindGameObject()
     {
-        map = GameObject.Find("Map");
-        mainCamera = Camera.main;
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
+        pUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
+
+        clickableManager = GameObject.Find("ClickManager").GetComponent<ClickableManager2D>() ;
+
+
+        map = GameObject.Find("Map");
+        mainCamera = pUIMgr.GetCamera();
+
+        clickableManager.m_camera = mainCamera;
+
         playerSymbol = mResLoader.Instantiate("Travel/pawn");
         Debug.Log("finish init travel");
     }
@@ -156,6 +176,7 @@ public class TravelGameMode : GameModeBase {
 
 
     public void initCameraControl(){
+
 		SpriteRenderer activeArea = map.GetComponent<SpriteRenderer> ();
 		cameraBound[0] = -activeArea.bounds.size.x/2;
 		cameraBound[1] = -activeArea.bounds.size.y/2;
