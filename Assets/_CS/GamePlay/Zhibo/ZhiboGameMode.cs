@@ -457,10 +457,7 @@ public class ZhiboGameMode : GameModeBase
     public void FinishZhibo()
     {
         mUIMgr.CloseCertainPanel(mUICtrl);
-        GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main",delegate {
-        
-
-        });
+        GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main");
     }
 
 

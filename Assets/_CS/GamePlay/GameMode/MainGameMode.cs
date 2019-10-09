@@ -9,8 +9,6 @@ public class MainGameMode : GameModeBase
     IRoleModule rm;
     ISpeEventMgr pEventMgr;
 
-    public OnInitDlg OnInitFunc;
-
 
     Queue<SpecialEvent> UnHandledEvent = new Queue<SpecialEvent>();
     public override void Tick(float dTime){
@@ -24,11 +22,6 @@ public class MainGameMode : GameModeBase
 
 
         pUIMgr.ShowPanel("UIMain");
-        if(OnInitFunc != null)
-        {
-            OnInitFunc();
-        }
-
     }
 
     public void NextTurn()

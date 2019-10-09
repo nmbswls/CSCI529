@@ -45,7 +45,7 @@ public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : Ba
 		this.nameStr = nameStr;
 		ResLoader resLoader = GameMain.GetInstance ().GetModule<ResLoader> ();
         zhiding = false;
-        GameObject prefab = resLoader.LoadResource<GameObject> ("UI/"+nameStr,false);
+        GameObject prefab = resLoader.LoadResource<GameObject> ("UI/UIPanels/" + nameStr,false);
 		if (prefab == null) {
 			Debug.LogError ("load "+nameStr+" main menu fail");
 			return;

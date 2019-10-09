@@ -97,28 +97,20 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     }
 
 
-    public void BindZhiboCallbck()
-    {
-        ZhiboGameMode zhiboGm = pCoreMgr.GetGameMode() as ZhiboGameMode;
-        if (zhiboGm == null)
-        {
-            Debug.LogError("load gm error");
-        }
-        zhiboGm.GameFinishedCallback = delegate {
-            MainGameMode gm = pCoreMgr.GetGameMode() as MainGameMode;
-            if (gm == null)
-            {
-                Debug.LogError("load gm error");
-            }
-            gm.OnInitFunc = gm.NextTurn;
-        }; 
-    }
+
     public override void RegisterEvent(){
         view.NextStage.onClick.AddListener(delegate ()
         {
             ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
             mUIMgr.CloseCertainPanel(this);
-            cm.ChangeScene("Zhibo", BindZhiboCallbck);
+            cm.ChangeScene("Zhibo", null,delegate {
+                MainGameMode gm = pCoreMgr.GetGameMode() as MainGameMode;
+                if (gm == null)
+                {
+                    Debug.LogError("load gm error");
+                }
+                gm.NextTurn();
+            });
         });
 
         view.ScheduleBtn.onClick.AddListener(delegate ()

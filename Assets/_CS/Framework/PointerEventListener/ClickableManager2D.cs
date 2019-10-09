@@ -71,6 +71,7 @@ public class ClickableManager2D : MonoBehaviour
 					Vector3 pos = m_camera.ScreenToWorldPoint (Input.mousePosition);
 					RaycastHit[] hits = null;
 					hits = Physics.RaycastAll (pos, Vector3.forward, Mathf.Infinity);
+                    int minDis = int.MaxValue;
 					if (hits.Length > 0) {    //检测是否射线接触物体
 						mouseDownPos = Input.mousePosition;
 						nowClickGO = hits [0].collider.gameObject;
@@ -127,20 +128,23 @@ public class ClickableManager2D : MonoBehaviour
 					//无法回调
 
 				} else {
-					if (!nowClickGO.GetComponentInParent<ClickableEventlistener2D> ().hasClickEvent()) {
+                    ClickableEventlistener2D cp = nowClickGO.GetComponentInParent<ClickableEventlistener2D>();
+
+                    if (cp == null || !cp.hasClickEvent()) {
 						int idx = 1;
 						if (clickedObjs != null) {
 							while (idx < clickedObjs.Length) {
 								nowClickGO = clickedObjs [idx];
-								if (nowClickGO.GetComponentInParent<ClickableEventlistener2D> ().hasClickEvent()) {
-									nowClickGO.GetComponentInParent<ClickableSprite> ().onClick (Input.mousePosition);
+                                cp = nowClickGO.GetComponentInParent<ClickableEventlistener2D>();
+                                if (cp!=null && cp.hasClickEvent()) {
+                                    cp.onClick (Input.mousePosition);
 									break;
 								}
 								idx++;
 							}
 						}
 					} else {
-						nowClickGO.GetComponentInParent<ClickableSprite> ().onClick (Input.mousePosition);
+						cp.onClick (Input.mousePosition);
 					}
 				}
 			} else if (nowMode == MouseState.DRAG) {
@@ -152,10 +156,6 @@ public class ClickableManager2D : MonoBehaviour
 			}
 			nowMode = MouseState.NONE;
 		}
-
-
-
-
 	}
 }
 

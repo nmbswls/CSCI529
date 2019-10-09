@@ -54,7 +54,7 @@ public class CoreManager : ModuleBase, ICoreManager
 
 
 
-    public void ChangeScene(string sname, OnCompleteDlg onComplete = null)
+    public void ChangeScene(string sname, Action onSceneChanged = null, Action onSceneFinished = null)
     {
         if (!SceneInfoDict.ContainsKey(sname))
         {
@@ -63,12 +63,13 @@ public class CoreManager : ModuleBase, ICoreManager
         string SceneName = SceneInfoDict[sname].SceneName;
         mResLoader.LoadLevelSync("Scene/"+ SceneName, LoadSceneMode.Single, delegate (Scene scene, LoadSceneMode mode) {
             Type t = SceneInfoDict[sname].GameModeType;
-            LoadGameMode(t);
-            if(onComplete != null)
+            GameModeBase gm = LoadGameMode(t);
+            if(onSceneChanged != null)
             {
-                onComplete();
+                onSceneChanged();
             }
-           
+            gm.GameFinishedCallback = onSceneFinished;
+
         });
     }
 
@@ -76,12 +77,12 @@ public class CoreManager : ModuleBase, ICoreManager
 
 
 
-    public void LoadGameMode(Type t)
+    public GameModeBase LoadGameMode(Type t)
     {
         if (!t.IsSubclassOf(typeof(GameModeBase)))
         {
             Debug.Log("type is not a game mode");
-            return;
+            return null;
         }
 
         GameModeBase preGm = mGameMode;
@@ -90,15 +91,16 @@ public class CoreManager : ModuleBase, ICoreManager
         if (mGameMode == null)
         {
             Debug.LogError("Load Game Mode " + t.FullName + " fail");
-            return;
+            return null;
         }
+        mGameMode.Init();
 
         if (preGm != null)
         {
             preGm.OnRelease();
         }
-        mGameMode.Init();
 
+        return mGameMode;
     }
 
 
@@ -115,9 +117,9 @@ public class CoreManager : ModuleBase, ICoreManager
 
     }
 
-    public void LoadGameMode<T>() where T : GameModeBase
+    public GameModeBase LoadGameMode<T>() where T : GameModeBase
     {
-        LoadGameMode(typeof(T));
+        return LoadGameMode(typeof(T));
     }
 
 

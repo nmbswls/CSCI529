@@ -66,11 +66,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public override void Init()
     {
-        view = new ZhiboView();
-        model = new ZhiboModel();
-
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
-        mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
         gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as ZhiboGameMode;
     }
 

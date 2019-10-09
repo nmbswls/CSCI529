@@ -57,7 +57,6 @@ public class ClickableEventlistener2D : MonoBehaviour,ClickableSprite
 	public bool hasClickEvent(){
 		if (ClickEvent != null) {
 			return ClickEvent.GetInvocationList ().Length > 0;
-
 		} else {
 			return false;
 		}

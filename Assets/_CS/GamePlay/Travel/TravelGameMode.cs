@@ -1,24 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 
 public class TravelGameState
 {
     public List<TravelPot> Pots = new List<TravelPot>();
+    public List<LineRenderer> lines = new List<LineRenderer>();
+
+    public int PlayerPotIdx = 0;
 }
 
 
 public class TravelGameMode : GameModeBase {
 
-    public TravelGameState state;
+    public TravelGameState state = new TravelGameState();
 
 
 
-    bool isMovingMap = false;
-	bool isContinueMovingMap = false;
+    bool isMovingCamera = false;
+	bool isContinueMovingCamera = false;
 
-	Vector3 toMove = Vector3.zero;
+    bool isMovingPlayer = false;
+    int highlightPotIdx = -1;
+
+	Vector3 CameraToMove = Vector3.zero;
 
 
 	float[] cameraBound = new float[4];
@@ -26,20 +33,82 @@ public class TravelGameMode : GameModeBase {
 	float cameraHalfWidth;
 
 
-	public GameObject map;
+	public GameObject Map;
+    Transform PotLyaer;
+    Transform LineLayer;
     
 
 	public Camera mainCamera;
-	public GameObject playerSymbol;
+	GameObject PlayerPawn;
+
 
     ClickableManager2D clickableManager;
     IResLoader mResLoader;
     IUIMgr pUIMgr;
 
+    TravelUI travelUI;
+
+    private static int CameraZ = -10;
+    private static int PawnZ = 10;
+    private static int LineZ = 95;
+
+    private void GeneratePots()
+    {
+
+        foreach(Transform child in PotLyaer.transform)
+        {
+            GameObject potGo = mResLoader.Instantiate("Travel/Pot",child);
+            TravelPot pot = potGo.GetComponent<TravelPot > ();
+            pot.Init(this);
+            state.Pots.Add(pot);
+        }
+
+        List<int[]> edges = new List<int[]>();
+        edges.Add(new int[] {0,1});
+
+        foreach(int[] edge in edges)
+        {
+            GameObject lineGo = mResLoader.Instantiate("Travel/Line", LineLayer);
+            LineRenderer line = lineGo.GetComponent<LineRenderer>();
+            Vector3 e0 = state.Pots[edge[0]].transform.position;
+            Vector3 e1 = state.Pots[edge[1]].transform.position;
+            
+            Vector3[] positions = { e0 + Vector3.forward, e1 + Vector3.forward };
+            line.SetPositions(positions);
+            state.lines.Add(line);
+        }
+
+        PlayerPawn = mResLoader.Instantiate("Travel/pawn");
+        int startIdx = 0;
+        Vector2 startPos = state.Pots[startIdx].transform.position;
+        PlayerPawn.transform.position = new Vector3(startPos.x, startPos.y, PawnZ);
+        Vector3 cameraPos = ClampPosInBound(startPos);
+        cameraPos.z = mainCamera.transform.position.z;
+        mainCamera.transform.position = cameraPos;
+    }
+
+    public override void Init()
+    {
+        BindGameObject();
+        InitCameraControl();
+
+        travelUI = pUIMgr.ShowPanel("TravelPanel") as TravelUI;
+
+        SetMap();
+        GeneratePots();
+
+
+        isMovingCamera = false;
+        isContinueMovingCamera = false;
+        Initialized = true;
+    }
+
+
 
     public void FinishTravel()
     {
         GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main");
+        mainCamera.transform.position = new Vector3(0,0, CameraZ);
     }
 
     public override void OnRelease()
@@ -53,43 +122,84 @@ public class TravelGameMode : GameModeBase {
         pUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
 
         clickableManager = GameObject.Find("ClickManager").GetComponent<ClickableManager2D>() ;
+        PotLyaer = GameObject.Find("PotLayer").transform;
+        LineLayer = GameObject.Find("Lines").transform;
 
-
-        map = GameObject.Find("Map");
+        Map = GameObject.Find("Map");
         mainCamera = pUIMgr.GetCamera();
 
         clickableManager.m_camera = mainCamera;
 
-        playerSymbol = mResLoader.Instantiate("Travel/pawn");
-        Debug.Log("finish init travel");
     }
 
-
-
-    public override void Init(){
-        BindGameObject();
-        initCameraControl();
-
-		Vector3 startPos = new Vector3(0,0,0);
-		{
-            startPos = ClampPosInBound(startPos);
+    public void ChoosePot(TravelPot pot)
+    {
+        if (state.Pots.IndexOf(pot)==-1)
+        {
+            return;
         }
-		SetMap ();
-		mainCamera.transform.position = new Vector3(startPos.x, startPos.y, mainCamera.transform.position.z);
 
-		isMovingMap = false;
-		isContinueMovingMap = false;
-        Initialized = true;
+        int index = state.Pots.IndexOf(pot);
 
+        if (isMovingPlayer)
+            return;
+
+        if (highlightPotIdx != index)
+        {
+            if(highlightPotIdx != -1)
+            {
+                state.Pots[highlightPotIdx].CancelSelect();
+            }
+            state.Pots[index].Selected();
+            highlightPotIdx = index;
+        }
+        else
+        {
+            if (state.PlayerPotIdx == index)
+            {
+                return;
+            }
+            isMovingPlayer = true;
+            Vector3 target = state.Pots[index].transform.position;
+            target.z = PawnZ;
+            Tween tween = DOTween.To
+                (
+                    () =>  PlayerPawn.transform.position,
+                    (x) => {  
+                            PlayerPawn.transform.position = x;
+                            //Vector3 cameraPos = PlayerPawn.transform.position;
+                            //cameraPos.z = CameraZ;
+                            //isMovingMap = true;
+                            //CameraToMove = cameraPos;
+                         },
+                    target,
+                    0.6f
+                ).OnComplete(delegate {
+                    isMovingPlayer = false;
+                    state.PlayerPotIdx = index;
+                });
+        }
     }
 
-	public override void Tick(float dTime){
+
+
+
+
+    public override void Tick(float dTime){
         if (!Initialized) return;
-		MoveMap ();
+		MoveCemera ();
 
         if (Input.GetKeyDown(KeyCode.A))
         {
             FinishTravel();
+        }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            foreach(TravelPot pot in state.Pots)
+            {
+                Debug.Log(pot.GetComponent<ClickableEventlistener2D>().hasClickEvent());
+
+            }
         }
     }
 
@@ -98,47 +208,50 @@ public class TravelGameMode : GameModeBase {
     public static float MAX_DIFF = 0.01f;
     public static float MAP_MOVE_RATE = 0.067f;
 
-    void MoveMap()
+    void MoveCemera()
     {
-        if (!isMovingMap && !isContinueMovingMap)
+        if (!isMovingCamera && !isContinueMovingCamera)
             return;
 
-        toMove = ClampPosInBound(toMove);
+        CameraToMove = ClampPosInBound(CameraToMove);
 
-        toMove.z = mainCamera.transform.localPosition.z;
+        CameraToMove.z = CameraZ;
 
-        if ((toMove - mainCamera.transform.localPosition).magnitude < MAX_DIFF)
+        if ((CameraToMove - mainCamera.transform.localPosition).magnitude < MAX_DIFF)
         {
-            mainCamera.transform.localPosition = toMove;
+            mainCamera.transform.localPosition = CameraToMove;
         }
         else
         {
-            mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, toMove, 0.5f);
+            mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, CameraToMove, 0.5f);
         }
     }
+
 
     public void UpdateMoveTarget(Vector3 dragDir){
 		Vector3 moveDir = dragDir * MAP_MOVE_RATE; //blend
 		moveDir.z = 0;
-		toMove = mainCamera.transform.localPosition - moveDir;
+		CameraToMove = mainCamera.transform.localPosition - moveDir;
 	}
+
+
 
 
 	public void SetMap(){
 		{
-			ClickableEventlistener2D listener = map.AddComponent<ClickableEventlistener2D> ();
+			ClickableEventlistener2D listener = Map.AddComponent<ClickableEventlistener2D> ();
 			listener.BeginDragEvent += delegate(GameObject gb,Vector3 dragDir) {
-				isMovingMap = true;
-				isContinueMovingMap = false;
-				toMove = mainCamera.transform.localPosition;
+				isMovingCamera = true;
+				isContinueMovingCamera = false;
+				CameraToMove = mainCamera.transform.localPosition;
 			};
 
 			listener.OnDragEvent += delegate(GameObject gb,Vector3 dragDir) {
 				UpdateMoveTarget(dragDir);
 			};
 			listener.EndDragEvent += delegate(GameObject gb,Vector3 dragDir) {
-				isContinueMovingMap = true;
-				isMovingMap = false;
+				isContinueMovingCamera = true;
+				isMovingCamera = false;
 			};
 		}
 
@@ -175,9 +288,9 @@ public class TravelGameMode : GameModeBase {
     }
 
 
-    public void initCameraControl(){
+    public void InitCameraControl(){
 
-		SpriteRenderer activeArea = map.GetComponent<SpriteRenderer> ();
+		SpriteRenderer activeArea = Map.GetComponent<SpriteRenderer> ();
 		cameraBound[0] = -activeArea.bounds.size.x/2;
 		cameraBound[1] = -activeArea.bounds.size.y/2;
 		cameraBound[2] = activeArea.bounds.size.x/2;
@@ -190,4 +303,6 @@ public class TravelGameMode : GameModeBase {
 		cameraHalfHeight = cameraBoundInWorld.y;
 		cameraHalfWidth = cameraBoundInWorld.x;
 	}
+
+
 }

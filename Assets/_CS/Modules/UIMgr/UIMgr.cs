@@ -65,6 +65,9 @@ public class UIMgr : ModuleBase, IUIMgr
 
         mUITypeMap["HintCtrl"] = typeof(HintCtrl);
 
+        mUITypeMap["TravelPanel"] = typeof(TravelUI);
+
+
     }
 
 	public void LockUI ()

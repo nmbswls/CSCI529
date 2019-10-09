@@ -6,29 +6,40 @@ public class TravelPot : MonoBehaviour
     SpriteRenderer image;
 
     bool selected = false;
-    public void Start()
+
+    TravelGameMode gm;
+    public void Init(TravelGameMode gm)
     {
+        this.gm = gm;
         image = GetComponent<SpriteRenderer>();
         RegisterEvent();
+
     }
+
 
     public void RegisterEvent()
     {
         {
-            ClickableEventlistener2D listener = gameObject.AddComponent<ClickableEventlistener2D>();
-            listener.ClickEvent += delegate {
-                selected = !selected;
-                if (selected)
-                {
-                    image.color = Color.red;
-                }
-                else
-                {
-                    image.color = Color.gray;
-                }
+            ClickableEventlistener2D listener = gameObject.GetComponent<ClickableEventlistener2D>();
+            if(listener == null)
+            {
+                listener = gameObject.AddComponent<ClickableEventlistener2D>();
+                listener.ClickEvent += delegate {
+                    gm.ChoosePot(this);
+                };
+                Debug.Log(listener.hasClickEvent());
+            }
 
-
-            };
         }
+    }
+
+    public void Selected()
+    {
+        image.color = Color.red;
+    }
+
+    public void CancelSelect()
+    {
+        image.color = Color.white;
     }
 }
