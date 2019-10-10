@@ -12,11 +12,14 @@ public class UIMgr : ModuleBase, IUIMgr
 	private CanvasGroup RootCanvasGroup;
 
 	private int lockCount = 0;
+    private ModelMask mask;
 
 	private readonly Dictionary<string, IUIBaseCtrl> mUIPanelMap = new Dictionary<string, IUIBaseCtrl>();
 	public readonly Dictionary<string, Type> mUITypeMap = new Dictionary<string, Type>();
 
 	private List<IUIBaseCtrl> mUILayerList = new List<IUIBaseCtrl> ();
+    private List<HintCtrl> mHints = new List<HintCtrl>();
+    private static int ZhidingSeblingIdx = 100; 
 
 	public override void Setup(){
 		mUIRoot = GameObject.Find ("UIRoot");
@@ -31,14 +34,21 @@ public class UIMgr : ModuleBase, IUIMgr
         GameObject.DontDestroyOnLoad(mCamera);
 		RootCanvasGroup = mUIRoot.GetComponent<CanvasGroup> ();
 		RegisterUIPanel ();
-		//InitUI ();
-	}
+        mask = new ModelMask();
+        mask.Setup("ModelMask",this);
+        //InitUI ();
+    }
 
 	public override void Tick(float dTime){
         for(int i = mUILayerList.Count - 1; i >= 0; i--) { 
             mUILayerList[i].Tick (dTime);
 		}
-	}
+
+        for(int i=mHints.Count - 1; i>=0; i--)
+        {
+            mHints[i].Tick(dTime);
+        }
+    }
 
 	public GameObject GetUIRoot(){
 		return mUIRoot;
@@ -66,7 +76,7 @@ public class UIMgr : ModuleBase, IUIMgr
         mUITypeMap["HintCtrl"] = typeof(HintCtrl);
 
         mUITypeMap["TravelPanel"] = typeof(TravelUI);
-
+        mUITypeMap["ModelMask"] = typeof(ModelMask);
 
     }
 
@@ -98,27 +108,34 @@ public class UIMgr : ModuleBase, IUIMgr
             if (mUILayerList.Contains(toClose))
             {
                 toClose.Release();
-                mUILayerList.Contains(toClose);
                 mUILayerList.Remove(toClose);
+
             }
             else
             {
                 Debug.Log("close not exitst ui panel");
             }
         }
+        AdjustLayerOrder();
     }
 
-    public void showHint(string text)
+    public void ShowHint(string text)
     {
         HintCtrl UICtrl = new HintCtrl();
         if (UICtrl != null)
         {
             UICtrl.Setup("hint", this);
             UICtrl.SetContent(text);
-            UICtrl.GetTransform().SetSiblingIndex(100);
-            mUILayerList.Add(UICtrl);
+            UICtrl.GetTransform().SetSiblingIndex(ZhidingSeblingIdx);
+            mHints.Add(UICtrl);
         }
 
+    }
+
+    public void CloseHint(HintCtrl hint)
+    {
+        hint.Release();
+        mUILayerList.Remove(hint); 
     }
 
     public Camera GetCamera()
@@ -154,7 +171,8 @@ public class UIMgr : ModuleBase, IUIMgr
     }
 
 	private void AdjustLayerOrder(){
-		for (int i = 0; i < mUILayerList.Count; i++) {
+
+		for (int i = 0; i < mUILayerList.Count-1; i++) {
 			Transform tr = mUILayerList [i].GetTransform ();
 			if (tr != null) {
                 if (mUILayerList[i].Zhiding)
@@ -168,7 +186,13 @@ public class UIMgr : ModuleBase, IUIMgr
 
 			}
 		}
-	}
+
+        mask.GetTransform().SetSiblingIndex(mUILayerList.Count - 1);
+        if (mUILayerList.Count > 0)
+        {
+            mUILayerList[mUILayerList.Count - 1].GetTransform().SetSiblingIndex(mUILayerList.Count);
+        }
+    }
 
 
 

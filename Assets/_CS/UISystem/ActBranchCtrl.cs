@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class ActBranchModel : BaseModel
 {
-
+    public float TimeLeft;
 }
 
 public class ActBranchView : BaseView
@@ -14,6 +14,8 @@ public class ActBranchView : BaseView
     public Text NameText;
     public Text DespText;
     public Transform ChoiceContrainer;
+
+    public Image TimeLeft;
 
     public List<ActBranchChoiceView> choices = new List<ActBranchChoiceView>();
 }
@@ -42,29 +44,50 @@ public class ActBranchCtrl : UIBaseCtrl<ActBranchModel, ActBranchView>
 
     public override void Init()
     {
-        view = new ActBranchView();
-        model = new ActBranchModel();
 
-        mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
     }
 
+    public override void Tick(float dTime)
+    {
+        base.Tick(dTime);
+        if(model.TimeLeft != -1)
+        {
+            model.TimeLeft -= dTime;
+            if (model.TimeLeft <= 0)
+            {
+                FinishChoose(view.choices[0]);
+            }
+            view.TimeLeft.fillAmount = model.TimeLeft / 15f;
+        }
+    }
     public override void BindView()
     {
         view.ChoiceContrainer = root.Find("Branches");
         view.NameText = root.Find("Name").GetComponent<Text>();
         view.DespText = root.Find("Desp").GetComponent<Text>();
-        foreach(Transform child in view.ChoiceContrainer)
+
+        view.TimeLeft = root.Find("Timer").Find("TimeLeft").GetComponent<Image>();
+
+        foreach (Transform child in view.ChoiceContrainer)
         {
             ActBranchChoiceView vv = new ActBranchChoiceView();
             vv.BindEvent(child);
             view.choices.Add(vv);
         }
+
+    }
+
+    public override void PostInit()
+    {
+        view.TimeLeft.fillAmount = 1;
     }
 
     public void SetEmergency(EmergencyAsset ea)
     {
         view.NameText.text = ea.EmName;
         view.DespText.text = ea.EmDesp;
+
+        model.TimeLeft = 15.0f;
 
         for (int i=0;i<view.choices.Count;i++)
         {
@@ -91,11 +114,6 @@ public class ActBranchCtrl : UIBaseCtrl<ActBranchModel, ActBranchView>
                 };
             }
         }
-    }
-
-    public override void PostInit()
-    {
-
     }
 
     private void AdjustChoices()

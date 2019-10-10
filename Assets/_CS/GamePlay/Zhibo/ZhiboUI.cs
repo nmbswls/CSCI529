@@ -7,6 +7,8 @@ using UnityEngine.EventSystems;
 public class ZhiboView : BaseView
 {
 
+    public Text TimeLeft;
+
     public Transform container;
     public Image hotZhu;
     public Image hotHead;
@@ -118,9 +120,15 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     }
 
+    public void UpdateTimeLeft(float time)
+    {
+        view.TimeLeft.text = (int)time + "";
+    }
 
     public override void BindView()
     {
+        view.TimeLeft = root.Find("TimeLeft").GetComponentInChildren<Text>();
+
         view.field = (RectTransform)(root.Find("DanmuField"));
         //view.container = view.viewRoot.transform.Find("OperatorsContainer");
         Transform hotView = root.transform.Find("Score");

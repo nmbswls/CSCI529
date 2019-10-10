@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System;
 
-public class DragEventListener : ClickEventListerner,IDragHandler,IBeginDragHandler,IEndDragHandler
+public class DragEventListener : ClickEventListerner,IDragHandler,IBeginDragHandler,IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     
 
@@ -17,7 +17,13 @@ public class DragEventListener : ClickEventListerner,IDragHandler,IBeginDragHand
     public delegate void OnEndDragDlg(PointerEventData eventData);
     public event OnEndDragDlg OnEndDragEvent;
 
-    
+
+    public delegate void OnPointerEnterDlg(PointerEventData eventData);
+    public event OnPointerEnterDlg PointerEnterEvent;
+
+    public delegate void OnPointerExitDlg(PointerEventData eventData);
+    public event OnPointerExitDlg PointerExitEvent;
+
 
 
     public void OnDrag(PointerEventData eventData)
@@ -45,8 +51,24 @@ public class DragEventListener : ClickEventListerner,IDragHandler,IBeginDragHand
 		//PassEvent<IPointerClickHandler>(eventData,ExecuteEvents.pointerClickHandler);
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (PointerEnterEvent != null)
+        {
+            PointerEnterEvent(eventData);
+        }
+    }
 
-	public void PassEvent<T>(PointerEventData data, ExecuteEvents.EventFunction<T> function) where T:IEventSystemHandler{
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (PointerExitEvent != null)
+        {
+            PointerExitEvent(eventData);
+        }
+    }
+
+
+    public void PassEvent<T>(PointerEventData data, ExecuteEvents.EventFunction<T> function) where T:IEventSystemHandler{
 		List<RaycastResult> results = new List<RaycastResult> ();
 		EventSystem.current.RaycastAll (data,results);
 		GameObject current = data.pointerCurrentRaycast.gameObject;
@@ -101,4 +123,39 @@ public class DragEventListener : ClickEventListerner,IDragHandler,IBeginDragHand
 		}
 
 	}
+
+    public void ClearPointerEvent()
+    {
+        {
+            if (PointerEnterEvent != null)
+            {
+                Delegate[] invokeList = PointerEnterEvent.GetInvocationList();
+                if (invokeList != null)
+                {
+                    foreach (Delegate del in invokeList)
+                    {
+                        PointerEnterEvent -= (OnPointerEnterDlg)del;
+                    }
+                }
+            }
+
+        }
+        {
+            if (PointerExitEvent != null)
+            {
+                Delegate[] invokeList = PointerExitEvent.GetInvocationList();
+                if (invokeList != null)
+                {
+                    foreach (Delegate del in invokeList)
+                    {
+                        PointerExitEvent -= (OnPointerExitDlg)del;
+                    }
+                }
+            }
+
+
+        }
+    }
+
+
 }

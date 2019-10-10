@@ -12,9 +12,10 @@ public interface IUIMgr : IModule
 	void CloseFirstPanel();
 	void CloseCertainPanel (IUIBaseCtrl toClose);
 	//mainMask
-	void showHint(string text);
+	void ShowHint(string text);
+    void CloseHint(HintCtrl hint);
 
-	void Loading ();
+    void Loading ();
 	void FinishLoading();
 
     IUIBaseCtrl GetCtrl(string str);

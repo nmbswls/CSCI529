@@ -23,7 +23,7 @@ MonoBehaviour:
   UseTime: 0
   effects:
   - effect: GenGoodDanmu
-    x: 
+    x: 30
     y: 
     z: 
     w: 

@@ -177,6 +177,26 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
             mUIMgr.CloseCertainPanel(this);
             cm.ChangeScene("Travel", null);
+        }else if (view.appViews.IndexOf(vv) == 0)
+        {
+            //{
+            //    Tween tween = DOTween.To
+            //        (
+            //          () => view.PhoneBigPic.rectTransform.anchoredPosition,
+            //          (x) => view.PhoneBigPic.rectTransform.anchoredPosition = x,
+            //          new Vector2(159, -471),
+            //          0.3f
+            //      );
+            //}
+            //{
+            //    Tween tween = DOTween.To
+            //        (
+            //            () => view.PhoneBigPic.rectTransform.localScale,
+            //            (x) => view.PhoneBigPic.rectTransform.localScale = x,
+            //            new Vector3(1.6f, 1.6f,1f),
+            //            0.3f
+            //     );
+            //}
         }
     }
 

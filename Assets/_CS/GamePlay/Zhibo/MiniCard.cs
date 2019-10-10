@@ -2,10 +2,13 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class MiniCardView
 {
 
+    public RectTransform root;
+    public RectTransform CardFace;
     public Image Bg;
     public Image Picture;
     public Text Name;
@@ -24,16 +27,29 @@ public class MiniCard : MonoBehaviour
     private float returnSpeed = 1800;
 
 
+    public bool PosDirty = false;
     public bool isBacking = false;
     public bool isDestroying = false;
+    public bool isHighlight = false;
+    public bool isDragging = false;
+
+
 
     public RectTransform rt;
     public Animator anim;
 
     public float nowValue;
 
+    private static Vector3 MinimizeScale = new Vector3(0.7f, 0.7f, 0.7f);
+    private static Vector3 NormalScale = new Vector3(1f, 1f, 1f);
+
+    private static float NormalYOffset = 150f;
+    private static float DragScaleRate = 0.3f;
+
+    private static float NowValueDecRate = 500f;
     //上拉多少触发卡片
-    float maxValue = 100f;
+    private static float MaxValue = 120f;
+    private static float TriggerValue = 100f;
 
     float preY = 0;
 
@@ -57,6 +73,10 @@ public class MiniCard : MonoBehaviour
 
         container.PutToInitPos(this);
         isBacking = false;
+        isDragging = false;
+        isDestroying = false;
+        isHighlight = false;
+        PosDirty = false;
     }
 
     public void Tick(float dTime)
@@ -65,7 +85,7 @@ public class MiniCard : MonoBehaviour
         {
             if (nowValue > 0)
             {
-                nowValue -= 300f * dTime;
+                nowValue -= NowValueDecRate * dTime;
                 HandleScale();
                 if (nowValue <= 0)
                 {
@@ -86,6 +106,33 @@ public class MiniCard : MonoBehaviour
         view.TimeLeft.text = (int)(info.TimeLeft) + "";
     }
 
+    public void CheckIsHighlight()
+    {
+        bool isUI = RectTransformUtility.RectangleContainsScreenPoint(view.CardFace, Input.mousePosition);
+        if (!isUI)
+        {
+            return;
+        }
+        if (isDestroying)
+        {
+            return;
+        }
+        isHighlight = true;
+        if (container.DraggingIdx != -1)
+        {
+            return;
+        }
+        if (isBacking)
+        {
+            isBacking = false;
+            nowValue = 0;
+        }
+
+
+        view.CardFace.localScale = NormalScale;
+        view.CardFace.anchoredPosition = new Vector3(0, 0 + NormalYOffset, 0);
+
+    }
     public void setTargetPosition(Vector2 position)
     {
         //if (state == 0 || state == 2)
@@ -97,10 +144,12 @@ public class MiniCard : MonoBehaviour
 
     private void BindView()
     {
-        view.Bg = transform.Find("CardFace").GetComponent<Image>();
-        view.Picture = transform.Find("CardFace").GetComponentInChildren<Image>();
-        view.Name = transform.Find("CardFace").GetComponentInChildren<Text>();
-        view.TimeLeft = transform.Find("CardFace").Find("TimeLeft").GetComponent<Text>();
+        view.root = transform as RectTransform;
+        view.CardFace = transform.Find("CardFace") as RectTransform;
+        view.Bg = view.CardFace.GetComponent<Image>();
+        view.Picture = view.CardFace.GetComponentInChildren<Image>();
+        view.Name = view.CardFace.GetComponentInChildren<Text>();
+        view.TimeLeft = view.CardFace.Find("TimeLeft").GetComponent<Text>();
     }
 
     private void RegisterEvent()
@@ -114,11 +163,13 @@ public class MiniCard : MonoBehaviour
 
 
             listener.OnBeginDragEvent += delegate (PointerEventData eventData) {
-                if (isDestroying || isBacking)
+                if (isDestroying || isBacking || isDragging)
                 {
                     return;
                 }
                 preY = eventData.position.y;
+                isDragging = true;
+                container.DraggingIdx = container.cards.IndexOf(this);
             };
 
             listener.OnDragEvent += delegate (PointerEventData eventData) {
@@ -129,7 +180,7 @@ public class MiniCard : MonoBehaviour
                 float nowY = eventData.position.y;
                 float dy = nowY - preY;
 
-                nowValue += dy*1.5f;
+                nowValue += dy*1.4f;
 
                 HandleScale();
 
@@ -141,7 +192,7 @@ public class MiniCard : MonoBehaviour
                 {
                     return;
                 }
-                if(nowValue >= maxValue)
+                if(nowValue >= TriggerValue)
                 {
                     UseCard();
                 }
@@ -149,19 +200,82 @@ public class MiniCard : MonoBehaviour
                 {
                     isBacking = true;
                 }
+
+                if (!isHighlight)
+                {
+                    MinimizeIgnoreBacking();
+                }
                 preY = 0;
+                isDragging = false;
+                container.DraggingIdx = -1;
+            };
+
+            listener.PointerEnterEvent += delegate (PointerEventData eventData) {
+                if (isDestroying)
+                {
+                    return;
+                }
+                isHighlight = true;
+                if (container.DraggingIdx != -1)
+                {
+                    return;
+                }
+                if (isBacking)
+                {
+                    isBacking = false;
+                    nowValue = 0;
+                }
+
+
+                view.CardFace.localScale = NormalScale;
+                view.CardFace.anchoredPosition = new Vector3(0,0+ NormalYOffset, 0);
+            };
+
+            listener.PointerExitEvent += delegate (PointerEventData eventData) {
+                if (isDestroying)
+                {
+                    return;
+                }
+                isHighlight = false;
+                if (container.DraggingIdx != -1)
+                {
+                    return;
+                }
+
+
+                MinimizeIgnoreBacking();
+
             };
         }
     }
 
+    public void MinimizeIgnoreBacking()
+    {
+        nowValue = 0;
+        DOTween.To
+                    (
+                        () => view.CardFace.localScale,
+                        (x) => { view.CardFace.localScale = x; },
+                        MinimizeScale,
+                        0.1f
+                    );
+        DOTween.To
+            (
+                () => view.CardFace.anchoredPosition,
+                (x) => { view.CardFace.anchoredPosition = x; },
+                Vector2.zero,
+                0.1f
+            );
+    }
+
     public void HandleScale()
     {
-        float viewValue = nowValue;
-        viewValue = viewValue < 0 ? 0 : viewValue;
-        viewValue = viewValue > maxValue ? maxValue : viewValue;
+        //float viewValue = nowValue;
+        nowValue = nowValue < 0 ? 0 : nowValue;
+        nowValue = nowValue > MaxValue ? MaxValue : nowValue;
         //nowValue = nowValue < 0 ? 0 : nowValue;
         //nowValue = nowValue > maxValue ? maxValue : nowValue;
-        if(nowValue > maxValue)
+        if(nowValue > TriggerValue)
         {
             SetHighLight();
         }
@@ -169,9 +283,9 @@ public class MiniCard : MonoBehaviour
         {
             CancelHighLight();
         }
-        view.Picture.rectTransform.anchoredPosition = new Vector3(0, 0.4f* viewValue, 0);
-        float scaleRate = 1f + 0.3f * viewValue / maxValue;
-        view.Picture.rectTransform.localScale = new Vector3(scaleRate, scaleRate,1);
+        view.CardFace.anchoredPosition = new Vector3(0, NormalYOffset + 0.4f* nowValue, 0);
+        float scaleRate = 1f + DragScaleRate * nowValue / TriggerValue;
+        view.CardFace.localScale = new Vector3(scaleRate, scaleRate,1);
     }
 
     public void SetHighLight()

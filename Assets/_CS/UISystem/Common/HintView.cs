@@ -33,7 +33,7 @@ public class HintCtrl : UIBaseCtrl<HintModel, HintView>
         model.left -= dTime;
         if (model.left < 0)
         {
-            mUIMgr.CloseCertainPanel(this);
+            mUIMgr.CloseHint(this);
         }else if (model.left < 0.4f)
         {
             root.transform.position += Vector3.up * dTime * FastSpeed;

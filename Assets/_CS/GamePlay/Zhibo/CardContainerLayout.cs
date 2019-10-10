@@ -25,6 +25,8 @@ public class CardContainerLayout : MonoBehaviour
 
     public ZhiboGameMode gameMode;
 
+    public int DraggingIdx = -1;
+
     public void Init(ZhiboGameMode gameMode)
     {
         rt = (RectTransform)transform;
@@ -71,6 +73,7 @@ public class CardContainerLayout : MonoBehaviour
             float angleDegree = i * interval - 10*0.5f;
             cards[i].transform.SetSiblingIndex(i);
             cards[i].targetDegree = angleDegree;
+            cards[i].PosDirty = true;
             //Vector2 posInWorld = transform.localToWorldMatrix * new Vector4(i * interval, 0, 0, 1);
             //cards[i].setTargetPosition(posInWorld);
         }
@@ -81,8 +84,10 @@ public class CardContainerLayout : MonoBehaviour
         foreach(MiniCard card in cards)
         {
             card.Tick(dTime);
-            if (Mathf.Abs(card.targetDegree - card.nowDegree) <= 1e-6)
+            if (!card.PosDirty || Mathf.Abs(card.targetDegree - card.nowDegree) <= 1e-6)
             {
+                card.PosDirty = false;
+                card.CheckIsHighlight();
                 continue;
             }
             card.nowDegree += (card.targetDegree - card.nowDegree) * dTime * CardMoveSpd;
@@ -108,6 +113,9 @@ public class CardContainerLayout : MonoBehaviour
 
     public void removeCard(MiniCard toRemove)
     {
+        if(DraggingIdx == cards.IndexOf(toRemove)){
+            DraggingIdx = -1;
+        }
         cards.Remove(toRemove);
         Adjust();
     }

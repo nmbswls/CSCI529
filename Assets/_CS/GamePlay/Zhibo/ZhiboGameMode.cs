@@ -36,6 +36,8 @@ public class ZhiboGameState
 {
     public RoleStats stats;
 
+    public float TimeLeft = 120;
+
     public List<ZhiboBuff> ZhiboBuffs = new List<ZhiboBuff>();
 
     public List<Danmu> Danmus = new List<Danmu>();
@@ -207,7 +209,7 @@ public class ZhiboGameMode : GameModeBase
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            mUIMgr.showHint("这是一段提示测试行");
+            mUIMgr.ShowHint("这是一段提示测试行");
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
@@ -217,6 +219,14 @@ public class ZhiboGameMode : GameModeBase
         {
             ShowEmergency();
         }
+
+        state.TimeLeft -= dTime * spdRate;
+        if (state.TimeLeft < 0)
+        {
+            FinishZhibo();
+        }
+        mUICtrl.UpdateTimeLeft(state.TimeLeft);
+
 
         state.AccelerateDur -= spdRate * dTime;
         if(state.AccelerateDur < 0)
@@ -394,13 +404,13 @@ public class ZhiboGameMode : GameModeBase
     public void GainScore(float score)
     {
         state.Score += score;
-        mUIMgr.showHint("获得热度" + (int)score);
+        mUIMgr.ShowHint("获得热度" + (int)score);
         mUICtrl.UpdateScore(state.Score);
     }
     public void GenTili(int v)
     {
         state.Tili += v;
-        mUIMgr.showHint("获得热度" + v);
+        mUIMgr.ShowHint("获得热度" + v);
         mUICtrl.UpdateScore(state.Score);
     }
 
