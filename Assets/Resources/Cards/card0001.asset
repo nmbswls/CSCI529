@@ -23,7 +23,7 @@ MonoBehaviour:
   UseTime: 0
   effects:
   - effect: GetScore
-    x: 10+1.1*tili
+    x: 10+1.1*t
     y: 
     z: 
     w: 

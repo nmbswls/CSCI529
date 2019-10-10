@@ -10,9 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85890aed052e14f66b06738b0eaf82ea, type: 3}
-  m_Name: emergency
+  m_Name: choufeng
   m_EditorClassIdentifier: 
-  EmId: 
-  EmName: 
-  EmDesp: 
-  Choices: []
+  EmId: choufeng
+  EmName: "\u8D85\u7BA1\u67E5\u623F"
+  EmDesp: "\u8D85\u7BA1\u6765\u67E5\u623F\u4E86\uFF0C\u4F60\u600E\u4E48\u529E\uFF1F\uFF1F"
+  Choices:
+  - Content: "\u5BF9\u55B7"
+    NextEmId: 
+    Ret: 
+  - Content: "\u8DEA\u8214"
+    NextEmId: 
+    Ret: 
+  - Content: "\u65E0\u89C6"
+    NextEmId: 
+    Ret: 
