@@ -21,6 +21,7 @@ public class ManageCardsView : BaseView
 
     public Button Close;
     public Text DetailDesp;
+    public Text DetailName;
 }
 
 public class CardOutView
@@ -35,6 +36,8 @@ public class CardOutView
     public Text Name;
     public Text TurnLeft;
 
+    public Image Hint;
+
     public void BindView(Transform transform)
     {
         root = transform as RectTransform;
@@ -44,6 +47,8 @@ public class CardOutView
         Picture = CardFace.Find("Picture").GetComponent<Image>();
         Name = CardFace.Find("Name").GetComponent<Text>();
         Desp = CardFace.Find("Desp").GetComponent<Text>();
+
+        Hint = transform.Find("Hint").GetComponent<Image>();
     }
 
 }
@@ -65,6 +70,7 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
     ICardDeckModule pCardMgr;
     IResLoader pResLoader;
 
+    CardOutView preCardView;
 
 
     public override void Init(){
@@ -82,7 +88,10 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
         view.CardsContainer = view.CardsSR.content.transform;
 		view.filter01 = root.Find("FilterBar").GetChild (0).GetComponent<Dropdown> ();
         view.Close = root.Find("Close").GetComponent<Button>();
+
+
         view.DetailDesp = root.Find("DetailPanel").Find("DetailDesp").GetComponent<Text>();
+        view.DetailName = root.Find("DetailPanel").Find("DetailName").GetComponent<Text>();
 
     }
 
@@ -91,6 +100,8 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
     {
         //ShowCards();
     }
+
+
 
     public override void RegisterEvent(){
 		view.tabGroup.InitTab (typeof(CardsTabView));
@@ -112,10 +123,14 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
     private void ShowCards()
     {
         List<CardInfo> infos = pCardMgr.GetAllCards();
+
+
         foreach(CardOutView vv in view.CardsViewList)
         {
             pResLoader.ReleaseGO("UI/Card",vv.root.gameObject);
         }
+        view.CardsViewList.Clear();
+        preCardView = null;
         model.NowCardInfos = infos;
         foreach (CardInfo c in infos)
         {
@@ -123,6 +138,7 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
             CardOutView cardOutView = new CardOutView();
             cardOutView.BindView(go.transform);
             view.CardsViewList.Add(cardOutView);
+            cardOutView.Hint.gameObject.SetActive(false);
 
             {
                 ClickEventListerner listener = cardOutView.CardFace.gameObject.GetComponent<ClickEventListerner>();
@@ -144,7 +160,24 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
     public void ShowCardDetail(CardOutView vv)
     {
         Debug.Log(vv);
+        int idx = view.CardsViewList.IndexOf(vv);
+        if(idx == -1)
+        {
+            return;
+        }
 
+        CardInfo info = model.NowCardInfos[idx];
+        CardAsset ca = pCardMgr.GetCardInfo(info.CardId);
+
+        view.DetailDesp.text = ca.CardDesp;
+        view.DetailName.text = ca.CardName;
+
+        if(preCardView != null)
+        {
+            preCardView.Hint.gameObject.SetActive(false);
+        }
+        vv.Hint.gameObject.SetActive(true);
+        preCardView = vv;
     }
 
     public void SwitchChoose(int newTab){
