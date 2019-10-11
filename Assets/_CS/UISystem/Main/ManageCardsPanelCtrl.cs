@@ -144,6 +144,7 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
     public void ShowCardDetail(CardOutView vv)
     {
         Debug.Log(vv);
+
     }
 
     public void SwitchChoose(int newTab){

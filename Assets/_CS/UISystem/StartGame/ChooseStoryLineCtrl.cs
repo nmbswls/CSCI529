@@ -109,8 +109,6 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 					view.roleList[i].desp.text = ret.Desp;
 				}
 			}
-
-
 			view.properies.Setup ();
 			switchSelectedStory (0);
 
@@ -153,7 +151,7 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 		//view.properies.SetPointValues (new int[]{Random.Range(10,20),Random.Range(10,20),Random.Range(10,20),Random.Range(10,20),Random.Range(10,20)}); 
 		nowIdx = idx;
 
-		RoleStoryAsset ret = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<RoleStoryAsset> ("role"+idx);
+		RoleStoryAsset ret = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<RoleStoryAsset> ("Roles/role"+idx);
 		if (ret != null) {
 			view.DetailName.text = ret.Name;
 			view.DetailDesp.text = "";
@@ -171,7 +169,7 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 
 	public override void Release(){
 		base.Release ();
-		GameMain.GetInstance ().GetModule<ResLoader> ().UnloadAsset ("role0");
+		GameMain.GetInstance ().GetModule<ResLoader> ().UnloadAsset ("Roles/role0");
 	}
 }
 
