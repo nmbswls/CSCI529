@@ -980,14 +980,14 @@ ParticleSystem:
     curve:
       serializedVersion: 2
       minMaxState: 1
-      scalar: 10
+      scalar: 3
       minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
-          time: 0
-          value: 0.6081085
+          time: 0.004878998
+          value: 0.86486435
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -995,8 +995,8 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.289567
-          value: 0.3036641
+          time: 0.29444218
+          value: 0.43880355
           inSlope: -1.5265148
           outSlope: -1.5265148
           tangentMode: 0
@@ -1004,8 +1004,8 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.68775946
-          value: 0.08150466
+          time: 0.66824347
+          value: 0.095016316
           inSlope: 0.03036789
           outSlope: 0.03036789
           tangentMode: 0
@@ -4757,7 +4757,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -91.9, y: -2.7}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 25, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4850593348040065094
 CanvasRenderer:
