@@ -81,9 +81,14 @@ public class CardContainerLayout : MonoBehaviour
 
     public void Tick(float dTime)
     {
+        int idx = 0;
         foreach(MiniCard card in cards)
         {
             card.Tick(dTime);
+            if (gameMode.state.Cards[idx].TimeLeft < 3f)
+            {
+                card.SetFlashingColor(gameMode.state.Cards[idx].TimeLeft);
+            }
             if (!card.PosDirty || Mathf.Abs(card.targetDegree - card.nowDegree) <= 1e-6)
             {
                 card.PosDirty = false;
@@ -93,8 +98,15 @@ public class CardContainerLayout : MonoBehaviour
             card.nowDegree += (card.targetDegree - card.nowDegree) * dTime * CardMoveSpd;
             card.rt.anchoredPosition = new Vector3(Mathf.Sin(card.nowDegree * Mathf.Deg2Rad) * R, Mathf.Cos(card.nowDegree * Mathf.Deg2Rad) * R - R);
             card.rt.localEulerAngles = new Vector3(0, 0, -card.nowDegree);
+
+
+            idx += 1;
         }
+
+
     }
+
+
 
 
     public bool UseCard(MiniCard toUse)

@@ -253,7 +253,7 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 				if(ret.gameObject != null){
 					if(ret.gameObject == view.PosSkillContainer.gameObject)
 					{
-						vv.root.SetParent(view.PosSkillContainer);
+						vv.root.SetParent(view.PosSkillContainer,false);
 						used = true;
 						RegisterAsChoosed(vv);
 						model.selectedOne.Add(view.avalableList.IndexOf (vv));
@@ -261,7 +261,7 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 				}
 			}
 			if(!used){
-				vv.root.SetParent(view.AvailableContainer);
+				vv.root.SetParent(view.AvailableContainer,false);
 			}
 		};
 	}
@@ -275,7 +275,7 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 		listener.ClearClickEvent ();
 		listener.ClearDragEvent ();
 		listener.OnClickEvent += delegate(PointerEventData eventData) {
-			vv.root.SetParent(view.AvailableContainer);
+			vv.root.SetParent(view.AvailableContainer,false);
 			RegisterAsAvailable(vv);
 			vv.selected = false;
 			model.selectedOne.Remove(view.avalableList.IndexOf (vv));

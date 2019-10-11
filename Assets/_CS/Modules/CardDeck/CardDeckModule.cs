@@ -82,7 +82,6 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
     public override void Setup(){
 		InstId = 0;
         fakeCards();
-
     }
 
 	public CardAsset Load(string cid){

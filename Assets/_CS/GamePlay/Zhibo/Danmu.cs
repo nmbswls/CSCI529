@@ -91,6 +91,8 @@ public class Danmu : MonoBehaviour
         {
             view.BadBg.gameObject.SetActive(false);
         }
+
+        view.textField.raycastTarget = true;
     }
 
     private Color getRandomColor()

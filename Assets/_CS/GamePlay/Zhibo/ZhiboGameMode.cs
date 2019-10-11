@@ -36,7 +36,7 @@ public class ZhiboGameState
 {
     public RoleStats stats;
 
-    public float TimeLeft = 120;
+    public float TimeLeft = 1200;
 
     public List<ZhiboBuff> ZhiboBuffs = new List<ZhiboBuff>();
 
@@ -106,7 +106,10 @@ public class ZhiboGameMode : GameModeBase
     private EmergencyAsset nowEmergency = null;
 
     private Dictionary<string, List<string>> DanmuDict = new Dictionary<string, List<string>>();
- 
+
+    private Dictionary<string, string> BuffDesp = new Dictionary<string, string>();
+
+
     public override void Init()
     {
         mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
@@ -140,6 +143,7 @@ public class ZhiboGameMode : GameModeBase
 
         LoadDanmuDict();
         LoadCard();
+        LoadBuff();
         InitEmergency();
 
         for (int i = 0; i < 3; i++)
@@ -148,6 +152,26 @@ public class ZhiboGameMode : GameModeBase
         }
     }
 
+
+    private void LoadBuff()
+    {
+        BuffDesp.Add("m+", "增加{0}点魅力");
+        BuffDesp.Add("t+", "增加{0}点体力");
+        BuffDesp.Add("k+", "增加{0}点口才");
+        BuffDesp.Add("j+", "增加{0}点技艺");
+        BuffDesp.Add("f+", "增加{0}点反应");
+
+        BuffDesp.Add("m+%", "增加百分比{0}的魅力");
+        BuffDesp.Add("t+%", "增加百分比{0}的体力");
+        BuffDesp.Add("k+%", "增加百分比{0}的口才");
+        BuffDesp.Add("j+%", "增加百分比{0}的技艺");
+        BuffDesp.Add("f+%", "增加百分比{0}的反应");
+    }
+
+    public string GetBuffDesp(string buffname)
+    {
+        return BuffDesp[buffname];
+    }
     private void LoadCard()
     {
         List<CardInfo> infoList = mCardMdl.GetAllCards();
@@ -619,6 +643,9 @@ public class ZhiboGameMode : GameModeBase
                     case "ClearDanmu":
                         DestroyRandomly(5);
                         break;
+                    case "AddCardToDeck":
+                        AddCardToDeck(ce.x, int.Parse(ce.y));
+                        break;
                     default:
                         break;
                 }
@@ -628,6 +655,15 @@ public class ZhiboGameMode : GameModeBase
     }
 
    
+    private void AddCardToDeck(string cardId, int level)
+    {
+
+        string eid = cardId;
+        CardAsset ca = mCardMdl.GetCardInfo(eid);
+        CardInZhibo card = new CardInZhibo(eid, ca.ValidTime, ca.UseTime);
+        card.ca = ca;
+        state.CardDeck.Add(card);
+    }
 
     private List<Danmu> randomPickDanmu(int n)
     {
@@ -655,14 +691,13 @@ public class ZhiboGameMode : GameModeBase
     }
 
 
-    public void GenDanmu(string fengxiang)
+    public void GenDanmu(string fengxian, int num = 50)
     {
-        DanmuLeft += 50;
+        DanmuLeft += num;
     }
 
     public void GenBuff(string BuffId, int value, float duration)
     {
-
 
         ZhiboBuff buff = mUICtrl.GenBuff();
         buff.Init(BuffId, value, duration, this);
@@ -681,34 +716,34 @@ public class ZhiboGameMode : GameModeBase
         {
             switch (buff.buffId)
             {
-                case "p0_fix":
+                case "m+":
                     state.BuffAddValue[0] += buff.buffLevel;
                     break;
-                case "p0_percent":
+                case "m+%":
                     state.BuffAddPercent[0] += buff.buffLevel;
                     break;
-                case "p1_fix":
+                case "t+":
                     state.BuffAddValue[1] += buff.buffLevel;
                     break;
-                case "p1_percent":
+                case "t+%":
                     state.BuffAddPercent[1] += buff.buffLevel;
                     break;
-                case "p2_fix":
+                case "k+":
                     state.BuffAddValue[2] += buff.buffLevel;
                     break;
-                case "p2_percent":
+                case "k+%":
                     state.BuffAddPercent[2] += buff.buffLevel;
                     break;
-                case "p3_fix":
+                case "f+":
                     state.BuffAddValue[3] += buff.buffLevel;
                     break;
-                case "p3_percent":
+                case "f+%":
                     state.BuffAddPercent[3] += buff.buffLevel;
                     break;
-                case "p4_fix":
+                case "j+":
                     state.BuffAddValue[4] += buff.buffLevel;
                     break;
-                case "p4_percent":
+                case "j+%":
                     state.BuffAddPercent[4] += buff.buffLevel;
                     break;
                 default:

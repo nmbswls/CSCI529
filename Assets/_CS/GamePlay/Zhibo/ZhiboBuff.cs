@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class ZhiboBuff : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class ZhiboBuff : MonoBehaviour
 
     private static float basicAlpht = 0.8f;
     private Image icon;
+
     public void Init(string buffId, int buffLevel, float totalLastTime, ZhiboGameMode gameMode)
     {
         this.buffId = buffId;
@@ -31,6 +33,18 @@ public class ZhiboBuff : MonoBehaviour
     public void RegisterEvent()
     {
         //鼠标悬浮显示buff
+        DragEventListener listener = gameObject.GetComponent<DragEventListener>();
+        if (listener == null)
+        {
+            listener = gameObject.AddComponent<DragEventListener>();
+            listener.PointerEnterEvent += delegate (PointerEventData eventData) {
+                gameMode.mUICtrl.ShowBuffDetail(this);
+            };
+
+            listener.PointerExitEvent += delegate (PointerEventData eventData) {
+                gameMode.mUICtrl.HideBuffDetail();
+            };
+        }
     }
     public void BindView()
     {

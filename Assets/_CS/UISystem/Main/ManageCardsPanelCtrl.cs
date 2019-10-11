@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-
-
+using System.Collections.Generic;
 
 public class ManageCardsModel : BaseModel
 {
-
+    public List<CardInfo> NowCardInfos = new List<CardInfo>();
+    public int nowTab = -1;
 }
 
 public class ManageCardsView : BaseView
@@ -17,10 +17,36 @@ public class ManageCardsView : BaseView
     public ScrollRect CardsSR;
 	public Transform CardsContainer;
 
+    public List<CardOutView> CardsViewList = new List<CardOutView>();
+
     public Button Close;
     public Text DetailDesp;
 }
 
+public class CardOutView
+{
+
+    public RectTransform root;
+    public RectTransform CardFace;
+    public CanvasGroup CardCG;
+    public Image Bg;
+    public Image Picture;
+    public Text Desp;
+    public Text Name;
+    public Text TurnLeft;
+
+    public void BindView(Transform transform)
+    {
+        root = transform as RectTransform;
+        CardFace = transform.Find("CardFace") as RectTransform;
+        CardCG = CardFace.GetComponent<CanvasGroup>();
+        Bg = CardFace.GetComponent<Image>();
+        Picture = CardFace.Find("Picture").GetComponent<Image>();
+        Name = CardFace.Find("Name").GetComponent<Text>();
+        Desp = CardFace.Find("Desp").GetComponent<Text>();
+    }
+
+}
 public class CardsTabView : TabGroupChildView{
 
 	public Text Title;
@@ -36,12 +62,14 @@ public class CardsTabView : TabGroupChildView{
 public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView>
 {
 
-	public override void Init(){
-		view = new ManageCardsView ();
-		model = new ManageCardsModel ();
+    ICardDeckModule pCardMgr;
+    IResLoader pResLoader;
 
-        mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
 
+
+    public override void Init(){
+        pCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
+        pResLoader = GameMain.GetInstance().GetModule<ResLoader>();
     }
 
 	public override void BindView(){
@@ -58,7 +86,13 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 
     }
 
-	public override void RegisterEvent(){
+
+    public override void PostInit()
+    {
+        //ShowCards();
+    }
+
+    public override void RegisterEvent(){
 		view.tabGroup.InitTab (typeof(CardsTabView));
 		view.tabGroup.OnValueChangeEvent += SwitchChoose;
 		view.tabGroup.switchTab (0);
@@ -75,9 +109,55 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 
     }
 
-	public void SwitchChoose(int newTab){
+    private void ShowCards()
+    {
+        List<CardInfo> infos = pCardMgr.GetAllCards();
+        foreach(CardOutView vv in view.CardsViewList)
+        {
+            pResLoader.ReleaseGO("UI/Card",vv.root.gameObject);
+        }
+        model.NowCardInfos = infos;
+        foreach (CardInfo c in infos)
+        {
+            GameObject go = pResLoader.Instantiate("UI/Card", view.CardsContainer);
+            CardOutView cardOutView = new CardOutView();
+            cardOutView.BindView(go.transform);
+            view.CardsViewList.Add(cardOutView);
+
+            {
+                ClickEventListerner listener = cardOutView.CardFace.gameObject.GetComponent<ClickEventListerner>();
+                if (listener == null)
+                {
+                    listener = cardOutView.CardFace.gameObject.AddComponent<ClickEventListerner>();
+                }
+
+                listener.ClearClickEvent();
+                listener.OnClickEvent += delegate {
+                    ShowCardDetail(cardOutView);
+                };
+            }
+
+        }
+
+    }
+
+    public void ShowCardDetail(CardOutView vv)
+    {
+        Debug.Log(vv);
+    }
+
+    public void SwitchChoose(int newTab){
 		
-		for (int i = 0; i < view.tabGroup.tabs.Count; i++) {
+		if(newTab == -1 || model.nowTab == newTab)
+        {
+            return;
+        }
+
+
+        model.nowTab = newTab;
+
+
+        for (int i = 0; i < view.tabGroup.tabs.Count; i++) {
 			CardsTabView childView = view.tabGroup.tabs[i] as CardsTabView;
 			childView.BG.color = Color.white;
 		}
@@ -85,7 +165,13 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 			CardsTabView childView = view.tabGroup.tabs [newTab] as CardsTabView;
 			childView.BG.color = Color.red;
 		}
-	}
+
+        if (newTab == 0)
+        {
+            ShowCards();
+        }
+
+    }
 }
 
 

@@ -23,7 +23,7 @@ MonoBehaviour:
   UseTime: 0
   effects:
   - effect: AddStatus
-    x: p0_fix
+    x: m+
     y: 10
     z: 
     w: 

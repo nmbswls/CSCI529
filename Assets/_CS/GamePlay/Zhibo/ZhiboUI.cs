@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class ZhiboView : BaseView
 {
@@ -13,6 +14,8 @@ public class ZhiboView : BaseView
     public Image hotZhu;
     public Image hotHead;
 
+    public Transform BuffDetailPanel;
+    public Text BuffDetail;
 
     public Text hotValue;
     public Text TiliValue;
@@ -88,7 +91,8 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.ChoukaValue.text = "0";
         view.ChoukaImage.fillAmount = view.ChoukaMinFillAmount;
 
-        gameMode.state.Cards.Clear();
+
+        HideBuffDetail();
     }
 
 
@@ -151,12 +155,44 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
         view.hotAnimator = hotView.GetComponent<Animator>();
 
-
+        view.BuffDetailPanel = root.Find("BuffDetail");
+        view.BuffDetail = view.BuffDetailPanel.GetChild(0).GetComponent<Text>();
 
         view.SpeField = root.Find("SpeField") as RectTransform;
         view.BuffContainer = root.Find("BuffContainer") as RectTransform;
     }
 
+    public void ShowDanmuEffect(Vector3 pos)
+    {
+        GameObject go = mResLoader.Instantiate("Zhibo/Effect",root);
+        go.transform.position = pos;
+        DOTween.To
+            (
+                () => go.transform.position,
+                (x) => go.transform.position = x,
+                view.hotZhu.transform.position,
+                1.5f
+            ).OnComplete(delegate ()
+            {
+                mResLoader.ReleaseGO("Zhibo/Effect", go);
+            });
+
+    }
+
+
+    public void ShowBuffDetail(ZhiboBuff buff)
+    {
+
+        view.BuffDetailPanel.transform.position = buff.gameObject.transform.position;
+        view.BuffDetailPanel.gameObject.SetActive(true);
+        string format = gameMode.GetBuffDesp(buff.buffId);
+        view.BuffDetail.text = string.Format(format,10);
+    }
+
+    public void HideBuffDetail()
+    {
+        view.BuffDetailPanel.gameObject.SetActive(false);
+    }
 
     public  override void RegisterEvent()
     {
@@ -261,7 +297,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
 
         danmu.init(gameMode.getRandomDanmu(), isBad,gameMode);
-        danmuGo.transform.SetParent(view.field);
+        danmuGo.transform.SetParent(view.field,false);
         danmu.rect.anchoredPosition = new Vector3(width + 30, -posY, 0);
         danmu.view.textField.fontSize += Random.Range(0,6);
 
@@ -279,9 +315,13 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             {
                 gameMode.GainScore(danmu.isBig ? 3:1);
                 danmu.view.textField.color = Color.gray;
+                danmu.view.textField.raycastTarget = false;
+                ShowDanmuEffect(danmu.transform.position);
             }
             else
             {
+
+
                 if (danmu.left <= 0)
                 {
                     danmu.OnDestroy();
@@ -289,6 +329,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
                     //gameMode.GainScore(10);
                 }
             }
+
         }
     }
 

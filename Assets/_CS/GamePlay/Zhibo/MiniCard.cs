@@ -9,8 +9,10 @@ public class MiniCardView
 
     public RectTransform root;
     public RectTransform CardFace;
+    public CanvasGroup CardCG;
     public Image Bg;
     public Image Picture;
+    public Text Desp;
     public Text Name;
     public Text TimeLeft;
 }
@@ -67,7 +69,7 @@ public class MiniCard : MonoBehaviour
 
         view.Name.text = ca.CardName;
 
-        transform.SetParent(container.transform);
+        transform.SetParent(container.transform,false);
         nowDegree = 20f;
         targetDegree = 20f;
 
@@ -77,6 +79,8 @@ public class MiniCard : MonoBehaviour
         isDestroying = false;
         isHighlight = false;
         PosDirty = false;
+
+        view.CardCG.alpha = 1f;
     }
 
     public void Tick(float dTime)
@@ -98,6 +102,8 @@ public class MiniCard : MonoBehaviour
                 isBacking = false;
             }
         }
+
+
 
     }
 
@@ -146,9 +152,11 @@ public class MiniCard : MonoBehaviour
     {
         view.root = transform as RectTransform;
         view.CardFace = transform.Find("CardFace") as RectTransform;
+        view.CardCG = view.CardFace.GetComponent<CanvasGroup>();
         view.Bg = view.CardFace.GetComponent<Image>();
-        view.Picture = view.CardFace.GetComponentInChildren<Image>();
-        view.Name = view.CardFace.GetComponentInChildren<Text>();
+        view.Picture = view.CardFace.Find("Picture").GetComponent<Image>();
+        view.Name = view.CardFace.Find("Name").GetComponent<Text>();
+        view.Desp = view.CardFace.Find("Desp").GetComponent<Text>();
         view.TimeLeft = view.CardFace.Find("TimeLeft").GetComponent<Text>();
     }
 
@@ -156,10 +164,10 @@ public class MiniCard : MonoBehaviour
     {
 
 
-        DragEventListener listener = view.Picture.gameObject.GetComponent<DragEventListener>();
+        DragEventListener listener = view.CardFace.gameObject.GetComponent<DragEventListener>();
         if (listener == null)
         {
-            listener = view.Picture.gameObject.AddComponent<DragEventListener>();
+            listener = view.CardFace.gameObject.AddComponent<DragEventListener>();
 
 
             listener.OnBeginDragEvent += delegate (PointerEventData eventData) {
@@ -215,11 +223,12 @@ public class MiniCard : MonoBehaviour
                 {
                     return;
                 }
-                isHighlight = true;
+
                 if (container.DraggingIdx != -1)
                 {
                     return;
                 }
+                isHighlight = true;
                 if (isBacking)
                 {
                     isBacking = false;
@@ -315,5 +324,25 @@ public class MiniCard : MonoBehaviour
         isDestroying = true;
         GetComponent<CanvasGroup>().blocksRaycasts = false;
         GameObject.DestroyObject(this, 0.5f);
+    }
+
+    private static float BasicAlpha = 1f;
+    private static float FlashInterval = 0.5f;
+
+    private static float MinAlpha = 0.3f;
+
+    public void SetFlashingColor(float leftTime)
+    {
+        if (isDestroying)
+        {
+            return;
+        }
+        if (isDragging|| isHighlight)
+        {
+            view.CardCG.alpha = BasicAlpha;
+            return;
+        }
+        float a = Mathf.Abs(1 - (leftTime - (int)(leftTime / FlashInterval) * FlashInterval) / FlashInterval * 2);
+        view.CardCG.alpha = MinAlpha + a * (BasicAlpha - MinAlpha);
     }
 }
