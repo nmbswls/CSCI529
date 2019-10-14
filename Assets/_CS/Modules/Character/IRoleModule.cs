@@ -20,4 +20,13 @@ public interface IRoleModule : IModule{
     ScheduleInfo GetInfo(string sid);
 
     RoleStats GetStats();
+
+
+    void AddMeili(float v);
+    void AddTili(float v);
+    void AddKoucai(float v);
+    void AddJiyi(float v); 
+    void AddFanying(float v);
+
+
 }

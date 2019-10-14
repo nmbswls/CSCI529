@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardId: card0002
   CardName: "\u53EC\u5524\u571F\u8C6A"
-  CardDesp: "\u53EC\u5524\u4E00\u5806\u571F\u8C6A"
+  CardDesp: "\u53EC\u5524\u571F\u8C6A\u5237\u793C"
+  CardEffectDesp: "\u7ACB\u5373\u5237\u65B03\u4EF6\u968F\u673A\u793C\u7269"
   CardType: 0
   cost: 0
-  IsConsume: 1
+  IsConsume: 0
   OverDueTurn: 0
   ValidTime: 0
-  UseTime: 0
+  UseTime: 3
   effects:
   - effect: SpawnGift
     x: 3

@@ -36,14 +36,14 @@ public class HintCtrl : UIBaseCtrl<HintModel, HintView>
             mUIMgr.CloseHint(this);
         }else if (model.left < 0.4f)
         {
-            root.transform.position += Vector3.up * dTime * FastSpeed;
+            root.transform.localPosition += Vector3.up * dTime * FastSpeed;
         }else if (model.left < 1f)
         {
-            root.transform.position += Vector3.up * dTime * LowSpeed;
+            root.transform.localPosition += Vector3.up * dTime * LowSpeed;
         }
         else
         {
-            root.transform.position += Vector3.up * dTime * FastSpeed;
+            root.transform.localPosition += Vector3.up * dTime * FastSpeed;
         }
     }
 

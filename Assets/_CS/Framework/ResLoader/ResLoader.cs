@@ -15,6 +15,7 @@ public class ResLoader : ModuleBase, IResLoader
 
     UnityAction<Scene, LoadSceneMode> lastCallback = null;
 
+    private IWWWMgr mWWWMgr;
 
     private GameObjectPool mGOPool = new GameObjectPool();
 	private AssetPool mAssetPool = new AssetPool();
@@ -27,7 +28,15 @@ public class ResLoader : ModuleBase, IResLoader
 	public override void Setup(){
 	}
 
-	public IEnumerator LoadLevelAsync(string scenePath, LoadSceneMode mode)
+    public override void Tick(float dTime)
+    {
+        if (mWWWMgr != null)
+        {
+            mWWWMgr.Update(dTime);
+        }
+    }
+
+    public IEnumerator LoadLevelAsync(string scenePath, LoadSceneMode mode)
 	{
         AsyncOperation async = SceneManager.LoadSceneAsync(scenePath,mode);
         //GameEvent e = null;
@@ -185,7 +194,41 @@ public class ResLoader : ModuleBase, IResLoader
 
 
 
+    private void HandleLoadWWWResAsync<T>(string url, AsynvLoadCallback<T> callback) where T : UnityEngine.Object
+    {
+        IWWWMgr wwwMgr = GetWWWMgr();
 
+        T asset = wwwMgr.TryLoadFromCache<T>(WWWType.DEFAULT, url);
+
+        if (asset != null && callback != null)
+        {
+            callback(asset);
+            return;
+        }
+        wwwMgr.BuildRequest(WWWType.DEFAULT, url)
+            .SetSuccessCallback(delegate (WWWRequestHandle handle)
+            {
+                asset = wwwMgr.TryLoadFromCache<T>(WWWType.DEFAULT, url);
+                if (callback != null)
+                {
+                    callback(asset);
+                }
+            }).Get();
+    }
+
+    public IWWWMgr GetWWWMgr()
+    {
+        if (mWWWMgr == null)
+        {
+            mWWWMgr = new WWWMgr(mAssetPool);
+        }
+        return mWWWMgr;
+    }
+
+    public void LoadWWWResAsync<T>(string path, AsynvLoadCallback<T> callback) where T : UnityEngine.Object
+    {
+        HandleLoadWWWResAsync(path, callback);
+    }
 
 
 }

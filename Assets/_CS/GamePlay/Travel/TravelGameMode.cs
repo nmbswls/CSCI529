@@ -4,12 +4,24 @@ using DG.Tweening;
 using UnityEngine;
 
 
+
+
+public class TravelMapInfo
+{
+    public string MapName;
+    public List<TravelPotInfo> pots = new List<TravelPotInfo>();
+    public List<int[]> edges = new List<int[]>();
+}
+
 public class TravelGameState
 {
     public List<TravelPot> Pots = new List<TravelPot>();
+
     public List<LineRenderer> lines = new List<LineRenderer>();
 
     public int PlayerPotIdx = 0;
+
+    public Dictionary<int, List<int>> graph = new Dictionary<int, List<int>>();
 }
 
 
@@ -35,6 +47,7 @@ public class TravelGameMode : GameModeBase {
 
 	public GameObject Map;
     Transform PotLyaer;
+    GameObject Pots;
     Transform LineLayer;
     
 
@@ -52,21 +65,22 @@ public class TravelGameMode : GameModeBase {
     private static int PawnZ = 10;
     private static int LineZ = 95;
 
-    private void GeneratePots()
+    private void GeneratePots(TravelMapInfo info)
     {
-
-        foreach(Transform child in PotLyaer.transform)
+        int idx = 0;
+        foreach(Transform child in Pots.transform)
         {
             GameObject potGo = mResLoader.Instantiate("Travel/Pot",child);
             TravelPot pot = potGo.GetComponent<TravelPot > ();
-            pot.Init(this);
+            pot.Init(info.pots[idx],this);
             state.Pots.Add(pot);
+            idx += 1;
         }
 
-        List<int[]> edges = new List<int[]>();
-        edges.Add(new int[] {0,1});
 
-        foreach(int[] edge in edges)
+
+
+        foreach (int[] edge in info.edges)
         {
             GameObject lineGo = mResLoader.Instantiate("Travel/Line", LineLayer);
             LineRenderer line = lineGo.GetComponent<LineRenderer>();
@@ -92,17 +106,42 @@ public class TravelGameMode : GameModeBase {
         BindGameObject();
         InitCameraControl();
 
-        travelUI = pUIMgr.ShowPanel("TravelPanel") as TravelUI;
+        travelUI = pUIMgr.ShowPanel("TravelPanel",false) as TravelUI;
 
         SetMap();
-        GeneratePots();
 
+        LoadMap(FakeMapInfo());
 
         isMovingCamera = false;
         isContinueMovingCamera = false;
         Initialized = true;
     }
 
+
+    private TravelMapInfo FakeMapInfo()
+    {
+        TravelMapInfo ret = new TravelMapInfo();
+
+        for(int i = 0; i < 7; i++)
+        {
+            TravelPotInfo pot = new TravelPotInfo("地点" + i);
+            pot.Opts = new List<string>(new string[] {"a","b","c"});
+            ret.pots.Add(pot);
+        }
+
+        List<int[]> edges = new List<int[]>();
+        edges.Add(new int[] { 0, 1});
+        edges.Add(new int[] { 1, 2 });
+        edges.Add(new int[] { 1, 3 });
+        edges.Add(new int[] { 2, 4 });
+        edges.Add(new int[] { 2, 5 });
+        edges.Add(new int[] { 4, 6 });
+        edges.Add(new int[] { 5, 6 });
+
+        ret.MapName = "Map00";
+        ret.edges = edges;
+        return ret;
+    }
 
 
     public void FinishTravel()
@@ -122,7 +161,7 @@ public class TravelGameMode : GameModeBase {
         pUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
 
         clickableManager = GameObject.Find("ClickManager").GetComponent<ClickableManager2D>() ;
-        PotLyaer = GameObject.Find("PotLayer").transform;
+        PotLyaer = GameObject.Find("Pots").transform;
         LineLayer = GameObject.Find("Lines").transform;
 
         Map = GameObject.Find("Map");
@@ -131,6 +170,29 @@ public class TravelGameMode : GameModeBase {
         clickableManager.m_camera = mainCamera;
 
     }
+
+    public void LoadMap(TravelMapInfo info)
+    {
+        int numPot = info.pots.Count;
+        Pots = mResLoader.Instantiate("Travel/Maps/"+ info.MapName, PotLyaer);
+        GeneratePots(info);
+
+        for(int i = 0; i < info.edges.Count; i++)
+        {
+            int[] edge =info.edges[i];
+            if (!state.graph.ContainsKey(edge[0]))
+            {
+                state.graph.Add(edge[0], new List<int>());
+            }
+            if (!state.graph.ContainsKey(edge[1]))
+            {
+                state.graph.Add(edge[1], new List<int>());
+            }
+            state.graph[edge[0]].Add(edge[1]);
+            state.graph[edge[1]].Add(edge[0]);
+        }
+    }
+
 
     public void ChoosePot(TravelPot pot)
     {
@@ -152,10 +214,21 @@ public class TravelGameMode : GameModeBase {
             }
             state.Pots[index].Selected();
             highlightPotIdx = index;
+
+            ChangeDetail(pot);
+
         }
         else
         {
             if (state.PlayerPotIdx == index)
+            {
+                return;
+            }
+            if (!state.graph.ContainsKey(state.PlayerPotIdx))
+            {
+                return;
+            }
+            if (state.graph[state.PlayerPotIdx].IndexOf(index) == -1)
             {
                 return;
             }
@@ -203,6 +276,11 @@ public class TravelGameMode : GameModeBase {
         }
     }
 
+    public void ChangeDetail(TravelPot pot)
+    {
+
+        travelUI.ChangeDetail(pot);
+    }
 
     public static float MAX_MAP_SPEED = 20f;
     public static float MAX_DIFF = 0.01f;

@@ -51,6 +51,7 @@ public class GameMain : MonoBehaviour,IGameMain
 		DefaultModuleList.ConfigList.Add (new ModuleConfig ("SpeEventMgr"));
 
 		DefaultModuleList.ConfigList.Add (new ModuleConfig ("CoreManager"));
+        DefaultModuleList.ConfigList.Add(new ModuleConfig("SkillTreeMgr"));
 
 		mGameMainConfig.Config.Add(DefaultModuleList);
 		LoadInitModules();
@@ -103,4 +104,15 @@ public class GameMain : MonoBehaviour,IGameMain
 		T t = mModuleMgr.GetModule<T>();
 		return t;
 	}
+
+    public long GetTime(bool bflag = true)
+    {
+        TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        long ret;
+        if (bflag)
+            ret = Convert.ToInt64(ts.TotalSeconds);
+        else
+            ret = Convert.ToInt64(ts.TotalMilliseconds);
+        return ret;
+    }
 }

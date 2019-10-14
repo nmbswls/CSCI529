@@ -5,6 +5,8 @@ public interface IGameMain
 {
 	void RunCoroutine(IEnumerator e);
 	T GetModule<T>() where T : IModule;
+
+    long GetTime(bool bflag = true);
 }
 
 public interface IModuleMgr

@@ -13,10 +13,23 @@ MonoBehaviour:
   m_Name: card0007
   m_EditorClassIdentifier: 
   CardId: card0007
-  CardName: "\u5403\u5C4E"
-  CardDesp: 
+  CardName: "\u5355\u6740\uFF01"
+  CardDesp: "\u4E2D\u8DEF\u5355\u6740\u3002"
+  CardEffectDesp: "\u7ACB\u5373\u83B7\u5F9734\u70B9\u70ED\u5EA6\u300230%\u51E0\u7387\u83B7\u5F971\u5F20\u3010\u53CC\u6740\u3011\u3002"
   CardType: 0
-  cost: 0
+  cost: 10
   IsConsume: 0
   OverDueTurn: 0
-  effects: []
+  ValidTime: 10
+  UseTime: 5
+  effects:
+  - effect: GainCardWithPossibility
+    x: card0008
+    y: 30
+    z: 
+    w: 
+  - effect: GetScore
+    x: 34
+    y: 
+    z: 
+    w: 

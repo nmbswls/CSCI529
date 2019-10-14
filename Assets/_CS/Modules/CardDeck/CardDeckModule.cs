@@ -30,7 +30,9 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 	Dictionary<string, CardAsset> CardDict = new Dictionary<string, CardAsset>();
 
 
-    public void GainNewCard (string cid)
+    Dictionary<string, List<CardInfo>> SkillCardDict = new Dictionary<string, List<CardInfo>>();
+
+    public CardInfo GainNewCard (string cid)
 	{
 		CardAsset aset = null;
 		CardDict.TryGetValue (cid, out aset);
@@ -38,10 +40,42 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 			aset = Load (cid);
 		}
 		if (aset != null) {
-			cards.Add (new CardInfo(InstId, cid,Time.realtimeSinceStartup));
+            CardInfo info = new CardInfo(InstId, cid, Time.realtimeSinceStartup);
+
+            cards.Add (info);
 			InstId += 1;
+            return info;
 		}
+        return null;
 	}
+
+
+    public void RemoveSkillCards(string skillId)
+    {
+        if (!SkillCardDict.ContainsKey(skillId))
+        {
+            return;
+        }
+        foreach(CardInfo info in SkillCardDict[skillId])
+        {
+            cards.Remove(info);
+        }
+        SkillCardDict[skillId].Clear();
+    }
+
+    public void AddSkillCards(string skillId, List<string> cid)
+    {
+        if (!SkillCardDict.ContainsKey(skillId))
+        {
+            SkillCardDict.Add(skillId, new List<CardInfo>());
+        }
+
+        foreach (string id in cid)
+        {
+            CardInfo info = GainNewCard(id);
+            SkillCardDict[skillId].Add(info);
+        }
+    }
 
     public void fakeCards()
     {

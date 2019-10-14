@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardId: card0003
   CardName: "\u5F39\u5E55\u6765\u88AD!"
-  CardDesp: 
+  CardDesp: "\u53EC\u5524\u5F39\u5E55"
+  CardEffectDesp: "\u5237\u65B020\u6761\u6B63\u9762\u5F39\u5E55"
   CardType: 0
   cost: 0
   IsConsume: 0
@@ -23,7 +24,7 @@ MonoBehaviour:
   UseTime: 0
   effects:
   - effect: GenGoodDanmu
-    x: 30
+    x: 20
     y: 
     z: 
     w: 

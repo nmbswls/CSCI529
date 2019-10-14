@@ -8,7 +8,7 @@ public interface IUIMgr : IModule
 	void LockUI();
 	void UnlockUI();
 
-	IUIBaseCtrl ShowPanel (string panelStr);
+	IUIBaseCtrl ShowPanel (string panelStr,bool modal = true);
 	void CloseFirstPanel();
 	void CloseCertainPanel (IUIBaseCtrl toClose);
 	//mainMask
@@ -24,5 +24,7 @@ public interface IUIMgr : IModule
     Vector3 GetLocalPosition(Vector2 screenPos, RectTransform target);
 
     Camera GetCamera();
+
+    void ShowMsgBox();
 }
 

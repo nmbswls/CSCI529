@@ -7,7 +7,7 @@ public class SpecialEvent
 
     public string EventId;
     public LogicNode TriggerCond;
-    public string action;
+    public List<string> actions = new List<string>();
     public bool OneTime;
 
     public SpecialEvent()
@@ -15,11 +15,11 @@ public class SpecialEvent
 
     }
 
-    public SpecialEvent(string EventId, LogicNode TriggerCond, string action)
+    public SpecialEvent(string EventId, LogicNode TriggerCond, List<string> actions)
     {
         this.EventId = EventId;
         this.TriggerCond = TriggerCond;
-        this.action = action;
+        this.actions = actions;
     }
 }
 
@@ -114,15 +114,15 @@ public class SpeEventMgr : ModuleBase, ISpeEventMgr
         {
             string eid = "e0";
             LogicNode node = pLogidTree.ConstructFromString("True()&!False()");
-            string action = "d0";
-            EventDict["e0"] = new SpecialEvent(eid, node, action);
+            List<string> actions = new List<string>(new string[] { "d0" });
+            EventDict["e0"] = new SpecialEvent(eid, node, actions);
         }
 
         {
             string eid = "e1";
             LogicNode node = pLogidTree.ConstructFromString("True()&!False()");
-            string action = "d1";
-            EventDict["e1"] = new SpecialEvent(eid, node, action);
+            List<string> actions = new List<string>(new string[] { "d1" });
+            EventDict["e1"] = new SpecialEvent(eid, node, actions);
         }
 
         //EventGroup.choose(3);

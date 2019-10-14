@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardId: card0001
   CardName: "\u70C2\u6897"
-  CardDesp: "\u975E\u5E38\u70C2\u7684\u6897\uFF0C\u5F88\u5C34\u5C2C"
+  CardDesp: "\u975E\u5E38\u70C2\u7684\u6897\uFF0C\u5BB9\u6613\u5F15\u8D77\u51B7\u573A"
+  CardEffectDesp: "\u83B7\u5F9710\u70B9\u70ED\u5EA6\u3002\u5F15\u8D77\u5C11\u91CF\u5410\u69FD\u3002"
   CardType: 1
   cost: 0
   IsConsume: 0
   OverDueTurn: 0
   ValidTime: 0
-  UseTime: 0
+  UseTime: 1
   effects:
   - effect: GetScore
     x: 10+1.1*t+0.5*m

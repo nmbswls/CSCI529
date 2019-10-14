@@ -34,6 +34,8 @@ public class ScheduleInfo
     }
 }
 
+
+
 public class RoleStats
 {
 
@@ -67,6 +69,7 @@ public class RoleModule : ModuleBase, IRoleModule
 
     private ISpeEventMgr pEventMgr;
     private ICoreManager pCoreMgr;
+    private ISkillTreeMgr pSkillTreeMgr;
 
     private RoleStats roleStats = new RoleStats();
 
@@ -124,7 +127,7 @@ public class RoleModule : ModuleBase, IRoleModule
 
         pEventMgr = GameMain.GetInstance().GetModule<SpeEventMgr>();
         pCoreMgr = GameMain.GetInstance().GetModule<CoreManager>();
-
+        pSkillTreeMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
     }
 
     public RoleStats GetStats()
@@ -212,6 +215,27 @@ public class RoleModule : ModuleBase, IRoleModule
     public void UnlockApp(string appId)
     {
 
+    }
+
+    public void AddMeili(float v)
+    {
+        roleStats.meili += v;
+    }
+    public void AddTili(float v)
+    {
+        roleStats.tili += v;
+    }
+    public void AddKoucai(float v)
+    {
+        roleStats.koucai += v;
+    }
+    public void AddJiyi(float v)
+    {
+        roleStats.jiyi += v;
+    }
+    public void AddFanying(float v)
+    {
+        roleStats.fanying += v;
     }
 }
 

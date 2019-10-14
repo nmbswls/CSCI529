@@ -37,6 +37,10 @@ public class ModuleMgr: IModuleMgr
 
 		RegModuleList["CoreManager"] = typeof(CoreManager);
 
+        RegModuleList["SkillTreeMgr"] = typeof(SkillTreeMgr);
+
+
+
         mMapType[typeof(CardDeckModule)] = "CardDeck";
         mMapType[typeof(UIMgr)] = "UIMgr";
         mMapType[typeof(ResLoader)] = "ResLoader";

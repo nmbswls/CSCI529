@@ -78,6 +78,9 @@ public class UIMgr : ModuleBase, IUIMgr
         mUITypeMap["TravelPanel"] = typeof(TravelUI);
         mUITypeMap["ModelMask"] = typeof(ModelMask);
 
+        mUITypeMap["MsgBox"] = typeof(MsgBoxCtrl);
+
+
     }
 
 	public void LockUI ()
@@ -142,8 +145,8 @@ public class UIMgr : ModuleBase, IUIMgr
     {
         return mCamera;
     }
-    public IUIBaseCtrl ShowPanel (string panelStr)
-	{
+    public IUIBaseCtrl ShowPanel (string panelStr, bool modal = true)
+    {
 		string nname = panelStr;
         IUIBaseCtrl UICtrl = null;
 
@@ -166,11 +169,11 @@ public class UIMgr : ModuleBase, IUIMgr
 				mUILayerList.Add(UICtrl);
 			}
 		}
-		AdjustLayerOrder ();
+		AdjustLayerOrder (modal);
         return UICtrl;
     }
 
-	private void AdjustLayerOrder(){
+	private void AdjustLayerOrder(bool modal = true){
 
 		for (int i = 0; i < mUILayerList.Count-1; i++) {
 			Transform tr = mUILayerList [i].GetTransform ();
@@ -186,8 +189,15 @@ public class UIMgr : ModuleBase, IUIMgr
 
 			}
 		}
-
-        mask.GetTransform().SetSiblingIndex(mUILayerList.Count - 1);
+        if (modal)
+        {
+            mask.GetTransform().SetSiblingIndex(mUILayerList.Count - 1);
+            mask.GetTransform().gameObject.SetActive(true);
+        }
+        else
+        {
+            mask.GetTransform().gameObject.SetActive(false);
+        }
         if (mUILayerList.Count > 0)
         {
             mUILayerList[mUILayerList.Count - 1].GetTransform().SetSiblingIndex(mUILayerList.Count);
@@ -245,6 +255,10 @@ public class UIMgr : ModuleBase, IUIMgr
         return localPos;
     }
 
+    public void ShowMsgBox()
+    {
+        ShowPanel("MsgBox");
+    }
 
 }
 

@@ -21,6 +21,7 @@ public class ZhiboView : BaseView
     public Text TiliValue;
     public Image TiliImage;
 
+    public Image Actions;
     public Animator hotAnimator;
 
 
@@ -160,6 +161,8 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
         view.SpeField = root.Find("SpeField") as RectTransform;
         view.BuffContainer = root.Find("BuffContainer") as RectTransform;
+
+        view.Actions = root.Find("Actions").GetComponent<Image>();
     }
 
     public void ShowDanmuEffect(Vector3 pos)
@@ -196,6 +199,17 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public  override void RegisterEvent()
     {
+        {
+            ClickEventListerner listener = view.Actions.gameObject.GetComponent<ClickEventListerner>();
+            if (listener == null)
+            {
+                listener = view.Actions.gameObject.AddComponent<ClickEventListerner>();
+            }
+            listener.ClearClickEvent();
+            listener.OnClickEvent += delegate {
+                Debug.Log(gameMode.state.CardDeck);
+            };
+        }
 
     }
 

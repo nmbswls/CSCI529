@@ -159,7 +159,7 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 				ChooseBranch(idx);
 			});
 		}
-
+        view.skipButton.onClick.RemoveAllListeners();
         view.skipButton.onClick.AddListener(delegate
         {
 

@@ -32,16 +32,22 @@ public class CardAsset : ScriptableObject
 	[TextArea(3,10)]
 	public string CardDesp;
 
-	public eCardType CardType;
+    [TextArea(3, 10)]
+    public string CardEffectDesp;
+
+    public eCardType CardType;
 
     public int cost=0;
 
 	public bool IsConsume;
 
-	public bool OverDueTurn;
+    //过期回合数
+	public int OverDueTurn;
 
+    //在手牌中存活时间
     public float ValidTime;
 
+    //单局游戏中使用次数
     public int UseTime;
 
 	public List<object> args = new List<object>();

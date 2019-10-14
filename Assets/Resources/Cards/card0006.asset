@@ -13,17 +13,23 @@ MonoBehaviour:
   m_Name: card0006
   m_EditorClassIdentifier: 
   CardId: card0006
-  CardName: "\u8BF4\u60C5\u8BDD"
-  CardDesp: 
+  CardName: "\u4E13\u6CE8\u6E38\u620F"
+  CardDesp: "\u5728\u6253\u56E2\uFF0C\u6302\u4E86"
+  CardEffectDesp: "\u6280\u827A\u589E\u52A030\uFF0C\u53CD\u5E94\u964D\u4F4E10"
   CardType: 0
   cost: 0
   IsConsume: 0
   OverDueTurn: 0
-  ValidTime: 0
+  ValidTime: 15
   UseTime: 0
   effects:
   - effect: AddStatus
-    x: m+
-    y: 10
+    x: j+
+    y: 30
+    z: 
+    w: 
+  - effect: AddStatus
+    x: f+
+    y: -10
     z: 
     w: 

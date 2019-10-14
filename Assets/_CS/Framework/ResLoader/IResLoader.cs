@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+
 public delegate void OnSceneLoadedDlg(Scene scene, LoadSceneMode mode);
 
 public interface IResLoader : IModule {
@@ -33,5 +34,7 @@ public interface IResLoader : IModule {
 
     void ReleaseGO(string str, GameObject obj);
 
+
+    void LoadWWWResAsync<T>(string path, ResLoader.AsynvLoadCallback<T> callback) where T : Object;
 
 }

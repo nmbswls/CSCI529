@@ -30,6 +30,13 @@ public class CardInZhibo
         this.TimeLeft = TimeLfet;
         this.UseLeft = UseLeft;
     }
+    public CardInZhibo(CardAsset ca)
+    {
+        this.CardId = ca.CardId;
+        this.TimeLeft = ca.ValidTime;
+        this.UseLeft = ca.UseTime;
+        this.ca = ca;
+    }
 }
 
 public class ZhiboGameState
@@ -148,7 +155,7 @@ public class ZhiboGameMode : GameModeBase
 
         for (int i = 0; i < 3; i++)
         {
-            AddNewCard();
+            AddCardFromDeck();
         }
     }
 
@@ -219,7 +226,7 @@ public class ZhiboGameMode : GameModeBase
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            AddNewCard();
+            AddCardFromDeck();
         }
 
         if (Input.GetKeyDown(KeyCode.A))
@@ -265,7 +272,7 @@ public class ZhiboGameMode : GameModeBase
             mUICtrl.ChangeChouka(state.ChoukaValue);
             for(int i = 0; i < cardNum; i++)
             {
-                AddNewCard();
+                AddCardFromDeck();
             }
         }
 
@@ -322,7 +329,7 @@ public class ZhiboGameMode : GameModeBase
             {
                 if (state.Cards[i].NeedDiscard)
                 {
-                    DiscardCard(state.Cards[i]);
+                    DiscardCard(state.Cards[i],false);
                     mUICtrl.GetCardContainer().RemoveCard(i);
                 }
                 else
@@ -372,6 +379,14 @@ public class ZhiboGameMode : GameModeBase
             spdRate = 1f;
             EmergencyChoice c = ea.Choices[idx];
             Debug.Log(c.Content);
+            if(c.NextEmId != null && c.NextEmId != string.Empty)
+            {
+
+            }
+            if (c.Ret=="Hot")
+            {
+
+            }
         };
     }
 
@@ -508,7 +523,31 @@ public class ZhiboGameMode : GameModeBase
         shuffle<CardInZhibo>(state.CardDeck);
     }
 
-    public void AddNewCard()
+    public void GainNewCard(string cardId)
+    {
+        CardAsset ca = mCardMdl.GetCardInfo(cardId);
+        if (ca == null)
+        {
+            return;
+        }
+        CardInZhibo info = new CardInZhibo(ca);
+
+
+        bool ret = mUICtrl.AddNewCard(cardId);
+        state.Cards.Add(info);
+    }
+
+    public void GainNewCardWithPossiblity(string cardId, int possibility)
+    {
+        int randInt = Random.Range(0, 100);
+        if(randInt >= possibility)
+        {
+            return;
+        }
+        GainNewCard(cardId);
+    }
+
+    public void AddCardFromDeck()
     {
 
         if(state.CardDeck.Count == 0)
@@ -534,7 +573,11 @@ public class ZhiboGameMode : GameModeBase
 
         state.CardDeck.RemoveAt(0);
         state.Cards.Add(info);
-        info.TimeLeft = 15f;
+
+        if(info.ca.ValidTime > 0)
+        {
+            info.TimeLeft = info.ca.ValidTime;
+        }
         //mUICtrl.GetCardContainer().UpdateCard(state.Cards.Count-1,info);
     }
 
@@ -555,21 +598,19 @@ public class ZhiboGameMode : GameModeBase
     }
 
 
-    private void DiscardCard(CardInZhibo cinfo)
+    private void DiscardCard(CardInZhibo cinfo, bool costUseTime=true)
     {
         state.Cards.Remove(cinfo);
-        if (cinfo.UseLeft != -1)
+        if (costUseTime && cinfo.UseLeft  > 0)
         {
             cinfo.UseLeft -= 1;
+            if (cinfo.UseLeft == 0)
+            {
+                return;
+            }
         }
-        if (cinfo.UseLeft == 0)
-        {
-            //xiaohui
-        }
-        else
-        {
-            state.CardUsed.Add(cinfo);
-        }
+
+        state.CardUsed.Add(cinfo);
         cinfo.TimeLeft = 0;
         cinfo.NeedDiscard = false;
     }
@@ -595,8 +636,8 @@ public class ZhiboGameMode : GameModeBase
 
     private void GenSpeedUp(float duration = 5f)
     {
-        state.AccelerateRate = 1.8f;
-        state.AccelerateDur = state.AccelerateDur > duration ? state.AccelerateDur : duration;
+        state.AccelerateRate = 2f;
+        state.AccelerateDur = (state.AccelerateDur < 0 ? 0 : state.AccelerateDur) + duration;
     }
 
     public void ExcuteUseCard(CardInZhibo card)
@@ -645,6 +686,9 @@ public class ZhiboGameMode : GameModeBase
                         break;
                     case "AddCardToDeck":
                         AddCardToDeck(ce.x, int.Parse(ce.y));
+                        break;
+                    case "GainCardWithPossibility":
+                        GainNewCardWithPossiblity(ce.x, int.Parse(ce.y));
                         break;
                     default:
                         break;
