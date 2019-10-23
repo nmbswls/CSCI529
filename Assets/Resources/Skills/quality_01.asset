@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54afdd85947a448e0a1fb1d46d600b96, type: 3}
   m_Name: quality_01
   m_EditorClassIdentifier: 
-  SkillId: 
-  SkillName: 
-  SkingDesp: "\u63D0\u9AD8\u81EA\u6211\u4FEE\u517B\n"
+  SkillId: quality_01
+  SkillName: "\u4FEE\u517B"
+  SkingDesp: "\u4E3B\u64AD\u7684\u81EA\u6211\u4FEE\u517B\n"
   MaxLevel: 1
   SkillType: quality
   AttachCards:

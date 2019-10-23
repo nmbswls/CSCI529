@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: card0003
   m_EditorClassIdentifier: 
   CardId: card0003
-  CardName: "\u5F39\u5E55\u6765\u88AD!"
-  CardDesp: "\u53EC\u5524\u5F39\u5E55"
+  CardName: "\u4F18\u8D28\u7F51\u7EDC"
+  CardDesp: "\u9AD8\u901F\u7684\u7F51\u7EDC\u4F7F\u4F60\u53EF\u4EE5\u6D41\u7545\u5730\u4E0E\u5F39\u5E55\u4EA4\u6D41"
   CardEffectDesp: "\u5237\u65B020\u6761\u6B63\u9762\u5F39\u5E55"
   CardType: 0
-  cost: 0
+  cost: 1
   IsConsume: 0
+  HasTurnEffect: 0
   OverDueTurn: 0
-  ValidTime: 0
+  ValidTime: 30
   UseTime: 0
   ModelCard: 
-  effects:
-  - effect: GenGoodDanmu
-    effectString: 20
+  Effects: []
+  TurnEffects: []

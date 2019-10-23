@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: caiyi_01
   m_EditorClassIdentifier: 
   SkillId: caiyi_01
-  SkillName: 
-  SkingDesp: caiyi
+  SkillName: "\u8868\u6F14\u8BAD\u7EC3"
+  SkingDesp: "\u4E3B\u64AD\u5FC5\u5907\u7684\u6280\u80FD"
   MaxLevel: 1
   SkillType: caiyi
   AttachCards:

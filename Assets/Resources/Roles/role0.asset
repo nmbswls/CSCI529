@@ -19,6 +19,18 @@ MonoBehaviour:
   initFreePoint: 10
   initSkillPoint: 15
   initOwing: e9030000ea030000
+  initCards:
+  - card0001
+  - card0001
+  - card0001
+  - card0023
+  - card0023
+  - card0020
+  - card0020
+  - card0022
+  - card0003
+  - card1003
+  initSkills: []
   specialList:
   - "\u4F60\u6CA1\u6709\u591A\u5C11\u7ECF\u9A8C\uFF0C\u4F46\u5145\u6EE1\u70ED\u60C5"
   - "\u6700\u539F\u6C41\u539F\u5473\u7684\u6E38\u620F\uFF0C\u63A8\u8350\u521D\u6B21\u5C1D\u8BD5"

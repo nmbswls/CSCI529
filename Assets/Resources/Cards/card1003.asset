@@ -13,14 +13,22 @@ MonoBehaviour:
   m_Name: card1003
   m_EditorClassIdentifier: 
   CardId: card1003
-  CardName: 
-  CardDesp: 
-  CardEffectDesp: 
+  CardName: "\u522E\u80E1\u5200\u9F20\u6807"
+  CardDesp: "\u6E38\u620F\u7528\u9F20\u6807"
+  CardEffectDesp: "\u6BCF\u56DE\u5408\u6280\u827A+1\n\u6E38\u620F\u7C7B\u52A0\u6210+1"
   CardType: 0
   cost: 0
   IsConsume: 0
+  HasTurnEffect: 1
   OverDueTurn: 0
   ValidTime: 0
   UseTime: 0
   ModelCard: 
-  effects: []
+  Effects:
+  - effect: Chongzhu
+    effectString: 
+  TurnEffects:
+  - effect: jiyi+
+    effectString: 1
+  - effect: game+
+    effectString: 1

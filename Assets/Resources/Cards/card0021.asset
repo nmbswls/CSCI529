@@ -19,10 +19,12 @@ MonoBehaviour:
   CardType: 0
   cost: 2
   IsConsume: 0
+  HasTurnEffect: 0
   OverDueTurn: 0
   ValidTime: 0
   UseTime: 0
   ModelCard: 
-  effects:
+  Effects:
   - effect: GetScore
     effectString: 9
+  TurnEffects: []
