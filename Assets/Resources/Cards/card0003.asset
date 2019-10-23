@@ -22,9 +22,7 @@ MonoBehaviour:
   OverDueTurn: 0
   ValidTime: 0
   UseTime: 0
+  ModelCard: 
   effects:
   - effect: GenGoodDanmu
-    x: 20
-    y: 
-    z: 
-    w: 
+    effectString: 20

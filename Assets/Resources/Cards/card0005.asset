@@ -22,9 +22,7 @@ MonoBehaviour:
   OverDueTurn: 0
   ValidTime: 15
   UseTime: 0
+  ModelCard: 
   effects:
   - effect: SpeedUp
-    x: 5
-    y: 
-    z: 
-    w: 
+    effectString: 5

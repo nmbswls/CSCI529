@@ -8,8 +8,11 @@ using UnityEngine.EventSystems;
 public class Tezhi{
 	public int Score;
 	public string Name;
+    public List<string> Effects = new List<string>();
 }
 public class AdjustInitModel : BaseModel{
+
+    public string roleId;
 	
 	public List<Tezhi> availabelTezhi = new List<Tezhi>();
 	public List<int> selectedOne = new List<int>();
@@ -74,9 +77,20 @@ public class BasePropertyLineView{
 public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 {
 
-	public override void Init(){
-		
-		model.extra = new int[5];
+    IRoleModule pRoleMgr;
+
+    public void SetRoleId(int idx)
+    {
+        model.roleId = idx + "";
+    }
+
+
+    public override void Init(){
+
+        pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
+
+
+        model.extra = new int[5];
         SetupAvailableTezhi();
 
     }
@@ -157,11 +171,26 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 
     }
 
+    public void SetupPlayerInfo()
+    {
+        //将数值写入rolemgr
+        List<Tezhi> AddTezhiList = new List<Tezhi>();
+        for(int i = 0; i < model.selectedOne.Count; i++)
+        {
+            AddTezhiList.Add(model.availabelTezhi[model.selectedOne[i]]);
+        }
+        pRoleMgr.InitRole(model.roleId);
+        pRoleMgr.AddTezhi(AddTezhiList);
 
-	public override void RegisterEvent(){
+
+    }
+
+
+    public override void RegisterEvent(){
 
 		view.NextStage.onClick.AddListener (delegate() {
 			mUIMgr.CloseCertainPanel(this);
+            SetupPlayerInfo();
             GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main",delegate {
                 ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
                 MainGameMode gm = cm.GetGameMode() as MainGameMode;

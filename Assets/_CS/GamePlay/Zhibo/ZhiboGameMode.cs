@@ -443,8 +443,11 @@ public class ZhiboGameMode : GameModeBase
     public void GainScore(float score)
     {
         state.Score += score;
-        mUIMgr.ShowHint("获得热度" + (int)score);
+        //mUIMgr.ShowHint("获得热度" + (int)score);
         mUICtrl.UpdateScore(state.Score);
+
+
+
     }
     public void GenTili(int v)
     {
@@ -640,65 +643,127 @@ public class ZhiboGameMode : GameModeBase
         state.AccelerateDur = (state.AccelerateDur < 0 ? 0 : state.AccelerateDur) + duration;
     }
 
+    private CardInZhibo NowExecuteCard;
+
     public void ExcuteUseCard(CardInZhibo card)
     {
+
         CardAsset cardAsset = card.ca;
         if (cardAsset != null)
         {
-            if(cardAsset.CardType == eCardType.GENG)
+            NowExecuteCard = card;
+            if (cardAsset.CardType == eCardType.GENG)
             {
                 mUICtrl.ShowGengEffect();
             }
 
-            foreach(CardEffect ce in cardAsset.effects)
+            //几率触发或条件触发的效果 将放入该列表中后处理
+            List<CardEffect> extraEffects = new List<CardEffect>();
+
+            foreach(CardEffect ce in cardAsset.Effects)
             {
-                switch (ce.effect)
-                {
-                    case  "SpawnGift":
-                        for(int i=0; i < 3; i++)
-                        {
-                            GenSpecial(ce.x);
-                        }
-                        break;
-                    case "SpeedUp":
-                        GenSpeedUp(float.Parse(ce.x));
-                        break;
-                    case "GenGoodDanmu":
-                        GenDanmu(ce.x);
-                        break;
-                    case "GetScore":
-                        GainScore(GetScoreFromFormulation(ce.x));
-                        break;
-                    case "GetChouka":
-                        GetChoukaValue(int.Parse(ce.x));
-                        break;
-                    case "GetTili":
-                        GenTili(int.Parse(ce.x));
-                        break;
-                    case "AddStatus":
-                        GenBuff(ce.x, int.Parse(ce.y),10);
-                        break;
-                    case "AddRemoveAward":
-                        GenBuff(ce.x, int.Parse(ce.y),10);
-                        break;
-                    case "ClearDanmu":
-                        DestroyRandomly(5);
-                        break;
-                    case "AddCardToDeck":
-                        AddCardToDeck(ce.x, int.Parse(ce.y));
-                        break;
-                    case "GainCardWithPossibility":
-                        GainNewCardWithPossiblity(ce.x, int.Parse(ce.y));
-                        break;
-                    default:
-                        break;
-                }
+                HandleOneCardEffect(ce, extraEffects);
             }
+
+            for(int i=0;i< extraEffects.Count;i++)
+            {
+                HandleOneCardEffect(extraEffects[i], extraEffects);
+            }
+            NowExecuteCard = null;
 
         }
     }
 
-   
+    private void HandleOneCardEffect(CardEffect ce, List<CardEffect> extraEffects)
+    {
+        string[] args = ce.effectString.Split(',');
+        switch (ce.effect)
+        {
+            case "SpawnGift":
+                for (int i = 0; i < 3; i++)
+                {
+                    GenSpecial(args[0]);
+                }
+                break;
+            case "SpeedUp":
+                GenSpeedUp(float.Parse(args[0]));
+                break;
+            case "GenGoodDanmu":
+                GenDanmu(args[0]);
+                break;
+            case "GenBadDanmu":
+                GenDanmu(args[0]);
+                break;
+            case "GetScore":
+
+                GainScore(GetScoreFromFormulation(args[0]));
+                mUICtrl.ShowNewAudience();
+
+
+                
+                mUICtrl.ShowDanmuEffect(mUICtrl.GetCardContainer().cards[state.Cards.IndexOf(NowExecuteCard)].transform.position);
+                break;
+            case "GetChouka":
+                GetChoukaValue(int.Parse(args[0]));
+                break;
+            case "GetTili":
+                GenTili(int.Parse(args[0]));
+                break;
+            case "AddStatus":
+                GenBuff(args[0], int.Parse(args[1]), 10);
+                break;
+            case "AddRemoveAward":
+
+                GenBuff(args[0], int.Parse(args[1]), 10);
+                break;
+            case "ClearDanmu":
+
+                DestroyRandomly(int.Parse(args[0]));
+                break;
+            case "AddCardToDeck":
+                AddCardToDeck(args[0], int.Parse(args[1]));
+                break;
+            case "Chongzhu":
+                AddCardFromDeck();
+                break;
+            case "GainCardWithPossibility":
+                GainNewCardWithPossiblity(args[0], int.Parse(args[1]));
+                break;
+            case "Branches":
+                int randNum = Random.Range(0, 100);
+                int baseNum = 0;
+                string[] cmds = ce.effectString.Split(';');
+                foreach (string cmd in cmds)
+                {
+                    if (cmd == "")
+                    {
+                        continue;
+                    }
+                    string s = cmd;
+                    int p = int.Parse(s.Substring(0, s.IndexOf(',')));
+                    if (randNum <= baseNum + p)
+                    {
+                        //生效
+                        s = s.Substring(s.IndexOf(',') + 1);
+                        string effect = s.Substring(0, s.IndexOf(','));
+                        string effectString = s.Substring(s.IndexOf(',') + 1);
+                        extraEffects.Add(new CardEffect(effect, effectString));
+                        break;
+                    }
+                    else
+                    {
+                        baseNum += p;
+                    }
+
+                }
+
+                break;
+            default:
+                break;
+        }
+
+    }
+
     private void AddCardToDeck(string cardId, int level)
     {
 

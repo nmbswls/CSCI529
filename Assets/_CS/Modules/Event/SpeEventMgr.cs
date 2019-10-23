@@ -10,10 +10,6 @@ public class SpecialEvent
     public List<string> actions = new List<string>();
     public bool OneTime;
 
-    public SpecialEvent()
-    {
-
-    }
 
     public SpecialEvent(string EventId, LogicNode TriggerCond, List<string> actions)
     {
@@ -86,7 +82,10 @@ public class SpeEventMgr : ModuleBase, ISpeEventMgr
         if(!EventDict.TryGetValue(eventId,out ret))
         {
             EventAsset eventAsset = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<EventAsset>("events/" + eventId);
-            ret = new SpecialEvent();
+            string eid = eventAsset.EventId;
+            LogicNode node = pLogidTree.ConstructFromString(eventAsset.TriggerCondString);
+            List<string> actions = new List<string>(eventAsset.Actions);
+            ret = new SpecialEvent(eid,node,actions);
             EventDict.Add(eventId, ret);
         }
 
@@ -112,22 +111,17 @@ public class SpeEventMgr : ModuleBase, ISpeEventMgr
         //	ListenDict [eventId] = new SpecialEvent ();
         //}
         {
-            string eid = "e0";
-            LogicNode node = pLogidTree.ConstructFromString("True()&!False()");
-            List<string> actions = new List<string>(new string[] { "d0" });
-            EventDict["e0"] = new SpecialEvent(eid, node, actions);
+            GetEvent("e00");
+
         }
 
         {
-            string eid = "e1";
-            LogicNode node = pLogidTree.ConstructFromString("True()&!False()");
-            List<string> actions = new List<string>(new string[] { "d1" });
-            EventDict["e1"] = new SpecialEvent(eid, node, actions);
+            GetEvent("e01");
         }
 
         //EventGroup.choose(3);
 
-        ListenEvents.Add("e0");
+        ListenEvents.Add("e00");
 
     }
 

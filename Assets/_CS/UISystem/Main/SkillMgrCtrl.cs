@@ -16,4 +16,6 @@ public class SkillMgrModel : BaseModel
 public class SkillMgrCtrl : UIBaseCtrl<SkillMgrModel, SkillMgrView>
 {
 
+
+
 }

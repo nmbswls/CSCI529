@@ -32,6 +32,7 @@ public class MainGameMode : GameModeBase
     {
         HandleEvents(pEventMgr.CheckEvent());
         GameMain.GetInstance().GetModule<CardDeckModule>().CheckOverdue();
+        GameMain.GetInstance().GetModule<CardDeckModule>().CheckTurnBonux();
     }
 
     public void HandleEvents(List<SpecialEvent> list)
@@ -55,24 +56,27 @@ public class MainGameMode : GameModeBase
         {
 
             SpecialEvent head = UnHandledEvent.Dequeue();
-
-            foreach(string action in head.actions)
+            pEventMgr.RemoveListener(head.EventId);
+            foreach (string action in head.actions)
             {
 
-                DialogManager dm = pUIMgr.ShowPanel("DialogManager") as DialogManager;
-                if (dm == null)
+                string[] cmd = action.Split(',');
+                if (cmd[0] == "dialog")
                 {
-                    Debug.LogError("dialog mgr load fail");
-                }
-                dm.StartDialog(action, delegate (string[] args)
-                {
-                    if (head.EventId == "e0")
+                    DialogManager dm = pUIMgr.ShowPanel("DialogManager") as DialogManager;
+                    if (dm == null)
                     {
-                        pEventMgr.AddListener("e1");
+                        Debug.LogError("dialog mgr load fail");
                     }
-                    pEventMgr.RemoveListener(head.EventId);
-                    HandleNextEvent();
-                });
+                    dm.StartDialog(cmd[1], delegate (string[] args)
+                    {
+                        HandleNextEvent();
+                    });
+                }else if (cmd[0] == "event")
+                {
+                    pEventMgr.AddListener(cmd[1]);
+                }
+
             }
 
         }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 [System.Serializable]
 public enum eCardType{
@@ -14,10 +15,20 @@ public enum eCardType{
 public class CardEffect
 {
     public string effect;
-    public string x;
-    public string y;
-    public string z;
-    public string w;
+
+    [TextArea(1,2)]
+    public string effectString;
+
+    public CardEffect()
+    {
+
+    }
+
+    public CardEffect(string effect, string effectString)
+    {
+        this.effect = effect;
+        this.effectString = effectString;
+    }
 }
 
 [CreateAssetMenu(fileName="new card",menuName="Ctm/card")]
@@ -41,6 +52,8 @@ public class CardAsset : ScriptableObject
 
 	public bool IsConsume;
 
+    public bool HasTurnEffect;
+
     //过期回合数
 	public int OverDueTurn;
 
@@ -52,7 +65,26 @@ public class CardAsset : ScriptableObject
 
 	public List<object> args = new List<object>();
 
-    public List<CardEffect> effects = new List<CardEffect>();
+    public string ModelCard;
 
+    public List<CardEffect> Effects = new List<CardEffect>();
+    public List<CardEffect> TurnEffects = new List<CardEffect>();
+
+    public string ReplaceWithAmountInEffect()
+    {
+        MatchCollection matches = Regex.Matches(CardEffectDesp,"\\{[a-z0-9A-Z\\+\\.]+\\}");
+
+        for (int i= 0;i< matches.Count; i++)
+        {
+            //Debug.Log(CardEffectDesp.Substring(matches[i].Index,matches[i].Length));
+        }
+
+        return CardEffectDesp;
+    }
+
+    public string ReplaceWithTextInEffect()
+    {
+        return CardEffectDesp;
+    }
 }
 

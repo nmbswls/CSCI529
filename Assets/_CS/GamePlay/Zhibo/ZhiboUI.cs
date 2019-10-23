@@ -10,6 +10,9 @@ public class ZhiboView : BaseView
 
     public Text TimeLeft;
 
+    public Transform TVContainer;
+    public List<ZhiboLittleTV> LittleTvList = new List<ZhiboLittleTV>();
+
     public Transform container;
     public Image hotZhu;
     public Image hotHead;
@@ -49,8 +52,10 @@ public class OperatorView
 public class ZhiboModel : BaseModel
 {
 
-
+    public List<int> EmptyTVList = new List<int>();
 }
+
+
 
 public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 {
@@ -60,6 +65,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     private int numOfGridVertical;
     private static float MinDanmuInterval = 0.5f;
 
+    private float TimerPerSec = 0;
 
     private int preDanmuGrid;
     private float[] preDanmuTime;
@@ -130,9 +136,52 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.TimeLeft.text = (int)time + "";
     }
 
+    public void ShowNewAudience()
+    {
+        if(model.EmptyTVList.Count == 0)
+        {
+            return;
+        }
+        int idx = Random.Range(0, model.EmptyTVList.Count);
+
+        idx = model.EmptyTVList[idx];
+
+        model.EmptyTVList.Remove(idx);
+
+        view.LittleTvList[idx].Show();
+    }
+
+    public void AttractAudience()
+    {
+        int idx = Random.Range(0, view.LittleTvList.Count);
+        while (true)
+        {
+            if (view.LittleTvList[idx].IsEmpty == false)
+            {
+                break;
+            }
+            idx = (idx + 1) % view.LittleTvList.Count;
+        }
+
+        view.LittleTvList[idx].Attract();
+    }
+
+
     public override void BindView()
     {
         view.TimeLeft = root.Find("TimeLeft").GetComponentInChildren<Text>();
+
+        view.TVContainer = root.Find("Audience");
+        foreach(Transform tv in view.TVContainer)
+        {
+            ZhiboLittleTV vv = tv.GetComponent<ZhiboLittleTV>();
+            vv.Init(tv,this);
+            view.LittleTvList.Add(vv);
+        }
+        for(int i = 0; i < view.LittleTvList.Count; i++)
+        {
+            model.EmptyTVList.Add(i);
+        }
 
         view.field = (RectTransform)(root.Find("DanmuField"));
         //view.container = view.viewRoot.transform.Find("OperatorsContainer");
@@ -253,10 +302,41 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public override void Tick(float dTime)
     {
+        dTime = dTime * gameMode.spdRate;
+
         if (view.CardContainer != null)
         {
             view.CardContainer.Tick(dTime);
         }
+
+        TimerPerSec += dTime;
+        bool triggerSec = false;
+        if(TimerPerSec > 1f)
+        {
+            TimerPerSec -= 1f;
+            triggerSec = true;
+        }
+
+        if (triggerSec)
+        {
+            for (int i = view.LittleTvList.Count - 1; i >= 0; i--)
+            {
+                view.LittleTvList[i].TickSec();
+                if (view.LittleTvList[i].TimeLeft <= 0)
+                {
+                    if (!model.EmptyTVList.Contains(i))
+                    {
+                        model.EmptyTVList.Add(i);
+                    }
+                }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ShowNewAudience();
+        }
+
     }
 
     public bool AddNewCard(string cardId)

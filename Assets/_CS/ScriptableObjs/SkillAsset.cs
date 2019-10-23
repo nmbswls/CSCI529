@@ -17,13 +17,17 @@ public class SkillAsset : ScriptableObject
 {
     public string SkillId;
 
+    public string SkillName;
+
     [TextArea(3, 10)]
     public string SkingDesp;
 
     public int MaxLevel;
 
+    public string SkillType;
+
     //每个等级都会有相应的附加卡片
-    public List<List<string>> AttachCards = new List<List<string>>();
+    public List<string> AttachCards = new List<string>();
 
     //与等级无关的前置条件，即前置技能
     public List<SkillPrerequist> PrerequistSkills = new List<SkillPrerequist>();

@@ -20,8 +20,12 @@ public class ManageCardsView : BaseView
     public List<CardOutView> CardsViewList = new List<CardOutView>();
 
     public Button Close;
+
+    public Transform DetailPanel;
     public Text DetailDesp;
     public Text DetailName;
+    public Text DetailEffectDesp;
+   
 }
 
 public class CardOutView
@@ -89,16 +93,18 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 		view.filter01 = root.Find("FilterBar").GetChild (0).GetComponent<Dropdown> ();
         view.Close = root.Find("Close").GetComponent<Button>();
 
+        view.DetailPanel = root.Find("DetailPanel");
 
-        view.DetailDesp = root.Find("DetailPanel").Find("DetailDesp").GetComponent<Text>();
-        view.DetailName = root.Find("DetailPanel").Find("DetailName").GetComponent<Text>();
-
+        view.DetailDesp = view.DetailPanel.Find("DetailDesp").GetComponent<Text>();
+        view.DetailName = view.DetailPanel.Find("DetailName").GetComponent<Text>();
+        view.DetailEffectDesp = view.DetailPanel.Find("DetailEffectDesp").GetComponent<Text>();
     }
 
 
     public override void PostInit()
     {
         //ShowCards();
+        SwitchChoose(0);
     }
 
 
@@ -106,7 +112,6 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
     public override void RegisterEvent(){
 		view.tabGroup.InitTab (typeof(CardsTabView));
 		view.tabGroup.OnValueChangeEvent += SwitchChoose;
-		view.tabGroup.switchTab (0);
 
 		view.filter01.onValueChanged.AddListener (delegate(int arg0) {
 			Debug.Log(arg0);	
@@ -151,10 +156,21 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
                 listener.OnClickEvent += delegate {
                     ShowCardDetail(cardOutView);
                 };
+
+
             }
+
+            CardAsset ca = pCardMgr.GetCardInfo(c.CardId);
+            cardOutView.Name.text = ca.CardName;
+            cardOutView.Desp.text = ca.CardEffectDesp;
 
         }
 
+    }
+
+    public void HideCardDetail()
+    {
+        view.DetailPanel.gameObject.SetActive(false);
     }
 
     public void ShowCardDetail(CardOutView vv)
@@ -171,11 +187,13 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 
         view.DetailDesp.text = ca.CardDesp;
         view.DetailName.text = ca.CardName;
+        view.DetailEffectDesp.text = ca.CardEffectDesp;
 
-        if(preCardView != null)
+        if (preCardView != null)
         {
             preCardView.Hint.gameObject.SetActive(false);
         }
+        view.DetailPanel.gameObject.SetActive(true);
         vv.Hint.gameObject.SetActive(true);
         preCardView = vv;
     }
@@ -204,6 +222,7 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
         {
             ShowCards();
         }
+        HideCardDetail();
 
     }
 }

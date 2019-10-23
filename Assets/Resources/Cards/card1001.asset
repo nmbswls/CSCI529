@@ -22,9 +22,7 @@ MonoBehaviour:
   OverDueTurn: 0
   ValidTime: 0
   UseTime: 0
+  ModelCard: 
   effects:
   - effect: GetScore
-    x: 6+0.1*j
-    y: 
-    z: 
-    w: 
+    effectString: 6+0.1*j

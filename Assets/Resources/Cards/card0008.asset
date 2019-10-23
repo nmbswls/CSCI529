@@ -22,14 +22,9 @@ MonoBehaviour:
   OverDueTurn: 0
   ValidTime: 5
   UseTime: 1
+  ModelCard: 
   effects:
   - effect: GainCardWithPossibility
-    x: card0009
-    y: 30
-    z: 
-    w: 
+    effectString: card0009,30
   - effect: GetScore
-    x: 54
-    y: 
-    z: 
-    w: 
+    effectString: 54

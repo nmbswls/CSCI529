@@ -123,8 +123,10 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 				listener = view.StartGame.gameObject.AddComponent<DragEventListener>();
 				listener.OnClickEvent += delegate (PointerEventData eventData) {
 					mUIMgr.CloseCertainPanel(this);
-					mUIMgr.ShowPanel("AdjustPanel");
-				};
+					AdjustInitCtrl ctrl = mUIMgr.ShowPanel("AdjustPanel") as AdjustInitCtrl;
+                    ctrl.SetRoleId(nowIdx);
+
+                };
 			}
 		}
 

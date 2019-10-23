@@ -19,6 +19,8 @@ public interface IModuleMgr
 
 	T GetModule<T> () where T : IModule;
 
+    void SetupModules();
+
 
 }
 public interface IEventMgr

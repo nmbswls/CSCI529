@@ -22,14 +22,9 @@ MonoBehaviour:
   OverDueTurn: 0
   ValidTime: 15
   UseTime: 0
+  ModelCard: 
   effects:
   - effect: AddStatus
-    x: j+
-    y: 30
-    z: 
-    w: 
+    effectString: j+,30
   - effect: AddStatus
-    x: f+
-    y: -10
-    z: 
-    w: 
+    effectString: f+,-10

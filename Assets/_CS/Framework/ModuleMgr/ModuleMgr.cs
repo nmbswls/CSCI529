@@ -57,7 +57,15 @@ public class ModuleMgr: IModuleMgr
 		}
 	}
 
-	public IModule CreateModule(ModuleConfig config)
+    public void SetupModules()
+    {
+        for(int i=0;i< mModuleList.Count; i++)
+        {
+            mModuleList[i].Setup();
+        }
+    }
+
+    public IModule CreateModule(ModuleConfig config)
 	{
 		string nname = config.ModuleName;
 		if (mModuleMap.ContainsKey(nname))
@@ -81,7 +89,7 @@ public class ModuleMgr: IModuleMgr
 			{
 				module.SetModuleName(mGameMain, nname);
 				module.RegisterModuleEvent();
-				module.Setup ();
+				//module.Setup ();
 				mModuleMap[nname] = module;
 				mModuleList.Add(module);
 			}

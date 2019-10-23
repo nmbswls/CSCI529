@@ -68,7 +68,7 @@ public class UIMgr : ModuleBase, IUIMgr
 		mUITypeMap["DialogManager"] = typeof(DialogManager);
 		mUITypeMap["HomeMenuCtrl"] = typeof(HomeMenuCtrl);
 
-        mUITypeMap["SchedulePanel"] = typeof(ScheduleCtrl);
+        mUITypeMap["SchedulePanel"] = typeof(SKillCtrl);
 
         mUITypeMap["ZhiboPanel"] = typeof(ZhiboUI);
         mUITypeMap["ActBranch"] = typeof(ActBranchCtrl);

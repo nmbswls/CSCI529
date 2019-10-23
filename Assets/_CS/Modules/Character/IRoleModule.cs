@@ -28,5 +28,7 @@ public interface IRoleModule : IModule{
     void AddJiyi(float v); 
     void AddFanying(float v);
 
+    void AddTezhi(List<Tezhi> tezhis);
 
+    void InitRole(string roleId);
 }

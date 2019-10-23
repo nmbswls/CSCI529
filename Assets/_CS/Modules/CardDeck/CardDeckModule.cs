@@ -7,6 +7,7 @@ public class CardInfo{
 	public uint InstId;
 	public string CardId;
 	public float GainTime;
+    public CardAsset ca;
     public int TurnLeft;
 
 	public CardInfo(){
@@ -23,6 +24,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 {
 
 	uint InstId;
+    IRoleModule pRoleMdl;
 
 	Dictionary<uint, CardInfo> CardInstDict = new Dictionary<uint, CardInfo> ();
 
@@ -31,6 +33,15 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 
 
     Dictionary<string, List<CardInfo>> SkillCardDict = new Dictionary<string, List<CardInfo>>();
+    HashSet<CardInfo> CardsWithTurnEffect = new HashSet<CardInfo>();
+
+
+    public override void Setup()
+    {
+
+        InstId = 0;
+        pRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
+    }
 
     public CardInfo GainNewCard (string cid)
 	{
@@ -38,17 +49,58 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 		CardDict.TryGetValue (cid, out aset);
 		if (aset == null) {
 			aset = Load (cid);
+
 		}
 		if (aset != null) {
+            aset.ReplaceWithAmountInEffect();
             CardInfo info = new CardInfo(InstId, cid, Time.realtimeSinceStartup);
-
+            info.ca = aset;
             cards.Add (info);
 			InstId += 1;
+
+            if (aset.HasTurnEffect || aset.TurnEffects.Count > 0)
+            {
+                CardsWithTurnEffect.Add(info);
+            }
+
             return info;
 		}
         return null;
 	}
 
+
+    public void CheckTurnBonux()
+    {
+        foreach(CardInfo info in cards)
+        {
+            if (info.ca.HasTurnEffect)
+            {
+                foreach (CardEffect effect in info.ca.TurnEffects)
+                {
+                    switch (effect.effect)
+                    {
+                        case "jiyi+":
+                            pRoleMdl.AddJiyi(int.Parse(effect.effectString));
+                            break;
+                        case "meili+":
+                            pRoleMdl.AddMeili(int.Parse(effect.effectString));
+                            break;
+                        case "fanying+":
+                            pRoleMdl.AddFanying(int.Parse(effect.effectString));
+                            break;
+                        case "tili+":
+                            pRoleMdl.AddTili(int.Parse(effect.effectString));
+                            break;
+                        case "koucai+":
+                            pRoleMdl.AddKoucai(int.Parse(effect.effectString));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+    }
 
     public void RemoveSkillCards(string skillId)
     {
@@ -58,9 +110,15 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         }
         foreach(CardInfo info in SkillCardDict[skillId])
         {
-            cards.Remove(info);
+            RemoveCard(info);
         }
         SkillCardDict[skillId].Clear();
+    }
+
+    public void RemoveCard(CardInfo info)
+    {
+        cards.Remove(info);
+        CardsWithTurnEffect.Remove(info);
     }
 
     public void AddSkillCards(string skillId, List<string> cid)
@@ -77,19 +135,16 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         }
     }
 
-    public void fakeCards()
+
+    public void AddCards(List<string> cards)
     {
-        GainNewCard("card0001");
-        GainNewCard("card0001");
-        GainNewCard("card0001");
-        GainNewCard("card0001");
-        GainNewCard("card0002");
-        GainNewCard("card0003");
-        GainNewCard("card0004");
-        GainNewCard("card0005");
-        GainNewCard("card0006");
-        GainNewCard("card0007");
+        foreach (string id in cards)
+        {
+            CardInfo info = GainNewCard(id);
+        }
     }
+
+
 
 
     public void CheckOverdue()
@@ -101,7 +156,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
                 cards[i].TurnLeft -= 1;
                 if (cards[i].TurnLeft <= 0)
                 {
-                    cards.RemoveAt(i);
+                    RemoveCard(cards[i]);
                 }
             }
 
@@ -113,10 +168,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
     {
         return cards;
     }
-    public override void Setup(){
-		InstId = 0;
-        fakeCards();
-    }
+
 
 	public CardAsset Load(string cid){
 		CardAsset c = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<CardAsset> ("Cards/"+cid,false);

@@ -22,14 +22,9 @@ MonoBehaviour:
   OverDueTurn: 0
   ValidTime: 5
   UseTime: 1
+  ModelCard: 
   effects:
   - effect: GetScore
-    x: 120
-    y: 
-    z: 
-    w: 
+    effectString: 120
   - effect: SpeedUp
-    x: 30
-    y: 
-    z: 
-    w: 
+    effectString: 30

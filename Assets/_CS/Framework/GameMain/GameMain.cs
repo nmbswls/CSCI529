@@ -91,7 +91,9 @@ public class GameMain : MonoBehaviour,IGameMain
 			mModuleMgr.CreateModule(config);
 		}
 
-	}
+        mModuleMgr.SetupModules();
+
+    }
 
 	public static bool HasInstance()
 	{

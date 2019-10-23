@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: game_01
   m_EditorClassIdentifier: 
   SkillId: game_01
+  SkillName: 
   SkingDesp: "\u57FA\u7840\u7684\u6E38\u620F\u6280\u5DE7\uFF0C\u4FEE\u70BC\u4E4B\u540E\u80FD\u52C9\u5F3A\u8131\u79BB\u83DC\u9E1F\u6C34\u51C6"
+  MaxLevel: 2
+  SkillType: game
   AttachCards:
-  - 
-  - 
-  - 
-  - 
-  Prerequists: []
+  - card0001,card0002
+  - card0002,card0003
+  PrerequistSkills: []
+  PrerequistStatus: []

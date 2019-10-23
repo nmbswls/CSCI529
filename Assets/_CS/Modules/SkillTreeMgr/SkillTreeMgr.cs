@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class SkillInfo
 {
     public string SkillId;
+    public float NowExp;
     public int SkillLvl;
 
     public SkillInfo()
@@ -38,14 +39,42 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
         mCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
 
+        LoadAllSkills();
         FakeSkillTree();
     }
 
     private void FakeSkillTree()
     {
-        GainSkills("game_01");
+        //GainSkills("game_01");
     }
 
+    public void GainExp(string sid)
+    {
+        SkillInfo skillInfo = GetOwnedSkill(sid);
+        skillInfo.NowExp += CalculateExp();
+        if(skillInfo.SkillLvl == GetSkillAsset(sid).MaxLevel)
+        {
+            return;
+        }
+        if (skillInfo.NowExp > 100)
+        {
+            GainSkills(sid);
+            if(skillInfo.SkillLvl == GetSkillAsset(sid).MaxLevel)
+            {
+                skillInfo.NowExp = 0;
+            }
+            else
+            {
+                skillInfo.NowExp -= 100;
+            }
+        }
+    }
+
+
+    private int CalculateExp()
+    {
+        return 30;
+    }
     public void GainSkills(string skillId)
     {
         if (GetSkillAsset(skillId) == null)
@@ -77,15 +106,17 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
             skillInfo.SkillLvl += 1;
             mCardMgr.RemoveSkillCards(skillId);
         }
-        mCardMgr.AddSkillCards(skillId,sa.AttachCards[skillInfo.SkillLvl]);
-
+        if(skillInfo.SkillLvl - 1 < sa.AttachCards.Count)
+        {
+            string[] cards = sa.AttachCards[skillInfo.SkillLvl - 1].Split(',');
+            mCardMgr.AddSkillCards(skillId, new List<string>(cards));
+        }
     }
-
 
 
     public SkillInfo GetOwnedSkill(string SkillId)
     {
-        for(int i = 0; i < OwnedSkills.Count - 1; i++)
+        for(int i = 0; i < OwnedSkills.Count; i++)
         {
             if(OwnedSkills[i].SkillId == SkillId)
             {
@@ -94,6 +125,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
         }
         return null;
     }
+
 
     public SkillAsset GetSkillAsset(string skillId)
     {
@@ -115,6 +147,14 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
         return asset;
     }
 
+    public void LoadAllSkills()
+    {
+        SkillAsset[] assets = mResLoader.LoadAllResouces<SkillAsset>("Skills/");
+        foreach(SkillAsset sa in assets)
+        {
+            SkillAssetDict.Add(sa.SkillId, sa);
+        }
+    }
 
 
     public int Func(string rootSkill, int depth)
@@ -135,4 +175,16 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
 
     }
 
+    public List<string> GetSkillByType(string type)
+    {
+        List<string> ret = new List<string>();
+        foreach(var kv in SkillAssetDict)
+        {
+            if(kv.Value.SkillType== type)
+            {
+                ret.Add(kv.Key);
+            }
+        }
+        return ret;
+    }
 }

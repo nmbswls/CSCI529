@@ -22,9 +22,7 @@ MonoBehaviour:
   OverDueTurn: 0
   ValidTime: 0
   UseTime: 0
+  ModelCard: 
   effects:
   - effect: GetChouka
-    x: 160
-    y: 
-    z: 
-    w: 
+    effectString: 160

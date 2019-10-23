@@ -37,4 +37,6 @@ public interface IResLoader : IModule {
 
     void LoadWWWResAsync<T>(string path, ResLoader.AsynvLoadCallback<T> callback) where T : Object;
 
+    T[] LoadAllResouces<T>(string path) where T : UnityEngine.Object;
+
 }

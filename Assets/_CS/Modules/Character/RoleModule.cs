@@ -45,6 +45,8 @@ public class RoleStats
     public float fanying = 10;
     public float jiyi = 10;
 
+
+
     public RoleStats()
     {
 
@@ -68,13 +70,19 @@ public class RoleModule : ModuleBase, IRoleModule
     public string[] Schedules;
 
     private ISpeEventMgr pEventMgr;
+    private ICardDeckModule pCardMdl;
     private ICoreManager pCoreMgr;
     private ISkillTreeMgr pSkillTreeMgr;
 
     private RoleStats roleStats = new RoleStats();
 
+    private float money;
+
+
 
     List<AppInfo> unlockedApps = new List<AppInfo>();
+
+    private readonly List<Tezhi> TezhiList = new List<Tezhi>();
 
     private readonly Dictionary<string, ScheduleInfo> ScheduleDict = new Dictionary<string, ScheduleInfo>();
     private readonly List<string> choices = new List<string>();
@@ -95,6 +103,21 @@ public class RoleModule : ModuleBase, IRoleModule
     private int overDueSchedule;
 
     public int OverDueSchedule { get { return overDueSchedule; } set { overDueSchedule = value; } }
+
+    public void InitRole(string roleId)
+    {
+        RoleStoryAsset ret = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<RoleStoryAsset>("Roles/role" + roleId);
+        roleStats.meili = ret.initProperties[0];
+        roleStats.tili = ret.initProperties[1];
+        roleStats.koucai = ret.initProperties[2];
+        roleStats.jiyi = ret.initProperties[3];
+        roleStats.fanying = ret.initProperties[4];
+
+        money = ret.initMoney;
+
+        pCardMdl.AddCards(ret.initCards);
+
+    }
 
     public override void Setup()
     {
@@ -126,6 +149,7 @@ public class RoleModule : ModuleBase, IRoleModule
         Schedules = new string[ScheduleMax];
 
         pEventMgr = GameMain.GetInstance().GetModule<SpeEventMgr>();
+        pCardMdl = GameMain.GetInstance().GetModule<CardDeckModule>();
         pCoreMgr = GameMain.GetInstance().GetModule<CoreManager>();
         pSkillTreeMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
     }
@@ -236,6 +260,25 @@ public class RoleModule : ModuleBase, IRoleModule
     public void AddFanying(float v)
     {
         roleStats.fanying += v;
+    }
+
+    public void AddTezhi(List<Tezhi> tezhis)
+    {
+        TezhiList.AddRange(tezhis);
+        foreach(Tezhi tezhi in TezhiList)
+        {
+            foreach(string effectString in tezhi.Effects)
+            {
+                string[] args = effectString.Split(',');
+                if (args[0] == "addM")
+                {
+                    roleStats.meili += int.Parse(args[1]);
+                }else if (args[0] == "card")
+                {
+                    pCardMdl.GainNewCard(args[1]);
+                }
+            }
+        }
     }
 }
 

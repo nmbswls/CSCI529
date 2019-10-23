@@ -14,5 +14,10 @@ public interface ICardDeckModule : IModule
 
     void AddSkillCards(string skillId, List<string> cid);
 
+
+    void AddCards(List<string> cards);
+
     void RemoveSkillCards(string skillId);
+
+    void CheckTurnBonux();
 }

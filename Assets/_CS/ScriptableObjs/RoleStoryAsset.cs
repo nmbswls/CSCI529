@@ -21,6 +21,10 @@ public class RoleStoryAsset : ScriptableObject {
 
 	public List<int> initOwing = new List<int>();
 
+    public List<string> initCards = new List<string>();
+
+    public List<string> initSkills = new List<string>();
+
 	[TextArea(3,10)]
 	public List<string> specialList = new List<string> ();
 

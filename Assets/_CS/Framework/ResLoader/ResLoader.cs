@@ -123,6 +123,11 @@ public class ResLoader : ModuleBase, IResLoader
         }
     }
 
+    public T[] LoadAllResouces<T>(string path) where T : UnityEngine.Object
+    {
+        return Resources.LoadAll<T>(path);
+    }
+
 
     public GameObject Instantiate(string strPath,Transform p=null)
 	{

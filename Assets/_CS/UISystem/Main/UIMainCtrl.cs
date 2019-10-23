@@ -67,6 +67,11 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         model.UnlockedApps = rm.GetApps();
     }
 
+    public void AddMsg(string content)
+    {
+
+    }
+
     public override void BindView(){
         //view.NextStage = root.
         view.InspectBtn = root.Find("Deck").GetComponent<Button>();
