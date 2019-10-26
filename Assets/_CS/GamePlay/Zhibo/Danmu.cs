@@ -5,15 +5,15 @@ using UnityEngine.EventSystems;
 
 public class DanmuView
 {
-    public Text textField;
-    public Image image0;
-    public Image BadBg;
+    public Text Content;
+    public Image Hengfu;
+    public Image BadBG;
 }
 
 public enum ENM_DanmuType
 {
     NORMAL,
-    GOOD,
+    RARE,
     BAD
 }
 
@@ -53,7 +53,7 @@ public class Danmu : MonoBehaviour
 
     ZhiboGameMode gameMode;
 
-    public void init(string txt, bool isBad, ZhiboGameMode gameMode)
+    public virtual void init(string txt, bool isBad, ZhiboGameMode gameMode)
     {
         rect = (RectTransform)transform;
         this.isBad = isBad;
@@ -79,20 +79,24 @@ public class Danmu : MonoBehaviour
         RegisterEvent();
 
         anim.Play("Normal");
-        view.textField.color = color;
         destroying = false;
 
         if (isBad)
         {
-            view.textField.color = Color.white;
-            view.BadBg.gameObject.SetActive(true);
+            view.Content.color = Color.white;
+            view.BadBG.gameObject.SetActive(true);
         }
         else
         {
-            view.BadBg.gameObject.SetActive(false);
+            view.BadBG.gameObject.SetActive(false);
         }
 
-        view.textField.raycastTarget = true;
+        view.Content.fontSize = 30;
+        view.Content.fontSize += Random.Range(0, 6);
+        view.Hengfu.raycastTarget = true;
+        view.Content.text = txt;
+        view.Hengfu.rectTransform.sizeDelta = new Vector2(txt.Length* view.Content.fontSize + 10, view.Hengfu.rectTransform.sizeDelta.y);
+
     }
 
     private Color getRandomColor()
@@ -123,27 +127,41 @@ public class Danmu : MonoBehaviour
 
     private void BindView()
     {
-        view.textField = transform.Find("Text").GetComponent<Text>();
-        view.image0 = transform.Find("Image").GetComponent<Image>();
-        view.BadBg = transform.Find("BadBg").GetComponent<Image>();
+        view.Hengfu = transform.Find("Hengfu").GetComponent<Image>();
+
+        view.Content = transform.Find("Hengfu").Find("Text").GetComponent<Text>();
+        view.BadBG = transform.Find("Hengfu").Find("BadBG").GetComponent<Image>();
+
 
     }
 
-    public void RegisterEvent()
+    private void RegisterEvent()
     {
-        DragEventListener listener = view.textField.gameObject.GetComponent<DragEventListener>();
+        ClickEventListerner listener = view.Hengfu.gameObject.GetComponent<DragEventListener>();
         if (listener == null)
         {
-            listener = view.textField.gameObject.AddComponent<DragEventListener>();
-            listener.OnClickEvent += delegate (PointerEventData eventData) {
-                if (destroying) return;
-
-                gameMode.mUICtrl.HitDanmu(this);
-            };
+            listener = view.Hengfu.gameObject.AddComponent<DragEventListener>();
         }
+        listener.ClearClickEvent();
+        listener.OnClickEvent += delegate (PointerEventData eventData) {
+            Clicked();
+        };
     }
 
-    public void Tick(float dTime)
+    public void Clicked()
+    {
+        if (destroying) return;
+
+        if (left > 0)
+        {
+            left -= 1;
+        }
+        if(left <= 0)
+        {
+            gameMode.DestroyDanmu(this);
+        }
+    }
+    public virtual void Tick(float dTime)
     {
         rect.anchoredPosition += Vector2.left *  gameMode.state.DanmuSpd * dTime;
         if (rect.anchoredPosition.x < -100) {
@@ -171,13 +189,12 @@ public class Danmu : MonoBehaviour
 
     public void SetAsBig()
     {
-        view.textField.fontSize = 46;
-        view.textField.color = getRandomColor();
+        view.Content.fontSize = 46;
+        view.Content.color = getRandomColor();
         //大弹幕不能是坏的
         isBad = false;
-        view.BadBg.gameObject.SetActive(false);
+        view.BadBG.gameObject.SetActive(false);
         isBig = true;
     }
-
 
 }

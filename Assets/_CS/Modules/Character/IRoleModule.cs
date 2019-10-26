@@ -31,4 +31,9 @@ public interface IRoleModule : IModule{
     void AddTezhi(List<Tezhi> tezhis);
 
     void InitRole(string roleId);
+    void AddFensi(int type, int num);
+
+    void GetMoney(int amount);
+
+    void AddExpBonux(int idx, int num);
 }

@@ -22,6 +22,8 @@ public class SkillAsset : ScriptableObject
     [TextArea(3, 10)]
     public string SkingDesp;
 
+
+
     public int MaxLevel;
 
     public string SkillType;
@@ -34,5 +36,8 @@ public class SkillAsset : ScriptableObject
 
     //每个等级的技能还有额外的属性要求
     public List<string> PrerequistStatus = new List<string>();
+
+    //每个等级的难度
+    public List<int> Difficulties = new List<int>();
 
 }

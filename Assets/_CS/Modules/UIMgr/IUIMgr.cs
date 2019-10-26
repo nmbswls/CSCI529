@@ -25,6 +25,6 @@ public interface IUIMgr : IModule
 
     Camera GetCamera();
 
-    void ShowMsgBox();
+    void ShowMsgBox(string content);
 }
 

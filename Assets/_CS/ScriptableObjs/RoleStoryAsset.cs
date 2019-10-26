@@ -19,7 +19,7 @@ public class RoleStoryAsset : ScriptableObject {
 
 	public int initSkillPoint;
 
-	public List<int> initOwing = new List<int>();
+	public List<string> initOwning = new List<string>();
 
     public List<string> initCards = new List<string>();
 

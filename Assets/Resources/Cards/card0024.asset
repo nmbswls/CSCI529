@@ -19,12 +19,14 @@ MonoBehaviour:
   CardType: 0
   cost: 0
   IsConsume: 0
+  UseOnDiscard: 0
+  HasTurnEffect: 0
   OverDueTurn: 0
-  ValidTime: 10
   UseTime: 1
   ModelCard: 
-  effects:
+  Effects:
   - effect: GetScore
     effectString: 10
   - effect: GetChouka
     effectString: 30
+  TurnEffects: []

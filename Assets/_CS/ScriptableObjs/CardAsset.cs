@@ -48,17 +48,18 @@ public class CardAsset : ScriptableObject
 
     public eCardType CardType;
 
-    public int cost=0;
+    public int cost = 0;
 
 	public bool IsConsume;
+
+    //public bool WillOverdue;
+
+    public bool UseOnDiscard;
 
     public bool HasTurnEffect;
 
     //过期回合数
 	public int OverDueTurn;
-
-    //在手牌中存活时间
-    public float ValidTime;
 
     //单局游戏中使用次数
     public int UseTime;
@@ -66,6 +67,12 @@ public class CardAsset : ScriptableObject
 	public List<object> args = new List<object>();
 
     public string ModelCard;
+
+    public int StatusBonusNum;
+    public int StatusBonusType;
+
+    public int SkillBonusType;
+    public int SkillBonusNum;
 
     public List<CardEffect> Effects = new List<CardEffect>();
     public List<CardEffect> TurnEffects = new List<CardEffect>();

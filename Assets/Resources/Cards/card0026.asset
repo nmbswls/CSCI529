@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
+  m_Name: card0026
+  m_EditorClassIdentifier: 
+  CardId: card0026
+  CardName: "\u529B\u633D\u72C2\u6F9C"
+  CardDesp: "\u4EA1\u7F8A\u8865\u7262\uFF0C\u4E3A\u65F6\u4E0D\u665A"
+  CardEffectDesp: "20\u70B9\u70ED\u5EA6\u9632\u62A4"
+  CardType: 0
+  cost: 0
+  IsConsume: 0
+  UseOnDiscard: 0
+  HasTurnEffect: 0
+  OverDueTurn: 0
+  UseTime: 0
+  ModelCard: 
+  Effects:
+  - effect: Armor
+    effectString: 20
+  TurnEffects: []

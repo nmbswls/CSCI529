@@ -19,10 +19,14 @@ MonoBehaviour:
   CardType: 0
   cost: 1
   IsConsume: 0
+  UseOnDiscard: 0
   HasTurnEffect: 0
   OverDueTurn: 0
-  ValidTime: 30
   UseTime: 0
   ModelCard: 
-  Effects: []
+  Effects:
+  - effect: GenGoodDanmu
+    effectString: wangluo,30
+  - effect: SpeedUp
+    effectString: 5
   TurnEffects: []

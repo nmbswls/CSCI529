@@ -23,6 +23,7 @@ public class MsgBoxCtrl : UIBaseCtrl<GottonModel, GottonView>
 
 
         view.ConfirmBtn = root.Find("ConfirmBtn").GetComponent<Button>();
+        view.Content = root.Find("Content").GetComponent<Text>();
     }
 
     public override void RegisterEvent()
@@ -39,9 +40,9 @@ public class MsgBoxCtrl : UIBaseCtrl<GottonModel, GottonView>
         base.PostInit();
     }
 
-    public void ShowMsg()
+    public void ShowMsg(string content)
     {
-
+        view.Content.text = content;
     }
 
 }

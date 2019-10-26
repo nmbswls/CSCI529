@@ -30,9 +30,11 @@ public class ChooseStoryLineView : BaseView
 
 }
 public class ExtraInfoView{
+    public Transform root;
 	public Image icon;
 	public void BindView(Transform root){
-		this.icon = root.GetChild (0).GetComponent<Image> ();
+        this.root = root;
+        this.icon = root.GetComponent<Image> ();
 	}
 }
 
@@ -62,13 +64,12 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 {
 
 	int nowIdx = -1;
+    IResLoader pResLoader;
 
 	public override void Init(){
-		view = new ChooseStoryLineView ();
-		model = new ChooseStoryLineModel ();
+        pResLoader = GameMain.GetInstance().GetModule<ResLoader>();
 
-		mUIMgr = GameMain.GetInstance ().GetModule<UIMgr> ();
-	}
+    }
 
 	public override void BindView(){
 		if (root == null) {
@@ -94,6 +95,8 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 			view.roleList.Add (v);
 
 		}
+
+
 
 
 		//init 
@@ -153,7 +156,7 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 		//view.properies.SetPointValues (new int[]{Random.Range(10,20),Random.Range(10,20),Random.Range(10,20),Random.Range(10,20),Random.Range(10,20)}); 
 		nowIdx = idx;
 
-		RoleStoryAsset ret = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<RoleStoryAsset> ("Roles/role"+idx);
+		RoleStoryAsset ret = pResLoader.LoadResource<RoleStoryAsset> ("Roles/role"+idx);
 		if (ret != null) {
 			view.DetailName.text = ret.Name;
 			view.DetailDesp.text = "";
@@ -166,7 +169,21 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 
 			view.properies.SetPointValues (ret.initProperties);
 
-		}
+
+            for(int i = 0; i < view.extraInfoList.Count; i++)
+            {
+                pResLoader.ReleaseGO("UI/Role/extra", view.extraInfoList[i].root.gameObject);
+            }
+            view.extraInfoList.Clear();
+
+            for(int i = 0; i < ret.initOwning.Count; i++)
+            {
+                ExtraInfoView vv = new ExtraInfoView();
+                GameObject go = pResLoader.Instantiate("UI/Role/extra",view.extraContainer);
+                vv.BindView(go.transform);
+                view.extraInfoList.Add(vv);
+            }
+        }
 	}
 
 	public override void Release(){

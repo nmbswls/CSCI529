@@ -17,14 +17,18 @@ MonoBehaviour:
   CardDesp: "\u975E\u5E38\u70C2\u7684\u6897\uFF0C\u5BB9\u6613\u5F15\u8D77\u51B7\u573A"
   CardEffectDesp: "\u83B7\u5F97{10+1.1t}\u70B9\u70ED\u5EA6\u3002\u5F15\u8D77\u5C11\u91CF\u5410\u69FD\u3002"
   CardType: 1
-  cost: 0
+  cost: 4
   IsConsume: 0
+  UseOnDiscard: 0
   HasTurnEffect: 0
   OverDueTurn: 0
-  ValidTime: 0
   UseTime: 1
   ModelCard: 
+  StatusBonusNum: 2
+  StatusBonusType: 1
+  SkillBonusType: 0
+  SkillBonusNum: 0
   Effects:
   - effect: GetScore
-    effectString: 10
+    effectString: 10+1.1*t
   TurnEffects: []

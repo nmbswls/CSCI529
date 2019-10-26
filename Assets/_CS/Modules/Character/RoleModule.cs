@@ -78,6 +78,11 @@ public class RoleModule : ModuleBase, IRoleModule
 
     private float money;
 
+    //路人粉数量
+    private float fen1Num;
+    //
+    private float fen2Num;
+    private float fen3Num;
 
 
     List<AppInfo> unlockedApps = new List<AppInfo>();
@@ -86,6 +91,8 @@ public class RoleModule : ModuleBase, IRoleModule
 
     private readonly Dictionary<string, ScheduleInfo> ScheduleDict = new Dictionary<string, ScheduleInfo>();
     private readonly List<string> choices = new List<string>();
+
+    public int[] expBonuses = new int[10];
 
     private int scheduleMax;
     public int ScheduleMax
@@ -116,7 +123,21 @@ public class RoleModule : ModuleBase, IRoleModule
         money = ret.initMoney;
 
         pCardMdl.AddCards(ret.initCards);
+        pCardMdl.AddCards(ret.initOwning);
+    }
 
+
+    public void AddFensi(int type, int num)
+    {
+        if(type == 0)
+        {
+            fen1Num += num;
+        }
+    }
+
+    public void GetMoney(int amount)
+    {
+        money += amount;
     }
 
     public override void Setup()
@@ -279,6 +300,11 @@ public class RoleModule : ModuleBase, IRoleModule
                 }
             }
         }
+    }
+
+    public void AddExpBonux(int idx, int num)
+    {
+        expBonuses[idx] += num;
     }
 }
 

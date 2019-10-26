@@ -8,8 +8,11 @@ using System.Collections.Generic;
 public class MainModel : BaseModel
 {
     public List<AppInfo> UnlockedApps = new List<AppInfo>();
+    public List<TurnMsg> Msgs = new List<TurnMsg>();
 
 }
+
+
 
 public class MainView : BaseView
 {
@@ -22,10 +25,27 @@ public class MainView : BaseView
     public Image PhoneBigPic;
     public Image Close;
 
+    public Transform Properties;
+
+    public Transform EventsContainer;
+    public List<EventView> EventViewList = new List<EventView>();
+
     public Transform AppsContainer;
     public List<AppView> appViews = new List<AppView>();
 }
 
+public class EventView
+{
+    public RectTransform root;
+    public Image icon;
+    public void BindView(Transform root)
+    {
+        this.root = (RectTransform)root;
+        icon = root.Find("Icon").GetComponent<Image>();
+
+        icon.gameObject.SetActive(true);
+    }
+}
 public class AppView
 {
     public RectTransform root;
@@ -44,21 +64,20 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 {
 
 	IRoleModule rm;
-    IResLoader lr;
+    IResLoader pResLoader;
     ICoreManager pCoreMgr;
 
 
     public override void Init(){
-		view = new MainView ();
-		model = new MainModel ();
 
 		rm = GameMain.GetInstance ().GetModule<RoleModule> ();
         mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
-        lr = GameMain.GetInstance().GetModule<ResLoader>();
+        pResLoader = GameMain.GetInstance().GetModule<ResLoader>();
 
         pCoreMgr = GameMain.GetInstance().GetModule<CoreManager>();
 
         GetApps();
+
     }
 
     public void GetApps()
@@ -67,10 +86,78 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         model.UnlockedApps = rm.GetApps();
     }
 
-    public void AddMsg(string content)
+    public void AddMsg(TurnMsg msg)
     {
-
+        model.Msgs.Add(msg);
+        GameObject go = pResLoader.Instantiate("UI/Main/e0", view.EventsContainer);
+        EventView vv = new EventView();
+        vv.BindView(go.transform);
+        ClickEventListerner listerner = vv.icon.gameObject.GetComponent<ClickEventListerner>();
+        if(listerner == null)
+        {
+            listerner = vv.icon.gameObject.AddComponent<ClickEventListerner>();
+        }
+        listerner.ClearClickEvent();
+        listerner.OnClickEvent += delegate
+        {
+            mUIMgr.ShowMsgBox(msg.content);
+            RemoveMsg(msg);
+        };
+        view.EventViewList.Add(vv);
     }
+
+
+    public void RemoveMsg(TurnMsg msg)
+    {
+        int msgIdx = model.Msgs.IndexOf(msg);
+        if(msgIdx == -1)
+        {
+            return;
+        }
+        model.Msgs.Remove(msg);
+        EventView vv = view.EventViewList[msgIdx];
+        view.EventViewList.RemoveAt(msgIdx);
+        vv.icon.gameObject.SetActive(false);
+        DOTween.To
+            (
+                () => vv.root.sizeDelta,
+                (x) => vv.root.sizeDelta = x,
+                new Vector2(0,vv.root.sizeDelta.y),
+                0.3f
+            ).OnComplete(delegate {
+                GameObject.Destroy(vv.root.gameObject);
+            }).OnUpdate(delegate {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(view.EventsContainer as RectTransform);
+                //view.EventsContainer.
+
+            });
+    }
+
+    public void ShowMsg(List<TurnMsg> msgs)
+    {
+        model.Msgs = msgs;
+        foreach (TurnMsg msg in msgs)
+        {
+            GameObject go = pResLoader.Instantiate("UI/Main/e0", view.EventsContainer);
+            EventView vv = new EventView();
+            vv.BindView(go.transform);
+
+            ClickEventListerner listerner = vv.icon.gameObject.GetComponent<ClickEventListerner>();
+            if (listerner == null)
+            {
+                listerner = vv.icon.gameObject.AddComponent<ClickEventListerner>();
+            }
+            listerner.ClearClickEvent();
+            listerner.OnClickEvent += delegate
+            {
+                mUIMgr.ShowMsgBox(msg.content);
+                RemoveMsg(msg);
+            };
+
+            view.EventViewList.Add(vv);
+        }
+    }
+
 
     public override void BindView(){
         //view.NextStage = root.
@@ -83,22 +170,46 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.Close = view.PhoneBigPic.transform.Find("Close").GetComponent<Image>();
         view.PhoneMiniIcon = root.Find("Phone_miniicon").GetComponent<Image>();
 
+        view.Properties = root.Find("Properties");
+
+        view.EventsContainer = root.Find("Events");
+
         view.AppsContainer = view.PhoneBigPic.transform.Find("Apps");
 
         foreach(AppInfo app in model.UnlockedApps)
         {
-            GameObject go = lr.Instantiate("UI/app",view.AppsContainer);
+            GameObject go = pResLoader.Instantiate("UI/app",view.AppsContainer);
             AppView appView = new AppView();
             appView.BindView(go.transform);
-            appView.icon.sprite = lr.LoadResource<Sprite>("Textures/" + app.AppId);
+            appView.icon.sprite = pResLoader.LoadResource<Sprite>("Textures/" + app.AppId);
             appView.title.text = app.ShowName;
             view.appViews.Add(appView);
+        }
+    }
+
+    public override void Tick(float dTime)
+    {
+        base.Tick(dTime);
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            AddMsg(new TurnMsg("abc"));
         }
     }
 
     public override void PostInit()
     {
         view.PhoneBigPic.gameObject.SetActive(false);
+
+        InitEvents();
+    }
+
+    private void InitEvents()
+    {
+        foreach (EventView vv in view.EventViewList)
+        {
+            GameObject.Destroy(vv.root.gameObject);
+        }
+        view.EventViewList.Clear();
     }
 
 

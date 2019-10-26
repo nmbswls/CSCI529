@@ -420,6 +420,9 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
             pSkillMgr.GainSkills(model.NowSkills[selectedSkill]);
             view.BeforeStudyPanel.gameObject.SetActive(false);
             view.AfterStudyPanel.gameObject.SetActive(true);
+
+            UpdateExp(pSkillMgr.GetOwnedSkill(skillId));
+
         }
         else
         {

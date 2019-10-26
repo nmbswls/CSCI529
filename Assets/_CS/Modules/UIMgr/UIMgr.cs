@@ -79,6 +79,7 @@ public class UIMgr : ModuleBase, IUIMgr
         mUITypeMap["ModelMask"] = typeof(ModelMask);
 
         mUITypeMap["MsgBox"] = typeof(MsgBoxCtrl);
+        mUITypeMap["ZhiboJiesuanPanel"] = typeof(ZhiboJiesuanUI);
 
 
     }
@@ -255,9 +256,10 @@ public class UIMgr : ModuleBase, IUIMgr
         return localPos;
     }
 
-    public void ShowMsgBox()
+    public void ShowMsgBox(string content)
     {
-        ShowPanel("MsgBox");
+        MsgBoxCtrl msgBox = ShowPanel("MsgBox") as MsgBoxCtrl;
+        msgBox.ShowMsg(content);
     }
 
 }

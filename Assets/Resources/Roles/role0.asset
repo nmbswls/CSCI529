@@ -18,7 +18,9 @@ MonoBehaviour:
   initMoney: 5
   initFreePoint: 10
   initSkillPoint: 15
-  initOwing: e9030000ea030000
+  initOwning:
+  - card2000
+  - card2000
   initCards:
   - card0001
   - card0001
@@ -30,6 +32,8 @@ MonoBehaviour:
   - card0022
   - card0003
   - card1003
+  - card9002
+  - card0026
   initSkills: []
   specialList:
   - "\u4F60\u6CA1\u6709\u591A\u5C11\u7ECF\u9A8C\uFF0C\u4F46\u5145\u6EE1\u70ED\u60C5"

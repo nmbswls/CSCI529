@@ -14,7 +14,9 @@ public class MiniCardView
     public Image Picture;
     public Text Desp;
     public Text Name;
+    public Transform TimeLeftComp;
     public Text TimeLeft;
+    public Animator ClockAnimator;
 }
 public class MiniCard : MonoBehaviour
 {
@@ -55,23 +57,41 @@ public class MiniCard : MonoBehaviour
 
     float preY = 0;
 
-    public void Init(string cardId, CardContainerLayout container)
+    public void Init(CardInZhibo cardInfo, CardContainerLayout container)
     {
         rt = (RectTransform)transform;
         anim = GetComponent<Animator>();
         this.container = container;
 
-        CardAsset ca = GameMain.GetInstance().GetModule<CardDeckModule>().GetCardInfo(cardId);
+        CardAsset ca = cardInfo.ca;
 
 
         BindView();
         RegisterEvent();
+        view.TimeLeftComp.gameObject.SetActive(false);
+        if(!cardInfo.ca.IsConsume)
+        {
+            view.TimeLeftComp.gameObject.SetActive(false);
+        }
+        else
+        {
+            view.TimeLeftComp.gameObject.SetActive(true);
+            view.TimeLeft.text = (int)cardInfo.UseLeft + "";
+            view.TimeLeft.color = Color.black;
+        }
 
+        anim.ResetTrigger("Disappear");
+        anim.Play("Normal");
+
+        //初始化卡面
         view.Name.text = ca.CardName;
+        view.Desp.text = ca.CardEffectDesp;
+
 
         transform.SetParent(container.transform,false);
         nowDegree = 20f;
         targetDegree = 20f;
+
 
         container.PutToInitPos(this);
         isBacking = false;
@@ -81,6 +101,14 @@ public class MiniCard : MonoBehaviour
         PosDirty = false;
 
         view.CardCG.alpha = 1f;
+
+        nowValue = 0;
+        view.CardFace.anchoredPosition = Vector2.zero;
+        view.CardFace.localScale = MinimizeScale;
+
+        view.CardCG.blocksRaycasts = true;
+        CancelHighLight();
+
     }
 
     public void Tick(float dTime)
@@ -102,14 +130,18 @@ public class MiniCard : MonoBehaviour
                 isBacking = false;
             }
         }
-
-
-
     }
 
     public void UpdateView(CardInZhibo info)
     {
-        view.TimeLeft.text = (int)(info.TimeLeft) + "";
+        //if (info.ca.WillOverdue)
+        //{
+        //    view.TimeLeft.text = ((int)(info.TimeLeft) + 1) + "";
+        //    if (info.TimeLeft < 3)
+        //    {
+        //        view.TimeLeft.color = Color.red;
+        //    }
+        //}
     }
 
     public void CheckIsHighlight()
@@ -157,7 +189,11 @@ public class MiniCard : MonoBehaviour
         view.Picture = view.CardFace.Find("Picture").GetComponent<Image>();
         view.Name = view.CardFace.Find("Name").GetComponent<Text>();
         view.Desp = view.CardFace.Find("Desp").GetComponent<Text>();
-        view.TimeLeft = view.CardFace.Find("TimeLeft").GetComponent<Text>();
+
+        view.TimeLeftComp = view.CardFace.Find("TimeLeft");
+        view.TimeLeft = view.TimeLeftComp.Find("Text").GetComponent<Text>();
+
+        view.ClockAnimator = view.TimeLeftComp.Find("Clock").GetComponent<Animator>();
     }
 
     private void RegisterEvent()
@@ -169,93 +205,95 @@ public class MiniCard : MonoBehaviour
         {
             listener = view.CardFace.gameObject.AddComponent<DragEventListener>();
 
-
-            listener.OnBeginDragEvent += delegate (PointerEventData eventData) {
-                if (isDestroying || isBacking || isDragging)
-                {
-                    return;
-                }
-                preY = eventData.position.y;
-                isDragging = true;
-                container.DraggingIdx = container.cards.IndexOf(this);
-            };
-
-            listener.OnDragEvent += delegate (PointerEventData eventData) {
-                if (isDestroying || isBacking)
-                {
-                    return;
-                }
-                float nowY = eventData.position.y;
-                float dy = nowY - preY;
-
-                nowValue += dy*1.4f;
-
-                HandleScale();
-
-                preY = nowY;
-            };
-
-            listener.OnEndDragEvent += delegate (PointerEventData eventData) {
-                if (isDestroying)
-                {
-                    return;
-                }
-                if(nowValue >= TriggerValue)
-                {
-                    UseCard();
-                }
-                else
-                {
-                    isBacking = true;
-                }
-
-                if (!isHighlight)
-                {
-                    MinimizeIgnoreBacking();
-                }
-                preY = 0;
-                isDragging = false;
-                container.DraggingIdx = -1;
-            };
-
-            listener.PointerEnterEvent += delegate (PointerEventData eventData) {
-                if (isDestroying)
-                {
-                    return;
-                }
-
-                if (container.DraggingIdx != -1)
-                {
-                    return;
-                }
-                isHighlight = true;
-                if (isBacking)
-                {
-                    isBacking = false;
-                    nowValue = 0;
-                }
-
-
-                view.CardFace.localScale = NormalScale;
-                view.CardFace.anchoredPosition = new Vector3(0,0+ NormalYOffset, 0);
-            };
-
-            listener.PointerExitEvent += delegate (PointerEventData eventData) {
-                if (isDestroying)
-                {
-                    return;
-                }
-                isHighlight = false;
-                if (container.DraggingIdx != -1)
-                {
-                    return;
-                }
-
-
-                MinimizeIgnoreBacking();
-
-            };
         }
+        listener.ClearDragEvent();
+        listener.ClearClickEvent();
+        listener.OnBeginDragEvent += delegate (PointerEventData eventData) {
+            if (isDestroying || isBacking || isDragging)
+            {
+                return;
+            }
+            preY = eventData.position.y;
+            isDragging = true;
+            container.DraggingIdx = container.cards.IndexOf(this);
+        };
+
+        listener.OnDragEvent += delegate (PointerEventData eventData) {
+            if (isDestroying || isBacking)
+            {
+                return;
+            }
+            float nowY = eventData.position.y;
+            float dy = nowY - preY;
+
+            nowValue += dy*1.4f;
+
+            HandleScale();
+
+            preY = nowY;
+        };
+
+        listener.OnEndDragEvent += delegate (PointerEventData eventData) {
+            if (isDestroying)
+            {
+                return;
+            }
+            if(nowValue >= TriggerValue)
+            {
+                UseCard();
+            }
+            else
+            {
+                isBacking = true;
+            }
+
+            if (!isHighlight)
+            {
+                MinimizeIgnoreBacking();
+            }
+            preY = 0;
+            isDragging = false;
+            container.DraggingIdx = -1;
+        };
+
+        listener.PointerEnterEvent += delegate (PointerEventData eventData) {
+            if (isDestroying)
+            {
+                return;
+            }
+
+            if (container.DraggingIdx != -1)
+            {
+                return;
+            }
+            isHighlight = true;
+            if (isBacking)
+            {
+                isBacking = false;
+                nowValue = 0;
+            }
+
+
+            view.CardFace.localScale = NormalScale;
+            view.CardFace.anchoredPosition = new Vector3(0,0+ NormalYOffset, 0);
+        };
+
+        listener.PointerExitEvent += delegate (PointerEventData eventData) {
+            if (isDestroying)
+            {
+                return;
+            }
+            isHighlight = false;
+            if (container.DraggingIdx != -1)
+            {
+                return;
+            }
+
+
+            MinimizeIgnoreBacking();
+
+        };
+
     }
 
     public void MinimizeIgnoreBacking()
@@ -311,10 +349,14 @@ public class MiniCard : MonoBehaviour
     {
         if (container.UseCard(this))
         {
-            anim.SetTrigger("Disappear");
-            isDestroying = true;
-            GetComponent<CanvasGroup>().blocksRaycasts = false;
-            GameObject.DestroyObject(this, 0.5f);
+            Disappaer();
+        }
+        else
+        {
+            //晃动
+            nowValue = 0;
+            CancelHighLight();
+            MinimizeIgnoreBacking();
         }
     }
 
@@ -322,27 +364,33 @@ public class MiniCard : MonoBehaviour
     {
         anim.SetTrigger("Disappear");
         isDestroying = true;
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
-        GameObject.DestroyObject(this, 0.5f);
+        view.CardCG.blocksRaycasts = false;
+        Invoke("Recycle", 0.5f);
     }
+
+    public void Recycle()
+    {
+        container.RecycleCard(gameObject);
+    }
+
 
     private static float BasicAlpha = 1f;
     private static float FlashInterval = 0.5f;
 
     private static float MinAlpha = 0.3f;
 
-    public void SetFlashingColor(float leftTime)
-    {
-        if (isDestroying)
-        {
-            return;
-        }
-        if (isDragging|| isHighlight)
-        {
-            view.CardCG.alpha = BasicAlpha;
-            return;
-        }
-        float a = Mathf.Abs(1 - (leftTime - (int)(leftTime / FlashInterval) * FlashInterval) / FlashInterval * 2);
-        view.CardCG.alpha = MinAlpha + a * (BasicAlpha - MinAlpha);
-    }
+    //public void SetFlashingColor(float leftTime)
+    //{
+    //    if (isDestroying)
+    //    {
+    //        return;
+    //    }
+    //    if (isDragging|| isHighlight)
+    //    {
+    //        view.CardCG.alpha = BasicAlpha;
+    //        return;
+    //    }
+    //    float a = Mathf.Abs(1 - (leftTime - (int)(leftTime / FlashInterval) * FlashInterval) / FlashInterval * 2);
+    //    view.CardCG.alpha = MinAlpha + a * (BasicAlpha - MinAlpha);
+    //}
 }

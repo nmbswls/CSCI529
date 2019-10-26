@@ -2,6 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
+public class TurnMsg
+{
+    public string content;
+
+    public TurnMsg(string content)
+    {
+        this.content = content;
+    }
+}
 public class MainGameMode : GameModeBase
 {
 
@@ -9,14 +19,14 @@ public class MainGameMode : GameModeBase
     IRoleModule rm;
     ISpeEventMgr pEventMgr;
 
+    UIMainCtrl mainUI;
 
     Queue<SpecialEvent> UnHandledEvent = new Queue<SpecialEvent>();
+
+    List<string> TurnInfos = new List<string>();
     public override void Tick(float dTime){
 
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            pUIMgr.ShowMsgBox();
-        }
+
     }
 
 	public override void Init(){
@@ -24,15 +34,17 @@ public class MainGameMode : GameModeBase
         rm = GameMain.GetInstance().GetModule<RoleModule>();
         pEventMgr = GameMain.GetInstance().GetModule<SpeEventMgr>();
 
-
-        pUIMgr.ShowPanel("UIMain");
+        mainUI = pUIMgr.ShowPanel("UIMain") as UIMainCtrl;
     }
 
     public void NextTurn()
     {
+        TurnInfos.Clear();
         HandleEvents(pEventMgr.CheckEvent());
         GameMain.GetInstance().GetModule<CardDeckModule>().CheckOverdue();
         GameMain.GetInstance().GetModule<CardDeckModule>().CheckTurnBonux();
+
+        mainUI.ShowMsg(new List<TurnMsg>());
     }
 
     public void HandleEvents(List<SpecialEvent> list)
@@ -45,6 +57,7 @@ public class MainGameMode : GameModeBase
         }
         HandleNextEvent();
     }
+
 
 
 

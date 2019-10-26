@@ -29,6 +29,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
 
     IResLoader mResLoader;
     ICardDeckModule mCardMgr;
+    IRoleModule mRoleMdl;
 
     public List<SkillInfo> OwnedSkills = new List<SkillInfo>();
 
@@ -38,6 +39,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
     {
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
         mCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
+        mRoleMdl = GameMain.GetInstance().GetModule<IRoleModule>();
 
         LoadAllSkills();
         FakeSkillTree();
@@ -51,7 +53,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
     public void GainExp(string sid)
     {
         SkillInfo skillInfo = GetOwnedSkill(sid);
-        skillInfo.NowExp += CalculateExp();
+        skillInfo.NowExp += CalculateExp(skillInfo);
         if(skillInfo.SkillLvl == GetSkillAsset(sid).MaxLevel)
         {
             return;
@@ -71,8 +73,15 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
     }
 
 
-    private int CalculateExp()
+    private int CalculateExp(SkillInfo skillInfo)
     {
+        SkillAsset sa = GetSkillAsset(skillInfo.SkillId);
+        if(sa == null)
+        {
+            return 0;
+        }
+        //int difficult=sa.Difficulties[0];
+        //mRoleMdl.AddExpBonux
         return 30;
     }
     public void GainSkills(string skillId)

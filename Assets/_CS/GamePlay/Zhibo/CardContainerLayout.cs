@@ -24,6 +24,8 @@ public class CardContainerLayout : MonoBehaviour
     float DefaultIntervalDegree = 2f;
 
     public ZhiboGameMode gameMode;
+    IResLoader mResLoader;
+
 
     public int DraggingIdx = -1;
 
@@ -33,7 +35,7 @@ public class CardContainerLayout : MonoBehaviour
         Width = rt.rect.width;
         this.gameMode = gameMode;
         R = Width * 0.5f / Mathf.Sin(MaxDegree * 0.5f * Mathf.Deg2Rad);
-        Debug.Log(R);
+        mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
     }
 
     public void PutToInitPos(MiniCard card)
@@ -42,10 +44,8 @@ public class CardContainerLayout : MonoBehaviour
         card.rt.localEulerAngles = new Vector3(0, 0, -MaxDegree);
     }
 
-    public bool AddCard(string cardId)
+    public bool AddCard(CardInZhibo cardInfo)
     {
-
-
         IResLoader loader = GameMain.GetInstance().GetModule<ResLoader>();
 
         GameObject cardGo = loader.Instantiate("Zhibo/Card");
@@ -54,10 +54,15 @@ public class CardContainerLayout : MonoBehaviour
             return false;
         }
         MiniCard card = cardGo.GetComponent<MiniCard>();
-        card.Init(cardId,this);
+        card.Init(cardInfo, this);
         cards.Add(card);
         Adjust();
         return true;
+    }
+
+    public void RecycleCard(GameObject go)
+    {
+        mResLoader.ReleaseGO("Zhibo/Card",go);
     }
 
     private void Adjust()
@@ -81,13 +86,13 @@ public class CardContainerLayout : MonoBehaviour
 
     public void Tick(float dTime)
     {
-        int idx = 0;
-        foreach(MiniCard card in cards)
+        for(int i = 0; i < cards.Count; i++)
         {
+            MiniCard card = cards[i];
             card.Tick(dTime);
-            if (gameMode.state.Cards[idx].TimeLeft < 3f)
+            if (gameMode.state.Cards[i].TimeLeft < 3f)
             {
-                card.SetFlashingColor(gameMode.state.Cards[idx].TimeLeft);
+                //card.SetFlashingColor(gameMode.state.Cards[i].TimeLeft);
             }
             if (!card.PosDirty || Mathf.Abs(card.targetDegree - card.nowDegree) <= 1e-6)
             {
@@ -98,12 +103,7 @@ public class CardContainerLayout : MonoBehaviour
             card.nowDegree += (card.targetDegree - card.nowDegree) * dTime * CardMoveSpd;
             card.rt.anchoredPosition = new Vector3(Mathf.Sin(card.nowDegree * Mathf.Deg2Rad) * R, Mathf.Cos(card.nowDegree * Mathf.Deg2Rad) * R - R);
             card.rt.localEulerAngles = new Vector3(0, 0, -card.nowDegree);
-
-
-            idx += 1;
         }
-
-
     }
 
 

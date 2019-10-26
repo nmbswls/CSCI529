@@ -19,12 +19,14 @@ MonoBehaviour:
   CardType: 0
   cost: 0
   IsConsume: 0
+  UseOnDiscard: 0
+  HasTurnEffect: 0
   OverDueTurn: 0
-  ValidTime: 0
   UseTime: 0
   ModelCard: 
-  effects:
+  Effects:
   - effect: GainCardWithPossibility
     effectString: card0024,100
   - effect: GainCardWithPossibility
     effectString: card0024,100
+  TurnEffects: []
