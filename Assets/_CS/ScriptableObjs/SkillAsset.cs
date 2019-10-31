@@ -23,7 +23,6 @@ public class SkillAsset : ScriptableObject
     public string SkingDesp;
 
 
-
     public int MaxLevel;
 
     public string SkillType;

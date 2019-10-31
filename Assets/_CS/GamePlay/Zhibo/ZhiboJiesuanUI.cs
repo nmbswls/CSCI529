@@ -39,5 +39,6 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
     public void SetContent(string bonusString)
     {
         view.text.text = bonusString;
+        view.text.text += "粉丝累计:";
     }
 }

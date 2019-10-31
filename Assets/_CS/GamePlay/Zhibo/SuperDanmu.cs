@@ -17,6 +17,7 @@ public class SuperDanmu : MonoBehaviour
     ZhiboGameMode gameMode;
 
     public RectTransform rect;
+    public Animator anim;
 
     public bool Activated = false;
 
@@ -37,6 +38,10 @@ public class SuperDanmu : MonoBehaviour
         this.gameMode = gameMode;
         this.txt = txt;
         rect = (RectTransform)transform;
+        anim = GetComponent<Animator>();
+
+        anim.Play("FadeIn");
+        anim.ResetTrigger("anim");
         Activated = false;
 
         HasDisapeared = false;
@@ -112,6 +117,7 @@ public class SuperDanmu : MonoBehaviour
     {
         HasDisapeared = true;
         destroying = true;
+        anim.SetTrigger("Disappear");
         Invoke("DelayDestroy", 0.5f);
     }
 

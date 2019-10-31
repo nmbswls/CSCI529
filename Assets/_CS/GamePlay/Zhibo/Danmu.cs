@@ -66,14 +66,7 @@ public class Danmu : MonoBehaviour
         strength = 1;
         left = 1;
 
-        if (isBad)
-        {
-            color = Color.red;
-        }
-        else
-        {
-            color = Color.black;
-        }
+
         //color = getRandomColor();
         BindView();
         RegisterEvent();
@@ -88,6 +81,7 @@ public class Danmu : MonoBehaviour
         }
         else
         {
+            view.Content.color = Color.black;
             view.BadBG.gameObject.SetActive(false);
         }
 

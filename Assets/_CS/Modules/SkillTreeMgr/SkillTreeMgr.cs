@@ -33,6 +33,8 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
 
     public List<SkillInfo> OwnedSkills = new List<SkillInfo>();
 
+    private Dictionary<string, int> TrackExps = new Dictionary<string, int>();
+
     private readonly static Dictionary<string, SkillAsset> SkillAssetDict = new Dictionary<string, SkillAsset>();
 
     public override void Setup()
@@ -80,6 +82,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
         {
             return 0;
         }
+        //难度 属性值 track经验值 计算出来 有min 和 max
         //int difficult=sa.Difficulties[0];
         //mRoleMdl.AddExpBonux
         return 30;
@@ -196,4 +199,6 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
         }
         return ret;
     }
+
+
 }

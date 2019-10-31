@@ -3,6 +3,11 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+
+public class ZhiboCardFilter
+{
+
+}
 public class ZhiboBuff : MonoBehaviour
 {
 
@@ -15,15 +20,28 @@ public class ZhiboBuff : MonoBehaviour
     public float leftTime;
     public int leftTurn;
 
+    //是否是接下来几张卡的效果
+    public bool AffectCard;
+    public int AffectedCardNum;
+
+    //
+    public ZhiboCardFilter AffectedCardFilter = null;
+
     private static float basicAlpht = 0.8f;
     private Image icon;
 
-    public void Init(string buffId, int buffLevel, int turnLeft, ZhiboGameMode gameMode)
+    public void Init(ZhiboGameMode gameMode, string buffId, int buffLevel, int turnLeft, int cardLeft = -1)
     {
         this.buffId = buffId;
         this.buffLevel = buffLevel;
         this.leftTurn = turnLeft;
         this.gameMode = gameMode;
+
+        if(cardLeft != -1)
+        {
+            AffectCard = true;
+            AffectedCardNum = cardLeft;
+        }
 
         BindView();
         RegisterEvent();

@@ -3,6 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+public class PlatformInfo
+{
+    public int Liuliang;
+    public int[] FensiBili = new int[4];
+    public int[] Xihao = new int[5];
+    public string PlatformId;
+    public string PlatformDesp;
+    public List<string> PlatformEffect;
+    public List<string> PlatformCards;
+}
+
 public class AppInfo
 {
     public string ShowName;
@@ -69,6 +80,7 @@ public class RoleModule : ModuleBase, IRoleModule
 
     public string[] Schedules;
 
+
     private ISpeEventMgr pEventMgr;
     private ICardDeckModule pCardMdl;
     private ICoreManager pCoreMgr;
@@ -84,15 +96,24 @@ public class RoleModule : ModuleBase, IRoleModule
     private float fen2Num;
     private float fen3Num;
 
+    private float fen4Num;
+
+    private float BadPoint;
+
+    private string NowPlatformId;
+
+
 
     List<AppInfo> unlockedApps = new List<AppInfo>();
 
     private readonly List<Tezhi> TezhiList = new List<Tezhi>();
 
     private readonly Dictionary<string, ScheduleInfo> ScheduleDict = new Dictionary<string, ScheduleInfo>();
+
+    private readonly Dictionary<string, PlatformInfo> Platforms = new Dictionary<string, PlatformInfo>();
+    private Dictionary<string, int> TrackExps = new Dictionary<string, int>();
     private readonly List<string> choices = new List<string>();
 
-    public int[] expBonuses = new int[10];
 
     private int scheduleMax;
     public int ScheduleMax
@@ -302,9 +323,47 @@ public class RoleModule : ModuleBase, IRoleModule
         }
     }
 
-    public void AddExpBonux(int idx, int num)
+    public void AddTrackExp(string track, int num)
     {
-        expBonuses[idx] += num;
+        if (TrackExps.ContainsKey(track))
+        {
+            TrackExps[track] += num;
+        }
+        else
+        {
+            TrackExps[track] = num;
+        }
+    }
+
+    public int GetTrackExp(string track)
+    {
+        if (TrackExps.ContainsKey(track))
+        {
+            return TrackExps[track];
+        }
+        return 0;
+    }
+
+    public void FakePlatformInfo()
+    {
+        PlatformInfo info = new PlatformInfo();
+
+        Platforms["s"] = info;
+    }
+
+    public PlatformInfo GetNowPlatformInfo()
+    {
+        return Platforms[NowPlatformId];
+    }
+
+    public int GetBadLevel()
+    {
+        int badLevel = (int)(BadPoint / 5);
+        if(badLevel > 10)
+        {
+            badLevel = 10;
+        }
+        return badLevel;
     }
 }
 

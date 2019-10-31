@@ -35,5 +35,10 @@ public interface IRoleModule : IModule{
 
     void GetMoney(int amount);
 
-    void AddExpBonux(int idx, int num);
+    void AddTrackExp(string type, int num);
+    int GetTrackExp(string track);
+
+    PlatformInfo GetNowPlatformInfo();
+
+    int GetBadLevel();
 }
