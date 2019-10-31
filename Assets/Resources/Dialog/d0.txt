@@ -1,0 +1,13 @@
+BG:asdsa
+Lihui:Enter p001 1, Enter p002 2, Enter p003 3
+[我]:这是一段d0号对话的测试用例
+[我]:立绘离开
+Lihui:Leave 0 1
+[我]:立绘进入
+Lihui:Enter p001 0
+[我]:屏幕效果演示
+Effect:Shake
+[我]:选项卡
+Branch:我想吃屎 1,我想升天 2,我想自爆 3
+[我]:结束
+End:0

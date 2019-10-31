@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
+  m_Name: card9002
+  m_EditorClassIdentifier: 
+  CardId: card9002
+  CardName: "\u98CE\u5BD2"
+  CardDesp: "\u98CE\u5BD2\u53D1\u4F5C\uFF0C\u4F60\u65E0\u6CD5\u4E13\u5FC3\u76F4\u64AD"
+  CardEffectDesp: "\u5168\u5C5E\u6027-10%"
+  CardType: 0
+  cost: 0
+  IsConsume: 0
+  UseOnDiscard: 1
+  HasTurnEffect: 1
+  OverDueTurn: 0
+  UseTime: 1
+  ModelCard: 
+  Effects:
+  - effect: AddStatus
+    effectString: f+%,-10
+  - effect: AddStatus
+    effectString: m+%,-10
+  - effect: AddStatus
+    effectString: t+%,-10
+  TurnEffects: []

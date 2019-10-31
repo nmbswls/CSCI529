@@ -1,0 +1,9 @@
+﻿BG:asdsa
+Lihui:Enter p001 1, Enter p002 2, Enter p003 3
+[我]:这是一段d1号对话的测试用例
+Lihui:Leave 0 1
+[我]:结束了
+Effect:Shake
+Branch:我想吃屎 1,我想升天 2,我想自爆 3
+[我]:结束了这才是真的
+End:0

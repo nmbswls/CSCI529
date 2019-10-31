@@ -1,0 +1,2 @@
+﻿Name    Key Frames  X   Y   Size
+{angry} [0] 1 0 0 0.125

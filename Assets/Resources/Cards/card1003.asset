@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
+  m_Name: card1003
+  m_EditorClassIdentifier: 
+  CardId: card1003
+  CardName: "\u522E\u80E1\u5200\u9F20\u6807"
+  CardDesp: "\u6E38\u620F\u7528\u9F20\u6807"
+  CardEffectDesp: "\u6BCF\u56DE\u5408\u6280\u827A+1\n\u6E38\u620F\u7C7B\u52A0\u6210+1"
+  CardType: 0
+  cost: 0
+  IsConsume: 0
+  HasTurnEffect: 1
+  OverDueTurn: 0
+  ValidTime: 0
+  UseTime: 0
+  ModelCard: 
+  Effects:
+  - effect: Chongzhu
+    effectString: 
+  TurnEffects:
+  - effect: jiyi+
+    effectString: 1
+  - effect: game+
+    effectString: 1

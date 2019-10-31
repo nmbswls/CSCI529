@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee0f02c7ecba04b2caa2afce1c662452, type: 3}
+  m_Name: role3
+  m_EditorClassIdentifier: 
+  Name: "\u5168\u804C\u5988\u5988"
+  Desp: "\u5728\u5BB6\u5EAD\u7B2C\u4E09\u4F4D\u6210\u5458\u5230\u6765\u540E\uFF0C\u4F60\u8F9E\u53BB\u5DE5\u4F5C\uFF0C\u5C06\u4E00\u5207\u6295\u5165\u5728\u4E86\u5BB6\u5EAD\u4E0A\u3002\u4F60\u8BA4\u4E3A\u8FD9\u5C31\u662F\u4F60\u4ECA\u540E\u7684\u751F\u6D3B\u65B9\u5F0F\uFF0C\u76F4\u5230\u53D1\u73B0\u76F4\u64AD\u3002\u4F60\u60F3\u6316\u6398\u81EA\u5DF1\u7684\u53EF\u80FD\u6027\uFF0C\u5728\u5F7B\u5E95\u6210\u4E3A\u9EC4\u8138\u5A46\u4E4B\u524D\u3002"
+  initProperties: 0a00000014000000140000000a0000000a000000
+  initMoney: 0
+  initFreePoint: 0
+  initSkillPoint: 0
+  initOwing: 
+  specialList:
+  - "\u6709\u4E00\u4E2A\u53EF\u7231\u7684\u5B9D\u5B9D\u3002"
+  - "\u6709\u4E00\u4E2A\u548C\u8C10\u7684\u5BB6\u5EAD\u3002"
+  - "\u6709\u4E00\u6BB5\u6709\u8DA3\u7684\u7ECF\u5386\u3002"
+  imageStr: 

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
+  m_Name: card1000
+  m_EditorClassIdentifier: 
+  CardId: card1000
+  CardName: "\u8D2A\u5403\u86C7"
+  CardDesp: "\u6700\u57FA\u7840\u7684\u7EA2\u767D\u673A\u6E38\u620F\uFF0C\u6709\u624B\u5C31\u80FD\u73A9"
+  CardEffectDesp: "\u83B7\u5F975+\u6280\u827A0.1\u500D\u7684\u70ED\u5EA6\u3002"
+  CardType: 0
+  cost: 5
+  IsConsume: 0
+  OverDueTurn: 0
+  ValidTime: 0
+  UseTime: 0
+  ModelCard: 
+  effects:
+  - effect: GetScore
+    effectString: 5+0.1*j

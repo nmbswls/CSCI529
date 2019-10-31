@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 921a99f710f1aa94d99381a81d56e928
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _MainTex: {instanceID: 0}
+  - _EmojiTex: {instanceID: 0}
+  - _EmojiDataTex: {instanceID: 0}
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
