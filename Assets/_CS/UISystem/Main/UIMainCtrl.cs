@@ -303,6 +303,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             }
         }
 
+
     }
 
     public void OpenApp(AppView vv)
@@ -337,10 +338,13 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             if (view.appViews.IndexOf(vv) == 4)
             {
                 //weibo
+                //insert a card
+
             }
             else if (view.appViews.IndexOf(vv) == 3)
             {
                 //taobao
+                //insert a card with money paid
             }
             else if (view.appViews.IndexOf(vv) == 1)
             {

@@ -6,6 +6,15 @@ using UnityEngine.UI;
 
 public class WeiboGameMode : GameModeBase
 {
-    ScrollRect sr;
-
+    ICardDeckModule pCardMdl;
+    
+    public override void Init()
+    {
+        pCardMdl = GameMain.GetInstance().GetModule<CardDeckModule>();
+        if(pCardMdl == null)
+        {
+            Debug.Log("getCardFailed!");
+        }
+    }
+    
 }
