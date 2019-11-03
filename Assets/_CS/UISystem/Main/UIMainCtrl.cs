@@ -25,9 +25,8 @@ public class MainView : BaseView
     public Image PhoneBigPic;
     public Image Close;
 
-    public Image weibo;
-    public Image mail;
-    public Image taobao;
+    public Image Mail;
+    public Image Taobao;
 
     public Transform Properties;
 
@@ -83,7 +82,6 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         pCoreMgr = GameMain.GetInstance().GetModule<CoreManager>();
 
         GetApps();
-
     }
 
     public void GetApps()
@@ -284,6 +282,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
                               );
                         }
                         closeCtr = false;
+                        //mUIMgr.CloseCertainPanel();
                     }
                     view.PhoneBigPic.gameObject.SetActive(false);
                     view.PhoneMiniIcon.gameObject.SetActive(true);
@@ -322,7 +321,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
                     (
                       () => view.PhoneBigPic.rectTransform.anchoredPosition,
                       (x) => view.PhoneBigPic.rectTransform.anchoredPosition = x,
-                      new Vector2(159, -540),
+                      new Vector2(159, -500),
                       0.3f
                   );
             }
@@ -337,8 +336,11 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             }
             if (view.appViews.IndexOf(vv) == 4)
             {
+                //Debug.Log(mUIMgr.GetModuleName());
+
                 //weibo
                 //insert a card
+                mUIMgr.ShowPanel("WeiboPanel");
 
             }
             else if (view.appViews.IndexOf(vv) == 3)

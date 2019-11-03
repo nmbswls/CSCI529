@@ -167,6 +167,7 @@ public class RoleModule : ModuleBase, IRoleModule
         unlockedApps.Add(new AppInfo("邮箱", "email"));
         unlockedApps.Add(new AppInfo("地图", "maps"));
         unlockedApps.Add(new AppInfo("购物", "taobao"));
+        unlockedApps.Add(new AppInfo("微博", "weibo"));
 
 
 
