@@ -25,6 +25,9 @@ public class MainView : BaseView
     public Image PhoneBigPic;
     public Image Close;
 
+    public Image Mail;
+    public Image Taobao;
+
     public Transform Properties;
 
     public Transform EventsContainer;
@@ -67,6 +70,8 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     IResLoader pResLoader;
     ICoreManager pCoreMgr;
 
+    bool closeCtr = false;
+
 
     public override void Init(){
 
@@ -77,7 +82,6 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         pCoreMgr = GameMain.GetInstance().GetModule<CoreManager>();
 
         GetApps();
-
     }
 
     public void GetApps()
@@ -265,7 +269,21 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             {
                 listener = view.Close.gameObject.AddComponent<ClickEventListerner>();
                 listener.OnClickEvent += delegate (PointerEventData eventData) {
-
+                    //check position of the phone
+                    if(closeCtr)
+                    {
+                        {
+                            Tween tween = DOTween.To
+                                (
+                                  () => view.PhoneBigPic.rectTransform.anchoredPosition,
+                                  (x) => view.PhoneBigPic.rectTransform.anchoredPosition = x,
+                                  new Vector2(778, -285),
+                                  0.3f
+                              );
+                        }
+                        closeCtr = false;
+                        //mUIMgr.CloseCertainPanel();
+                    }
                     view.PhoneBigPic.gameObject.SetActive(false);
                     view.PhoneMiniIcon.gameObject.SetActive(true);
                 };
@@ -284,6 +302,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             }
         }
 
+
     }
 
     public void OpenApp(AppView vv)
@@ -293,26 +312,53 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
             mUIMgr.CloseCertainPanel(this);
             cm.ChangeScene("Travel", null);
-        }else if (view.appViews.IndexOf(vv) == 0)
+        }
+        else if (view.appViews.IndexOf(vv) == 4)
         {
-            //{
-            //    Tween tween = DOTween.To
-            //        (
-            //          () => view.PhoneBigPic.rectTransform.anchoredPosition,
-            //          (x) => view.PhoneBigPic.rectTransform.anchoredPosition = x,
-            //          new Vector2(159, -471),
-            //          0.3f
-            //      );
-            //}
-            //{
-            //    Tween tween = DOTween.To
-            //        (
-            //            () => view.PhoneBigPic.rectTransform.localScale,
-            //            (x) => view.PhoneBigPic.rectTransform.localScale = x,
-            //            new Vector3(1.6f, 1.6f,1f),
-            //            0.3f
-            //     );
-            //}
+            //Debug.Log(mUIMgr.GetModuleName());
+
+            //weibo
+            //insert a card
+            mUIMgr.ShowPanel("WeiboPanel");
+
+        }
+        else if (view.appViews.IndexOf(vv) == 3)
+        {
+            //taobao
+            //insert a card with money paid
+            mUIMgr.ShowPanel("TaobaoPanel");
+        }
+        else if (view.appViews.IndexOf(vv) == 1)
+        {
+            //mail
+
+        }
+        else if (view.appViews.IndexOf(vv) == 0)
+        {
+            //wechat
+        }
+        else
+        {
+            closeCtr = true;
+            {
+                Tween tween = DOTween.To
+                    (
+                      () => view.PhoneBigPic.rectTransform.anchoredPosition,
+                      (x) => view.PhoneBigPic.rectTransform.anchoredPosition = x,
+                      new Vector2(159, -500),
+                      0.3f
+                  );
+            }
+            {
+                Tween tween = DOTween.To
+                    (
+                        () => view.PhoneBigPic.rectTransform.localScale,
+                        (x) => view.PhoneBigPic.rectTransform.localScale = x,
+                        new Vector3(1.6f, 1.6f, 1f),
+                        0.3f
+                 );
+            }
+
         }
     }
 

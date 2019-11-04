@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
+  m_Name: card8002
+  m_EditorClassIdentifier: 
+  CardId: card8002
+  CardName: "\u6C99\u96D5\u7F51\u53CB"
+  CardDesp: "\u6BCF\u4E00\u4E2A\u6C99\u96D5\u7F51\u53CB\u90FD\u662F\u53E6\u4E00\u4E2A\u6C99\u96D5\u7F51\u53CB\u7684\u5FEB\u4E50\u6E90\u6CC9"
+  CardEffectDesp: 
+  CardType: 0
+  cost: 0
+  IsConsume: 0
+  UseOnDiscard: 0
+  HasTurnEffect: 0
+  OverDueTurn: 0
+  UseTime: 0
+  ModelCard: 
+  StatusBonusNum: 0
+  StatusBonusType: 0
+  SkillBonusType: 0
+  SkillBonusNum: 0
+  Effects: []
+  TurnEffects: []

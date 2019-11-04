@@ -90,6 +90,9 @@ public class RoleModule : ModuleBase, IRoleModule
 
     private float money;
 
+    public float Money { get {return money; } protected set {money = value; } }
+
+
     //路人粉数量
     private float fen1Num;
     //
@@ -160,7 +163,7 @@ public class RoleModule : ModuleBase, IRoleModule
         }
     }
 
-    public void GetMoney(int amount)
+    public void GainMoney(int amount)
     {
         money += amount;
     }
@@ -171,6 +174,7 @@ public class RoleModule : ModuleBase, IRoleModule
         unlockedApps.Add(new AppInfo("邮箱", "email"));
         unlockedApps.Add(new AppInfo("地图", "maps"));
         unlockedApps.Add(new AppInfo("购物", "taobao"));
+        unlockedApps.Add(new AppInfo("微博", "weibo"));
 
 
 
@@ -393,5 +397,6 @@ public class RoleModule : ModuleBase, IRoleModule
         ActionPoints -= mgm.GetPracticeCost();
         mgm.TurnPracticeNum++;
     }
+
 }
 

@@ -949,7 +949,7 @@ public class ZhiboGameMode : GameModeBase
         if(true||state.Score > state.MaxScore)
         {
             pRoleMgr.AddFensi(0,100);
-            pRoleMgr.GetMoney(100);
+            pRoleMgr.GainMoney(100);
             //根据打过的卡牌 增加主属性 和 经验值
             int[] bonus = new int[5];
             for(int i = 0; i < state.UsedCardsToGetBonus.Count; i++)

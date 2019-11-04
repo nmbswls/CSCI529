@@ -33,7 +33,9 @@ public interface IRoleModule : IModule{
     void InitRole(string roleId);
     void AddFensi(int type, int num);
 
-    void GetMoney(int amount);
+    void GainMoney(int amount);
+
+    float Money { get;  }
 
     void AddTrackExp(string type, int num);
     int GetTrackExp(string track);

@@ -29,6 +29,7 @@ MonoBehaviour:
   StatusBonusType: 0
   SkillBonusType: 0
   SkillBonusNum: 0
+
   Effects:
   - EMode: 1
     effect: 
@@ -41,4 +42,5 @@ MonoBehaviour:
     - effect: GenBadDanmu
       effectString: a,20
       value: 100
+
   TurnEffects: []
