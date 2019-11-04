@@ -313,6 +313,30 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             mUIMgr.CloseCertainPanel(this);
             cm.ChangeScene("Travel", null);
         }
+        else if (view.appViews.IndexOf(vv) == 4)
+        {
+            //Debug.Log(mUIMgr.GetModuleName());
+
+            //weibo
+            //insert a card
+            mUIMgr.ShowPanel("WeiboPanel");
+
+        }
+        else if (view.appViews.IndexOf(vv) == 3)
+        {
+            //taobao
+            //insert a card with money paid
+            mUIMgr.ShowPanel("TaobaoPanel");
+        }
+        else if (view.appViews.IndexOf(vv) == 1)
+        {
+            //mail
+
+        }
+        else if (view.appViews.IndexOf(vv) == 0)
+        {
+            //wechat
+        }
         else
         {
             closeCtr = true;
@@ -334,29 +358,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
                         0.3f
                  );
             }
-            if (view.appViews.IndexOf(vv) == 4)
-            {
-                //Debug.Log(mUIMgr.GetModuleName());
 
-                //weibo
-                //insert a card
-                mUIMgr.ShowPanel("WeiboPanel");
-
-            }
-            else if (view.appViews.IndexOf(vv) == 3)
-            {
-                //taobao
-                //insert a card with money paid
-            }
-            else if (view.appViews.IndexOf(vv) == 1)
-            {
-                //mail
-                
-            }
-            else if (view.appViews.IndexOf(vv) == 0)
-            {
-                //wechat
-            }
         }
     }
 

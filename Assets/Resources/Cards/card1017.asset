@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
-  m_Name: card0023
+  m_Name: card1017
   m_EditorClassIdentifier: 
-  CardId: card0023
-  CardName: "\u62D9\u52A3\u7684\u624B\u7A3F"
-  CardDesp: "\u4F60\u638F\u51FA\u4E86\u4E4B\u524D\u51C6\u5907\u7684\u7A3F\u5B50\u3002"
-  CardEffectDesp: "\u5C062\u5F20\u68D2\u8BFB\u52A0\u5165\u624B\u4E2D"
-  CardType: 0
+  CardId: card1017
+  CardName: "\u7A7A\u6C14\u62CC\u996D"
+  CardDesp: "\u4E3B\u64AD\u5DF2\u7ECF\u8DB3\u591F\u60E8\u4E86\uFF0C\u54CE\u4EBA\u603B\u662F\u8981\u6070\u996D\u7684\u5427"
+  CardEffectDesp: "\u83B7\u5F97120\u70B9\u70ED\u5EA6\uFF0C\u5355\u573A\u83B7\u5F97\u989D\u5916\u7C89\u4E1D\u3002\u8D85\u8FC73\u6B21\u65F6\u53EA\u83B7\u5F97\u70ED\u5EA6"
+  CardType: 1
   Tags: []
-  cost: 0
+  cost: 3
   IsConsume: 0
   UseOnDiscard: 0
   HasTurnEffect: 0
@@ -32,11 +32,11 @@ MonoBehaviour:
   UseConditions: []
   Effects:
   - EMode: 0
-    effectType: 18
+    effectType: 7
     isNegEffect: 0
-    Possibility: 100
+    Possibility: 0
     turnEffect: 
-    effectString: card0024,100
+    effectString: 120
     isAddBuff: 0
     buffInfo:
       BuffType: 0
@@ -48,11 +48,27 @@ MonoBehaviour:
     BranchType: 
     BranchEffectStrings: []
   - EMode: 0
-    effectType: 18
+    effectType: 26
     isNegEffect: 0
-    Possibility: 100
+    Possibility: 0
     turnEffect: 
-    effectString: card0024,100
+    effectString: 3
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+    BranchType: 
+    BranchEffectStrings: []
+  - EMode: 0
+    effectType: 23
+    isNegEffect: 0
+    Possibility: 0
+    turnEffect: 
+    effectString: 50
     isAddBuff: 0
     buffInfo:
       BuffType: 0

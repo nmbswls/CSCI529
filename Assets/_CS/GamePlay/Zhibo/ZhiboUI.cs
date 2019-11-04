@@ -23,7 +23,9 @@ public class ZhiboView : BaseView
 
     public Text hotValue;
     public Text TiliValue;
-    //public Image TiliImage;
+
+    public Transform TiliBar;
+    public List<Image> TiliPoints = new List<Image>();
 
     public Image Actions;
     public Text DeckLeft;
@@ -59,6 +61,7 @@ public class ZhiboModel : BaseModel
 {
 
     public List<int> EmptyTVList = new List<int>();
+    public int nowScoreText = 0;
 }
 
 
@@ -108,7 +111,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         preDanmuGrid = -1;
         preDanmuTime = new float[numOfGridVertical];
 
-        UpdateScore(gameMode.state.Score);
+        UpdateScore();
         view.TiliValue.text = "10";
         //view.TiliImage.fillAmount = view.TiliMaxFillAmount;
 
@@ -127,14 +130,30 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         }
     }
 
-    public void UpdateScore(float nowScore)
+    public void UpdateScore()
     {
+        float nowScore = gameMode.state.Score;
         view.hotValue.text = (int)nowScore + "";
         view.Score.value = nowScore * 1.0f / gameMode.state.MaxScore;
     }
     public void UpdateTili()
     {
         view.TiliValue.text = (int)gameMode.state.Tili + "";
+        int points = (int)gameMode.state.Tili;
+        for(int i = 0; i < 5; i++)
+        {
+            view.TiliPoints[i].color = Color.white;
+        }
+        Color fullColor = Color.white;
+        ColorUtility.TryParseHtmlString("#40AB0D", out fullColor);
+        for (int i = 0; i < points / 2; i++)
+        {
+            view.TiliPoints[i].color = fullColor;
+        }
+        if (points % 2 == 1)
+        {
+            view.TiliPoints[points/2+1].color = Color.green;
+        }
         //view.TiliImage.fillAmount = (view.TiliMaxFillAmount - view.TiliMinFillAmount) * nowTili / 100 + view.TiliMinFillAmount;
 
     }
@@ -219,7 +238,12 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.TiliValue = lbArea.Find("Tili").GetComponent<Text>();
         view.TurnTimeValue = lbArea.Find("Chouka").GetComponent<Text>();
 
-        //view.TiliImage = lbArea.Find("TiliBar").Find("Content").GetComponent<Image>();
+        view.TiliBar = lbArea.Find("TiliBar");
+        foreach(Transform child in view.TiliBar)
+        {
+            view.TiliPoints.Add(child.GetComponent<Image>());
+        }
+
         view.TurnTimeImage = lbArea.Find("EnegyBar").Find("Content").GetComponent<Image>();
 
 
@@ -279,7 +303,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
         view.BuffDetailPanel.transform.position = buff.gameObject.transform.position;
         view.BuffDetailPanel.gameObject.SetActive(true);
-        string format = gameMode.GetBuffDesp(buff.buffId);
+        string format = gameMode.GetBuffDesp(buff.bInfo.BuffType);
         view.BuffDetail.text = string.Format(format,10);
     }
 
@@ -315,7 +339,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         {
             return;
         }
-        gameMode.NextTurn();
+        gameMode.NextTurnCaller();
     }
 
     public ZhiboSpecial GenSpecial(string sType)
@@ -331,16 +355,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         return ret;
     }
 
-    public ZhiboBuff GenBuff()
-    {
-        GameObject go = mResLoader.Instantiate("Zhibo/Buff", view.BuffContainer);
-        if (go == null)
-        {
-            Debug.LogError("fail");
-        }
-        ZhiboBuff ret = go.GetComponent<ZhiboBuff>();
-        return ret;
-    }
+
 
     private void AddClickFunc(GameObject target, DragEventListener.OnClickDlg func)
     {
@@ -411,6 +426,10 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         return view.CardContainer.AddCard(cardInfo);
     }
 
+    public bool AddNewTmpCard(CardInZhibo cardInfo)
+    {
+        return view.CardContainer.AddTmpCard(cardInfo);
+    }
 
     public void ChangeTurnTime(float value)
     {
@@ -525,5 +544,16 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     public void ShowHitEffect(Vector2 posIn2D)
     {
 
+    }
+
+    public ZhiboBuff GenBuff()
+    {
+        GameObject go = mResLoader.Instantiate("Zhibo/Buff", view.BuffContainer);
+        if (go == null)
+        {
+            Debug.LogError("fail");
+        }
+        ZhiboBuff ret = go.GetComponent<ZhiboBuff>();
+        return ret;
     }
 }

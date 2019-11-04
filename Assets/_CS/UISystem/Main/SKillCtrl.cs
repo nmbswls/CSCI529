@@ -431,6 +431,11 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
             {
                 return;
             }
+            if (!rmgr.CanPractice())
+            {
+                return;
+            }
+            rmgr.Practive();
             pSkillMgr.GainExp(skillId);
             lockLearnButton = true;
 

@@ -24,6 +24,14 @@ public class MainGameMode : GameModeBase
     Queue<SpecialEvent> UnHandledEvent = new Queue<SpecialEvent>();
 
     List<string> TurnInfos = new List<string>();
+
+    public int TurnPracticeNum = 0;
+
+    public int GetPracticeCost()
+    {
+        return TurnPracticeNum * 5;
+    }
+
     public override void Tick(float dTime){
 
 
@@ -45,6 +53,7 @@ public class MainGameMode : GameModeBase
         GameMain.GetInstance().GetModule<CardDeckModule>().CheckTurnBonux();
 
         mainUI.ShowMsg(new List<TurnMsg>());
+        TurnPracticeNum = 0;
     }
 
     public void HandleEvents(List<SpecialEvent> list)
