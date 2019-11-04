@@ -10,8 +10,8 @@ public class PlatformInfo
     public int[] Xihao = new int[5];
     public string PlatformId;
     public string PlatformDesp;
-    public List<string> PlatformEffect;
-    public List<string> PlatformCards;
+    public List<string> PlatformEffect = new List<string>();
+    public List<string> PlatformCards = new List<string>();
 }
 
 public class AppInfo
@@ -102,6 +102,7 @@ public class RoleModule : ModuleBase, IRoleModule
 
     private string NowPlatformId;
 
+    private float ActionPoints;
 
 
     List<AppInfo> unlockedApps = new List<AppInfo>();
@@ -145,6 +146,9 @@ public class RoleModule : ModuleBase, IRoleModule
 
         pCardMdl.AddCards(ret.initCards);
         pCardMdl.AddCards(ret.initOwning);
+
+        FakePlatformInfo();
+        NowPlatformId = "begin";
     }
 
 
@@ -346,9 +350,12 @@ public class RoleModule : ModuleBase, IRoleModule
 
     public void FakePlatformInfo()
     {
-        PlatformInfo info = new PlatformInfo();
+        {
+            PlatformInfo info = new PlatformInfo();
+            info.PlatformCards.Add("card9005");
+            Platforms["begin"] = info;
+        }
 
-        Platforms["s"] = info;
     }
 
     public PlatformInfo GetNowPlatformInfo()
@@ -364,6 +371,27 @@ public class RoleModule : ModuleBase, IRoleModule
             badLevel = 10;
         }
         return badLevel;
+    }
+
+    public bool CanPractice()
+    {
+
+        MainGameMode mgm = pCoreMgr.GetGameMode() as MainGameMode;
+        if(ActionPoints < mgm.GetPracticeCost())
+        {
+            return false;
+        }
+        return true;
+    }
+    public void Practive()
+    {
+        MainGameMode mgm = pCoreMgr.GetGameMode() as MainGameMode;
+        if (ActionPoints < mgm.GetPracticeCost())
+        {
+            return;
+        }
+        ActionPoints -= mgm.GetPracticeCost();
+        mgm.TurnPracticeNum++;
     }
 }
 

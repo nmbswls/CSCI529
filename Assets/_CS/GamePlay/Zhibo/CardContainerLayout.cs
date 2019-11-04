@@ -4,8 +4,9 @@ using System.Collections.Generic;
 public class CardContainerLayout : MonoBehaviour
 {
     public List<MiniCard> cards = new List<MiniCard>();
+    public List<MiniCard> TmpCards = new List<MiniCard>();
 
-
+    public Transform FixedContainer;
     //public GameObject cardPrefab;
 
 
@@ -36,6 +37,8 @@ public class CardContainerLayout : MonoBehaviour
         this.gameMode = gameMode;
         R = Width * 0.5f / Mathf.Sin(MaxDegree * 0.5f * Mathf.Deg2Rad);
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
+
+        FixedContainer = transform.Find("FixedArea");
     }
 
     public void PutToInitPos(MiniCard card)
@@ -55,8 +58,27 @@ public class CardContainerLayout : MonoBehaviour
         }
         MiniCard card = cardGo.GetComponent<MiniCard>();
         card.Init(cardInfo, this);
+        card.transform.SetParent(transform, false);
         cards.Add(card);
         Adjust();
+        return true;
+    }
+
+    public bool AddTmpCard(CardInZhibo cardInfo)
+    {
+        IResLoader loader = GameMain.GetInstance().GetModule<ResLoader>();
+
+        GameObject cardGo = loader.Instantiate("Zhibo/Card", FixedContainer);
+        if (cardGo == null)
+        {
+            return false;
+        }
+        MiniCard card = cardGo.GetComponent<MiniCard>();
+        card.Init(cardInfo, this);
+        card.rt.anchoredPosition = Vector3.zero;
+        card.rt.localEulerAngles = Vector3.zero;
+        TmpCards.Add(card);
+        AdjustTmp();
         return true;
     }
 
@@ -84,6 +106,18 @@ public class CardContainerLayout : MonoBehaviour
         }
     }
 
+    private void AdjustTmp()
+    {
+
+
+        for (int i = 0; i < TmpCards.Count; i++)
+        {
+            cards[i].transform.SetSiblingIndex(i);
+            cards[i].TargetPos = new Vector3(30*i,30*i,0);
+            cards[i].PosDirty = true;
+        }
+    }
+
     public void Tick(float dTime)
     {
         for(int i = 0; i < cards.Count; i++)
@@ -104,6 +138,18 @@ public class CardContainerLayout : MonoBehaviour
             card.rt.anchoredPosition = new Vector3(Mathf.Sin(card.nowDegree * Mathf.Deg2Rad) * R, Mathf.Cos(card.nowDegree * Mathf.Deg2Rad) * R - R);
             card.rt.localEulerAngles = new Vector3(0, 0, -card.nowDegree);
         }
+
+        for(int i = 0; i < TmpCards.Count; i++)
+        {
+            MiniCard card = TmpCards[i];
+            if (!card.PosDirty || Mathf.Abs(card.targetDegree - card.nowDegree) <= 1e-6)
+            {
+                card.PosDirty = false;
+                card.CheckIsHighlight();
+                continue;
+            }
+            card.rt.anchoredPosition = (card.TargetPos - card.rt.anchoredPosition) * dTime * 10f;
+        }
     }
 
 
@@ -114,7 +160,7 @@ public class CardContainerLayout : MonoBehaviour
         int cardIdx = cards.IndexOf(toUse);
         if (gameMode.TryUseCard(cardIdx))
         {
-            removeCard(toUse);
+            //removeCard(toUse);
             return true;
         }
         else
@@ -141,6 +187,30 @@ public class CardContainerLayout : MonoBehaviour
         cards[CardIdx].Disappaer();
         cards.RemoveAt(CardIdx);
         Adjust();
+    }
+
+    public Vector3 GetCardPosition(CardInZhibo card)
+    {
+        Vector3 ret = Vector3.zero;
+        if (card.isTmp)
+        {
+            ret = TmpCards[gameMode.state.TmpCards.IndexOf(card)].transform.position;
+        }
+        else
+        {
+            ret = cards[gameMode.state.Cards.IndexOf(card)].transform.position;
+        }
+        return ret;
+    }
+    public void RemoveTmpCard(int CardIdx)
+    {
+        if (CardIdx < 0 || CardIdx >= TmpCards.Count)
+        {
+            return;
+        }
+        TmpCards[CardIdx].Disappaer();
+        TmpCards.RemoveAt(CardIdx);
+        AdjustTmp();
     }
 
     public void UpdateCard(int CardIdx, CardInZhibo cinfo)

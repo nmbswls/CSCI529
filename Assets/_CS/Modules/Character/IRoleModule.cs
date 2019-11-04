@@ -41,4 +41,7 @@ public interface IRoleModule : IModule{
     PlatformInfo GetNowPlatformInfo();
 
     int GetBadLevel();
+
+    bool CanPractice();
+    void Practive();
 }

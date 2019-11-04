@@ -77,7 +77,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             {
                 foreach (CardEffect effect in info.ca.TurnEffects)
                 {
-                    switch (effect.effect)
+                    switch (effect.turnEffect)
                     {
                         case "jiyi+":
                             pRoleMdl.AddJiyi(int.Parse(effect.effectString));

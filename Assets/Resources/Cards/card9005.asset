@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
-  m_Name: card9001
+  m_Name: card9005
   m_EditorClassIdentifier: 
-  CardId: card9001
-  CardName: "\u7B28\u86CB\u5BA4\u53CB"
-  CardDesp: "\u7B28\u86CB\u5BA4\u53CB\u53EF\u4EE5\u5E2E\u4F60\u5236\u9020\u6548\u679C\uFF0C\u4E5F\u53EF\u4EE5\u6467\u6BC1\u4F60\u7684\u76F4\u64AD"
-  CardEffectDesp: "50%\u51E0\u7387\u70ED\u5EA6+100\uFF0C50%\u51E0\u7387\u5237\u65B020\u6761\u8D1F\u9762\u5F39\u5E55"
+  CardId: card9005
+  CardName: "\u5E73\u53F0\u4E13\u5C5E"
+  CardDesp: "\u5E73\u53F0\u4E13\u5C5E"
+  CardEffectDesp: "\u4E13\u5C5E\u65E0\u6548\u679C"
   CardType: 0
   Tags: []
   cost: 0
@@ -29,16 +29,6 @@ MonoBehaviour:
   StatusBonusType: 0
   SkillBonusType: 0
   SkillBonusNum: 0
-  Effects:
-  - EMode: 1
-    effect: 
-    effectString: 
-    BranchType: random
-    BranchEffectStrings:
-    - effect: GetScore
-      effectString: 100
-      value: 50
-    - effect: GenBadDanmu
-      effectString: a,20
-      value: 100
+  UseConditions: []
+  Effects: []
   TurnEffects: []

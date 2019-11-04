@@ -27,6 +27,9 @@ public class MiniCard : MonoBehaviour
     public float nowDegree;
     public float targetDegree;
 
+    public bool isTmp;
+    public Vector2 TargetPos;
+
     private float moveSpeed = 1500;
     private float returnSpeed = 1800;
 
@@ -37,6 +40,8 @@ public class MiniCard : MonoBehaviour
     public bool isHighlight = false;
     public bool isDragging = false;
 
+
+    public bool isInChain = false;
 
 
     public RectTransform rt;
@@ -64,7 +69,7 @@ public class MiniCard : MonoBehaviour
         this.container = container;
 
         CardAsset ca = cardInfo.ca;
-
+        this.isTmp = cardInfo.isTmp;
 
         BindView();
         RegisterEvent();
@@ -88,7 +93,7 @@ public class MiniCard : MonoBehaviour
         view.Desp.text = ca.CardEffectDesp;
 
 
-        transform.SetParent(container.transform,false);
+
         nowDegree = 20f;
         targetDegree = 20f;
 
@@ -99,6 +104,7 @@ public class MiniCard : MonoBehaviour
         isDestroying = false;
         isHighlight = false;
         PosDirty = false;
+        isInChain = false;
 
         view.CardCG.alpha = 1f;
 
@@ -113,7 +119,12 @@ public class MiniCard : MonoBehaviour
 
     public void Tick(float dTime)
     {
-        if(isBacking)
+        if (isTmp)
+        {
+            return;
+        }
+
+        if (isBacking)
         {
             if (nowValue > 0)
             {
@@ -208,8 +219,12 @@ public class MiniCard : MonoBehaviour
         }
         listener.ClearDragEvent();
         listener.ClearClickEvent();
+        if (isTmp)
+        {
+            return;
+        }
         listener.OnBeginDragEvent += delegate (PointerEventData eventData) {
-            if (isDestroying || isBacking || isDragging)
+            if (isInChain || isDestroying || isBacking || isDragging)
             {
                 return;
             }
@@ -219,7 +234,7 @@ public class MiniCard : MonoBehaviour
         };
 
         listener.OnDragEvent += delegate (PointerEventData eventData) {
-            if (isDestroying || isBacking)
+            if (isInChain || isDestroying || isBacking)
             {
                 return;
             }
@@ -234,7 +249,7 @@ public class MiniCard : MonoBehaviour
         };
 
         listener.OnEndDragEvent += delegate (PointerEventData eventData) {
-            if (isDestroying)
+            if (isInChain || isDestroying)
             {
                 return;
             }
@@ -349,7 +364,7 @@ public class MiniCard : MonoBehaviour
     {
         if (container.UseCard(this))
         {
-            Disappaer();
+            //Disappaer();
         }
         else
         {
