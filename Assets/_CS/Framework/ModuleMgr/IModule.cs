@@ -6,7 +6,7 @@ using UnityEngine;
 public interface IEventListener
 {
 	void RegisterEvent();
-
+    GameEventMap GetEventMap();
 }
 
 public interface IComponent : IEventListener

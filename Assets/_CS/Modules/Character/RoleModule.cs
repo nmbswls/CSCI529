@@ -81,6 +81,10 @@ public class RoleModule : ModuleBase, IRoleModule
     public string[] Schedules;
 
 
+    //test test
+    public int resource;
+
+
     private ISpeEventMgr pEventMgr;
     private ICardDeckModule pCardMdl;
     private ICoreManager pCoreMgr;

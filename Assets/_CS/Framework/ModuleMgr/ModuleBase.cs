@@ -4,7 +4,7 @@ using System.Collections;
 public class ModuleBase : IModule
 {
 	private string mModuleName = string.Empty;
-//	protected readonly CtmEventMap mEventMap = new CtmEventMap();
+	protected readonly GameEventMap mEventMap = new GameEventMap();
 
 	protected IGameMain mGameMain;
 	public virtual string GetModuleName()
@@ -20,7 +20,8 @@ public class ModuleBase : IModule
 
 	public virtual void RegisterEvent()
 	{
-		return;
+        //mEventMap.RegisterEvent(CEventType.TestEvent, (int)TestEventId.Test1, OnTest01Event);
+        return;
 	}
 
 	public virtual void Setup()
@@ -38,4 +39,9 @@ public class ModuleBase : IModule
 
 	}
 
+
+    public GameEventMap GetEventMap()
+    {
+        return null;
+    }
 }

@@ -35,6 +35,15 @@ public class MainView : BaseView
 
     public Transform AppsContainer;
     public List<AppView> appViews = new List<AppView>();
+
+
+
+    //test
+    public Text showAll;
+    public Button NextTest;
+    public Button Next30Turn;
+    public Button BuyThings;
+    public Button UpdateCards;
 }
 
 public class EventView
@@ -189,7 +198,100 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             appView.title.text = app.ShowName;
             view.appViews.Add(appView);
         }
+
+
+
+        //
+        view.showAll = root.Find("Test").Find("Text").GetComponent<Text>();
+        view.BuyThings = root.Find("Test").Find("BuyThing").GetComponent<Button>();
+        view.NextTest = root.Find("Test").Find("Next").GetComponent<Button>();
+        view.UpdateCards = root.Find("Test").Find("UpdateCard").GetComponent<Button>();
+        view.Next30Turn = root.Find("Test").Find("Next30").GetComponent<Button>();
+        view.NextTest.onClick.AddListener(delegate
+        {
+            turn += 1;
+            testStatus += turnStatus;
+            testResource += 30 + 50 * turn;
+            //nandu = 50 + 10 * Mathf.Pow(1.2f,turn);
+            testUpdateWords();
+        });
+
+        view.BuyThings.onClick.AddListener(delegate
+        {
+
+            //一半一半
+            float r = testResource / 2;
+            testResource = 0;
+            testStatus += r / 5;
+            turnStatus += r / 50;
+            testUpdateWords();
+        });
+
+        view.UpdateCards.onClick.AddListener(delegate
+        {
+            testCardExp += testStatus;
+            testCardPower = Mathf.Sqrt(testCardExp);
+            testUpdateWords();
+        });
+        view.Next30Turn.onClick.AddListener(delegate
+        {
+            for(int i = 0; i < 30; i++)
+            {
+                float r = testResource / 2;
+                testResource = 0;
+                testStatus += r / 5;
+                turnStatus += r / 50;
+
+                testCardExp += testStatus;
+                testCardPower = Mathf.Sqrt(testCardExp);
+                testUpdateWords();
+
+                turn += 1;
+                testStatus += turnStatus;
+                testResource += 30 + 50 * turn;
+                //nandu = 50 + 10 * Mathf.Pow(1.2f,turn);
+            }
+            testUpdateWords();
+
+
+        });
+        testUpdateWords();
     }
+
+    //50点资源 = 每回合属性+1
+    //5点资源 = 属性+1
+    //每点属性 每回合 使技能进度+1
+    //技能进度+1 卡片战力+1
+
+    //每回合获得资源100 * 回合数 (最多*1.2)
+    //每回合固定获得属性
+
+    //1级技能 0点经验 强度5伤害
+    //2级技能 50点经验 强度8 伤害
+    //3级技能 150点经验 强度12 伤害
+    //4级技能 300点经验 强度17伤害
+
+    public void testUpdateWords()
+    {
+        string s = ""; 
+        s += "回合" + turn + "\n";
+        s += "资源" + testResource + "\n";
+        s += "技能经验" + testCardExp + "\n";
+        s += "卡片强度" + testCardPower + "\n";
+        s += "属性" + testStatus + "\n";
+        s += "回合属性" + turnStatus + "\n";
+        s += "难度" + nandu  + "\n";
+        view.showAll.text = s;
+    }
+
+
+    public int turn = 1;
+    public float testResource = 10;
+    public float testCardPower = 50;
+    public float testStatus = 50;
+    public float turnStatus = 0;
+    public float testCardExp = 50;
+    public float nandu;
 
     public override void Tick(float dTime)
     {
