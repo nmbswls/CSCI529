@@ -417,12 +417,9 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         }
         else if (view.appViews.IndexOf(vv) == 4)
         {
-            //Debug.Log(mUIMgr.GetModuleName());
-
             //weibo
             //insert a card
             mUIMgr.ShowPanel("WeiboPanel");
-
         }
         else if (view.appViews.IndexOf(vv) == 3)
         {

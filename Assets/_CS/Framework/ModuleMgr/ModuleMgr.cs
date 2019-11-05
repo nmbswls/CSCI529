@@ -39,6 +39,8 @@ public class ModuleMgr: IModuleMgr
 
         RegModuleList["SkillTreeMgr"] = typeof(SkillTreeMgr);
 
+        RegModuleList["WeiboModule"] = typeof(WeiboModule);
+
 
 
         mMapType[typeof(CardDeckModule)] = "CardDeck";
@@ -49,6 +51,7 @@ public class ModuleMgr: IModuleMgr
         mMapType[typeof(SpeEventMgr)] = "SpeEventMgr";
         mMapType[typeof(RoleModule)] = "RoleModule";
         mMapType[typeof(CoreManager)] = "CoreManager";
+        mMapType[typeof(WeiboModule)] = "WeiboModule";
     }
 
 	public void Tick(float dTime){

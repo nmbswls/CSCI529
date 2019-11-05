@@ -27,6 +27,8 @@ public class MainGameMode : GameModeBase
 
     public int TurnPracticeNum = 0;
 
+    
+
     public int GetPracticeCost()
     {
         return TurnPracticeNum * 5;
@@ -41,7 +43,7 @@ public class MainGameMode : GameModeBase
 		pUIMgr = GameMain.GetInstance ().GetModule<UIMgr> ();
         rm = GameMain.GetInstance().GetModule<RoleModule>();
         pEventMgr = GameMain.GetInstance().GetModule<SpeEventMgr>();
-
+        
         mainUI = pUIMgr.ShowPanel("UIMain") as UIMainCtrl;
     }
 
@@ -51,7 +53,8 @@ public class MainGameMode : GameModeBase
         HandleEvents(pEventMgr.CheckEvent());
         GameMain.GetInstance().GetModule<CardDeckModule>().CheckOverdue();
         GameMain.GetInstance().GetModule<CardDeckModule>().CheckTurnBonux();
-
+        GameMain.GetInstance().GetModule<WeiboModule>().resetShua();
+        GameMain.GetInstance().GetModule<WeiboModule>().enableRealRandom();
         mainUI.ShowMsg(new List<TurnMsg>());
         TurnPracticeNum = 0;
     }
