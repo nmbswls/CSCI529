@@ -105,6 +105,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 	IRoleModule rm;
     IResLoader pResLoader;
     ICoreManager pCoreMgr;
+    IShopMgr pShopMgr;
 
     bool closeCtr = false;
 
@@ -116,6 +117,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         pResLoader = GameMain.GetInstance().GetModule<ResLoader>();
 
         pCoreMgr = GameMain.GetInstance().GetModule<CoreManager>();
+        pShopMgr = GameMain.GetInstance().GetModule<ShopMgr>();
 
         GetApps();
     }
@@ -305,8 +307,11 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
     public void UseResource()
     {
+
+
         while (testResource > nowItemLevel * 50)
         {
+            pShopMgr.FakeBuy(nowItemLevel);
             testResource -= nowItemLevel * 50;
             turnStatus += nowItemLevel;
             nowItemLevel++;

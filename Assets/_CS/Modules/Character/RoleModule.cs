@@ -110,6 +110,7 @@ public class RoleModule : ModuleBase, IRoleModule
     private string NowPlatformId;
 
     private float ActionPoints;
+    private float DefaultActionPoints;
 
 
     List<AppInfo> unlockedApps = new List<AppInfo>();
@@ -122,6 +123,8 @@ public class RoleModule : ModuleBase, IRoleModule
     private Dictionary<string, int> TrackExps = new Dictionary<string, int>();
     private readonly List<string> choices = new List<string>();
 
+
+    public int MaxItemNum { get { return 5 + TurnNum / 6; }}
 
     private int scheduleMax;
     public int ScheduleMax
@@ -314,6 +317,19 @@ public class RoleModule : ModuleBase, IRoleModule
     public void AddFanying(float v)
     {
         roleStats.fanying += v;
+    }
+
+    public void AddActionPoints(float v)
+    {
+        ActionPoints += v;
+    }
+
+    public void RestoreActionPoints(float v)
+    {
+        if(ActionPoints < DefaultActionPoints)
+        {
+            ActionPoints = DefaultActionPoints;
+        }
     }
 
     public void AddTezhi(List<Tezhi> tezhis)

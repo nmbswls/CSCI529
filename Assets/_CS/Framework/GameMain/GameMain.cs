@@ -54,6 +54,8 @@ public class GameMain : MonoBehaviour,IGameMain
         DefaultModuleList.ConfigList.Add(new ModuleConfig("SkillTreeMgr"));
 
         DefaultModuleList.ConfigList.Add(new ModuleConfig("WeiboModule"));
+        DefaultModuleList.ConfigList.Add(new ModuleConfig("ShopMgr"));
+
 
         mGameMainConfig.Config.Add(DefaultModuleList);
 		LoadInitModules();

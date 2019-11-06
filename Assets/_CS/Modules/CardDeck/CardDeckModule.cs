@@ -9,6 +9,7 @@ public class CardInfo{
 	public float GainTime;
     public CardAsset ca;
     public int TurnLeft;
+    public bool isDisabled;
 
 	public CardInfo(){
 	}
@@ -35,6 +36,9 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
     Dictionary<string, List<CardInfo>> SkillCardDict = new Dictionary<string, List<CardInfo>>();
     HashSet<CardInfo> CardsWithTurnEffect = new HashSet<CardInfo>();
 
+    List<uint> UsedItemList = new List<uint>();
+
+
 
     public override void Setup()
     {
@@ -56,6 +60,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             CardInfo info = new CardInfo(InstId, cid, Time.realtimeSinceStartup);
             info.ca = aset;
             cards.Add (info);
+            CardInstDict.Add(InstId,info);
 			InstId += 1;
 
             if (aset.HasTurnEffect || aset.TurnEffects.Count > 0)
@@ -80,19 +85,33 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
                     switch (effect.turnEffect)
                     {
                         case "jiyi+":
-                            pRoleMdl.AddJiyi(int.Parse(effect.effectString));
+                            pRoleMdl.AddJiyi(float.Parse(effect.effectString));
                             break;
+
                         case "meili+":
-                            pRoleMdl.AddMeili(int.Parse(effect.effectString));
+                            pRoleMdl.AddMeili(float.Parse(effect.effectString));
                             break;
                         case "fanying+":
-                            pRoleMdl.AddFanying(int.Parse(effect.effectString));
+                            pRoleMdl.AddFanying(float.Parse(effect.effectString));
                             break;
                         case "tili+":
-                            pRoleMdl.AddTili(int.Parse(effect.effectString));
+                            pRoleMdl.AddTili(float.Parse(effect.effectString));
                             break;
                         case "koucai+":
-                            pRoleMdl.AddKoucai(int.Parse(effect.effectString));
+                            pRoleMdl.AddKoucai(float.Parse(effect.effectString));
+                            break;
+                        case "shuxing+":
+                            pRoleMdl.AddJiyi(float.Parse(effect.effectString));
+                            pRoleMdl.AddMeili(float.Parse(effect.effectString));
+                            pRoleMdl.AddFanying(float.Parse(effect.effectString));
+                            pRoleMdl.AddTili(float.Parse(effect.effectString));
+                            pRoleMdl.AddKoucai(float.Parse(effect.effectString));
+                            break;
+                        case "fensi+":
+                            pRoleMdl.AddFensi(0,int.Parse(effect.effectString));
+                            break;
+                        case "action+":
+                            pRoleMdl.AddActionPoints(int.Parse(effect.effectString));
                             break;
                         default:
                             break;
@@ -118,6 +137,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
     public void RemoveCard(CardInfo info)
     {
         cards.Remove(info);
+        CardInstDict.Remove(info.InstId);
         CardsWithTurnEffect.Remove(info);
     }
 
@@ -189,7 +209,16 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         return ret;
 	}
 
-	public List<CardInfo> SortAllCard(List<eCardType> FTypes){
+    public CardInfo GetCardByInstId(uint instId)
+    {
+        if (CardInstDict.ContainsKey(InstId))
+        {
+            return CardInstDict[InstId];
+        }
+        return null;
+    }
+
+    public List<CardInfo> SortAllCard(List<eCardType> FTypes){
 		List<CardInfo> ret = new List<CardInfo> ();
 		for (int i = 0; i < cards.Count; i++) {
 			if (FTypes.Contains (CardDict[cards[i].CardId].CardType)) {
@@ -209,12 +238,39 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 		return ret;
 	}
 
-	//public void RemoveCard(int idx){
-	//	cards.RemoveAt (idx);
-	//}
-	//public void RemoveCard(CardInfo c){
-	//	cards.Remove (c);
-	//}
+    public bool ChangeEnable(uint instId, bool enable)
+    {
+        CardInfo target = GetCardByInstId(instId);
+        if(target == null)
+        {
+            return false;
+        }
+        target.isDisabled = !enable;
+
+        if(target.ca.CardType == eCardType.ITEM)
+        {
+            if (enable)
+            {
+                if(UsedItemList.Count >= pRoleMdl.MaxItemNum)
+                {
+                    return false;
+                }
+                UsedItemList.Add(target.InstId);
+            }
+            else
+            {
+                UsedItemList.Remove(target.InstId);
+            }
+        }
+        return true;
+    }
+
+    //public void RemoveCard(int idx){
+    //	cards.RemoveAt (idx);
+    //}
+    //public void RemoveCard(CardInfo c){
+    //	cards.Remove (c);
+    //}
 
 }
 

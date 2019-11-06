@@ -357,7 +357,7 @@ public class MiniCard : MonoBehaviour
 
     public void CancelHighLight()
     {
-        view.Bg.color = Color.black;
+        view.Bg.color = Color.white;
     }
 
     private void UseCard()

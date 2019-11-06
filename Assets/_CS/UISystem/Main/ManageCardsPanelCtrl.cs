@@ -25,7 +25,10 @@ public class ManageCardsView : BaseView
     public Text DetailDesp;
     public Text DetailName;
     public Text DetailEffectDesp;
-   
+
+    public Toggle DisableBtn;
+    public Text DisableHint;
+
 }
 
 public class CardOutView
@@ -41,6 +44,7 @@ public class CardOutView
     public Text TurnLeft;
 
     public Image Hint;
+    public GameObject DaGou;
 
     public void BindView(Transform transform)
     {
@@ -51,6 +55,9 @@ public class CardOutView
         Picture = CardFace.Find("Picture").GetComponent<Image>();
         Name = CardFace.Find("Name").GetComponent<Text>();
         Desp = CardFace.Find("Desp").GetComponent<Text>();
+
+        DaGou = root.Find("DaGou").gameObject;
+
 
         Hint = transform.Find("Hint").GetComponent<Image>();
     }
@@ -98,6 +105,8 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
         view.DetailDesp = view.DetailPanel.Find("DetailDesp").GetComponent<Text>();
         view.DetailName = view.DetailPanel.Find("DetailName").GetComponent<Text>();
         view.DetailEffectDesp = view.DetailPanel.Find("DetailEffectDesp").GetComponent<Text>();
+        view.DisableBtn = view.DetailPanel.Find("DisableBtn").GetComponent<Toggle>();
+        view.DisableHint = view.DetailPanel.Find("DisableHint").GetComponent<Text>();
     }
 
 
@@ -123,6 +132,15 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
         });
 
 
+        view.DisableBtn.onValueChanged.AddListener(delegate(bool v)
+        {
+
+            int idx = view.CardsViewList.IndexOf(preCardView);
+            CardInfo cinfo = model.NowCardInfos[idx];
+            bool ret = pCardMgr.ChangeEnable(cinfo.InstId,v);
+            view.DisableBtn.isOn = !cinfo.isDisabled;
+        });
+
     }
 
     private void ShowCards()
@@ -132,14 +150,14 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 
         foreach(CardOutView vv in view.CardsViewList)
         {
-            pResLoader.ReleaseGO("UI/Card",vv.root.gameObject);
+            pResLoader.ReleaseGO("UI/CardOut", vv.root.gameObject);
         }
         view.CardsViewList.Clear();
         preCardView = null;
         model.NowCardInfos = infos;
         foreach (CardInfo c in infos)
         {
-            GameObject go = pResLoader.Instantiate("UI/Card", view.CardsContainer);
+            GameObject go = pResLoader.Instantiate("UI/CardOut", view.CardsContainer);
             CardOutView cardOutView = new CardOutView();
             cardOutView.BindView(go.transform);
             view.CardsViewList.Add(cardOutView);
@@ -163,7 +181,7 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
             CardAsset ca = pCardMgr.GetCardInfo(c.CardId);
             cardOutView.Name.text = ca.CardName;
             cardOutView.Desp.text = ca.CardEffectDesp;
-
+            cardOutView.DaGou.SetActive(!c.isDisabled);
         }
 
     }
@@ -175,7 +193,6 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 
     public void ShowCardDetail(CardOutView vv)
     {
-        Debug.Log(vv);
         int idx = view.CardsViewList.IndexOf(vv);
         if(idx == -1)
         {
@@ -188,6 +205,18 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
         view.DetailDesp.text = ca.CardDesp;
         view.DetailName.text = ca.CardName;
         view.DetailEffectDesp.text = ca.CardEffectDesp;
+
+        if(ca.CardType == eCardType.ABILITY)
+        {
+            view.DisableHint.gameObject.SetActive(true);
+            view.DisableBtn.interactable = false;
+        }
+        else
+        {
+            view.DisableHint.gameObject.SetActive(false);
+            view.DisableBtn.interactable = true;
+        }
+        view.DisableBtn.isOn = !info.isDisabled;
 
         if (preCardView != null)
         {

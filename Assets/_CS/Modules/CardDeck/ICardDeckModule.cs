@@ -20,4 +20,8 @@ public interface ICardDeckModule : IModule
     void RemoveSkillCards(string skillId);
 
     void CheckTurnBonux();
+
+    bool ChangeEnable(uint instId, bool enable);
+
+    CardInfo GetCardByInstId(uint instId);
 }

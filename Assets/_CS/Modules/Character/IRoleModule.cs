@@ -28,6 +28,9 @@ public interface IRoleModule : IModule{
     void AddJiyi(float v); 
     void AddFanying(float v);
 
+    void AddActionPoints(float v);
+    void RestoreActionPoints(float v);
+
     void AddTezhi(List<Tezhi> tezhis);
 
     void InitRole(string roleId);
@@ -46,4 +49,6 @@ public interface IRoleModule : IModule{
 
     bool CanPractice();
     void Practive();
+
+    int MaxItemNum { get;}
 }
