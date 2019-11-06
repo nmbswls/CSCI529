@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -29,45 +30,33 @@ public class WeiboModel : BaseModel
 public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
 {
     IUIMgr pUIMgr;
-    IResLoader mResLoader;
+    IResLoader pResLoader;
+    IRoleModule pRoleMgr;
+    WeiboModule pWeiboMgr;
 
     ICardDeckModule pCardMdl;
+
     const string prefix = "card";
-    const int shuaTimeLimit = 3;     //每回合只有3次刷到牌的机会
-    int curShuaTime = 0;
 
     float originalY;
     float diffY;
 
     bool isGengGet = false;
+    bool isValidDrag = false;
 
     string cardName;
-
-    public List<string> nameArr = new List<string>
-    {
-        {"老王" },
-        {"老刘" },
-        {"老铁" },
-        {"老张" }
-    };
-
-    public List<string> DescriArr = new List<string>
-    {
-        {"来今儿个给大家搞个二斤地瓜烧" },
-        {"当朝大学士，总共有五位，朕不得不罢免三位" },
-        {"转发这条锦鲤，也没什么卵用" },
-        {"卧槽" }
-    };
 
     public override void Init()
     {
         pCardMdl = GameMain.GetInstance().GetModule<CardDeckModule>();
         pUIMgr = GameMain.GetInstance().GetModule<IUIMgr>();
+        pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
+        pWeiboMgr = GameMain.GetInstance().GetModule<WeiboModule>();
 
-        if (pCardMdl == null)
-        {
-            Debug.Log("getCardFailed!");
-        }
+    }
+    public override void PostInit()
+    {
+        randomWeibo();
     }
 
     public void getRandomCard()
@@ -80,9 +69,13 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
 
     public void insertCard(string cardName)
     {
-        List<string> st = new List<string>();
-        st.Add(cardName);
-        pCardMdl.AddCards(st);
+        if(cardName != null)
+        {
+            List<string> st = new List<string>();
+            st.Add(cardName);
+            pCardMdl.AddCards(st);
+            mUIMgr.ShowHint("获得卡牌" + cardName);
+        }
     }
 
     public override void BindView()
@@ -101,6 +94,8 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
         view.TouXiang = view.GetGeng.transform.Find("TouXiang").GetComponent<Image>();
         view.WeiboImage = view.GetGeng.transform.Find("WeiboImage").GetComponent<Image>();
         view.Post = view.GetGeng.transform.Find("Post").GetComponent<Image>();
+
+
     }
 
     public override void RegisterEvent()
@@ -125,31 +120,42 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
                 Vector3 scrVec = new Vector3();
                 scrVec = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 vec = view.GetGeng.transform.position;
-                vec.y = scrVec.y - diffY;
-                view.GetGeng.transform.position = vec;
+                if(scrVec.y - diffY <= originalY && originalY + diffY - scrVec.y <= 2)
+                {
+                    vec.y = scrVec.y - diffY;
+                    view.GetGeng.transform.position = vec;
+                    if(originalY + diffY - scrVec.y >= 1.3)
+                    {
+                        isValidDrag = true;
+                    }   
+                }
             };
             listener.OnEndDragEvent += delegate
             {
-                
                 Vector3 vec = new Vector3();
                 vec = view.GetGeng.transform.position;
-                //vec.y = originalY;
-                //view.GetGeng.transform.position = vec;
                 Tween tween = DOTween.To(
-                        () => view.GetGeng.rectTransform.anchoredPosition,
-                        (x) => view.GetGeng.rectTransform.anchoredPosition = x,
-                        new Vector2(0, originalY - vec.y),
-                        0.3f
-                    );
-                if(curShuaTime<shuaTimeLimit)
+                                () => view.GetGeng.rectTransform.anchoredPosition,
+                                (x) => view.GetGeng.rectTransform.anchoredPosition = x,
+                                new Vector2(0, originalY - vec.y),
+                                0.3f
+                            );
+                Debug.Log(isValidDrag);
+                if (isValidDrag)
                 {
-                    randomWeibo();
-                    getRandomCard();
-                    isGengGet = false;
-                } else
-                {
-                    Debug.Log("啊，没什么瓜可以吃的，之后再来吧");
+                    if (pWeiboMgr.IsShuable)
+                    {
+                        randomWeibo();
+                        getRandomCard();
+                        isGengGet = false;
+                    }
+                    else
+                    {
+                        mUIMgr.ShowHint("啊，没什么瓜可以吃的，之后再来吧");
+                        pWeiboMgr.disableRealRandom();
+                    }
                 }
+                isValidDrag = false;
             };
         }
         {
@@ -176,8 +182,9 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
                 if(!isGengGet)
                 {
                     isGengGet = true;
-                    curShuaTime++;
+                    pWeiboMgr.ReduceShuaTime();
                     insertCard(cardName);
+                    
                 }
             };
         }
@@ -185,36 +192,24 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
 
     public void randomWeibo()
     {
-        randomTime();
-        randomName();
-        randomDescription();
+        view.Time.text = randomTime();
+        view.Name.text = randomName();
+        view.Description.text = randomDescription();
     }
 
-    public void randomTime()
+    public string randomTime()
     {
-        int rn = UnityEngine.Random.Range(0,80);
-        string timeMessage = rn + " 分钟前";
-        view.Time.text = timeMessage;
+        return pWeiboMgr.randomTime();
     }
 
-    public void randomName()
+    public string randomName()
     {
-        int rn = UnityEngine.Random.Range(0, 3);
-        string nameMessage = nameArr[rn];
-        view.Name.text = nameMessage;
+        return pWeiboMgr.randomName();
     }
 
-    public void randomDescription()
+    public string randomDescription()
     {
-        int rn = UnityEngine.Random.Range(0, 3);
-        string descriptionMessage = DescriArr[rn];
-        view.Description.text = descriptionMessage;
+        return pWeiboMgr.randomDescription();
     }
-
-    public void resetShua()
-    {
-        curShuaTime = 0;
-    }
-
 
 }
