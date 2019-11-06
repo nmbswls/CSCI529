@@ -29,6 +29,18 @@ public class MainView : BaseView
     public Image Taobao;
 
     public Transform Properties;
+    public List<PropertyMainView> PropertyViewList = new List<PropertyMainView>();
+
+
+    public Text NowSkillShow;
+    public Text SkillListShow;
+
+    public Text NextItemPrice;
+    public Text MoneyShow;
+    public Text FansShow;
+    public Text SkillExpShow;
+    public Text CardPowerShow;
+    public Text SkillNeddExp;
 
     public Transform EventsContainer;
     public List<EventView> EventViewList = new List<EventView>();
@@ -44,6 +56,21 @@ public class MainView : BaseView
     public Button Next30Turn;
     public Button BuyThings;
     public Button UpdateCards;
+}
+
+public class PropertyMainView
+{
+    public RectTransform root;
+    public Text Value;
+    public Text Add;
+
+    public void BindView(Transform root)
+    {
+        this.root = (RectTransform)root;
+        Value = root.Find("Value").GetComponent<Text>();
+        Add = root.Find("Add").GetComponent<Text>();
+    }
+
 }
 
 public class EventView
@@ -183,7 +210,18 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.Close = view.PhoneBigPic.transform.Find("Close").GetComponent<Image>();
         view.PhoneMiniIcon = root.Find("Phone_miniicon").GetComponent<Image>();
 
+        view.MoneyShow = root.Find("Money").Find("Value").GetComponent<Text>();
+        view.SkillExpShow = root.Find("SkillExp").Find("Value").GetComponent<Text>();
+        view.CardPowerShow = root.Find("CardPower").Find("Value").GetComponent<Text>();
+
         view.Properties = root.Find("Properties");
+
+        foreach(Transform child in view.Properties.Find("VBox"))
+        {
+            PropertyMainView vv = new PropertyMainView();
+            vv.BindView(child);
+            view.PropertyViewList.Add(vv);
+        }
 
         view.EventsContainer = root.Find("Events");
 
@@ -199,8 +237,10 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             view.appViews.Add(appView);
         }
 
-
-
+        view.FansShow = root.Find("Fans").Find("Value").GetComponent<Text>();
+        view.NextItemPrice = root.Find("NextItem").Find("Value").GetComponent<Text>();
+        view.NowSkillShow = root.Find("NowSkill").Find("Value").GetComponent<Text>();
+        view.SkillListShow = root.Find("NowSkill").Find("List").GetComponent<Text>();
         //
         view.showAll = root.Find("Test").Find("Text").GetComponent<Text>();
         view.BuyThings = root.Find("Test").Find("BuyThing").GetComponent<Button>();
@@ -209,53 +249,32 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.Next30Turn = root.Find("Test").Find("Next30").GetComponent<Button>();
         view.NextTest.onClick.AddListener(delegate
         {
-            turn += 1;
-            testStatus += turnStatus;
-            testResource += 30 + 50 * turn;
-            //nandu = 50 + 10 * Mathf.Pow(1.2f,turn);
-            testUpdateWords();
+            TestNextTurn();
         });
 
         view.BuyThings.onClick.AddListener(delegate
         {
 
-            //一半一半
-            float r = testResource / 2;
-            testResource = 0;
-            testStatus += r / 5;
-            turnStatus += r / 50;
-            testUpdateWords();
+            UseResource();
         });
 
         view.UpdateCards.onClick.AddListener(delegate
         {
-            testCardExp += testStatus;
-            testCardPower = Mathf.Sqrt(testCardExp);
-            testUpdateWords();
+            AddSkill();
         });
         view.Next30Turn.onClick.AddListener(delegate
         {
-            for(int i = 0; i < 30; i++)
+            while(turn<30)
             {
-                float r = testResource / 2;
-                testResource = 0;
-                testStatus += r / 5;
-                turnStatus += r / 50;
-
-                testCardExp += testStatus;
-                testCardPower = Mathf.Sqrt(testCardExp);
-                testUpdateWords();
-
-                turn += 1;
-                testStatus += turnStatus;
-                testResource += 30 + 50 * turn;
-                //nandu = 50 + 10 * Mathf.Pow(1.2f,turn);
+                UseResource();
+                AddSkill();
+                TestNextTurn();
             }
             testUpdateWords();
-
-
         });
         testUpdateWords();
+
+
     }
 
     //50点资源 = 每回合属性+1
@@ -270,28 +289,110 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     //2级技能 50点经验 强度8 伤害
     //3级技能 150点经验 强度12 伤害
     //4级技能 300点经验 强度17伤害
+    //50级技能 
+
+
+
+    int nowItemLevel = 1;
+
+    int beginSkillLevel = 1;
+    int nowSkillLevel = 1;
+
+
+    int totalSkillLevel = 1;
+
+    int SkillNum = 1;
+
+    public void UseResource()
+    {
+        while (testResource > nowItemLevel * 50)
+        {
+            testResource -= nowItemLevel * 50;
+            turnStatus += nowItemLevel;
+            nowItemLevel++;
+        }
+        if (testResource > 0)
+        {
+            //testCardExp += testResource / 10;
+            //testResource -= 0;
+        }
+
+
+        testUpdateWords();
+    }
+
+    public void AddSkill()
+    {
+        //testCardExp += 
+        if (hasAddSkill) return;
+        hasAddSkill = true;
+        testCardExp += testStatus;
+
+        while(testCardExp > nowSkillLevel * 50)
+        {
+            if (nowSkillLevel - beginSkillLevel > 4)
+            {
+                //if(testResource > (nowSkillLevel - 3) * 50 / 10)
+                beginSkillLevel = nowSkillLevel - 3;
+                nowSkillLevel = beginSkillLevel;
+                continue;
+            }
+
+            testCardExp -= nowSkillLevel * 50;
+            nowSkillLevel++;
+            totalSkillLevel++;
+        }
+
+        testCardPower = totalSkillLevel * 5;
+        testUpdateWords();
+    }
+
+    public void TestNextTurn()
+    {
+        turn += 1;
+        testStatus += turnStatus;
+        testResource += 30 + 50 * turn;
+        testFans += 10 + 20 * turn + 10 * turn * turn;
+        //nandu = 50 + 10 * Mathf.Pow(1.2f,turn);
+        testUpdateWords();
+        hasAddSkill = false;
+    }
 
     public void testUpdateWords()
     {
         string s = ""; 
         s += "回合" + turn + "\n";
-        s += "资源" + testResource + "\n";
-        s += "技能经验" + testCardExp + "\n";
-        s += "卡片强度" + testCardPower + "\n";
-        s += "属性" + testStatus + "\n";
-        s += "回合属性" + turnStatus + "\n";
-        s += "难度" + nandu  + "\n";
         view.showAll.text = s;
+
+        view.SkillExpShow.text = testCardExp + "";
+        view.CardPowerShow.text = testCardPower + "";
+
+        for (int i = 0; i < 5; i++)
+        {
+            view.PropertyViewList[i].Value.text = (int)(testStatus * 0.2f)+"";
+            view.PropertyViewList[i].Add.text = (int)(turnStatus * 0.2f) + "";
+        }
+
+        view.MoneyShow.text = (int)testResource + "";
+        view.NowSkillShow.text = beginSkillLevel + "->" + nowSkillLevel;
+        view.FansShow.text = testFans + "";
+        view.NextItemPrice.text = (nowItemLevel * 50) + "";
+        view.SkillListShow.text = nowSkillLevel * 50 + "";
     }
 
 
     public int turn = 1;
+    public bool hasAddSkill = false;
     public float testResource = 10;
     public float testCardPower = 50;
     public float testStatus = 50;
     public float turnStatus = 0;
     public float testCardExp = 50;
     public float nandu;
+
+    public int testFans = 0;
+
+
 
     public override void Tick(float dTime)
     {

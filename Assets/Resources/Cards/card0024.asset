@@ -17,6 +17,7 @@ MonoBehaviour:
   CardDesp: "\u4F60\u673A\u68B0\u6027\u5730\u6717\u8BFB\u624B\u4E2D\u7684\u6587\u5B57\u3002"
   CardEffectDesp: "\u83B7\u5F9710\u70B9\u70ED\u5EA6\uFF0C30\u70B9\u62BD\u5361\u503C"
   CardType: 0
+  Tags: []
   cost: 0
   IsConsume: 0
   UseOnDiscard: 0
@@ -24,9 +25,44 @@ MonoBehaviour:
   OverDueTurn: 0
   UseTime: 1
   ModelCard: 
+  StatusBonusNum: 0
+  StatusBonusType: 0
+  SkillBonusType: 0
+  SkillBonusNum: 0
+  UseConditions: []
   Effects:
-  - effect: GetScore
+  - EMode: 0
+    effectType: 7
+    isNegEffect: 0
+    Possibility: 100
+    turnEffect: 
     effectString: 10
-  - effect: GetChouka
-    effectString: 30
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
+  - EMode: 0
+    effectType: 8
+    isNegEffect: 0
+    Possibility: 100
+    turnEffect: 
+    effectString: 5
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
   TurnEffects: []
