@@ -45,6 +45,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 
         InstId = 0;
         pRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
+        GenFakeCards();
     }
 
     public CardInfo GainNewCard (string cid)
@@ -119,6 +120,53 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
                 }
             }
         }
+    }
+
+    public void ChangeSkillCard(string skillId, string fromCard, string toCard)
+    {
+        if (!SkillCardDict.ContainsKey(skillId))
+        {
+            return;
+        }
+
+        if (fromCard == null)
+        {
+            AddSkillCards(skillId,new List<string>() { toCard});
+            return;
+        }
+
+
+
+        CardInfo info = null;
+        for(int i=0;i< SkillCardDict[skillId].Count; i++)
+        {
+            if(SkillCardDict[skillId][i].CardId == fromCard)
+            {
+                info = SkillCardDict[skillId][i];
+                break;
+            }
+        }
+
+        if (info == null)
+        {
+            return;
+        }
+
+        if (toCard == null)
+        {
+            RemoveCard(info);
+            SkillCardDict[skillId].Remove(info);
+        }
+        else
+        {
+            info.CardId = toCard;
+            info.ca = GetCardInfo(toCard);
+            info.InstId = InstId;
+            InstId++;
+        }
+
+
+
     }
 
     public void RemoveSkillCards(string skillId)
@@ -271,6 +319,30 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
     //public void RemoveCard(CardInfo c){
     //	cards.Remove (c);
     //}
+
+
+    public void GenFakeCards()
+    {
+       
+
+        for (int i = 0; i < 30; i++)
+        {
+            CardAsset ca = new CardAsset();
+            ca.CardName = "技能卡";
+            ca.CardId = string.Format("test_{0:00}", i + 1);
+            ca.CardDesp = "等级" + (i + 1) + "的卡";
+            ca.cost = 2;
+            {
+                CardEffect ce = new CardEffect();
+                ce.EMode = eCardEffectMode.SIMPLE;
+                ce.effectType = eEffectType.GetScore;
+                ce.effectString = ((i + 1) * 5) + "";
+                ca.Effects.Add(ce);
+            }
+            CardDict.Add(ca.CardId,ca);
+        }
+
+    }
 
 }
 

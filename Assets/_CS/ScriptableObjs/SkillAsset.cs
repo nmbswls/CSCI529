@@ -3,6 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+public enum eSkillType
+{
+    None,
+    Koucai,
+    Game,
+}
+
 [System.Serializable]
 public class SkillPrerequist
 {
@@ -10,8 +17,57 @@ public class SkillPrerequist
     public int level;
 }
 
+public enum eCardOperatorMode
+{
+    Add,
+    Replace,
+}
 
-[CreateAssetMenu(fileName = "new skill", menuName = "Ctm/skill")]
+[System.Serializable]
+public class CardOperator
+{
+    public eCardOperatorMode opt;
+    public string from;
+    public string to;
+}
+
+[System.Serializable]
+public class AttachCardsInfo
+{
+    public List<CardOperator> operators = new List<CardOperator>();
+}
+
+[CreateAssetMenu(fileName = "new base skill", menuName = "Ctm/BaseSkill")]
+[System.Serializable]
+public class BaseSkillAsset : SkillAsset
+{
+    //基础固定卡片
+    public List<string> BaseCardList = new List<string>();
+
+    //基础技能 升级靠学习 所以每个等级的技能还有额外的属性要求
+    public List<string> PrerequistStatus = new List<string>();
+
+    //每个等级 都有固定数量的可配置卡片
+    public List<int> FreeCardNum = new List<int>();
+
+    //每个等级 都有对应固定bonus加成
+    public List<int[]> StatusBonus = new List<int[]>();
+
+}
+
+[CreateAssetMenu(fileName = "new extend skill", menuName = "Ctm/ExtendSkill")]
+[System.Serializable]
+public class ExtentSkillAsset : SkillAsset
+{
+    public string BaseSkillId = null;
+
+    //每个等级的难度
+    public List<int> Difficulties = new List<int>();
+
+    //每个等级都会有相应的附加卡片
+    public List<AttachCardsInfo> AttachCardInfos = new List<AttachCardsInfo>();
+}
+
 [System.Serializable]
 public class SkillAsset : ScriptableObject
 {
@@ -22,21 +78,11 @@ public class SkillAsset : ScriptableObject
     [TextArea(3, 10)]
     public string SkingDesp;
 
-
     public int MaxLevel;
 
-    public string SkillType;
-
-    //每个等级都会有相应的附加卡片
-    public List<string> AttachCards = new List<string>();
+    public eSkillType SkillType = eSkillType.Game;
 
     //与等级无关的前置条件，即前置技能
     public List<SkillPrerequist> PrerequistSkills = new List<SkillPrerequist>();
-
-    //每个等级的技能还有额外的属性要求
-    public List<string> PrerequistStatus = new List<string>();
-
-    //每个等级的难度
-    public List<int> Difficulties = new List<int>();
 
 }

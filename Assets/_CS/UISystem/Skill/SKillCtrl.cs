@@ -16,6 +16,19 @@ public class ScheduleModel : BaseModel
     public int nowTab = -1;
 }
 
+
+//红白机基础 fps moba
+//base 
+//lv1 2张 贪吃蛇I 2张 推箱子I 2张俄罗斯方块I bonus: x0.5
+//lv2 bonus x0.8 自由移除2张卡
+//lv3 bonus x1.5 自由移除4张卡
+
+//分支技能 
+//推箱王 lv1 推箱子II*1
+//推箱王 lv2 推箱子II*2
+//推箱王 lv3 推箱子超人I
+
+//
 public class ScheduleView : BaseView
 {
 	public Transform ScheduledContainer;
@@ -233,13 +246,17 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
             view.Prerequist.text = s;
 
-            string cards = sa.AttachCards[0];
-            string[] cardsArray = cards.Split(',');
-            view.CurLevelCards.text = "";
-            for (int i = 0; i < cardsArray.Length; i++)
+            ExtentSkillAsset esa = sa as ExtentSkillAsset;
+            if(esa != null || esa.AttachCardInfos.Count==0)
             {
-                view.NextLevelCards.text += cardsArray[i] + "\n";
+                AttachCardsInfo attach = esa.AttachCardInfos[0];
+                view.CurLevelCards.text = "";
+                for (int i = 0; i < attach.operators.Count; i++)
+                {
+
+                }
             }
+
         }
         else
         {
@@ -251,12 +268,15 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
             UpdateExp(info);
 
 
-            string cards = sa.AttachCards[info.SkillLvl-1];
-            string[] cardsArray = cards.Split(',');
-            view.CurLevelCards.text = "";
-            for (int i = 0; i < cardsArray.Length; i++)
+            ExtentSkillAsset esa = sa as ExtentSkillAsset;
+            if (esa != null || esa.AttachCardInfos.Count == 0)
             {
-                view.CurLevelCards.text += cardsArray[i] + "\n";
+                AttachCardsInfo attach = esa.AttachCardInfos[0];
+                view.CurLevelCards.text = "";
+                for (int i = 0; i < attach.operators.Count; i++)
+                {
+
+                }
             }
 
         }
@@ -308,18 +328,18 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         List<string> skills = new List<string>();
         if(newTab == 0)
         {
-            skills = pSkillMgr.GetSkillByType("common");
+            skills = pSkillMgr.GetSkillByType(eSkillType.None);
         }else if (newTab == 1)
         {
-            skills = pSkillMgr.GetSkillByType("quality");
+            skills = pSkillMgr.GetSkillByType(eSkillType.Koucai);
         }
         else if (newTab == 2)
         {
-            skills = pSkillMgr.GetSkillByType("caiyi");
+            skills = pSkillMgr.GetSkillByType(eSkillType.Game);
         }
         else if (newTab == 3)
         {
-            skills = pSkillMgr.GetSkillByType("game");
+            skills = pSkillMgr.GetSkillByType(eSkillType.None);
         }
         model.NowSkills = skills;
         foreach (SkillItemView vv in view.SkillViewList)

@@ -24,4 +24,6 @@ public interface ICardDeckModule : IModule
     bool ChangeEnable(uint instId, bool enable);
 
     CardInfo GetCardByInstId(uint instId);
+
+    void ChangeSkillCard(string skillId, string fromCard, string toCard);
 }

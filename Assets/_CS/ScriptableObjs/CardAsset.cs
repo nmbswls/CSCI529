@@ -89,15 +89,15 @@ public class CardFilter
 public class CardAsset : ScriptableObject
 {
 
-	public string CardId;
+	public string CardId = "";
 
-	public string CardName;
+	public string CardName = "";
 
 	[TextArea(3,10)]
-	public string CardDesp;
+	public string CardDesp = "";
 
     [TextArea(3, 10)]
-    public string CardEffectDesp;
+    public string CardEffectDesp = "";
 
     public eCardType CardType;
 

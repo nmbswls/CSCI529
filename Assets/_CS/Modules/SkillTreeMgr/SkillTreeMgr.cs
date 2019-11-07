@@ -44,12 +44,57 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
         mRoleMdl = GameMain.GetInstance().GetModule<IRoleModule>();
 
         LoadAllSkills();
-        FakeSkillTree();
+        GenFakeExtendSKills();
+        GenFakeBaseSkills();
     }
 
-    private void FakeSkillTree()
+    private void GenFakeExtendSKills()
     {
-        //GainSkills("game_01");
+        for (int i = 0; i < 30; i++)
+        {
+            ExtentSkillAsset sa = new ExtentSkillAsset();
+
+            sa.SkillId = string.Format("test_extend_{0:00}", i + 1);
+            sa.BaseSkillId = string.Format("test_{0:00}", i + 1);
+
+            sa.MaxLevel = 5;
+            for(int j = 0; j < 5; j++)
+            {
+                sa.Difficulties.Add(i*3+j);
+            }
+            for(int j = 0; j < 5; j++)
+            {
+                AttachCardsInfo attached = new AttachCardsInfo();
+                CardOperator opt1 = new CardOperator();
+
+                BaseSkillAsset bsa = GetSkillAsset(sa.BaseSkillId) as BaseSkillAsset;
+
+                opt1.opt = eCardOperatorMode.Replace;
+
+                opt1.from = string.Format("test_{0:00}", i + 1);
+                opt1.to = string.Format("test_{0:00}", i + 1 + j + 1);
+
+                attached.operators.Add(opt1);
+
+                sa.AttachCardInfos.Add(attached);
+
+            }
+
+            SkillAssetDict.Add(sa.SkillId,sa);
+
+        }
+    }
+
+    private void GenFakeBaseSkills()
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            BaseSkillAsset sa = new BaseSkillAsset();
+            sa.SkillId = string.Format("test_{0:00}", i + 1);
+            sa.MaxLevel = 1;
+            sa.BaseCardList.Add(string.Format("test_{0:00}", i + 1));
+            SkillAssetDict.Add(sa.SkillId, sa);
+        }
     }
 
     public void GainExp(string sid)
@@ -112,16 +157,42 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
             OwnedSkills.Add(skillInfo);
             skillInfo.SkillLvl = 1;
 
+            BaseSkillAsset bsa = sa as BaseSkillAsset;
+            if (bsa != null)
+            {
+                mCardMgr.AddSkillCards(skillId,new List<string>(bsa.BaseCardList));
+            }
+
+
         }
         else
         {
             skillInfo.SkillLvl += 1;
-            mCardMgr.RemoveSkillCards(skillId);
         }
-        if(skillInfo.SkillLvl - 1 < sa.AttachCards.Count)
+
+        
+
+        ExtentSkillAsset esa = sa as ExtentSkillAsset;
+        if (esa == null)
         {
-            string[] cards = sa.AttachCards[skillInfo.SkillLvl - 1].Split(',');
-            mCardMgr.AddSkillCards(skillId, new List<string>(cards));
+            return;
+        }
+
+        if (skillInfo.SkillLvl > 1)
+        {
+            AttachCardsInfo attachInfo = esa.AttachCardInfos[skillInfo.SkillLvl - 2];
+            for (int i = 0; i < attachInfo.operators.Count; i++)
+            {
+                mCardMgr.ChangeSkillCard(skillId, attachInfo.operators[i].to,attachInfo.operators[i].from);
+            }
+        }
+        {
+            AttachCardsInfo attachInfo = esa.AttachCardInfos[skillInfo.SkillLvl - 1];
+
+            for (int i = 0; i < attachInfo.operators.Count; i++)
+            {
+                mCardMgr.ChangeSkillCard(skillId, attachInfo.operators[i].from, attachInfo.operators[i].to);
+            }
         }
     }
 
@@ -187,7 +258,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
 
     }
 
-    public List<string> GetSkillByType(string type)
+    public List<string> GetSkillByType(eSkillType type)
     {
         List<string> ret = new List<string>();
         foreach(var kv in SkillAssetDict)
@@ -200,5 +271,14 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
         return ret;
     }
 
+    public void PrintSkills()
+    {
+        Debug.Log("----------");
+        for(int i=0;i< OwnedSkills.Count; i++)
+        {
+            Debug.Log(OwnedSkills[i].SkillId + "," + OwnedSkills[i].SkillLvl);
+        }
+
+    }
 
 }

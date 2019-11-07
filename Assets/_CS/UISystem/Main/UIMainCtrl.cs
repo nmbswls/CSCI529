@@ -106,6 +106,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     IResLoader pResLoader;
     ICoreManager pCoreMgr;
     IShopMgr pShopMgr;
+    ISkillTreeMgr pSkillMgr;
 
     bool closeCtr = false;
 
@@ -118,6 +119,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
         pCoreMgr = GameMain.GetInstance().GetModule<CoreManager>();
         pShopMgr = GameMain.GetInstance().GetModule<ShopMgr>();
+        pSkillMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
 
         GetApps();
     }
@@ -300,6 +302,8 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     int beginSkillLevel = 1;
     int nowSkillLevel = 1;
 
+    int sameSkillNum = 0;
+
 
     int totalSkillLevel = 1;
 
@@ -335,17 +339,33 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
         while(testCardExp > nowSkillLevel * 50)
         {
-            if (nowSkillLevel - beginSkillLevel > 4)
+            if (nowSkillLevel - beginSkillLevel > 3)
             {
                 //if(testResource > (nowSkillLevel - 3) * 50 / 10)
-                beginSkillLevel = nowSkillLevel - 3;
+                if (sameSkillNum >= 4)
+                {
+                    sameSkillNum = 1;
+                    beginSkillLevel = beginSkillLevel + 3;
+                }
+                else
+                {
+                    sameSkillNum++;
+                }
                 nowSkillLevel = beginSkillLevel;
+
+                pSkillMgr.GainSkills(string.Format("test_{0:00}", NumSkill + 1));
+                pSkillMgr.PrintSkills();
+
+                NumSkill++;
+
                 continue;
             }
+
 
             testCardExp -= nowSkillLevel * 50;
             nowSkillLevel++;
             totalSkillLevel++;
+
         }
 
         testCardPower = totalSkillLevel * 5;
@@ -394,7 +414,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     public float turnStatus = 0;
     public float testCardExp = 50;
     public float nandu;
-
+    public int NumSkill = 1;
     public int testFans = 0;
 
 

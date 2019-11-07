@@ -10,7 +10,9 @@ public interface ISkillTreeMgr : IModule
 
     void GainSkills(string skillId);
 
-    List<string> GetSkillByType(string type);
+    List<string> GetSkillByType(eSkillType type);
 
     void GainExp(string sid);
+
+    void PrintSkills();
 }
