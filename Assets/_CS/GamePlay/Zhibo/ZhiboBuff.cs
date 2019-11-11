@@ -27,6 +27,7 @@ public enum eBuffType
     No_Neg_Danmu,
 
     Next_Card_Extra_Score,
+    Next_Card_Extra_Status,
 
     Success_Rate_Multi,
     Success_Rate_Max,

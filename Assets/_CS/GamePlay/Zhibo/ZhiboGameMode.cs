@@ -98,6 +98,11 @@ public class ZhiboGameState
     public float Score = 0;
     public int MaxScore = 100;
 
+    public float Status = 100;
+    public int MaxStatus = 200;
+    public int MinStatus = 0;
+
+
     public float ScoreArmor = 0;
     public float Hot = 30;
 
@@ -433,6 +438,16 @@ public class ZhiboGameMode : GameModeBase
         {
             GenSpecial("Special");
         }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            GainStatus(30);
+            Debug.Log(state.Status);
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            GainStatus(-10);
+            Debug.Log(state.Status);
+        }
 
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -675,10 +690,53 @@ public class ZhiboGameMode : GameModeBase
 
     }
 
+    public float GetStatusFromFormulation(string formulation)
+    {
+        string[] comps = formulation.Split('+');
+        float finalValue = 0;
+        foreach (string comp in comps)
+        {
+            if (comp.Contains("*"))
+            {
+                string[] ss = comp.Split('*');
+                float rate = float.Parse(ss[0]);
+                string pname = ss[1];
+                switch (pname)
+                {
+                    case "m":
+                        finalValue += state.stats.meili * rate;
+                        break;
+                    case "k":
+                        finalValue += state.stats.koucai * rate;
+                        break;
+                    case "t":
+                        finalValue += state.stats.tili * rate;
+                        break;
+                    case "f":
+                        finalValue += state.stats.fanying * rate;
+                        break;
+                    case "j":
+                        finalValue += state.stats.jiyi * rate;
+                        break;
+                    default:
+                        Debug.Log("unknown property");
+                        break;
+                }
+            }
+            else
+            {
+                finalValue += int.Parse(comp);
+            }
+        }
+        return finalValue;
+
+    }
+
     public void GainScore(float score, int add=0)
     {
 
         float scoreReal = score;
+        float statusRate = state.Status / 100f;
         if (score < 0)
         {
             float absScore = -score;
@@ -698,7 +756,8 @@ public class ZhiboGameMode : GameModeBase
         }
 
         //scoreReal *= mBuffManager.
-        state.Score += scoreReal;
+        Debug.Log(scoreReal * statusRate);
+        state.Score += scoreReal * statusRate;
 
         //mUIMgr.ShowHint("获得热度" + (int)score);
         mUICtrl.UpdateScore();
@@ -710,6 +769,24 @@ public class ZhiboGameMode : GameModeBase
     {
         state.Tili += v;
         mUICtrl.UpdateTili();
+    }
+    public void GainStatus(float status, int add=0)
+    {
+
+        float statusReal = status;
+        statusReal *= 1 + (add * 0.01f) + (mBuffManager.GenStatusExtraRate);    //加了一个status 的 extra rate，但目前还没作用
+        if(state.Status + statusReal > state.MaxStatus)
+        {
+            state.Status = state.MaxStatus;
+        }
+        else if (state.Status + statusReal < state.MinStatus)
+        {
+            state.Status = state.MinStatus;
+        } else
+        {
+            state.Status += statusReal;
+        }
+        mUICtrl.UpdateStatus();
     }
 
 
@@ -1228,6 +1305,8 @@ public class ZhiboGameMode : GameModeBase
             switch (ce.effectType)
             {
                 case eEffectType.SpawnGift:
+                    Debug.Log(args[0]);
+                    Debug.Log(args.Length);
                     GenSpecial(args[0],int.Parse(args[1]));
                     break;
                 case eEffectType.MaxCount:
@@ -1366,6 +1445,18 @@ public class ZhiboGameMode : GameModeBase
                 case eEffectType.EndFollowingEffect:
                     IsNoEffect = true;
                     break;
+                case eEffectType.GetStatus:
+                    int statusAdd = 0;
+                    for (int i = 0; i < ValidBuffs.Count; i++)
+                    {
+                        if (ValidBuffs[i].bInfo.BuffType == eBuffType.Next_Card_Extra_Score)
+                        {
+                            statusAdd += ValidBuffs[i].bInfo.BuffLevel;
+                        }
+
+                    }
+                    GainStatus(GetStatusFromFormulation(args[0]), statusAdd);
+                    break;
                 default:
                     break;
             }
@@ -1474,6 +1565,7 @@ public class ZhiboGameMode : GameModeBase
 
         string eid = cardId;
         CardAsset ca = mCardMdl.GetCardInfo(eid);
+        Debug.Log(cardId);
         CardInZhibo card = new CardInZhibo(eid, ca.UseTime);
         card.ca = ca;
         state.CardDeck.Add(card);

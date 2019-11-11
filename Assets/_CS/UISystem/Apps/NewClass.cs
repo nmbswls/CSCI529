@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WeiboView : BaseView
+public class MailView : BaseView
 {
     public Image GetGeng;
     public ScrollRect ScrollView;
@@ -22,12 +22,12 @@ public class WeiboView : BaseView
     public Image Post;
 }
 
-public class WeiboModel : BaseModel
+public class MailModel : BaseModel
 {
-    
+
 }
 
-public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
+public class MailUI : UIBaseCtrl<MailModel, MailView>
 {
     IUIMgr pUIMgr;
     IResLoader pResLoader;
@@ -61,7 +61,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
 
     public void getRandomCard()
     {
-        int randInt = UnityEngine.Random.Range(1,4);
+        int randInt = UnityEngine.Random.Range(1, 3);
         //string cardName = prefix + randInt.ToString().PadLeft(4,'0');
         cardName = "card800" + randInt.ToString();
         Debug.Log(cardName);
@@ -69,7 +69,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
 
     public void insertCard(string cardName)
     {
-        if(cardName != null)
+        if (cardName != null)
         {
             List<string> st = new List<string>();
             st.Add(cardName);
@@ -120,14 +120,14 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
                 Vector3 scrVec = new Vector3();
                 scrVec = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 vec = view.GetGeng.transform.position;
-                if(scrVec.y - diffY <= originalY && originalY + diffY - scrVec.y <= 2)
+                if (scrVec.y - diffY <= originalY && originalY + diffY - scrVec.y <= 2)
                 {
                     vec.y = scrVec.y - diffY;
                     view.GetGeng.transform.position = vec;
-                    if(originalY + diffY - scrVec.y >= 1.3)
+                    if (originalY + diffY - scrVec.y >= 1.3)
                     {
                         isValidDrag = true;
-                    }   
+                    }
                 }
             };
             listener.OnEndDragEvent += delegate
@@ -160,7 +160,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
         }
         {
             ClickEventListerner listener = view.Back.gameObject.GetComponent<ClickEventListerner>();
-            if(listener == null)
+            if (listener == null)
             {
                 listener = view.Back.gameObject.AddComponent<ClickEventListerner>();
             }
@@ -179,12 +179,12 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
 
             listener.OnClickEvent += delegate
             {
-                if(!isGengGet)
+                if (!isGengGet)
                 {
                     isGengGet = true;
                     pWeiboMgr.ReduceShuaTime();
                     insertCard(cardName);
-                    
+
                 }
             };
         }

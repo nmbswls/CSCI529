@@ -15,12 +15,16 @@ public class ZhiboBuffManager
     public int[] BuffAddPercent = new int[5];
 
     public float GenScoreExtraRate = 0;
+    
     public float DanmuExtraReward = 0;
     public float GainScorePerSec = 0;
     public float ExtraSuccessPossibility = 0;
     public int BadRateDiff = 0;
     public bool AvoidBadDanmu = false;
     public float ExtraChenggonglv = 0;
+
+    public float GenStatusExtraRate = 0;
+    public float GainStatusPerSec = 0;
 
     private IResLoader mResLoader;
     private ZhiboGameMode gameMode;
@@ -52,7 +56,10 @@ public class ZhiboBuffManager
         {
             gameMode.GainScore(GainScorePerSec);
         }
-
+        if (GainStatusPerSec > 0)
+        {
+            gameMode.GainStatus(GainStatusPerSec);
+        }
     }
 
 
