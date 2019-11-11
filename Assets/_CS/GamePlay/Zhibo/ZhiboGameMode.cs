@@ -800,10 +800,12 @@ public class ZhiboGameMode : GameModeBase
         if (danmu.isBad)
         {
             GainScore(-2);
+            GainStatus(-1); //status
         }
         else
         {
             GainScore(1);
+            GainStatus(0.1f);
         }
     }
 
@@ -824,10 +826,12 @@ public class ZhiboGameMode : GameModeBase
             if (danmu.isBad)
             {
                 GainScore(-2);
+                GainStatus(-1);
             }
             else
             {
                 GainScore(1);
+                GainStatus(0.1f);
             }
         }
 
