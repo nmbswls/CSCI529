@@ -16,6 +16,7 @@ MonoBehaviour:
   CardName: "\u70C2\u6897"
   CardDesp: "\u975E\u5E38\u70C2\u7684\u6897\uFF0C\u5BB9\u6613\u5F15\u8D77\u51B7\u573A"
   CardEffectDesp: "\u83B7\u5F97{10+1.1t}\u70B9\u70ED\u5EA6\u3002\u5F15\u8D77\u5C11\u91CF\u5410\u69FD\u3002"
+  Picture: {fileID: 21300000, guid: ef5427f5182e740a492e50acc0236949, type: 3}
   CardType: 2
   Tags: []
   cost: 4

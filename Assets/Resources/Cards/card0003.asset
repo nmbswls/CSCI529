@@ -16,7 +16,9 @@ MonoBehaviour:
   CardName: "\u4F18\u8D28\u7F51\u7EDC"
   CardDesp: "\u9AD8\u901F\u7684\u7F51\u7EDC\u4F7F\u4F60\u53EF\u4EE5\u6D41\u7545\u5730\u4E0E\u5F39\u5E55\u4EA4\u6D41"
   CardEffectDesp: "\u5237\u65B020\u6761\u6B63\u9762\u5F39\u5E55"
+  Picture: {fileID: 21300000, guid: c388f6d6f4d854d639dee43d7eb3b99a, type: 3}
   CardType: 0
+  Tags: []
   cost: 1
   IsConsume: 0
   UseOnDiscard: 0
@@ -24,9 +26,44 @@ MonoBehaviour:
   OverDueTurn: 0
   UseTime: 0
   ModelCard: 
+  StatusBonusNum: 0
+  StatusBonusType: 0
+  SkillBonusType: 0
+  SkillBonusNum: 0
+  UseConditions: []
   Effects:
-  - effect: GenGoodDanmu
+  - EMode: 0
+    effectType: 0
+    isNegEffect: 0
+    Possibility: 100
+    turnEffect: 
     effectString: wangluo,30
-  - effect: SpeedUp
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
+  - EMode: 0
+    effectType: 0
+    isNegEffect: 0
+    Possibility: 100
+    turnEffect: 
     effectString: 5
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
   TurnEffects: []

@@ -756,7 +756,6 @@ public class ZhiboGameMode : GameModeBase
         }
 
         //scoreReal *= mBuffManager.
-        Debug.Log(scoreReal * statusRate);
         state.Score += scoreReal * statusRate;
 
         //mUIMgr.ShowHint("获得热度" + (int)score);

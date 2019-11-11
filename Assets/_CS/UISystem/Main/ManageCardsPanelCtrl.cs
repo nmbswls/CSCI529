@@ -182,6 +182,8 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
             cardOutView.Name.text = ca.CardName;
             cardOutView.Desp.text = ca.CardEffectDesp;
             cardOutView.DaGou.SetActive(!c.isDisabled);
+            cardOutView.Picture.sprite = ca.Picture;
+            //Debug.Log(ca.Picture.name);
         }
 
     }
