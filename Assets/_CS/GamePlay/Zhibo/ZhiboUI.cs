@@ -17,11 +17,15 @@ public class ZhiboView : BaseView
     public Transform container;
     public Slider Score;
 
+    public Slider Status;
+
     public Text QifenValue;
     public Transform BuffDetailPanel;
     public Text BuffDetail;
 
     public Text hotValue;
+    public Text TiliValue;
+    public Text statusValue;
 
     public Transform TiliBar;
     public List<Image> TiliPoints = new List<Image>();
@@ -63,6 +67,7 @@ public class ZhiboModel : BaseModel
 
     public List<int> EmptyTVList = new List<int>();
     public int nowScoreText = 0;
+    public int nowStatusText = 100;
 }
 
 
@@ -114,6 +119,8 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
         UpdateScore();
         //view.TiliValue.text = "10";
+        UpdateStatus();
+        view.TiliValue.text = "10";
         //view.TiliImage.fillAmount = view.TiliMaxFillAmount;
 
         UpdateQifen();
@@ -142,6 +149,13 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         float nowScore = gameMode.state.Score;
         view.hotValue.text = (int)nowScore + "";
         view.Score.value = nowScore * 1.0f / gameMode.state.MaxScore;
+    }
+
+    public void UpdateStatus()
+    {
+        float nowStatus = gameMode.state.Status;
+        view.statusValue.text = (int)nowStatus + "";
+        view.Status.value = nowStatus * 1.0f / gameMode.state.MaxStatus;
     }
     public void UpdateTili()
     {
@@ -237,6 +251,11 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         Transform hotView = root.transform.Find("Score");
         view.Score = hotView.GetComponent<Slider>();
         view.hotValue = hotView.Find("Value").GetComponent<Text>();
+
+        Transform StatusView = root.transform.Find("Status");
+        view.Status = StatusView.GetComponent<Slider>();
+        view.statusValue = StatusView.Find("Value").GetComponent<Text>();
+
 
         Transform lbArea = root.Find("LeftBottom");
 
@@ -566,4 +585,6 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         ZhiboBuff ret = go.GetComponent<ZhiboBuff>();
         return ret;
     }
+
+    
 }

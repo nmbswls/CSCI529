@@ -16,6 +16,7 @@ MonoBehaviour:
   CardName: "\u7981\u8A00\u5957\u9910"
   CardDesp: "\u521A\u624D\u90A3\u4E2A\u5F39\u5E55\uFF0C\u6293\u51FA\u6765\u5173\u4E86"
   CardEffectDesp: "\u4E09\u56DE\u5408\u5185\u7981\u6B62\u9ED1\u8272\u5F39\u5E55\u751F\u6210\uFF0C\u63D0\u9AD8\u4E09\u4E2A\u8D1F\u9762\u7B49\u7EA7"
+  Picture: {fileID: 21300000, guid: 4c428ebb62872427486361170b1432e2, type: 3}
   CardType: 1
   Tags: []
   cost: 2
@@ -45,6 +46,7 @@ MonoBehaviour:
       filterString: 
       TurnLast: 10
       CardNum: 0
+      SecLast: 0
     BranchType: 
     BranchEffectStrings: []
   - EMode: 0
@@ -61,6 +63,7 @@ MonoBehaviour:
       filterString: 
       TurnLast: 3
       CardNum: 0
+      SecLast: 0
     BranchType: 
     BranchEffectStrings: []
   TurnEffects: []

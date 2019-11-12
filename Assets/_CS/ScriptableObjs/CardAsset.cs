@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System;
+using UnityEngine.UI;
 
 [System.Serializable]
 public enum eCardType{
@@ -98,6 +99,8 @@ public class CardAsset : ScriptableObject
 
     [TextArea(3, 10)]
     public string CardEffectDesp = "";
+
+    public Sprite Picture;
 
     public eCardType CardType;
 
@@ -200,6 +203,8 @@ public enum eEffectType
     GetScore,
     GetChouka,
     GetTili,
+
+    GetStatus,
 
     AddTurnBuff,
     AddRemoveAward,

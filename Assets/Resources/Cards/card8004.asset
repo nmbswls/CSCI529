@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
+  m_Name: card8004
+  m_EditorClassIdentifier: 
+  CardId: card8004
+  CardName: "\u6D51\u8EAB\u96BE\u53D7"
+  CardDesp: "\u4E00\u5929\u4E0D\u559D\u5927\u529B\uFF0C\u6211\u6D51\u8EAB\u96BE\u53D7"
+  CardEffectDesp: "\u51CF\u5C1110\u70B9\u72B6\u6001\u503C"
+  CardType: 2
+  Tags: []
+  cost: 0
+  IsConsume: 0
+  UseOnDiscard: 0
+  HasTurnEffect: 0
+  OverDueTurn: 0
+  UseTime: 0
+  ModelCard: 
+  StatusBonusNum: 0
+  StatusBonusType: 0
+  SkillBonusType: 0
+  SkillBonusNum: 0
+  UseConditions: []
+  Effects:
+  - EMode: 0
+    effectType: 10
+    isNegEffect: 0
+    Possibility: 0
+    turnEffect: 
+    effectString: -10
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
+  TurnEffects: []

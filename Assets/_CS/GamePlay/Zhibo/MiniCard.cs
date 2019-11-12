@@ -91,6 +91,7 @@ public class MiniCard : MonoBehaviour
         //初始化卡面
         view.Name.text = ca.CardName;
         view.Desp.text = ca.CardEffectDesp;
+        view.Picture.sprite = ca.Picture;
 
 
 

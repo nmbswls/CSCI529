@@ -61,7 +61,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
 
     public void getRandomCard()
     {
-        int randInt = UnityEngine.Random.Range(1,3);
+        int randInt = UnityEngine.Random.Range(1,5);
         //string cardName = prefix + randInt.ToString().PadLeft(4,'0');
         cardName = "card800" + randInt.ToString();
         Debug.Log(cardName);

@@ -16,6 +16,7 @@ MonoBehaviour:
   CardName: "\u7ACBflag"
   CardDesp: "\u4F60\u7684\u751F\u547D\u5DF2\u5982\u98CE\u4E2D\u6B8B\u70DB"
   CardEffectDesp: "\u83B7\u5F97100\u70B9\u70ED\u5EA6\uFF0C\u5237\u65B030\u6761\u8D1F\u9762\u5F39\u5E55"
+  Picture: {fileID: 21300000, guid: a3ee5b2425bc742c69797be56290615f, type: 3}
   CardType: 1
   Tags: []
   cost: 2
@@ -45,6 +46,7 @@ MonoBehaviour:
       filterString: 
       TurnLast: 0
       CardNum: 0
+      SecLast: 0
     BranchType: 
     BranchEffectStrings: []
   - EMode: 0
@@ -61,6 +63,7 @@ MonoBehaviour:
       filterString: 
       TurnLast: 0
       CardNum: 0
+      SecLast: 0
     BranchType: 
     BranchEffectStrings: []
   TurnEffects: []
