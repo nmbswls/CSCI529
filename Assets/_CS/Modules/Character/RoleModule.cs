@@ -105,7 +105,7 @@ public class RoleModule : ModuleBase, IRoleModule
 
     private float fen4Num;
 
-    private float BadPoint;
+    private float BadPoint = 5;
 
     private string NowPlatformId;
 
@@ -156,6 +156,8 @@ public class RoleModule : ModuleBase, IRoleModule
 
         pCardMdl.AddCards(ret.initCards);
         pCardMdl.AddCards(ret.initOwning);
+
+        BadPoint = 20;
 
         FakePlatformInfo();
         NowPlatformId = "begin";
@@ -219,7 +221,12 @@ public class RoleModule : ModuleBase, IRoleModule
     public void NextTurn()
     {
         TurnNum++;
-        Debug.Log("现在回合数:" + TurnNum);
+        RestoreActionPoints();
+    }
+
+    public void RestoreActionPoints()
+    {
+        ActionPoints = 1000;
     }
 
 

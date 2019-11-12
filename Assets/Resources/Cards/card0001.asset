@@ -29,10 +29,23 @@ MonoBehaviour:
   StatusBonusType: 1
   SkillBonusType: 0
   SkillBonusNum: 0
+  UseConditions: []
   Effects:
   - EMode: 0
-    effect: GetScore
+    effectType: 7
+    isNegEffect: 0
+    Possibility: 100
+    turnEffect: 
     effectString: 10+1.1*t
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
     BranchType: 
     BranchEffectStrings: []
   TurnEffects: []

@@ -51,7 +51,7 @@ public class BaseSkillAsset : SkillAsset
     public List<int> FreeCardNum = new List<int>();
 
     //每个等级 都有对应固定bonus加成
-    public List<int[]> StatusBonus = new List<int[]>();
+    public List<float[]> StatusBonus = new List<float[]>();
 
 }
 
@@ -66,6 +66,9 @@ public class ExtentSkillAsset : SkillAsset
 
     //每个等级都会有相应的附加卡片
     public List<AttachCardsInfo> AttachCardInfos = new List<AttachCardsInfo>();
+
+
+
 }
 
 [System.Serializable]
@@ -84,5 +87,11 @@ public class SkillAsset : ScriptableObject
 
     //与等级无关的前置条件，即前置技能
     public List<SkillPrerequist> PrerequistSkills = new List<SkillPrerequist>();
+
+    //每级
+    public List<int> LevelStatusAdd = new List<int>();
+
+    //每级效果说明
+    public List<string> LevelDesp = new List<string>();
 
 }

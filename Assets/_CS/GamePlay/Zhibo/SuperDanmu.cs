@@ -9,6 +9,13 @@ public class SuperDanmuView
     public Image Icon;
     public Image Hengfu;
 }
+
+public enum eSuperDanmuType
+{
+    Jianpanxia,
+    Penzi,
+    Gangjing,
+}
 public class SuperDanmu : MonoBehaviour
 {
 
@@ -33,10 +40,13 @@ public class SuperDanmu : MonoBehaviour
     int HpLeft = 0;
 
     int hengfuSize = 0;
-    public void init(string txt, string type, ZhiboGameMode gameMode)
+
+    public eSuperDanmuType Type;
+    public void init(string txt, eSuperDanmuType type, ZhiboGameMode gameMode)
     {
         this.gameMode = gameMode;
         this.txt = txt;
+        this.Type = type;
         rect = (RectTransform)transform;
         anim = GetComponent<Animator>();
 

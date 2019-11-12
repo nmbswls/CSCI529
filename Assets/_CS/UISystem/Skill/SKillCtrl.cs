@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
+﻿using System.Collections.Generic;
 using DG.Tweening;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class ScheduleModel : BaseModel
 {
@@ -34,9 +32,14 @@ public class ScheduleView : BaseView
 	public Transform ScheduledContainer;
     public List<ScheduleSlot> slots = new List<ScheduleSlot>();
 
-	public Transform ChoicesContainer;
+    public ScrollRect ChoicesScrollRect;
+	public RectTransform ChoicesContainer;
     public List<SkillItemView> SkillViewList = new List<SkillItemView>();
 
+    public Button BackToTopLevel;
+    public Text ActionCost;
+    public List<Transform> SkillPanels = new List<Transform>();
+    public List<SkillItem> TopSkills = new List<SkillItem>();
 
     public Transform Detail;
     public Text DetailName;
@@ -55,7 +58,12 @@ public class ScheduleView : BaseView
     public Slider ExpSlider;
     public Text ExpValue;
     public Text Difficulty;
-    public Text PracticeAward;
+
+    public Transform CurLevel;
+    public Transform NextLevel;
+
+    public Text CurLevelAward;
+    public Text NextLevelAward;
 
     public Text CurLevelCards;
     public Text NextLevelCards;
@@ -133,10 +141,17 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
     TabGroup tabGroup;
 
-    int selectedSlot = -1;
-    int selectedSkill = -1;
+    MainGameMode mainGameMode;
+
+    public bool isSubLevel = false;
+
+    //int selectedSkill = -1;
+
+    string selectedSkillId = "";
     public override void Init(){
-		
+
+        mainGameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as MainGameMode;
+
         rmgr = GameMain.GetInstance().GetModule<RoleModule>();
         resLoader = GameMain.GetInstance().GetModule<ResLoader>();
 
@@ -165,9 +180,17 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         view.BtnClose = root.Find("Close").GetComponent<Button>();
 
 
+        view.BackToTopLevel = root.Find("Pool").Find("BackToTopLevel").GetComponent<Button>();
+        view.ActionCost = root.Find("Pool").Find("ActionCost").GetComponentInChildren<Text>();
 
-        view.ChoicesContainer = root.Find("Pool").Find("Choices").GetChild(0).GetChild(0);
+        view.ChoicesScrollRect = root.Find("Pool").Find("Choices").GetComponent<ScrollRect>();
+        view.ChoicesContainer = root.Find("Pool").Find("Choices").GetChild(0).GetChild(0) as RectTransform;
         view.ScheduledContainer = root.Find("ClassShedule").GetChild(0).GetChild(0);
+        Transform panels = view.ChoicesContainer.Find("Panels");
+        foreach (Transform child in panels)
+        {
+            view.SkillPanels.Add(child);
+        }
 
         view.Detail = root.Find("Pool").Find("Detail");
 
@@ -186,15 +209,21 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
         view.AfterStudyPanel = view.Detail.Find("AfterStudy");
 
-        view.PracticeAward = view.AfterStudyPanel.Find("PracticeAward").Find("Content").GetComponent<Text>();
+        //view.PracticeAward = view.AfterStudyPanel.Find("PracticeAward").Find("Content").GetComponent<Text>();
         view.Difficulty = view.AfterStudyPanel.Find("Difficulty").GetComponent<Text>();
         view.Level = view.AfterStudyPanel.Find("Level").GetComponent<Text>();
         view.ExpSlider = view.AfterStudyPanel.Find("Exp").GetComponent<Slider>();
         view.ExpValue = view.ExpSlider.transform.GetChild(1).GetComponentInChildren<Text>();
         view.PracticeBtn = view.AfterStudyPanel.Find("PracticeBtn").GetComponent<Button>();
 
-        view.CurLevelCards = view.Detail.Find("当前等级卡牌").GetComponentInChildren<Text>();
-        view.NextLevelCards = view.Detail.Find("下一等级卡牌").GetComponentInChildren<Text>();
+        view.CurLevel = view.Detail.Find("CurLevel");
+        view.NextLevel = view.Detail.Find("NextLevel");
+
+        view.CurLevelAward = view.Detail.Find("CurLevel").Find("LevelAward").GetComponent<Text>();
+        view.NextLevelAward = view.Detail.Find("NextLevel").Find("LevelAward").GetComponent<Text>();
+
+        view.CurLevelCards = view.Detail.Find("CurLevel").Find("Title").GetComponent<Text>();
+        view.NextLevelCards = view.Detail.Find("NextLevel").Find("Title").GetComponent<Text>();
 
         //for (int i = 0; i < model.MaxSchedule; i++)
         //{
@@ -235,6 +264,9 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
             //未学习技能
             view.AfterStudyPanel.gameObject.SetActive(false);
             view.BeforeStudyPanel.gameObject.SetActive(true);
+
+            view.CurLevel.gameObject.SetActive(false);
+
             view.MoneyCost.text = "1000";
             string s = "";
             for(int i = 0; i < sa.PrerequistSkills.Count; i++)
@@ -244,18 +276,21 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
                 s += "\n";
             }
 
+            view.NextLevelCards.text = sa.LevelDesp[0];
+            view.NextLevelAward.text = "属性+"+sa.LevelStatusAdd[0];
+
             view.Prerequist.text = s;
 
-            ExtentSkillAsset esa = sa as ExtentSkillAsset;
-            if(esa != null || esa.AttachCardInfos.Count==0)
-            {
-                AttachCardsInfo attach = esa.AttachCardInfos[0];
-                view.CurLevelCards.text = "";
-                for (int i = 0; i < attach.operators.Count; i++)
-                {
+            //ExtentSkillAsset esa = sa as ExtentSkillAsset;
+            //if(esa != null && esa.AttachCardInfos.Count!=0)
+            //{
+            //    AttachCardsInfo attach = esa.AttachCardInfos[0];
+            //    view.CurLevelCards.text = "";
+            //    for (int i = 0; i < attach.operators.Count; i++)
+            //    {
 
-                }
-            }
+            //    }
+            //}
 
         }
         else
@@ -264,20 +299,35 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
             view.BeforeStudyPanel.gameObject.SetActive(false);
             view.Difficulty.text = "300";
 
+            view.CurLevel.gameObject.SetActive(true);
 
             UpdateExp(info);
 
 
-            ExtentSkillAsset esa = sa as ExtentSkillAsset;
-            if (esa != null || esa.AttachCardInfos.Count == 0)
-            {
-                AttachCardsInfo attach = esa.AttachCardInfos[0];
-                view.CurLevelCards.text = "";
-                for (int i = 0; i < attach.operators.Count; i++)
-                {
+            view.CurLevelCards.text = sa.LevelDesp[info.SkillLvl-1];
+            view.CurLevelAward.text = "属性+" + sa.LevelStatusAdd[info.SkillLvl-1];
 
-                }
+            if (info.SkillLvl == sa.MaxLevel)
+            {
+                view.CurLevel.gameObject.SetActive(false);
             }
+            else
+            {
+                view.NextLevel.gameObject.SetActive(true);
+                view.NextLevelCards.text = sa.LevelDesp[info.SkillLvl];
+                view.NextLevelAward.text = "属性+" + sa.LevelStatusAdd[info.SkillLvl];
+            }
+
+            //ExtentSkillAsset esa = sa as ExtentSkillAsset;
+            //if (esa != null && esa.AttachCardInfos.Count != 0)
+            //{
+            //    AttachCardsInfo attach = esa.AttachCardInfos[0];
+            //    view.CurLevelCards.text = "";
+            //    for (int i = 0; i < attach.operators.Count; i++)
+            //    {
+
+            //    }
+            //}
 
         }
 
@@ -341,35 +391,47 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         {
             skills = pSkillMgr.GetSkillByType(eSkillType.None);
         }
+
+
         model.NowSkills = skills;
-        foreach (SkillItemView vv in view.SkillViewList)
+
+        for(int i = 0; i < view.SkillPanels.Count; i++)
         {
-            resLoader.ReleaseGO("UI/Schedule/ScheduleItem",vv.root.gameObject);
+            view.SkillPanels[i].gameObject.SetActive(false);
         }
-        view.SkillViewList.Clear();
+
+        view.SkillPanels[newTab].gameObject.SetActive(true);
+
+        SwitchTabInit();
+
+        //foreach (SkillItemView vv in view.SkillViewList)
+        //{
+        //    resLoader.ReleaseGO("UI/Schedule/ScheduleItem",vv.root.gameObject);
+        //}
+        //view.SkillViewList.Clear();
 
 
-        foreach (string sid in skills)
-        {
-            SkillAsset sa = pSkillMgr.GetSkillAsset(sid);
+        //foreach (string sid in skills)
+        //{
+        //    SkillAsset sa = pSkillMgr.GetSkillAsset(sid);
 
-            GameObject go = resLoader.Instantiate("UI/Schedule/ScheduleItem", view.ChoicesContainer);
-            SkillItemView vv = new SkillItemView();
-            vv.BindView(go.transform);
-            vv.Title.text = sa.SkillName;
-            view.SkillViewList.Add(vv);
-            vv.Unselect();
+        //    GameObject go = resLoader.Instantiate("UI/Schedule/ScheduleItem", view.ChoicesContainer);
+        //    SkillItemView vv = new SkillItemView();
+        //    vv.BindView(go.transform);
+        //    vv.Title.text = sa.SkillName;
+        //    view.SkillViewList.Add(vv);
+        //    vv.Unselect();
 
-            ClickEventListerner listener = vv.Icon.gameObject.GetComponent<ClickEventListerner>();
-            if (listener == null)
-            {
-                listener = vv.Icon.gameObject.AddComponent<ClickEventListerner>();
-            }
-            listener.ClearClickEvent();
-            listener.OnClickEvent += delegate {
-                SelectSkill(vv);
-            };
-        }
+        //    ClickEventListerner listener = vv.Icon.gameObject.GetComponent<ClickEventListerner>();
+        //    if (listener == null)
+        //    {
+        //        listener = vv.Icon.gameObject.AddComponent<ClickEventListerner>();
+        //    }
+        //    listener.ClearClickEvent();
+        //    listener.OnClickEvent += delegate {
+        //        SelectSkill(vv);
+        //    };
+        //}
 
         HideDetail();
     }
@@ -381,6 +443,11 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         view.TypeTabGroup.InitTab(typeof(CardsTabView));
         view.TypeTabGroup.OnValueChangeEvent += SwitchChoose;
         view.TypeTabGroup.switchTab(0);
+
+        view.BackToTopLevel.onClick.AddListener(delegate {
+            BackToTop();
+
+        });
 
         view.BtnClose.onClick.AddListener(delegate ()
         {
@@ -410,12 +477,17 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
     public override void PostInit()
     {
-        selectedSlot = -1;
-        selectedSkill = -1;
+        //selectedSkill = -1;
+        selectedSkillId = "";
         HideDetail();
+        UpdateActionCost();
         SwitchChoose(0);
     }
 
+    public void UpdateActionCost()
+    {
+        view.ActionCost.text = "消耗" + mainGameMode.GetPracticeCost() + "点";
+    }
     //public void UnloadSchedule(ScheduleSlot vv)
     //{
     //    vv.Content.text = "死宅";
@@ -427,22 +499,23 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
     public void LearnCurSkill()
     {
-        if(selectedSkill == -1 || selectedSkill >= model.NowSkills.Count)
+        //if(selectedSkill == -1 || selectedSkill >= model.NowSkills.Count)
+        //{
+        //    return;
+        //}
+
+        if (selectedSkillId == "")
         {
             return;
         }
-        string skillId = model.NowSkills[selectedSkill];
+        //string skillId = model.NowSkills[selectedSkill];
+        string skillId = selectedSkillId;
         SkillInfo skill = pSkillMgr.GetOwnedSkill(skillId);
 
         if(skill == null)
         {
-            Debug.Log("learn");
-            pSkillMgr.GainSkills(model.NowSkills[selectedSkill]);
-            view.BeforeStudyPanel.gameObject.SetActive(false);
-            view.AfterStudyPanel.gameObject.SetActive(true);
-
-            UpdateExp(pSkillMgr.GetOwnedSkill(skillId));
-
+            pSkillMgr.GainSkills(skillId);
+            ShowDetail(skillId);
         }
         else
         {
@@ -462,64 +535,130 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
             view.ExpSlider.DOValue(skill.NowExp*0.01f,0.3f).OnComplete(delegate
                 {
                     lockLearnButton = false;
-                    UpdateExp(skill);
+                    ShowDetail(skillId);
                 }
             );
 
         }
-
+        UpdateActionCost();
     }
 
-
-    public void SelectSkill(SkillItemView vv)
+    public void SelectSkill(string vv)
     {
-        if(selectedSkill != -1)
-        {
-            view.SkillViewList[selectedSkill].Unselect();
-        }
-        if(vv == null)
-        {
-            selectedSkill = -1;
-            return;
-        }
-        selectedSkill = view.SkillViewList.IndexOf(vv);
-        vv.Select();
 
-        ShowDetail(model.NowSkills[selectedSkill]);
-
+        ShowDetail(vv);
+        selectedSkillId = vv;
         //UpdateDetailPanel(model.Choosavles[selectSchedule]);
     }
 
-    //private void UpdateDetailPanel(string skillId)
+    //public void SelectSkill(SkillItemView vv)
     //{
-
-    //    SkillAsset sa = pSkillMgr.GetSkillAsset(skillId);
-
-    //    if (sa == null)
+    //    if(selectedSkill != -1)
     //    {
-    //        view.DetailName.text = "未安排";
-    //        view.DetailDesp.text = "摸鱼是没有未来的";
+    //        view.SkillViewList[selectedSkill].Unselect();
     //    }
-    //    else
+    //    if(vv == null)
     //    {
-    //        view.DetailName.text = sa.SkillId;
-    //        view.DetailDesp.text = sa.SkingDesp;
+    //        selectedSkill = -1;
+    //        return;
     //    }
+    //    selectedSkill = view.SkillViewList.IndexOf(vv);
+    //    vv.Select();
+
+    //    ShowDetail(model.NowSkills[selectedSkill]);
+
+    //    //UpdateDetailPanel(model.Choosavles[selectSchedule]);
     //}
 
-    private void InitChoices()
+    
+    public void BackToTop()
     {
-        //fake get schedule list
+        for (int i = 0; i < view.TopSkills.Count; i++)
+        {
+            view.TopSkills[i].TurnOrigin();
+            view.TopSkills[i].gameObject.SetActive(true);
+        }
+        view.BackToTopLevel.gameObject.SetActive(false);
+        ChoicesScrollToOrigin();
+        UnLockScroll();
+        isSubLevel = false;
+    }
 
+    public void ChooseSubskill(string id)
+    {
+        SelectSkill(id); 
+        //ShowDetail(id);
+    }
+
+    public void ChooseBaseSkill(SkillItem choose)
+    {
+        if (isSubLevel)
+        {
+            SelectSkill(choose.SkillId);
+        }
+        else
+        {
+            for (int i = 0; i < view.TopSkills.Count; i++)
+            {
+                if (view.TopSkills[i] != choose)
+                {
+                    view.TopSkills[i].TurnOrigin();
+                    view.TopSkills[i].gameObject.SetActive(false);
+                }
+                else
+                {
+                    view.TopSkills[i].FocusNow();
+                    view.TopSkills[i].gameObject.SetActive(true);
+                }
+            }
+            LockScroll();
+            Vector3 posScreen = RectTransformUtility.WorldToScreenPoint(mUIMgr.GetCamera(), choose.rt.position);
+            ChoicesScrollTo(posScreen);
+            view.BackToTopLevel.gameObject.SetActive(true);
+            isSubLevel = true;
+        }
 
     }
 
-    private void InitScheduled()
+    public void ChoicesScrollTo(Vector3 target)
     {
-
+        Vector3 posScreen = RectTransformUtility.WorldToScreenPoint(mUIMgr.GetCamera(), view.ChoicesContainer.position);
+        view.ChoicesContainer.anchoredPosition= (posScreen - target);
     }
 
+    public void ChoicesScrollToOrigin()
+    {
+        view.ChoicesContainer.anchoredPosition = Vector3.zero;
+    }
 
+    public void SwitchTabInit()
+    {
+        view.TopSkills.Clear();
+        foreach (Transform child in view.SkillPanels[model.nowTab])
+        {
+            SkillItem si = child.GetComponent<SkillItem > ();
+            si.Init(this);
+            view.TopSkills.Add(si);
+        }
+        //全部xianshi
+        view.BackToTopLevel.gameObject.SetActive(false);
+        UnLockScroll();
+        isSubLevel = false;
+    }
+
+    public void LockScroll()
+    {
+        view.ChoicesScrollRect.horizontal = false;
+        view.ChoicesScrollRect.vertical = false;
+        view.ChoicesScrollRect.movementType = ScrollRect.MovementType.Unrestricted;
+    }
+
+    public void UnLockScroll()
+    {
+        view.ChoicesScrollRect.horizontal = true;
+        view.ChoicesScrollRect.vertical = true;
+        view.ChoicesScrollRect.movementType = ScrollRect.MovementType.Clamped;
+    }
 
 }
 

@@ -74,7 +74,10 @@ public class ZhiboGameState
 
     public int BadLevel = 0;
 
+
+    public int OriginTurn = 12;
     public int TurnLeft = 12;
+
 
 
 
@@ -98,7 +101,10 @@ public class ZhiboGameState
     public float Score = 0;
     public int MaxScore = 100;
 
-    public float ScoreArmor = 0;
+    public int TmpHp = 0;
+    public int Hp;
+
+    //public float ScoreArmor = 0;
     public float Hot = 30;
 
     public float TurnTimeLeft = 30;
@@ -119,7 +125,7 @@ public class ZhiboGameState
     public float AccelerateRate = 1.0f;
     public float AccelerateDur = 0f;
 
-
+    public float HpScoreRate;
 
     public List<string> ComingEmergencies = new List<string>();
 
@@ -142,6 +148,8 @@ public class ZhiboGameMode : GameModeBase
     IResLoader mResLoader;
     IRoleModule pRoleMgr;
     ICardDeckModule mCardMdl;
+    ISkillTreeMgr mSkillMdl;
+
     public ZhiboUI mUICtrl;
 
     public ZhiboGameState state;
@@ -149,7 +157,7 @@ public class ZhiboGameMode : GameModeBase
     public ZhiboEmergencyManager mEmergencyManager;
 
     public float spdRate = 1.0f;
-
+    public bool isFirstTurn = true;
 
     public float lastTick = 0;
     public float nextTick = 0;
@@ -165,14 +173,15 @@ public class ZhiboGameMode : GameModeBase
 
     private int EmergencyShowTime;
 
+   
 
     private Dictionary<string, List<string>> DanmuDict = new Dictionary<string, List<string>>();
 
 
     //分别为5% 10% 15%...时的概率
     private float[] WeisuijiDict = new float[] {
-        0, 
-        0.0038f, 
+        0,
+        0.0038f,
         0.01475f,
         0.03321f,
         0.0557f,
@@ -187,6 +196,7 @@ public class ZhiboGameMode : GameModeBase
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
         mCardMdl = GameMain.GetInstance().GetModule<CardDeckModule>();
         pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
+        mSkillMdl = GameMain.GetInstance().GetModule<ISkillTreeMgr>();
 
         state = new ZhiboGameState();
 
@@ -202,7 +212,8 @@ public class ZhiboGameMode : GameModeBase
         mBuffManager = new ZhiboBuffManager(this);
         mEmergencyManager = new ZhiboEmergencyManager(this);
 
-        state.TurnLeft = 12;
+        state.OriginTurn = 12;
+        state.TurnLeft = state.OriginTurn;
         state.TurnTimeLeft = 30f;
 
         state.Score = 0;
@@ -210,6 +221,9 @@ public class ZhiboGameMode : GameModeBase
 
         state.Qifen = 300;
         state.Tili = 10;
+
+        state.Hp = 80;
+        state.TmpHp = 0;
 
         spdRate = 1.0f;
         lastTick = 0;
@@ -221,6 +235,8 @@ public class ZhiboGameMode : GameModeBase
         LoadCard();
         mUICtrl = mUIMgr.ShowPanel("ZhiboPanel") as ZhiboUI;
 
+        isFirstTurn = true;
+        CalHpScoreRate();
         //NextTurn();
         NextTurnCaller();
 
@@ -238,12 +254,20 @@ public class ZhiboGameMode : GameModeBase
 
         for (int i = state.Cards.Count - 1; i >= 0; i--)
         {
-            DiscardCard(state.Cards[i],true);
+            DiscardCard(state.Cards[i], true);
             //mUICtrl.GetCardContainer().RemoveCard(i);
         }
         ClearAllDanmu(true);
 
-        while(state.UseCardChain.Count > 0)
+        if (!isFirstTurn)
+        {
+            AddHp(-(pRoleMgr.GetBadLevel()+mBuffManager.BadRateDiff)*2);
+        }
+        isFirstTurn = false;
+
+        RemoveTmpHp();
+
+        while (state.UseCardChain.Count > 0)
         {
             yield return null;
         }
@@ -299,7 +323,7 @@ public class ZhiboGameMode : GameModeBase
 
     public void ShowSuperDanmu(int idx)
     {
-        if(idx<0 || idx >= state.SuperDanmus.Count)
+        if (idx < 0 || idx >= state.SuperDanmus.Count)
         {
             return;
         }
@@ -312,10 +336,10 @@ public class ZhiboGameMode : GameModeBase
     {
         List<int> ret = new List<int>();
 
-        float inteval = (to - from) * 1.0f / (timeNum-1);
-        for(int i=0;i< timeNum; i++)
+        float inteval = (to - from) * 1.0f / (timeNum - 1);
+        for (int i = 0; i < timeNum; i++)
         {
-            int t = from + (int)(i * inteval + (Random.value*0.8f-0.4f) * inteval);
+            int t = from + (int)(i * inteval + (Random.value * 0.8f - 0.4f) * inteval);
             if (t < from)
             {
                 t = from;
@@ -332,7 +356,7 @@ public class ZhiboGameMode : GameModeBase
     public void InitSuperDanmu()
     {
         //fix number
-        for(int i=0;i< state.SuperDanmus.Count; i++)
+        for (int i = 0; i < state.SuperDanmus.Count; i++)
         {
             if (state.SuperDanmus[i].HasDisapeared)
             {
@@ -345,13 +369,13 @@ public class ZhiboGameMode : GameModeBase
         mUICtrl.ClearSuperDanmu();
 
 
-        state.SuperDanmuShowTimeList = PickRandomTime(3,25,5);
+        state.SuperDanmuShowTimeList = PickRandomTime(3, 25, 5);
 
 
-        for(int i = 0; i < state.SuperDanmuShowTimeList.Count; i++)
+        for (int i = 0; i < state.SuperDanmuShowTimeList.Count; i++)
         {
             SuperDanmu sDanmu = mUICtrl.ShowSuperDanmu();
-            if(sDanmu != null)
+            if (sDanmu != null)
             {
                 state.SuperDanmus.Add(sDanmu);
             }
@@ -360,7 +384,34 @@ public class ZhiboGameMode : GameModeBase
 
     }
 
+    public void CalHpScoreRate()
+    {
+        if(state.Hp > 90) {
+            state.HpScoreRate = 1.2f;
+        }else if (state.Hp > 80)
+        {
+            state.HpScoreRate = 1.1f;
+        }
+        else if (state.Hp > 70)
+        {
+            state.HpScoreRate = 1f;
+        }
+        else if (state.Hp > 60)
+        {
+            state.HpScoreRate = 0.8f;
+        }else if (state.Hp > 40)
+        {
+            state.HpScoreRate = 0.6f;
+        }else if (state.Hp > 20)
+        {
+            state.HpScoreRate = 0.4f;
+        }
+        else
+        {
+            state.HpScoreRate = 0.3f;
+        }
 
+    }
 
     public string GetBuffDesp(eBuffType buffType)
     {
@@ -368,7 +419,7 @@ public class ZhiboGameMode : GameModeBase
     }
     private void LoadCard()
     {
-        List<CardInfo> infoList = mCardMdl.GetAllCards();
+        List<CardInfo> infoList = mCardMdl.GetAllEnabledCards();
         state.CardDeck.Clear();
         foreach (CardInfo info in infoList)
         {
@@ -380,7 +431,7 @@ public class ZhiboGameMode : GameModeBase
         }
 
         List<string> platformCards = pRoleMgr.GetNowPlatformInfo().PlatformCards;
-        for(int i=0;i< platformCards.Count; i++)
+        for (int i = 0; i < platformCards.Count; i++)
         {
             string eid = platformCards[i];
             CardAsset ca = mCardMdl.GetCardInfo(eid);
@@ -453,7 +504,7 @@ public class ZhiboGameMode : GameModeBase
 
 
         state.AccelerateDur -= spdRate * dTime;
-        if(state.AccelerateDur < 0)
+        if (state.AccelerateDur < 0)
         {
             state.AccelerateRate = 1f;
         }
@@ -470,10 +521,10 @@ public class ZhiboGameMode : GameModeBase
         //}
 
         //handle card chain
-        if(state.UseCardChain.Count > 0)
+        if (state.UseCardChain.Count > 0)
         {
             CardDelayTimer += dTime * spdRate;
-            if(CardDelayTimer > state.UseCardChain[0].Delay)
+            if (CardDelayTimer > state.UseCardChain[0].Delay)
             {
                 CardDelayTimer = 0;
                 ExcuteUseCard(state.UseCardChain[0]);
@@ -484,7 +535,7 @@ public class ZhiboGameMode : GameModeBase
 
         for (int i = state.Danmus.Count - 1; i >= 0; i--)
         {
-            state.Danmus[i].Tick(dTime* spdRate);
+            state.Danmus[i].Tick(dTime * spdRate);
             if (state.Danmus[i].NeedDestroy)
             {
                 AutoDisappear(state.Danmus[i]);
@@ -500,6 +551,11 @@ public class ZhiboGameMode : GameModeBase
             state.SuperDanmus[i].Tick(dTime * spdRate);
             if (state.SuperDanmus[i].NeedDestroy)
             {
+                //super danmu 起效
+                if(state.SuperDanmus[i].Type == eSuperDanmuType.Jianpanxia)
+                {
+                    AddHp(-4);
+                }
                 state.SuperDanmus[i].Disappear();
             }
         }
@@ -527,17 +583,17 @@ public class ZhiboGameMode : GameModeBase
         //}
 
         SecTimer += dTime * spdRate;
-        if(SecTimer > 1f)
+        if (SecTimer > 1f)
         {
             SecTimer -= 1f;
             SecCount += 1;
-            if(state.NowSuperDanmuIdx< state.SuperDanmuShowTimeList.Count&& state.SuperDanmuShowTimeList[state.NowSuperDanmuIdx] == SecCount)
+            if (state.NowSuperDanmuIdx < state.SuperDanmuShowTimeList.Count && state.SuperDanmuShowTimeList[state.NowSuperDanmuIdx] == SecCount)
             {
                 ShowSuperDanmu(state.NowSuperDanmuIdx);
                 state.NowSuperDanmuIdx++;
             }
 
-            if(EmergencyShowTime != -1 && EmergencyShowTime == SecCount)
+            if (EmergencyShowTime != -1 && EmergencyShowTime == SecCount)
             {
                 //showEmergency
             }
@@ -597,7 +653,7 @@ public class ZhiboGameMode : GameModeBase
         }
 
         state.TurnTimeLeft -= dTime * spdRate;
-        if(state.TurnTimeLeft <= 0)
+        if (state.TurnTimeLeft <= 0)
         {
             NextTurnCaller();
         }
@@ -637,7 +693,7 @@ public class ZhiboGameMode : GameModeBase
     {
         string[] comps = formulation.Split('+');
         float finalValue = 0;
-        foreach(string comp in comps)
+        foreach (string comp in comps)
         {
             if (comp.Contains("*"))
             {
@@ -675,28 +731,29 @@ public class ZhiboGameMode : GameModeBase
 
     }
 
-    public void GainScore(float score, int add=0)
+    public void GainScore(float score, int add = 0)
     {
 
         float scoreReal = score;
         if (score < 0)
         {
             float absScore = -score;
-            if (state.ScoreArmor > 0)
-            {
-                state.ScoreArmor -= absScore;
-                if(state.ScoreArmor < 0)
-                {
-                    state.ScoreArmor = 0;
-                }
-                scoreReal = 0;
-            }
+            //if (state.ScoreArmor > 0)
+            //{
+            //    state.ScoreArmor -= absScore;
+            //    if (state.ScoreArmor < 0)
+            //    {
+            //        state.ScoreArmor = 0;
+            //    }
+            //    scoreReal = 0;
+            //}
         }
         else
         {
             scoreReal *= 1 + (add * 0.01f) + (mBuffManager.GenScoreExtraRate);
         }
 
+        scoreReal *= state.HpScoreRate;
         //scoreReal *= mBuffManager.
         state.Score += scoreReal;
 
@@ -732,13 +789,13 @@ public class ZhiboGameMode : GameModeBase
 
     private void AutoDisappear(SuperDanmu danmu)
     {
-        mResLoader.ReleaseGO("Zhibo/SuperDanmu",danmu.gameObject);
+        mResLoader.ReleaseGO("Zhibo/SuperDanmu", danmu.gameObject);
     }
 
 
     public void ClearAllDanmu(bool getScore)
     {
-        for(int i = state.Danmus.Count - 1; i >= 0; i--)
+        for (int i = state.Danmus.Count - 1; i >= 0; i--)
         {
             Danmu danmu = state.Danmus[i];
             danmu.OnDestroy();
@@ -754,7 +811,7 @@ public class ZhiboGameMode : GameModeBase
             }
         }
 
-        for (int i = state.SuperDanmus.Count-1; i >=0 ; i--)
+        for (int i = state.SuperDanmus.Count - 1; i >= 0; i--)
         {
             if (state.SuperDanmus[i].HasDisapeared)
             {
@@ -769,7 +826,7 @@ public class ZhiboGameMode : GameModeBase
     public void DestroyBadRandomly(int num)
     {
         List<Danmu> toClean = randomPickBadDanmu(num);
-        for (int i = 0; i < toClean.Count;i++)
+        for (int i = 0; i < toClean.Count; i++)
         {
             Danmu danmu = toClean[i];
             danmu.OnDestroy();
@@ -783,7 +840,7 @@ public class ZhiboGameMode : GameModeBase
 
 
 
-    
+
     //IEnumerator GenMultiDanmu(int num)
     //{
     //    int nn = num;
@@ -824,7 +881,7 @@ public class ZhiboGameMode : GameModeBase
     public void GainNewCardWithPossiblity(string cardId, int possibility)
     {
         int randInt = Random.Range(0, 100);
-        if(randInt >= possibility)
+        if (randInt >= possibility)
         {
             return;
         }
@@ -833,7 +890,7 @@ public class ZhiboGameMode : GameModeBase
 
     public void AddCardsFromDeck(int num)
     {
-        for(int i=0; i< num; i++)
+        for (int i = 0; i < num; i++)
         {
             AddCardFromDeck();
         }
@@ -841,16 +898,16 @@ public class ZhiboGameMode : GameModeBase
     public CardInZhibo AddCardFromDeck()
     {
 
-        if(state.CardDeck.Count == 0)
+        if (state.CardDeck.Count == 0)
         {
             RefreshUsedCards();
         }
-        if(state.CardDeck.Count == 0)
+        if (state.CardDeck.Count == 0)
         {
             return null;
         }
 
-        if(state.Cards.Count >= CardMax)
+        if (state.Cards.Count >= CardMax)
         {
             return null;
         }
@@ -865,7 +922,7 @@ public class ZhiboGameMode : GameModeBase
         state.CardDeck.RemoveAt(0);
         state.Cards.Add(info);
 
-        if(state.CardDeck.Count == 0)
+        if (state.CardDeck.Count == 0)
         {
             RefreshUsedCards();
         }
@@ -904,13 +961,13 @@ public class ZhiboGameMode : GameModeBase
         CardInZhibo toPick = null;
         for (int i = 0; i < state.CardDeck.Count; i++)
         {
-            if(state.CardDeck[i].CardId == cardId)
+            if (state.CardDeck[i].CardId == cardId)
             {
                 toPick = state.CardDeck[i];
                 break;
             }
         }
-        if(toPick == null)
+        if (toPick == null)
         {
             return;
         }
@@ -946,32 +1003,32 @@ public class ZhiboGameMode : GameModeBase
     {
         ZhiboJiesuanUI p = mUIMgr.ShowPanel("ZhiboJiesuanPanel") as ZhiboJiesuanUI;
         spdRate = 0;
-        if(true||state.Score > state.MaxScore)
+        if (true || state.Score > state.MaxScore)
         {
-            pRoleMgr.AddFensi(0,100);
+            pRoleMgr.AddFensi(0, 100);
             pRoleMgr.GainMoney(100);
             //根据打过的卡牌 增加主属性 和 经验值
             int[] bonus = new int[5];
-            for(int i = 0; i < state.UsedCardsToGetBonus.Count; i++)
+            for (int i = 0; i < state.UsedCardsToGetBonus.Count; i++)
             {
                 string cid = state.UsedCardsToGetBonus[i];
                 CardAsset ca = mCardMdl.GetCardInfo(cid);
-                if(ca == null)
+                if (ca == null)
                 {
                     continue;
                 }
-                if(ca.StatusBonusType > 0)
+                if (ca.StatusBonusType > 0)
                 {
                     bonus[ca.StatusBonusType - 1] += ca.StatusBonusNum;
                 }
-                if(ca.SkillBonusType > 0)
+                if (ca.SkillBonusType > 0)
                 {
                     //
                 }
 
             }
             string bonusString = "";
-            for(int i = 0; i < 5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 if (bonus[i] > 0)
                 {
@@ -1012,7 +1069,7 @@ public class ZhiboGameMode : GameModeBase
             state.Cards.Remove(cinfo);
         }
 
-        if (cinfo.UseLeft >0)
+        if (cinfo.UseLeft > 0)
         {
             state.CardUsed.Add(cinfo);
         }
@@ -1031,7 +1088,7 @@ public class ZhiboGameMode : GameModeBase
 
     public bool TryUseCard(int cardIdx)
     {
-        if(cardIdx < 0|| cardIdx >= state.Cards.Count)
+        if (cardIdx < 0 || cardIdx >= state.Cards.Count)
         {
             return false;
         }
@@ -1045,7 +1102,7 @@ public class ZhiboGameMode : GameModeBase
         }
 
 
-        for(int i=0;i< ca.UseConditions.Count; i++)
+        for (int i = 0; i < ca.UseConditions.Count; i++)
         {
             string[] args = ca.UseConditions[i].effectString.Split(',');
             switch (ca.UseConditions[i].effectType)
@@ -1066,7 +1123,7 @@ public class ZhiboGameMode : GameModeBase
                     }
                     break;
                 case eEffectType.HavaCost:
-                    if(state.Tili == 0)
+                    if (state.Tili == 0)
                     {
                         return false;
                     }
@@ -1094,7 +1151,7 @@ public class ZhiboGameMode : GameModeBase
 
     public void PutCardInChain(CardInZhibo card, float delay = 0f)
     {
-        state.UseCardChain.Add(new CardChainNode(card,delay));
+        state.UseCardChain.Add(new CardChainNode(card, delay));
         if (card.isTmp)
         {
             int idx = state.TmpCards.IndexOf(card);
@@ -1109,6 +1166,44 @@ public class ZhiboGameMode : GameModeBase
         //isInChain
     }
 
+    public void AddTmpHp(int amount)
+    {
+        state.TmpHp += amount;
+        mUICtrl.UpdateHp();
+    }
+
+    public void RemoveTmpHp()
+    {
+        state.TmpHp = 0;
+        mUICtrl.UpdateHp();
+    }
+
+    public void AddHp(int amount)
+    {
+        if(amount < 0)
+        {
+            if(state.TmpHp > 0)
+            {
+                if(state.TmpHp + amount <= 0)
+                {
+                    state.TmpHp = 0;
+                    amount = amount + state.TmpHp;
+                }
+                else
+                {
+                    state.TmpHp += amount;
+                    amount = 0;
+                }
+            }
+        }
+
+        state.Hp += amount;
+        if (amount != 0)
+        {
+            mUICtrl.UpdateHp();
+            CalHpScoreRate();
+        }
+    }
 
     private CardInZhibo NowExecuteCard;
     private List<ZhiboBuff> ValidBuffs = new List<ZhiboBuff>();
@@ -1139,25 +1234,25 @@ public class ZhiboGameMode : GameModeBase
                 HandleOneCardEffect(ce, extraEffects);
             }
 
-            for(int i=0;i< extraEffects.Count;i++)
+            for (int i = 0; i < extraEffects.Count; i++)
             {
                 HandleOneCardEffect(extraEffects[i], extraEffects);
             }
             NowExecuteCard = null;
 
-            if(cardAsset.StatusBonusType != 0 || cardAsset.SkillBonusType != 0)
+            if (cardAsset.StatusBonusType != 0 || cardAsset.SkillBonusType != 0)
             {
                 state.UsedCardsToGetBonus.Add(cardAsset.CardId);
             }
 
-            for(int i=0;i< ValidBuffs.Count; i++)
+            for (int i = 0; i < ValidBuffs.Count; i++)
             {
-                if(!ValidBuffs[i].isBasedOn(eBuffLastType.CARD_BASE))
+                if (!ValidBuffs[i].isBasedOn(eBuffLastType.CARD_BASE))
                 {
                     continue;
                 }
                 ValidBuffs[i].LeftCardNum -= 1;
-                if(ValidBuffs[i].LeftCardNum <= 0)
+                if (ValidBuffs[i].LeftCardNum <= 0)
                 {
                     mBuffManager.RemoveBuff(ValidBuffs[i]);
                     mBuffManager.CalculateBuffExtras();
@@ -1172,18 +1267,20 @@ public class ZhiboGameMode : GameModeBase
         RemoveCardToDiscarded(card);
     }
 
-    public void AddArmor(float armor)
-    {
-        state.ScoreArmor += armor;
-    }
+
+
+    //public void AddArmor(float armor)
+    //{
+    //    state.ScoreArmor += armor;
+    //}
 
     public void DiscardRandomCards(int num)
     {
         if (num >= state.Cards.Count)
         {
-            for(int i=state.Cards.Count-1;i >= 0; i--)
+            for (int i = state.Cards.Count - 1; i >= 0; i--)
             {
-                DiscardCard(state.Cards[i],false);
+                DiscardCard(state.Cards[i], false);
 
             }
         }
@@ -1192,8 +1289,8 @@ public class ZhiboGameMode : GameModeBase
             int n = num;
             while (n > 0)
             {
-                int randIdx = Random.Range(0,state.Cards.Count);
-                DiscardCard(state.Cards[randIdx],false);
+                int randIdx = Random.Range(0, state.Cards.Count);
+                DiscardCard(state.Cards[randIdx], false);
                 n--;
             }
         }
@@ -1204,14 +1301,14 @@ public class ZhiboGameMode : GameModeBase
         if (IsNoEffect) return;
 
 
-        if(ce.EMode == eCardEffectMode.SIMPLE)
+        if (ce.EMode == eCardEffectMode.SIMPLE)
         {
-            int rate = (int)(ce.Possibility==0?100: ce.Possibility * (1f + mBuffManager.ExtraChenggonglv));
+            int rate = (int)(ce.Possibility == 0 ? 100 : ce.Possibility * (1f + mBuffManager.ExtraChenggonglv));
 
-            if(rate < 100)
+            if (rate < 100)
             {
-                int rand = Random.Range(0,100);
-                if(rand >= rate)
+                int rand = Random.Range(0, 100);
+                if (rand >= rate)
                 {
                     return;
                 }
@@ -1228,7 +1325,10 @@ public class ZhiboGameMode : GameModeBase
             switch (ce.effectType)
             {
                 case eEffectType.SpawnGift:
-                    GenSpecial(args[0],int.Parse(args[1]));
+                    GenSpecial(args[0], int.Parse(args[1]));
+                    break;
+                case eEffectType.AddHp:
+                    AddHp(int.Parse(args[0]));
                     break;
                 case eEffectType.MaxCount:
                     int maxCount = int.Parse(args[0]);
@@ -1290,14 +1390,31 @@ public class ZhiboGameMode : GameModeBase
                     int add = 0;
                     for (int i = 0; i < ValidBuffs.Count; i++)
                     {
-                        if (ValidBuffs[i].bInfo.BuffType==eBuffType.Next_Card_Extra_Score)
+                        if (ValidBuffs[i].bInfo.BuffType == eBuffType.Next_Card_Extra_Score)
                         {
                             add += ValidBuffs[i].bInfo.BuffLevel;
                         }
 
                     }
+                    float originScore = GetScoreFromFormulation(args[0]);
+                    if (NowExecuteCard.ca.BaseSkillId != null)
+                    {
+                        SkillInfo info = mSkillMdl.GetOwnedSkill(NowExecuteCard.ca.BaseSkillId);
+                        if (info != null)
+                        {
+                            BaseSkillAsset bsa = info.sa as BaseSkillAsset;
+                            if (bsa != null)
+                            {
+                                float[] bonus = bsa.StatusBonus[info.SkillLvl - 1];
+                                //附加bonus
+                                originScore *= 10 * bonus[0];
+                            }
 
-                    GainScore(GetScoreFromFormulation(args[0]), add);
+                        }
+                    }
+
+
+                    GainScore(originScore, add);
                     mUICtrl.ShowNewAudience();
 
 
@@ -1340,7 +1457,7 @@ public class ZhiboGameMode : GameModeBase
                     AddCardsFromDeck((int)(float.Parse(args[0])));
                     break;
                 case eEffectType.GetArmor:
-                    AddArmor(int.Parse(args[0]));
+                    AddTmpHp(int.Parse(args[0]));
                     break;
                 case eEffectType.GainCardWithPossibility:
                     GainNewCardWithPossiblity(args[0], int.Parse(args[1]));

@@ -22,7 +22,6 @@ public class ZhiboView : BaseView
     public Text BuffDetail;
 
     public Text hotValue;
-    public Text TiliValue;
 
     public Transform TiliBar;
     public List<Image> TiliPoints = new List<Image>();
@@ -36,8 +35,10 @@ public class ZhiboView : BaseView
 
     public CardContainerLayout CardContainer;
 
-    public Text TurnTimeValue;
-    public Image TurnTimeImage;
+    public Text HpValue;
+    public Image HpBar;
+
+    public Image TurnTimeBar;
 
     public float TurnTimeMaxFillAmount = 0.35f;
     public float TurnTimeMinFillAmount = 0.02f;
@@ -112,7 +113,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         preDanmuTime = new float[numOfGridVertical];
 
         UpdateScore();
-        view.TiliValue.text = "10";
+        //view.TiliValue.text = "10";
         //view.TiliImage.fillAmount = view.TiliMaxFillAmount;
 
         UpdateQifen();
@@ -130,6 +131,12 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         }
     }
 
+    public void UpdateHp()
+    {
+        view.HpBar.fillAmount = gameMode.state.Hp / 100;
+        view.HpValue.text = gameMode.state.Hp + "<color=blue>"+"+" + gameMode.state.TmpHp+"</color>";
+    }
+
     public void UpdateScore()
     {
         float nowScore = gameMode.state.Score;
@@ -138,7 +145,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     }
     public void UpdateTili()
     {
-        view.TiliValue.text = (int)gameMode.state.Tili + "";
+        //view.TiliValue.text = (int)gameMode.state.Tili + "";
         int points = (int)gameMode.state.Tili;
         for(int i = 0; i < 5; i++)
         {
@@ -235,8 +242,11 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
         view.QifenValue = lbArea.Find("QifenValue").GetComponent<Text>();
         view.NextTurnBtn = lbArea.Find("NextTurn").GetComponent<Button>();
-        view.TiliValue = lbArea.Find("Tili").GetComponent<Text>();
-        view.TurnTimeValue = lbArea.Find("Chouka").GetComponent<Text>();
+        //view.TiliValue = lbArea.Find("Tili").GetComponent<Text>();
+
+        view.HpValue = lbArea.Find("HpValue").GetComponent<Text>();
+
+        view.TurnTimeBar = lbArea.Find("Timer").GetChild(0).GetComponent<Image>();
 
         view.TiliBar = lbArea.Find("TiliBar");
         foreach(Transform child in view.TiliBar)
@@ -244,7 +254,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             view.TiliPoints.Add(child.GetComponent<Image>());
         }
 
-        view.TurnTimeImage = lbArea.Find("EnegyBar").Find("Content").GetComponent<Image>();
+        view.HpBar = lbArea.Find("EnegyBar").Find("Content").GetComponent<Image>();
 
 
         view.CardContainer = root.Find("CardsContainer").GetComponent<CardContainerLayout>();
@@ -267,17 +277,17 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.DeckLeft.text = gameMode.state.CardDeck.Count + "";
     }
 
-    public void UpdateShieldView()
-    {
-        if(gameMode.state.ScoreArmor <= 0)
-        {
+    //public void UpdateShieldView()
+    //{
+    //    if(gameMode.state.ScoreArmor <= 0)
+    //    {
 
-        }
-        else
-        {
+    //    }
+    //    else
+    //    {
 
-        }
-    }
+    //    }
+    //}
 
     public void ShowDanmuEffect(Vector3 pos)
     {
@@ -409,10 +419,10 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
                     }
                 }
             }
-            view.TurnTimeValue.text = (int)gameMode.state.TurnTimeLeft+"";
+            //view.TurnTimeValue.text = (int)gameMode.state.TurnTimeLeft+"";
         }
-
-        view.TurnTimeImage.fillAmount = (view.TurnTimeMaxFillAmount - view.TurnTimeMinFillAmount) * gameMode.state.TurnTimeLeft / 30 + view.TurnTimeMinFillAmount;
+        view.TurnTimeBar.fillAmount = gameMode.state.TurnTimeLeft / 30;
+        //view.TurnTimeBar.fillAmount = (view.TurnTimeMaxFillAmount - view.TurnTimeMinFillAmount) * gameMode.state.TurnTimeLeft / 30 + view.TurnTimeMinFillAmount;
 
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -433,8 +443,8 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public void ChangeTurnTime(float value)
     {
-        view.TurnTimeValue.text = (int)value+"";
-        view.TurnTimeImage.fillAmount = (view.TurnTimeMaxFillAmount - view.TurnTimeMinFillAmount) * value / 100 + view.TurnTimeMinFillAmount;
+        //view.TurnTimeValue.text = (int)value+"";
+        view.TurnTimeBar.fillAmount = value / 30;
     }
 
     public Danmu GenDanmu(bool isBad)
@@ -507,7 +517,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
         SuperDanmuSlots[randSlot] = danmu;
         danmu.transform.localPosition = new Vector3(0, randSlot*-80f,0);
-        danmu.init("maybe sssss asd","0",gameMode);
+        danmu.init("maybe sssss asd",eSuperDanmuType.Jianpanxia,gameMode);
         return danmu;
     }
 

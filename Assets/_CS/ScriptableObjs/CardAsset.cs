@@ -129,6 +129,8 @@ public class CardAsset : ScriptableObject
     public int SkillBonusType;
     public int SkillBonusNum;
 
+    public string BaseSkillId;// is exist
+
     public List<CardEffect> UseConditions = new List<CardEffect>();
     public List<CardEffect> Effects = new List<CardEffect>();
     public List<CardEffect> TurnEffects = new List<CardEffect>();
@@ -218,6 +220,8 @@ public enum eEffectType
     GetCertainCard,
 
     EndFollowingEffect,
+    AddHp,
+
     //前置条件
     HavaCost,
     MaxCount,

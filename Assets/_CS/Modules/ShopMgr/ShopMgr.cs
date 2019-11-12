@@ -46,4 +46,9 @@ public class ShopMgr : ModuleBase,IShopMgr
         mCardMgr.GainNewCard(item.AddCardId);
     }
 
+    public void GetRandomCards()
+    {
+
+    }
+
 }

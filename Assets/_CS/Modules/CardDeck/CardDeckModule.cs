@@ -196,6 +196,8 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             SkillCardDict.Add(skillId, new List<CardInfo>());
         }
 
+
+
         foreach (string id in cid)
         {
             CardInfo info = GainNewCard(id);
@@ -237,8 +239,21 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         return cards;
     }
 
+    public List<CardInfo> GetAllEnabledCards()
+    {
+        List<CardInfo> ret = new List<CardInfo>();
+        for(int i = 0; i < cards.Count; i++)
+        {
+            if (!cards[i].isDisabled)
+            {
+                ret.Add(cards[i]);
+            }
+        }
+        return ret;
+    }
 
-	public CardAsset Load(string cid){
+
+    public CardAsset Load(string cid){
 		CardAsset c = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<CardAsset> ("Cards/"+cid,false);
 		if (c != null) {
 			CardDict [cid] = c;
@@ -259,9 +274,9 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 
     public CardInfo GetCardByInstId(uint instId)
     {
-        if (CardInstDict.ContainsKey(InstId))
+        if (CardInstDict.ContainsKey(instId))
         {
-            return CardInstDict[InstId];
+            return CardInstDict[instId];
         }
         return null;
     }
@@ -331,6 +346,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardName = "技能卡";
             ca.CardId = string.Format("test_{0:00}", i + 1);
             ca.CardDesp = "等级" + (i + 1) + "的卡";
+            ca.BaseSkillId = string.Format("test_{0:00}", (i + 1)/5); ;
             ca.cost = 2;
             {
                 CardEffect ce = new CardEffect();
@@ -340,6 +356,40 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
                 ca.Effects.Add(ce);
             }
             CardDict.Add(ca.CardId,ca);
+        }
+        for (int i = 0; i < 30; i++)
+        {
+            CardAsset ca = new CardAsset();
+            ca.CardName = "回血卡";
+            ca.CardId = string.Format("test_xue_{0:00}", i + 1);
+            ca.CardDesp = "等级" + (i + 1) + "的回血卡";
+            ca.BaseSkillId = string.Format("test_{0:00}", (i + 1) / 5); ;
+            ca.cost = 2;
+            {
+                CardEffect ce = new CardEffect();
+                ce.EMode = eCardEffectMode.SIMPLE;
+                ce.effectType = eEffectType.AddHp;
+                ce.effectString = ((i + 1) * 1) + "";
+                ca.Effects.Add(ce);
+            }
+            CardDict.Add(ca.CardId, ca);
+        }
+        for (int i = 0; i < 30; i++)
+        {
+            CardAsset ca = new CardAsset();
+            ca.CardName = "防御卡";
+            ca.CardId = string.Format("test_armor_{0:00}", i + 1);
+            ca.CardDesp = "等级" + (i + 1) + "的防御卡";
+            ca.BaseSkillId = string.Format("test_{0:00}", (i + 1) / 5); ;
+            ca.cost = 2;
+            {
+                CardEffect ce = new CardEffect();
+                ce.EMode = eCardEffectMode.SIMPLE;
+                ce.effectType = eEffectType.GetArmor;
+                ce.effectString = ((i + 1) * 3) + "";
+                ca.Effects.Add(ce);
+            }
+            CardDict.Add(ca.CardId, ca);
         }
 
     }

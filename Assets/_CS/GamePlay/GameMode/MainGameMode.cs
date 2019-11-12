@@ -50,6 +50,7 @@ public class MainGameMode : GameModeBase
     public void NextTurn()
     {
         TurnInfos.Clear();
+        rm.NextTurn();
         HandleEvents(pEventMgr.CheckEvent());
         GameMain.GetInstance().GetModule<CardDeckModule>().CheckOverdue();
         GameMain.GetInstance().GetModule<CardDeckModule>().CheckTurnBonux();

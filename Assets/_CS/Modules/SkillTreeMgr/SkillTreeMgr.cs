@@ -10,15 +10,17 @@ public class SkillInfo
     public string SkillId;
     public float NowExp;
     public int SkillLvl;
+    public SkillAsset sa;
 
     public SkillInfo()
     {
 
     }
 
-    public SkillInfo(string skillId)
+    public SkillInfo(string skillId, SkillAsset sa)
     {
         this.SkillId = skillId;
+        this.sa = sa;
     }
 }
 
@@ -46,6 +48,8 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
         LoadAllSkills();
         GenFakeExtendSKills();
         GenFakeBaseSkills();
+
+        GainSkills("test_01");
     }
 
     private void GenFakeExtendSKills()
@@ -57,10 +61,16 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
             sa.SkillId = string.Format("test_extend_{0:00}", i + 1);
             sa.BaseSkillId = string.Format("test_{0:00}", i + 1);
 
+            sa.SkillName = string.Format("扩展技能{0:00}", i + 1);
+            sa.SkingDesp = string.Format("这是测试用的扩展技能{0:00}", i + 1);
+
+
             sa.MaxLevel = 5;
             for(int j = 0; j < 5; j++)
             {
                 sa.Difficulties.Add(i*3+j);
+                sa.LevelDesp.Add(string.Format("将一张基础卡升级为test_{0:00}", i + 1 + j + 1));
+                sa.LevelStatusAdd.Add(i+j);
             }
             for(int j = 0; j < 5; j++)
             {
@@ -91,8 +101,20 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
         {
             BaseSkillAsset sa = new BaseSkillAsset();
             sa.SkillId = string.Format("test_{0:00}", i + 1);
+            sa.SkillName = string.Format("基础技能{0:00}", i + 1);
+            sa.SkingDesp = string.Format("这是测试用的基础技能{0:00}", i + 1);
             sa.MaxLevel = 1;
-            sa.BaseCardList.Add(string.Format("test_{0:00}", i + 1));
+            sa.StatusBonus.Add(new float[] { 0, 0, 1, 1, 1 });
+
+            {
+                sa.BaseCardList.Add(string.Format("test_{0:00}", i + 1));
+            }
+            {
+                sa.BaseCardList.Add(string.Format("test_xue_{0:00}", i + 1));
+            }
+            {
+                sa.BaseCardList.Add(string.Format("test_armor_{0:00}", i + 1));
+            }
             SkillAssetDict.Add(sa.SkillId, sa);
         }
     }
@@ -153,7 +175,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
 
         if (skillInfo == null)
         {
-            skillInfo = new SkillInfo(skillId);
+            skillInfo = new SkillInfo(skillId,sa);
             OwnedSkills.Add(skillInfo);
             skillInfo.SkillLvl = 1;
 

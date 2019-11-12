@@ -62,6 +62,18 @@ public class CardOutView
         Hint = transform.Find("Hint").GetComponent<Image>();
     }
 
+    public void ChangeEnable(bool enabled)
+    {
+        if (enabled)
+        {
+            DaGou.SetActive(true);
+        }
+        else
+        {
+            DaGou.SetActive(false);
+        }
+    }
+
 }
 public class CardsTabView : TabGroupChildView{
 
@@ -132,12 +144,17 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
         });
 
 
+
         view.DisableBtn.onValueChanged.AddListener(delegate(bool v)
         {
 
             int idx = view.CardsViewList.IndexOf(preCardView);
             CardInfo cinfo = model.NowCardInfos[idx];
             bool ret = pCardMgr.ChangeEnable(cinfo.InstId,v);
+            if (ret)
+            {
+                preCardView.ChangeEnable(!cinfo.isDisabled);
+            }
             view.DisableBtn.isOn = !cinfo.isDisabled;
         });
 
@@ -206,15 +223,15 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
         view.DetailName.text = ca.CardName;
         view.DetailEffectDesp.text = ca.CardEffectDesp;
 
-        if(ca.CardType == eCardType.ABILITY)
-        {
-            view.DisableHint.gameObject.SetActive(true);
-            view.DisableBtn.interactable = false;
-        }
-        else
+        if(ca.CardType == eCardType.ITEM)
         {
             view.DisableHint.gameObject.SetActive(false);
             view.DisableBtn.interactable = true;
+        }
+        else
+        {
+            view.DisableHint.gameObject.SetActive(true);
+            view.DisableBtn.interactable = false;
         }
         view.DisableBtn.isOn = !info.isDisabled;
 
