@@ -202,7 +202,7 @@ public class ZhiboGameMode : GameModeBase
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
         mCardMdl = GameMain.GetInstance().GetModule<CardDeckModule>();
         pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
-        mSkillMdl = GameMain.GetInstance().GetModule<ISkillTreeMgr>();
+        mSkillMdl = GameMain.GetInstance().GetModule<SkillTreeMgr>();
 
         state = new ZhiboGameState();
 
@@ -828,6 +828,8 @@ public class ZhiboGameMode : GameModeBase
         state.Tili += v;
         mUICtrl.UpdateTili();
     }
+
+
     public void GainStatus(float status, int add=0)
     {
 
