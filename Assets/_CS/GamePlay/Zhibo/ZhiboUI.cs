@@ -120,7 +120,6 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         UpdateScore();
         //view.TiliValue.text = "10";
         UpdateStatus();
-        view.TiliValue.text = "10";
         //view.TiliImage.fillAmount = view.TiliMaxFillAmount;
 
         UpdateQifen();
