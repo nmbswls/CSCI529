@@ -208,7 +208,14 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
             cardOutView.Name.text = ca.CardName;
             cardOutView.Desp.text = ca.CardEffectDesp;
             cardOutView.DaGou.SetActive(!c.isDisabled);
-            cardOutView.Picture.sprite = ca.Picture;
+            if (ca.CatdImageName == null || ca.CatdImageName == string.Empty)
+            {
+                cardOutView.Picture.sprite = ca.Picture;
+            }
+            else
+            {
+                cardOutView.Picture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardImage/" + ca.CatdImageName);
+            }
             //Debug.Log(ca.Picture.name);
         }
     }

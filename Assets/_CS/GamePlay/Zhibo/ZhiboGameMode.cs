@@ -66,8 +66,6 @@ public class CardChainNode
 }
 
 
-
-
 public class ZhiboGameState
 {
     public RoleStats stats;
@@ -104,13 +102,10 @@ public class ZhiboGameState
 
     public int TmpHp = 0;
     public int MaxHp;
+    public int MinHp;
     public int Hp;
 
     //public float ScoreArmor = 0;
-    public float Status = 100;
-    public int MaxStatus = 200;
-    public int MinStatus = 0;
-
 
     public float ScoreArmor = 0;
     public float Hot = 30;
@@ -233,7 +228,8 @@ public class ZhiboGameMode : GameModeBase
         state.Tili = 10;
 
         state.Hp = pRoleMgr.GetXinqingLevel()*10;
-        state.MaxHp = 500;
+        state.MaxHp = 200;
+        state.MinHp = 0;
         state.TmpHp = 0;
 
         spdRate = 1.0f;
@@ -521,13 +517,11 @@ public class ZhiboGameMode : GameModeBase
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            GainStatus(30);
-            Debug.Log(state.Status);
+            AddHp(30);
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            GainStatus(-10);
-            Debug.Log(state.Status);
+            AddHp(-10);
         }
 
         if (Input.GetKeyDown(KeyCode.F))
@@ -777,54 +771,10 @@ public class ZhiboGameMode : GameModeBase
 
     }
 
-
-    public float GetStatusFromFormulation(string formulation)
-    {
-        string[] comps = formulation.Split('+');
-        float finalValue = 0;
-        foreach (string comp in comps)
-        {
-            if (comp.Contains("*"))
-            {
-                string[] ss = comp.Split('*');
-                float rate = float.Parse(ss[0]);
-                string pname = ss[1];
-                switch (pname)
-                {
-                    case "m":
-                        finalValue += state.stats.meili * rate;
-                        break;
-                    case "k":
-                        finalValue += state.stats.koucai * rate;
-                        break;
-                    case "t":
-                        finalValue += state.stats.tili * rate;
-                        break;
-                    case "f":
-                        finalValue += state.stats.fanying * rate;
-                        break;
-                    case "j":
-                        finalValue += state.stats.jiyi * rate;
-                        break;
-                    default:
-                        Debug.Log("unknown property");
-                        break;
-                }
-            }
-            else
-            {
-                finalValue += int.Parse(comp);
-            }
-        }
-        return finalValue;
-
-    }
-
     public void GainScore(float score, int add=0)
     {
 
         float scoreReal = score;
-        float statusRate = state.Status / 100f;
         if (score < 0)
         {
             float absScore = -score;
@@ -845,7 +795,7 @@ public class ZhiboGameMode : GameModeBase
 
         scoreReal *= state.HpScoreRate;
         //scoreReal *= mBuffManager.
-        state.Score += scoreReal * statusRate;
+        state.Score += scoreReal;
 
         //mUIMgr.ShowHint("获得热度" + (int)score);
         mUICtrl.UpdateScore();
@@ -868,24 +818,7 @@ public class ZhiboGameMode : GameModeBase
     }
 
 
-    public void GainStatus(float status, int add=0)
-    {
-
-        float statusReal = status;
-        statusReal *= 1 + (add * 0.01f) + (mBuffManager.GenStatusExtraRate);    //加了一个status 的 extra rate，但目前还没作用
-        if(state.Status + statusReal > state.MaxStatus)
-        {
-            state.Status = state.MaxStatus;
-        }
-        else if (state.Status + statusReal < state.MinStatus)
-        {
-            state.Status = state.MinStatus;
-        } else
-        {
-            state.Status += statusReal;
-        }
-        mUICtrl.UpdateStatus();
-    }
+    
 
 
 
@@ -898,12 +831,11 @@ public class ZhiboGameMode : GameModeBase
         if (danmu.isBad)
         {
             GainScore(-2);
-            GainStatus(-1); //status
+            //AddHp(-1); //status
         }
         else
         {
             GainScore(1);
-            GainStatus(0.1f);
         }
     }
 
@@ -924,12 +856,11 @@ public class ZhiboGameMode : GameModeBase
             if (danmu.isBad)
             {
                 GainScore(-2);
-                GainStatus(-1);
+                //AddHp(-1);
             }
             else
             {
                 GainScore(1);
-                GainStatus(0.1f);
             }
         }
 
@@ -1306,7 +1237,7 @@ public class ZhiboGameMode : GameModeBase
         mUICtrl.UpdateHp();
     }
 
-    public void AddHp(int amount)
+    public void AddHp(int amount, int add = 0)
     {
         if(amount < 0)
         {
@@ -1326,6 +1257,13 @@ public class ZhiboGameMode : GameModeBase
         }
 
         state.Hp += amount;
+        if(state.Hp > state.MaxHp)
+        {
+            state.Hp = state.MaxHp;   
+        } else if(state.Hp < state.MinHp)
+        {
+            state.Hp = state.MinHp;
+        }
         if (amount != 0)
         {
             mUICtrl.UpdateHp();
@@ -1610,18 +1548,6 @@ public class ZhiboGameMode : GameModeBase
                     break;
                 case eEffectType.EndFollowingEffect:
                     IsNoEffect = true;
-                    break;
-                case eEffectType.GetStatus:
-                    int statusAdd = 0;
-                    for (int i = 0; i < ValidBuffs.Count; i++)
-                    {
-                        if (ValidBuffs[i].bInfo.BuffType == eBuffType.Next_Card_Extra_Score)
-                        {
-                            statusAdd += ValidBuffs[i].bInfo.BuffLevel;
-                        }
-
-                    }
-                    GainStatus(GetStatusFromFormulation(args[0]), statusAdd);
                     break;
                 default:
                     break;

@@ -24,7 +24,6 @@ public class ZhiboBuffManager
     public float ExtraChenggonglv = 0;
 
     public float GenStatusExtraRate = 0;
-    public float GainStatusPerSec = 0;
 
     private IResLoader mResLoader;
     private ZhiboGameMode gameMode;
@@ -55,10 +54,6 @@ public class ZhiboBuffManager
         if (GainScorePerSec > 0)
         {
             gameMode.GainScore(GainScorePerSec);
-        }
-        if (GainStatusPerSec > 0)
-        {
-            gameMode.GainStatus(GainStatusPerSec);
         }
     }
 
