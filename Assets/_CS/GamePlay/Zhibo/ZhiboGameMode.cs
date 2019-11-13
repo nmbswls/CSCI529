@@ -883,7 +883,7 @@ public class ZhiboGameMode : GameModeBase
         else
         {
             GainScore(1);
-            GainStatus(0.1f);
+            GainStatus(0.2f);
         }
     }
 
@@ -909,7 +909,7 @@ public class ZhiboGameMode : GameModeBase
             else
             {
                 GainScore(1);
-                GainStatus(0.1f);
+                GainStatus(0.2f);
             }
         }
 

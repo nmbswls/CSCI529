@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
-  m_Name: card8002
+  m_Name: new card
   m_EditorClassIdentifier: 
-  CardId: card8002
-  CardName: "\u6C99\u96D5\u7F51\u53CB"
-  CardDesp: "\u6BCF\u4E00\u4E2A\u6C99\u96D5\u7F51\u53CB\u90FD\u662F\u53E6\u4E00\u4E2A\u6C99\u96D5\u7F51\u53CB\u7684\u5FEB\u4E50\u6E90\u6CC9"
-  CatdImageName: 
+  CardId: 
+  CardName: 
+  CardDesp: 
   CardEffectDesp: 
-  Picture: {fileID: 21300000, guid: 2e7815e16d9db4fc9937851d8f147075, type: 3}
+  Picture: {fileID: 0}
   CardType: 0
   Tags: []
-  cost: 1
+  cost: 0
   IsConsume: 0
   UseOnDiscard: 0
   HasTurnEffect: 0
@@ -33,22 +32,5 @@ MonoBehaviour:
   SkillBonusNum: 0
   BaseSkillId: 
   UseConditions: []
-  Effects:
-  - EMode: 0
-    effectType: 7
-    isNegEffect: 0
-    Possibility: 0
-    turnEffect: 
-    effectString: 25
-    isAddBuff: 0
-    buffInfo:
-      BuffType: 0
-      BuffLevel: 0
-      AffectCard: 0
-      filterString: 
-      TurnLast: 0
-      CardNum: 0
-      SecLast: 0
-    BranchType: 
-    BranchEffectStrings: []
+  Effects: []
   TurnEffects: []
