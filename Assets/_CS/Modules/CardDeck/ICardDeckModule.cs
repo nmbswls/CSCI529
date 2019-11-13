@@ -6,6 +6,7 @@ public interface ICardDeckModule : IModule
 {
     CardInfo GainNewCard(string cid);
 
+    List<CardInfo> GetTypeCards(eCardType type);
     List<CardInfo> GetAllCards();
     List<CardInfo> GetAllEnabledCards();
 

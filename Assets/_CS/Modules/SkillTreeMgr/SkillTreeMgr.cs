@@ -56,41 +56,48 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
     {
         for (int i = 0; i < 30; i++)
         {
-            ExtentSkillAsset sa = new ExtentSkillAsset();
-
-            sa.SkillId = string.Format("test_extend_{0:00}", i + 1);
-            sa.BaseSkillId = string.Format("test_{0:00}", i + 1);
-
-            sa.SkillName = string.Format("扩展技能{0:00}", i + 1);
-            sa.SkingDesp = string.Format("这是测试用的扩展技能{0:00}", i + 1);
 
 
-            sa.MaxLevel = 5;
-            for(int j = 0; j < 5; j++)
+
+            for(int n = 0; n < 10; n++)
             {
-                sa.Difficulties.Add(i*3+j);
-                sa.LevelDesp.Add(string.Format("将一张基础卡升级为test_{0:00}", i + 1 + j + 1));
-                sa.LevelStatusAdd.Add(i+j);
+                ExtentSkillAsset sa = new ExtentSkillAsset();
+
+                sa.SkillId = string.Format("test_extend_{0:00}_{1:00}", i + 1,n+1);
+                sa.BaseSkillId = string.Format("test_{0:00}", i + 1);
+
+                sa.SkillName = string.Format("扩展技能{0:00}-{1:00}", i + 1, n + 1);
+                sa.SkingDesp = string.Format("这是测试用的扩展技能{0:00}-{1:00}", i + 1, n+1);
+
+                sa.MaxLevel = 5;
+                for (int j = 0; j < 5; j++)
+                {
+                    sa.Difficulties.Add(i * 3 + j);
+                    sa.LevelDesp.Add(string.Format("将一张基础卡升级为test_{0:00}", i + 1 + j + 1));
+                    sa.LevelStatusAdd.Add(i + j);
+                }
+                for (int j = 0; j < 5; j++)
+                {
+                    AttachCardsInfo attached = new AttachCardsInfo();
+                    CardOperator opt1 = new CardOperator();
+
+                    BaseSkillAsset bsa = GetSkillAsset(sa.BaseSkillId) as BaseSkillAsset;
+
+                    opt1.opt = eCardOperatorMode.Replace;
+
+                    opt1.from = string.Format("test_{0:00}", i + 1);
+                    opt1.to = string.Format("test_{0:00}", i + 1 + j + 1);
+
+                    attached.operators.Add(opt1);
+
+                    sa.AttachCardInfos.Add(attached);
+
+                }
+
+                SkillAssetDict.Add(sa.SkillId, sa);
             }
-            for(int j = 0; j < 5; j++)
-            {
-                AttachCardsInfo attached = new AttachCardsInfo();
-                CardOperator opt1 = new CardOperator();
 
-                BaseSkillAsset bsa = GetSkillAsset(sa.BaseSkillId) as BaseSkillAsset;
 
-                opt1.opt = eCardOperatorMode.Replace;
-
-                opt1.from = string.Format("test_{0:00}", i + 1);
-                opt1.to = string.Format("test_{0:00}", i + 1 + j + 1);
-
-                attached.operators.Add(opt1);
-
-                sa.AttachCardInfos.Add(attached);
-
-            }
-
-            SkillAssetDict.Add(sa.SkillId,sa);
 
         }
     }
@@ -110,7 +117,14 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
                 sa.BaseCardList.Add(string.Format("test_{0:00}", i + 1));
             }
             {
+                sa.BaseCardList.Add(string.Format("test_{0:00}", i + 1));
+            }
+            {
+
                 sa.BaseCardList.Add(string.Format("test_xue_{0:00}", i + 1));
+            }
+            {
+                sa.BaseCardList.Add(string.Format("test_armor_{0:00}", i + 1));
             }
             {
                 sa.BaseCardList.Add(string.Format("test_armor_{0:00}", i + 1));
@@ -205,7 +219,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
             AttachCardsInfo attachInfo = esa.AttachCardInfos[skillInfo.SkillLvl - 2];
             for (int i = 0; i < attachInfo.operators.Count; i++)
             {
-                mCardMgr.ChangeSkillCard(skillId, attachInfo.operators[i].to,attachInfo.operators[i].from);
+                mCardMgr.ChangeSkillCard(esa.BaseSkillId, attachInfo.operators[i].to,attachInfo.operators[i].from);
             }
         }
         {
@@ -213,7 +227,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
 
             for (int i = 0; i < attachInfo.operators.Count; i++)
             {
-                mCardMgr.ChangeSkillCard(skillId, attachInfo.operators[i].from, attachInfo.operators[i].to);
+                mCardMgr.ChangeSkillCard(esa.BaseSkillId, attachInfo.operators[i].from, attachInfo.operators[i].to);
             }
         }
     }

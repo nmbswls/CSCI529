@@ -275,6 +275,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
                 TestNextTurn();
             }
             testUpdateWords();
+            pSkillMgr.PrintSkills();
         });
         testUpdateWords();
 
@@ -339,13 +340,15 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
         while(testCardExp > nowSkillLevel * 50)
         {
-            if (nowSkillLevel - beginSkillLevel > 3)
+            if (nowSkillLevel - beginSkillLevel > 5)
             {
                 //if(testResource > (nowSkillLevel - 3) * 50 / 10)
-                if (sameSkillNum >= 4)
+                if (sameSkillNum > 3)
                 {
                     sameSkillNum = 1;
+                    pSkillMgr.GainSkills(string.Format("test_{0:00}", NumBaseSkill+1));
                     beginSkillLevel = beginSkillLevel + 3;
+                    NumBaseSkill++;
                 }
                 else
                 {
@@ -353,19 +356,19 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
                 }
                 nowSkillLevel = beginSkillLevel;
 
-                pSkillMgr.GainSkills(string.Format("test_{0:00}", NumSkill + 1));
-                pSkillMgr.PrintSkills();
+                //sa.SkillId = string.Format("test_extend_{0:00}_{1:00}", i + 1, n + 1);
+                //pSkillMgr.GainSkills(string.Format("test_extend_{0:00}", NumSkill + 1));
+
+                //pSkillMgr.PrintSkills();
 
                 NumSkill++;
 
                 continue;
             }
-
-
+            pSkillMgr.GainSkills(string.Format("test_extend_{0:00}_{1:00}", NumBaseSkill, nowSkillLevel - beginSkillLevel));
             testCardExp -= nowSkillLevel * 50;
             nowSkillLevel++;
             totalSkillLevel++;
-
         }
 
         testCardPower = totalSkillLevel * 5;
@@ -415,6 +418,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     public float testCardExp = 50;
     public float nandu;
     public int NumSkill = 1;
+    public int NumBaseSkill = 1;
     public int testFans = 0;
 
 

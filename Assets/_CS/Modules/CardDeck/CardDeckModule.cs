@@ -239,6 +239,19 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         return cards;
     }
 
+    public List<CardInfo> GetTypeCards(eCardType type)
+    {
+        List<CardInfo> ret = new List<CardInfo>();
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (cards[i].ca.CardType == type)
+            {
+                ret.Add(cards[i]);
+            }
+        }
+        return ret;
+    }
+
     public List<CardInfo> GetAllEnabledCards()
     {
         List<CardInfo> ret = new List<CardInfo>();
@@ -344,6 +357,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         {
             CardAsset ca = new CardAsset();
             ca.CardName = "技能卡";
+            ca.CardType = eCardType.ABILITY;
             ca.CardId = string.Format("test_{0:00}", i + 1);
             ca.CardDesp = "等级" + (i + 1) + "的卡";
             ca.CatdImageName = "Image_Bangyigegezuibangla";
@@ -362,6 +376,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         {
             CardAsset ca = new CardAsset();
             ca.CardName = "回血卡";
+            ca.CardType = eCardType.ABILITY;
             ca.CardId = string.Format("test_xue_{0:00}", i + 1);
             ca.CardDesp = "等级" + (i + 1) + "的回血卡";
             ca.CatdImageName = "Image_Kongqibanfan";
@@ -380,6 +395,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         {
             CardAsset ca = new CardAsset();
             ca.CardName = "防御卡";
+            ca.CardType = eCardType.ABILITY;
             ca.CardId = string.Format("test_armor_{0:00}", i + 1);
             ca.CardDesp = "等级" + (i + 1) + "的防御卡";
 

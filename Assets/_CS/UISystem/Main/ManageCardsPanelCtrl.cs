@@ -160,12 +160,23 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 
     }
 
-    private void ShowCards()
+
+    private void ShowCards(eCardType type)
+    {
+        List<CardInfo> infos = pCardMgr.GetTypeCards(type);
+        UpdateCards(infos);
+    }
+
+    private void ShowCardsAll()
     {
         List<CardInfo> infos = pCardMgr.GetAllCards();
+        UpdateCards(infos);
+    }
 
 
-        foreach(CardOutView vv in view.CardsViewList)
+    private void UpdateCards(List<CardInfo> infos)
+    {
+        foreach (CardOutView vv in view.CardsViewList)
         {
             pResLoader.ReleaseGO("UI/CardOut", vv.root.gameObject);
         }
@@ -191,8 +202,6 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
                 listener.OnClickEvent += delegate {
                     ShowCardDetail(cardOutView);
                 };
-
-
             }
 
             CardAsset ca = pCardMgr.GetCardInfo(c.CardId);
@@ -202,7 +211,6 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
             cardOutView.Picture.sprite = ca.Picture;
             //Debug.Log(ca.Picture.name);
         }
-
     }
 
     public void HideCardDetail()
@@ -268,7 +276,18 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 
         if (newTab == 0)
         {
-            ShowCards();
+            ShowCardsAll();
+        }else if (newTab == 1)
+        {
+            ShowCards(eCardType.ABILITY);
+        }
+        else if (newTab == 2)
+        {
+            ShowCards(eCardType.ITEM);
+        }
+        else if (newTab == 3)
+        {
+            ShowCards(eCardType.ITEM);
         }
         HideCardDetail();
 
