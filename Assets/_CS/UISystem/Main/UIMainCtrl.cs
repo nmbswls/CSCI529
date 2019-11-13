@@ -379,6 +379,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     {
         turn += 1;
         testStatus += turnStatus;
+        rm.GainMoney(30 + 50 * turn);
         testResource += 30 + 50 * turn;
         int adddd = (int)((30 + turn * 50 + (testStatus * 10 + testFans * 0.2f + 0) * 0.2f) * 1f);
         testFans += adddd;
