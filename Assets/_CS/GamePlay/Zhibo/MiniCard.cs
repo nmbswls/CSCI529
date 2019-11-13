@@ -91,8 +91,15 @@ public class MiniCard : MonoBehaviour
         //初始化卡面
         view.Name.text = ca.CardName;
         view.Desp.text = ca.CardEffectDesp;
+        if(ca.CatdImageName == null || ca.CatdImageName == string.Empty)
+        {
+            view.Picture.sprite = ca.Picture;
+        }
+        else
+        {
+            view.Picture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardImage/" + ca.CatdImageName);
 
-        view.Picture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardImage/"+ca.CatdImageName);
+        }
 
 
 

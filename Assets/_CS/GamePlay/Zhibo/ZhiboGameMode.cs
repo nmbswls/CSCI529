@@ -225,7 +225,7 @@ public class ZhiboGameMode : GameModeBase
         state.Score = 0;
         state.MaxScore = 100;
 
-        state.Qifen = 400;
+        state.Qifen = 500;
         state.Tili = 10;
 
         state.Hp = 80;
@@ -284,7 +284,7 @@ public class ZhiboGameMode : GameModeBase
         int cardNum = (int)(state.Qifen / 100);
         if (isFirstTurn)
         {
-            cardNum += 1;
+            //cardNum += 1;
         }
         for (int i = 0; i < cardNum; i++)
         {
