@@ -1167,7 +1167,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5213366284144178820
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1303,7 +1303,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u7ED3\u675F\n\u56DE\u5408"
+  m_Text: 'End
+
+    Turn'
 --- !u!1 &2348521831650814610
 GameObject:
   m_ObjectHideFlags: 0
@@ -1774,7 +1776,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6401564795734921373
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2383,7 +2385,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6926907109702873044
 RectTransform:
   m_ObjectHideFlags: 0

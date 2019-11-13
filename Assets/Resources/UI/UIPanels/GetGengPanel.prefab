@@ -452,7 +452,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u8F6C\u53D1"
+  m_Text: 'Post
+
+'
 --- !u!1 &8431994006707053599
 GameObject:
   m_ObjectHideFlags: 0
