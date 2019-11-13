@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public interface IUIMgr : IModule
 {
@@ -26,5 +27,6 @@ public interface IUIMgr : IModule
     Camera GetCamera();
 
     void ShowMsgBox(string content);
+    void ShowConfirmBox(string content, Action cb);
 }
 

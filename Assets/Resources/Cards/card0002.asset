@@ -15,21 +15,46 @@ MonoBehaviour:
   CardId: card0002
   CardName: "\u53EC\u5524\u571F\u8C6A"
   CardDesp: "\u53EC\u5524\u571F\u8C6A\u5237\u793C"
+  CatdImageName: 
   CardEffectDesp: "\u7ACB\u5373\u5237\u65B03\u4EF6\u968F\u673A\u793C\u7269"
   Picture: {fileID: 21300000, guid: 04fe2b0fe4a7f41d3b76317608fe1279, type: 3}
   CardType: 0
   Tags: []
   cost: 0
-  IsConsume: 0
   UseOnDiscard: 0
   HasTurnEffect: 0
   OverDueTurn: 0
+  IsConsume: 0
   UseTime: 3
   ModelCard: 
   StatusBonusNum: 0
   StatusBonusType: 0
   SkillBonusType: 0
   SkillBonusNum: 0
+  BaseSkillId: 
   UseConditions: []
-  Effects: []
+  Effects:
+  - EMode: 1
+    effectType: 0
+    isNegEffect: 0
+    Possibility: 0
+    turnEffect: 
+    effectString: 
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings:
+    - effect: 
+      effectString: 
+      value: 0
+    - effect: 
+      effectString: 
+      value: 0
   TurnEffects: []

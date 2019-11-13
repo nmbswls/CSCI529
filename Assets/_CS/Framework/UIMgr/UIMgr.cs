@@ -80,6 +80,9 @@ public class UIMgr : ModuleBase, IUIMgr
         mUITypeMap["ModelMask"] = typeof(ModelMask);
 
         mUITypeMap["MsgBox"] = typeof(MsgBoxCtrl);
+        mUITypeMap["ConfirmBox"] = typeof(ConfirmBoxCtrl);
+
+
         mUITypeMap["ZhiboJiesuanPanel"] = typeof(ZhiboJiesuanUI);
 
         mUITypeMap["TaobaoPanel"] = typeof(TaobaoUI);
@@ -263,6 +266,12 @@ public class UIMgr : ModuleBase, IUIMgr
     {
         MsgBoxCtrl msgBox = ShowPanel("MsgBox") as MsgBoxCtrl;
         msgBox.ShowMsg(content);
+    }
+
+    public void ShowConfirmBox(string content, Action cb)
+    {
+        ConfirmBoxCtrl msgBox = ShowPanel("ConfirmBox") as ConfirmBoxCtrl;
+        msgBox.ShowMsg(content,cb);
     }
 
 }
