@@ -16,15 +16,15 @@ MonoBehaviour:
   CardName: "\u72B6\u6001\u6FC0\u589E"
   CardDesp: "\u4E0D\u77E5\u600E\u4E48\u7684\uFF0C\u8FD9\u4E2A\u4EBA\u4E00\u4E0B\u5B50\u5C31\u725B\u8D77\u6765\u4E86"
   CatdImageName: 
-  CardEffectDesp: "\u589E\u52A030\u70B9\u72B6\u6001\u503C"
+  CardEffectDesp: "\u589E\u52A030\u70B9HP"
   Picture: {fileID: 21300000, guid: 6c47470c37856459ebd766fddce4783a, type: 3}
   CardType: 2
   Tags: []
   cost: 2
-  IsConsume: 0
   UseOnDiscard: 0
   HasTurnEffect: 0
   OverDueTurn: 0
+  IsConsume: 0
   UseTime: 0
   ModelCard: 
   StatusBonusNum: 0
@@ -35,7 +35,7 @@ MonoBehaviour:
   UseConditions: []
   Effects:
   - EMode: 0
-    effectType: 10
+    effectType: 27
     isNegEffect: 0
     Possibility: 0
     turnEffect: 

@@ -101,7 +101,7 @@ public class SuperDanmu : MonoBehaviour
             if (HpLeft <= 0)
             {
                 Disappear();
-                gameMode.GainStatus(6f);
+                //gameMode.AddHp(6);
             }
         }
     }
@@ -131,7 +131,7 @@ public class SuperDanmu : MonoBehaviour
 
     public void StatusEffect()
     {
-        gameMode.GainStatus(-5f);
+        //gameMode.AddHp(-5);
     }
 
     public void Disappear()
