@@ -1199,7 +1199,7 @@ public class ZhiboGameMode : GameModeBase
         CardInZhibo cinfo = state.Cards[cardIdx];
 
         CardAsset ca = cinfo.ca;
-        if (state.Tili < ca.cost)
+        if (ca.cost>0 && state.Tili < ca.cost)
         {
             mUIMgr.ShowHint("体力不足");
             return false;
@@ -1236,8 +1236,10 @@ public class ZhiboGameMode : GameModeBase
                     break;
             }
         }
-
-        state.Tili -= ca.cost;
+        if(ca.cost >= 0)
+        {
+            state.Tili -= ca.cost;
+        }
         mUICtrl.UpdateTili();
         PutCardInChain(cinfo);
         return true;

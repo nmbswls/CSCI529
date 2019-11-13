@@ -17,6 +17,7 @@ public class MiniCardView
     public Transform TimeLeftComp;
     public Text TimeLeft;
     public Animator ClockAnimator;
+    public Text Cost;
 }
 public class MiniCard : MonoBehaviour
 {
@@ -91,7 +92,16 @@ public class MiniCard : MonoBehaviour
         //初始化卡面
         view.Name.text = ca.CardName;
         view.Desp.text = ca.CardEffectDesp;
-        if(ca.CatdImageName == null || ca.CatdImageName == string.Empty)
+        if(ca.cost == -1)
+        {
+            view.Cost.text = "X";
+        }
+        else
+        {
+            view.Cost.text = ca.cost + "";
+        }
+
+        if (ca.CatdImageName == null || ca.CatdImageName == string.Empty)
         {
             view.Picture.sprite = ca.Picture;
         }
@@ -209,6 +219,7 @@ public class MiniCard : MonoBehaviour
         view.Picture = view.CardFace.Find("Picture").GetComponent<Image>();
         view.Name = view.CardFace.Find("Name").GetComponent<Text>();
         view.Desp = view.CardFace.Find("Desp").GetComponent<Text>();
+        view.Cost = view.CardFace.Find("Cost").GetComponent<Text>();
 
         view.TimeLeftComp = view.CardFace.Find("TimeLeft");
         view.TimeLeft = view.TimeLeftComp.Find("Text").GetComponent<Text>();
