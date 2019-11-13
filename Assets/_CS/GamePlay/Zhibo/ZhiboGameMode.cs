@@ -1124,6 +1124,8 @@ public class ZhiboGameMode : GameModeBase
             //PlatformInfo info = pRoleMgr.GetNowPlatformInfo();
             //float basicReward = state.Score * 0.1 + bonus[0] * info.Xihao[0];
         }
+
+        //Resources.UnloadUnusedAssets();
     }
 
     private void DiscardCard(CardInZhibo cinfo, bool triggerEffect)

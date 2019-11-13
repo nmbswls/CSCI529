@@ -41,7 +41,6 @@ public class AssetPool
 	public void Release(string path){
 		if (path != string.Empty && mCacheObjects.ContainsKey (path)) {
 			mCacheObjects.Remove (path);
-
 		}
 	}
 

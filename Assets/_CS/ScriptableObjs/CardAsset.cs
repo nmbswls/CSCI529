@@ -97,6 +97,8 @@ public class CardAsset : ScriptableObject
 	[TextArea(3,10)]
 	public string CardDesp = "";
 
+    public string CatdImageName = "";
+
     [TextArea(3, 10)]
     public string CardEffectDesp = "";
 
