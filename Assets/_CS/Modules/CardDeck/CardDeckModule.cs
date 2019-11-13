@@ -69,6 +69,18 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
                 CardsWithTurnEffect.Add(info);
             }
 
+            if(aset.CardType == eCardType.ITEM)
+            {
+                if(UsedItemList.Count < pRoleMdl.MaxItemNum)
+                {
+                    info.isDisabled = false;
+                }
+                else
+                {
+                    info.isDisabled = true;
+                }
+            }
+
             return info;
 		}
         return null;
@@ -359,7 +371,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardName = "技能卡";
             ca.CardType = eCardType.ABILITY;
             ca.CardId = string.Format("test_{0:00}", i + 1);
-            ca.CardEffectDesp = "等级" + (i + 1) + "的卡";
+            ca.CardEffectDesp = "等级" + (i + 1) + "的攻击卡";
             ca.CatdImageName = "Image_Bangyigegezuibangla";
             ca.BaseSkillId = string.Format("test_{0:00}", (i + 1)/5); ;
             ca.cost = 2;
@@ -407,6 +419,36 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
                 ce.EMode = eCardEffectMode.SIMPLE;
                 ce.effectType = eEffectType.GetArmor;
                 ce.effectString = ((i + 1) * 3) + "";
+                ca.Effects.Add(ce);
+            }
+            CardDict.Add(ca.CardId, ca);
+        }
+
+        for (int i = 0; i < 40; i++)
+        {
+            CardAsset ca = new CardAsset();
+            ca.CardName = "道具卡";
+            ca.CardType = eCardType.ITEM;
+            ca.CardId = string.Format("item_{0:00}", i + 1);
+            ca.CardEffectDesp = "等级" + (i + 1) + "的道具卡";
+            ca.CatdImageName = "Image_Longju";
+            ca.BaseSkillId = null;
+            ca.cost = 0;
+            {
+                CardEffect ce = new CardEffect();
+                ce.EMode = eCardEffectMode.SIMPLE;
+                ce.turnEffect = "shuxing+";
+                ce.effectString = ((i + 1)) + "";
+                ca.TurnEffects.Add(ce);
+            }
+            {
+                CardEffect ce = new CardEffect();
+                ce.EMode = eCardEffectMode.SIMPLE;
+                ce.isAddBuff = true;
+                ce.buffInfo = new ZhiboBuffInfo();
+                ce.buffInfo.BuffType = eBuffType.Jiyi_Add;
+                ce.buffInfo.BuffLevel = 10+i*5;
+                ce.buffInfo.TurnLast = 2;
                 ca.Effects.Add(ce);
             }
             CardDict.Add(ca.CardId, ca);

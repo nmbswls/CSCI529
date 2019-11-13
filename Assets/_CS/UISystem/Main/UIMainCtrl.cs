@@ -20,6 +20,8 @@ public class MainView : BaseView
     public Button ScheduleBtn;
     public Button InspectBtn;
 
+    public Slider XinqingSlider;
+    public Slider FumianSlider;
 
     public Image PhoneMiniIcon;
     public Image PhoneBigPic;
@@ -202,12 +204,24 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         }
     }
 
+    public void UpdateXintai()
+    {
+        view.XinqingSlider.value = rm.GetXinqingLevel() * 1.0f / 20;
+    }
+
+    public void UpdateFumian()
+    {
+        view.XinqingSlider.value = rm.GetBadLevel() * 1.0f / 20;
+    }
 
     public override void BindView(){
         //view.NextStage = root.
         view.InspectBtn = root.Find("Deck").GetComponent<Button>();
         view.ScheduleBtn = root.Find("Schedule").GetComponent<Button>();
         view.NextStage = root.Find("NextTurn").GetComponent<Button>();
+
+        view.XinqingSlider = root.Find("Property2").Find("Xintai").Find("Slider").GetComponent<Slider>();
+        view.FumianSlider = root.Find("Property2").Find("Fumian").Find("Slider").GetComponent<Slider>();
 
 
         view.PhoneBigPic = root.Find("PhoneMenu").GetComponent<Image>();
@@ -437,7 +451,8 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     public override void PostInit()
     {
         view.PhoneBigPic.gameObject.SetActive(false);
-
+        UpdateFumian();
+        UpdateXintai();
         InitEvents();
     }
 

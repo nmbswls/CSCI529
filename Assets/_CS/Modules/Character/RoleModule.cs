@@ -106,6 +106,7 @@ public class RoleModule : ModuleBase, IRoleModule
     private float fen4Num;
 
     private float BadPoint = 5;
+    private int XinqingLevel = 10;
 
     private string NowPlatformId;
 
@@ -158,6 +159,7 @@ public class RoleModule : ModuleBase, IRoleModule
         pCardMdl.AddCards(ret.initOwning);
 
         BadPoint = 20;
+        XinqingLevel = 10;
 
         FakePlatformInfo();
         NowPlatformId = "begin";
@@ -180,6 +182,30 @@ public class RoleModule : ModuleBase, IRoleModule
     public void GainMoney(int amount)
     {
         money += amount;
+    }
+
+    private void XinqingBodong()
+    {
+        GetXinqing(Random.Range(-2, 2));
+    }
+
+    public void GetXinqing(int amount)
+    {
+
+        XinqingLevel += amount;
+        if(XinqingLevel > 20)
+        {
+            XinqingLevel = 20;
+        }
+        if(XinqingLevel < 0)
+        {
+            XinqingLevel = 0;
+        }
+    }
+
+    public int GetXinqingLevel()
+    {
+        return XinqingLevel;
     }
 
     public override void Setup()
@@ -227,6 +253,7 @@ public class RoleModule : ModuleBase, IRoleModule
     {
         TurnNum++;
         RestoreActionPoints();
+        XinqingBodong();
     }
 
     public void RestoreActionPoints()

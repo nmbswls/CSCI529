@@ -102,6 +102,7 @@ public class ZhiboGameState
     public int MaxScore = 100;
 
     public int TmpHp = 0;
+    public int MaxHp;
     public int Hp;
 
     //public float ScoreArmor = 0;
@@ -228,7 +229,8 @@ public class ZhiboGameMode : GameModeBase
         state.Qifen = 500;
         state.Tili = 10;
 
-        state.Hp = 80;
+        state.Hp = pRoleMgr.GetXinqingLevel()*10;
+        state.MaxHp = 500;
         state.TmpHp = 0;
 
         spdRate = 1.0f;

@@ -52,4 +52,7 @@ public interface IRoleModule : IModule{
     void Practive();
 
     int MaxItemNum { get;}
+
+    int GetXinqingLevel();
+    void GetXinqing(int amount);
 }
