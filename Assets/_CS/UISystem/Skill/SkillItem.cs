@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class SkillItem : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class SkillItem : MonoBehaviour
 
 
     GameObject Expands;
+    CanvasGroup ExpandGroup;
     Transform Lines;
     Transform Subskills;
 
@@ -34,13 +36,32 @@ public class SkillItem : MonoBehaviour
 
     public void TurnOrigin()
     {
-        transform.localScale = Vector3.one;
+        ExpandGroup.alpha = 1;
         Expands.gameObject.SetActive(false);
+        transform.localScale = Vector3.one*0.7f;
     }
 
     public void FocusNow()
     {
-        transform.localScale = Vector3.one * 1.3f;
+        Tween t = DOTween.To
+            (
+                () => transform.localScale,
+                (x) => transform.localScale = x,
+                Vector3.one * 1f,
+                0.3f
+            ).OnKill(delegate {
+                transform.localScale = Vector3.one * 1f;
+            });
+        DOTween.To
+            (
+                () => ExpandGroup.alpha,
+                (x) => ExpandGroup.alpha = x,
+                1f,
+                0.3f
+            );
+
+        ExpandGroup.alpha = 0f;
+        //transform.localScale = Vector3.one * 1f;
         Expands.gameObject.SetActive(true);
     }
 
@@ -48,10 +69,11 @@ public class SkillItem : MonoBehaviour
     {
         rt = (RectTransform)transform;
         Expands = transform.Find("Expand").gameObject;
+        ExpandGroup = Expands.GetComponent<CanvasGroup>();
         Lines = Expands.transform.Find("Lines");
         Subskills = Expands.transform.Find("Tabs");
 
-        Icon = transform.Find("Icon").GetComponent<Image>();
+        Icon = transform.Find("BaseIcon").GetComponent<Image>();
 
         ClickEventListerner listener = Icon.gameObject.GetComponent<ClickEventListerner>();
         if (listener == null)
@@ -80,32 +102,22 @@ public class SkillItem : MonoBehaviour
     [ContextMenu("GenLines")]
     public void GenLines()
     {
-        Transform lines = transform.Find("Expand").Find("Lines");
-        if(lines == null)
-        {
-            return;
-        }
-        Debug.Log(lines.childCount);
-
-        foreach (Transform line in lines)
-        {
-            GameObject.DestroyImmediate(line.gameObject);
-        }
 
         Transform subskills = transform.Find("Expand").Find("Tabs");
 
         List<Transform> ll = new List<Transform>();
         foreach (Transform child in subskills)
         {
-            ll.Add(child);
-        }
-        for (int i=0;i< ll.Count; i++)
-        {
-            GameObject line = Instantiate(LinePrefab, lines);
-            float angle = Vector3.SignedAngle(transform.up, (ll[i].position - transform.position),Vector3.forward);
-            (line.transform as RectTransform).sizeDelta = new Vector2(5, (ll[i].position - transform.position).magnitude);
-            line.transform.position = (ll[i].position + transform.position) / 2;
-            line.transform.localEulerAngles = new Vector3(0,0, angle);
+
+            SubskillItem sub = child.GetComponent<SubskillItem>();
+            if(sub == null || sub.PreNode==null || sub.ReachedLine == null)
+            {
+                continue;
+            }
+            float angle = Vector3.SignedAngle(transform.up, (sub.transform.position - sub.PreNode.transform.position), Vector3.forward);
+            (sub.ReachedLine.transform as RectTransform).sizeDelta = new Vector2(5, (sub.transform.position - sub.PreNode.transform.position).magnitude);
+            sub.ReachedLine.transform.position = (sub.transform.position + sub.PreNode.transform.position) / 2;
+            sub.ReachedLine.transform.localEulerAngles = new Vector3(0, 0, angle);
         }
     }
 

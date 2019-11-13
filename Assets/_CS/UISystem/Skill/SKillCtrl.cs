@@ -445,6 +445,7 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         view.TypeTabGroup.switchTab(0);
 
         view.BackToTopLevel.onClick.AddListener(delegate {
+            if (isChanging) return;
             BackToTop();
 
         });
@@ -573,14 +574,29 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
     
     public void BackToTop()
     {
+        isChanging = true;
         for (int i = 0; i < view.TopSkills.Count; i++)
         {
             view.TopSkills[i].TurnOrigin();
             view.TopSkills[i].gameObject.SetActive(true);
         }
         view.BackToTopLevel.gameObject.SetActive(false);
-        ChoicesScrollToOrigin();
-        UnLockScroll();
+
+
+        DOTween.To
+            (
+                () => view.ChoicesContainer.anchoredPosition,
+                (x) => view.ChoicesContainer.anchoredPosition = x,
+                Vector2.zero,
+                0.3f
+            ).OnComplete(delegate
+            {
+                UnLockScroll();
+                isChanging = false;
+            });
+
+        //ChoicesScrollToOrigin();
+
         isSubLevel = false;
     }
 
@@ -590,6 +606,9 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         //ShowDetail(id);
     }
 
+    private bool isChanging = false;
+    private Vector3 tmpPos;
+
     public void ChooseBaseSkill(SkillItem choose)
     {
         if (isSubLevel)
@@ -598,6 +617,7 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         }
         else
         {
+            if (isChanging) return;
             for (int i = 0; i < view.TopSkills.Count; i++)
             {
                 if (view.TopSkills[i] != choose)
@@ -611,19 +631,34 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
                     view.TopSkills[i].gameObject.SetActive(true);
                 }
             }
+
+            isChanging = true;
+
             LockScroll();
             Vector3 posScreen = RectTransformUtility.WorldToScreenPoint(mUIMgr.GetCamera(), choose.rt.position);
-            ChoicesScrollTo(posScreen);
+            Vector2 posTarget = ChoicesScrollTo(posScreen);
+            DOTween.To
+            (
+                () => view.ChoicesContainer.anchoredPosition,
+                (x) => view.ChoicesContainer.anchoredPosition = x,
+                posTarget,
+                0.3f
+            ).OnComplete(delegate
+            {
+                isChanging = false;
+            });
             view.BackToTopLevel.gameObject.SetActive(true);
             isSubLevel = true;
+            //ChoicesScrollTo(posScreen);
+
         }
 
     }
 
-    public void ChoicesScrollTo(Vector3 target)
+    public Vector3 ChoicesScrollTo(Vector3 target)
     {
         Vector3 posScreen = RectTransformUtility.WorldToScreenPoint(mUIMgr.GetCamera(), view.ChoicesContainer.position);
-        view.ChoicesContainer.anchoredPosition= (posScreen - target);
+        return (posScreen - target);
     }
 
     public void ChoicesScrollToOrigin()
@@ -633,6 +668,8 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
     public void SwitchTabInit()
     {
+        if (isChanging) return;
+        BackToTop();
         view.TopSkills.Clear();
         foreach (Transform child in view.SkillPanels[model.nowTab])
         {

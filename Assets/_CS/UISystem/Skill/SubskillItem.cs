@@ -6,6 +6,9 @@ public class SubskillItem : MonoBehaviour
 
     public string SkillId;
 
+    public GameObject ReachedLine;
+    public GameObject PreNode;
+
     SkillItem baseItem;
     // Use this for initialization
     public void Init(SkillItem baseItem)
