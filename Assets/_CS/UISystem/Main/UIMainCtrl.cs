@@ -272,8 +272,9 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
         view.BuyThings.onClick.AddListener(delegate
         {
-
-            UseResource();
+            AdjustSkillCardCtrl cc =mUIMgr.ShowPanel("AdjustSkillCardsPanel") as AdjustSkillCardCtrl;
+            cc.SetContent("test_01");
+            //UseResource();
         });
 
         view.UpdateCards.onClick.AddListener(delegate

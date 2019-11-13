@@ -26,6 +26,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 
 	uint InstId;
     IRoleModule pRoleMdl;
+    ISkillTreeMgr pSKillMgr;
 
 	Dictionary<uint, CardInfo> CardInstDict = new Dictionary<uint, CardInfo> ();
 
@@ -45,6 +46,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 
         InstId = 0;
         pRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
+        pSKillMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
         GenFakeCards();
     }
 
@@ -227,7 +229,14 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
     }
 
 
-
+    public List<CardInfo> GetSkillCards(string skillId)
+    {
+        if (SkillCardDict.ContainsKey(skillId))
+        {
+            return SkillCardDict[skillId];
+        }
+        return new List<CardInfo>();
+    }
 
     public void CheckOverdue()
     {
@@ -333,7 +342,8 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         {
             return false;
         }
-        target.isDisabled = !enable;
+
+
 
         if(target.ca.CardType == eCardType.ITEM)
         {
@@ -343,12 +353,54 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
                 {
                     return false;
                 }
+                target.isDisabled = !enable;
                 UsedItemList.Add(target.InstId);
             }
             else
             {
+                target.isDisabled = !enable;
                 UsedItemList.Remove(target.InstId);
             }
+        }
+        else
+        {
+            if (target.ca.BaseSkillId == null)
+            {
+                target.isDisabled = !enable;
+            }
+            else
+            {
+                if (enable)
+                {
+                    target.isDisabled = !enable;
+                }
+                else
+                {
+                    //如果想关技能 则要检查
+                    List<CardInfo> infoList = GetSkillCards(target.ca.BaseSkillId);
+                    int nowEnabled = 0;
+                    for (int i = 0; i < infoList.Count; i++)
+                    {
+                        if (!infoList[i].isDisabled)
+                        {
+                            nowEnabled++;
+                        }
+                    }
+                    SkillInfo baseSkillInfo = pSKillMgr.GetOwnedSkill(target.ca.BaseSkillId);
+                    int minNum = (baseSkillInfo.sa as BaseSkillAsset).BaseCardList.Count - 1;
+                    if (nowEnabled > minNum)
+                    {
+                        target.isDisabled = !enable;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+
+            }
+
         }
         return true;
     }
@@ -373,7 +425,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardId = string.Format("test_{0:00}", i + 1);
             ca.CardEffectDesp = "等级" + (i + 1) + "的攻击卡";
             ca.CatdImageName = "Image_Bangyigegezuibangla";
-            ca.BaseSkillId = string.Format("test_{0:00}", (i + 1)/5); ;
+            ca.BaseSkillId = string.Format("test_{0:00}", (i)/5+1); ;
             ca.cost = 2;
             {
                 CardEffect ce = new CardEffect();
@@ -392,7 +444,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardId = string.Format("test_xue_{0:00}", i + 1);
             ca.CardEffectDesp = "等级" + (i + 1) + "的回血卡";
             ca.CatdImageName = "Image_Kongqibanfan";
-            ca.BaseSkillId = string.Format("test_{0:00}", (i + 1) / 5); ;
+            ca.BaseSkillId = string.Format("test_{0:00}", (i) / 5+1); ;
             ca.cost = 2;
             {
                 CardEffect ce = new CardEffect();
@@ -412,7 +464,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardEffectDesp = "等级" + (i + 1) + "的防御卡";
 
             ca.CatdImageName = "Image_Zhaohuanshuijun";
-            ca.BaseSkillId = string.Format("test_{0:00}", (i + 1) / 5); ;
+            ca.BaseSkillId = string.Format("test_{0:00}", (i) / 5); ;
             ca.cost = 2;
             {
                 CardEffect ce = new CardEffect();
@@ -430,7 +482,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardName = "道具卡";
             ca.CardType = eCardType.ITEM;
             ca.CardId = string.Format("item_{0:00}", i + 1);
-            ca.CardEffectDesp = "等级" + (i + 1) + "的道具卡";
+            ca.CardEffectDesp = "等级" + (i + 1) + "的道具卡,每回合增加"+ ((i + 1))+"点属性";
             ca.CatdImageName = "Image_Longju";
             ca.BaseSkillId = null;
             ca.cost = 0;

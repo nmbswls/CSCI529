@@ -28,4 +28,6 @@ public interface ICardDeckModule : IModule
     CardInfo GetCardByInstId(uint instId);
 
     void ChangeSkillCard(string skillId, string fromCard, string toCard);
+
+    List<CardInfo> GetSkillCards(string skillId);
 }

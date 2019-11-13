@@ -87,6 +87,8 @@ public class UIMgr : ModuleBase, IUIMgr
 
         mUITypeMap["TaobaoPanel"] = typeof(TaobaoUI);
 
+        mUITypeMap["AdjustSkillCardsPanel"] = typeof(AdjustSkillCardCtrl);
+
 
     }
 

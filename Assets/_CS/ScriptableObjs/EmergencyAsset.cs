@@ -22,5 +22,5 @@ public class EmergencyAsset : ScriptableObject
     public string EmDesp;
 
 
-    public List<EmergencyChoice> Choices;
+    public List<EmergencyChoice> Choices = new List<EmergencyChoice>();
 }

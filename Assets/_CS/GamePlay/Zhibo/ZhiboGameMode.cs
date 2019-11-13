@@ -78,7 +78,7 @@ public class ZhiboGameState
     public int OriginTurn = 12;
     public int TurnLeft = 12;
 
-
+    public int NowTurn = 12;
 
 
 
@@ -97,6 +97,7 @@ public class ZhiboGameState
 
     public Dictionary<string, int> CardUsedCount = new Dictionary<string, int>();
     public List<ZhiboSpecial> Specials = new List<ZhiboSpecial>();
+
 
     public float Score = 0;
     public int MaxScore = 100;
@@ -134,7 +135,7 @@ public class ZhiboGameState
 
     public float HpScoreRate;
 
-    public List<string> ComingEmergencies = new List<string>();
+    public List<KeyValuePair<int,string>> ComingEmergencies = new List<KeyValuePair<int, string>>();
 
     public List<DanmuGroup> danmuGroups = new List<DanmuGroup>();
     public List<string> TurnSpecials = new List<string>();
@@ -179,8 +180,9 @@ public class ZhiboGameMode : GameModeBase
 
 
     private int EmergencyShowTime;
+    private int emergencyIdx;
 
-   
+
 
     private Dictionary<string, List<string>> DanmuDict = new Dictionary<string, List<string>>();
 
@@ -221,6 +223,7 @@ public class ZhiboGameMode : GameModeBase
 
         state.OriginTurn = 12;
         state.TurnLeft = state.OriginTurn;
+        state.NowTurn = 0;
         state.TurnTimeLeft = 30f;
 
         state.Score = 0;
@@ -241,6 +244,7 @@ public class ZhiboGameMode : GameModeBase
 
         LoadDanmuDict();
         LoadCard();
+        GenEmergency();
         mUICtrl = mUIMgr.ShowPanel("ZhiboPanel") as ZhiboUI;
 
         isFirstTurn = true;
@@ -281,6 +285,7 @@ public class ZhiboGameMode : GameModeBase
         }
         waitingForNextTurn = false;
         state.TurnLeft -= 1;
+        state.NowTurn += 1;
         state.TurnTimeLeft = 30f;
         state.Tili = 10;
         int cardNum = (int)(state.Qifen / 100);
@@ -322,8 +327,17 @@ public class ZhiboGameMode : GameModeBase
         mUICtrl.UpdateDeckLeft();
 
         //如果当前回合有emergency
-        EmergencyShowTime = -1;
-        EmergencyShowTime = Random.Range(5, 15);
+        if (emergencyIdx < state.ComingEmergencies.Count && state.ComingEmergencies[emergencyIdx].Key == state.NowTurn)
+        {
+            EmergencyShowTime = Random.Range(5, 10);
+            emergencyIdx++;
+        }
+        else
+        {
+            EmergencyShowTime = -1;
+        }
+
+
 
 
         SecCount = 0;
@@ -335,7 +349,12 @@ public class ZhiboGameMode : GameModeBase
         mUICtrl.UpdateTili();
         mUICtrl.UpdateHp();
     }
-
+    public void GenEmergency()
+    {
+        state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(3,6),"choufeng"));
+        state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(7, 9), "choufeng"));
+        emergencyIdx = 0;
+    }
 
     public void ShowSuperDanmu(int idx)
     {
@@ -621,7 +640,7 @@ public class ZhiboGameMode : GameModeBase
 
             if (EmergencyShowTime != -1 && EmergencyShowTime == SecCount)
             {
-                //showEmergency
+                ShowEmergency("choufeng");
             }
 
             mBuffManager.TickSec();
@@ -703,7 +722,8 @@ public class ZhiboGameMode : GameModeBase
             }
             if (c.Ret == "Hot")
             {
-
+                GainScore(idx*50+50, 0);
+                mUIMgr.ShowHint("Get "+(idx * 50 + 50) +" Score");
             }
         };
     }
