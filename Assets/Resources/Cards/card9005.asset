@@ -15,20 +15,40 @@ MonoBehaviour:
   CardId: card9005
   CardName: "\u5E73\u53F0\u4E13\u5C5E"
   CardDesp: "\u5E73\u53F0\u4E13\u5C5E"
-  CardEffectDesp: "\u4E13\u5C5E\u65E0\u6548\u679C"
-  CardType: 0
+  CatdImageName: Image_Banka
+  CardEffectDesp: "\u6062\u590D3\u70B9\u4F53\u529B"
+  Picture: {fileID: 0}
+  CardType: 1
   Tags: []
   cost: 0
-  IsConsume: 0
   UseOnDiscard: 0
   HasTurnEffect: 0
   OverDueTurn: 0
+  IsConsume: 0
   UseTime: 0
   ModelCard: 
   StatusBonusNum: 0
   StatusBonusType: 0
   SkillBonusType: 0
   SkillBonusNum: 0
+  BaseSkillId: 
   UseConditions: []
-  Effects: []
+  Effects:
+  - EMode: 0
+    effectType: 9
+    isNegEffect: 0
+    Possibility: 0
+    turnEffect: 
+    effectString: 3
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
   TurnEffects: []

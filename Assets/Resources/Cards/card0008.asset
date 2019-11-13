@@ -15,16 +15,57 @@ MonoBehaviour:
   CardId: card0008
   CardName: "\u53CC\u6740"
   CardDesp: "\u53CC\u6740\uFF01\u8FD8\u6709\u8C01\uFF01"
+  CatdImageName: Image_Bujieshilianzhao
   CardEffectDesp: "\u7ACB\u5373\u83B7\u5F9754\u70B9\u70ED\u5EA6\u300230%\u51E0\u7387\u83B7\u5F97\u4E00\u5F20\u3010\u4E09\u6740\u3011\u3002"
-  CardType: 0
-  cost: 10
-  IsConsume: 0
+  Picture: {fileID: 0}
+  CardType: 1
+  Tags: []
+  cost: 0
+  UseOnDiscard: 0
+  HasTurnEffect: 0
   OverDueTurn: 0
-  ValidTime: 5
+  IsConsume: 1
   UseTime: 1
   ModelCard: 
-  effects:
-  - effect: GainCardWithPossibility
-    effectString: card0009,30
-  - effect: GetScore
+  StatusBonusNum: 0
+  StatusBonusType: 0
+  SkillBonusType: 0
+  SkillBonusNum: 0
+  BaseSkillId: 
+  UseConditions: []
+  Effects:
+  - EMode: 0
+    effectType: 7
+    isNegEffect: 0
+    Possibility: 0
+    turnEffect: 
     effectString: 54
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
+  - EMode: 0
+    effectType: 19
+    isNegEffect: 0
+    Possibility: 40
+    turnEffect: 
+    effectString: card0009
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
+  TurnEffects: []

@@ -15,16 +15,40 @@ MonoBehaviour:
   CardId: card0006
   CardName: "\u4E13\u6CE8\u6E38\u620F"
   CardDesp: "\u5728\u6253\u56E2\uFF0C\u6302\u4E86"
+  CatdImageName: 
   CardEffectDesp: "\u6280\u827A\u589E\u52A030\uFF0C\u53CD\u5E94\u964D\u4F4E10"
-  CardType: 0
+  Picture: {fileID: 0}
+  CardType: 1
+  Tags: []
   cost: 0
-  IsConsume: 0
+  UseOnDiscard: 0
+  HasTurnEffect: 0
   OverDueTurn: 0
-  ValidTime: 15
+  IsConsume: 0
   UseTime: 0
   ModelCard: 
-  effects:
-  - effect: AddStatus
-    effectString: j+,30
-  - effect: AddStatus
-    effectString: f+,-10
+  StatusBonusNum: 0
+  StatusBonusType: 0
+  SkillBonusType: 0
+  SkillBonusNum: 0
+  BaseSkillId: 
+  UseConditions: []
+  Effects:
+  - EMode: 0
+    effectType: 0
+    isNegEffect: 0
+    Possibility: 0
+    turnEffect: 
+    effectString: 
+    isAddBuff: 1
+    buffInfo:
+      BuffType: 9
+      BuffLevel: 30
+      AffectCard: 0
+      filterString: 
+      TurnLast: 3
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
+  TurnEffects: []

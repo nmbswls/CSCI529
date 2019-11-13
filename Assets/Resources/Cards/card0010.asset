@@ -15,16 +15,40 @@ MonoBehaviour:
   CardId: card0010
   CardName: "\u66B4\u8D70\uFF01"
   CardDesp: "Rampage\uFF01"
+  CatdImageName: Image_Bujieshilianzhao
   CardEffectDesp: "\u7ACB\u5373\u83B7\u5F97120\u70B9\u70ED\u5EA6\u3002\u83B7\u5F9730\u79D2\u9AD8\u70ED\u65F6\u95F4\u3002"
-  CardType: 0
+  Picture: {fileID: 0}
+  CardType: 1
+  Tags: []
   cost: 20
-  IsConsume: 0
+  UseOnDiscard: 0
+  HasTurnEffect: 0
   OverDueTurn: 0
-  ValidTime: 5
+  IsConsume: 0
   UseTime: 1
   ModelCard: 
-  effects:
-  - effect: GetScore
+  StatusBonusNum: 0
+  StatusBonusType: 0
+  SkillBonusType: 0
+  SkillBonusNum: 0
+  BaseSkillId: 
+  UseConditions: []
+  Effects:
+  - EMode: 0
+    effectType: 7
+    isNegEffect: 0
+    Possibility: 0
+    turnEffect: 
     effectString: 120
-  - effect: SpeedUp
-    effectString: 30
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
+  TurnEffects: []

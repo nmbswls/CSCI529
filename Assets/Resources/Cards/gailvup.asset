@@ -18,7 +18,7 @@ MonoBehaviour:
   CatdImageName: 
   CardEffectDesp: 
   Picture: {fileID: 0}
-  CardType: 0
+  CardType: 1
   Tags: []
   cost: 0
   UseOnDiscard: 0
@@ -33,5 +33,22 @@ MonoBehaviour:
   SkillBonusNum: 0
   BaseSkillId: 
   UseConditions: []
-  Effects: []
+  Effects:
+  - EMode: 0
+    effectType: 0
+    isNegEffect: 0
+    Possibility: 0
+    turnEffect: 
+    effectString: 
+    isAddBuff: 1
+    buffInfo:
+      BuffType: 20
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 1
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
   TurnEffects: []
