@@ -67,7 +67,7 @@ public class ActBranchCtrl : UIBaseCtrl<ActBranchModel, ActBranchView>
             {
                 FinishChoose(view.choices[0]);
             }
-            view.TimeLeft.text = model.TimeLeft.ToString();
+            view.TimeLeft.text = model.TimeLeft.ToString("f1");
             //view.TimeLeft.fillAmount = model.TimeLeft / 15f;
             
         }

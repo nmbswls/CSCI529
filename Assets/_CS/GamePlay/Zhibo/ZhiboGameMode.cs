@@ -347,8 +347,8 @@ public class ZhiboGameMode : GameModeBase
     }
     public void GenEmergency()
     {
-        state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(3,6),"choufeng"));
-        state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(7, 9), "choufeng"));
+        state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(1,2),"em01"));
+        state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(7, 9), "em02"));
         emergencyIdx = 0;
     }
 
@@ -634,7 +634,8 @@ public class ZhiboGameMode : GameModeBase
 
             if (EmergencyShowTime != -1 && EmergencyShowTime == SecCount)
             {
-                ShowEmergency("choufeng");
+                //已经加过了 要-1
+                ShowEmergency(state.ComingEmergencies[emergencyIdx-1].Value);
             }
 
             mBuffManager.TickSec();

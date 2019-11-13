@@ -35,23 +35,49 @@ public class ZhiboEmergencyManager
             {
                 EmergencyChoice choice = new EmergencyChoice();
                 choice.Content = "装傻";
-                choice.Ret = "100";
+                choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
             {
                 EmergencyChoice choice = new EmergencyChoice();
                 choice.Content = "向观众介绍";
-                choice.Ret = "100";
+                choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
             {
                 EmergencyChoice choice = new EmergencyChoice();
                 choice.Content = "喷走";
-                choice.Ret = "100";
+                choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
 
             EmergencyDict["em01"] = ea;
+        }
+        {
+            EmergencyAsset ea = new EmergencyAsset();
+            ea.EmId = "em02";
+            ea.EmName = "老妈出现！";
+            ea.EmDesp = "老妈突然闯了进来！";
+            {
+                EmergencyChoice choice = new EmergencyChoice();
+                choice.Content = "装傻";
+                choice.Ret = "Hot";
+                ea.Choices.Add(choice);
+            }
+            {
+                EmergencyChoice choice = new EmergencyChoice();
+                choice.Content = "向观众介绍";
+                choice.Ret = "Hot";
+                ea.Choices.Add(choice);
+            }
+            {
+                EmergencyChoice choice = new EmergencyChoice();
+                choice.Content = "喷走";
+                choice.Ret = "Hot";
+                ea.Choices.Add(choice);
+            }
+
+            EmergencyDict["em02"] = ea;
         }
     }
 
@@ -61,6 +87,10 @@ public class ZhiboEmergencyManager
 
     public EmergencyAsset GetEmergencyAsset(string id)
     {
+        if (EmergencyDict.ContainsKey(id))
+        {
+            return EmergencyDict[id];
+        }
         return mResLoader.LoadResource<EmergencyAsset>("Emergencies/choufeng");
     }
 }
