@@ -56,7 +56,7 @@ MonoBehaviour:
     isNegEffect: 0
     Possibility: 30
     turnEffect: 
-    effectString: card00010
+    effectString: card0010
     isAddBuff: 0
     buffInfo:
       BuffType: 0

@@ -20,11 +20,11 @@ MonoBehaviour:
   Picture: {fileID: 0}
   CardType: 1
   Tags: []
-  cost: 20
+  cost: 0
   UseOnDiscard: 0
   HasTurnEffect: 0
   OverDueTurn: 0
-  IsConsume: 0
+  IsConsume: 1
   UseTime: 1
   ModelCard: 
   StatusBonusNum: 0

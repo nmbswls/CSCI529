@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
   m_Name: gailvup
   m_EditorClassIdentifier: 
-  CardId: 
-  CardName: 
+  CardId: gailvup
+  CardName: "\u6982\u7387up"
   CardDesp: 
-  CatdImageName: 
-  CardEffectDesp: 
+  CatdImageName: Image_Duguai
+  CardEffectDesp: "\u5FC5\u5B9A\u6210\u529F"
   Picture: {fileID: 0}
   CardType: 1
   Tags: []

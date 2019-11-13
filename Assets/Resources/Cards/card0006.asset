@@ -15,12 +15,12 @@ MonoBehaviour:
   CardId: card0006
   CardName: "\u4E13\u6CE8\u6E38\u620F"
   CardDesp: "\u5728\u6253\u56E2\uFF0C\u6302\u4E86"
-  CatdImageName: 
+  CatdImageName: Image_Zhongchou
   CardEffectDesp: "\u6280\u827A\u589E\u52A030\uFF0C\u53CD\u5E94\u964D\u4F4E10"
   Picture: {fileID: 0}
   CardType: 1
   Tags: []
-  cost: 0
+  cost: 2
   UseOnDiscard: 0
   HasTurnEffect: 0
   OverDueTurn: 0

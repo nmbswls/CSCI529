@@ -15,7 +15,7 @@ MonoBehaviour:
   CardId: card1015
   CardName: "\u4E34\u65F6\u51C6\u5907"
   CardDesp: "\u7F8E\u989C\u51C6\u5907\u8D77\u6765"
-  CatdImageName: 
+  CatdImageName: Image_Duguai
   CardEffectDesp: "\u6D88\u8017\u6240\u6709\u4F53\u529B\uFF0C\u83B7\u5F97x\u5F20\u884C\u52A8"
   Picture: {fileID: 0}
   CardType: 1
