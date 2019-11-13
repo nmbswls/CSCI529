@@ -110,7 +110,7 @@ public class CardAsset : ScriptableObject
 
     public int cost = 0;
 
-	public bool IsConsume;
+	
 
     //public bool WillOverdue;
 
@@ -121,6 +121,7 @@ public class CardAsset : ScriptableObject
     //过期回合数
 	public int OverDueTurn;
 
+    public bool IsConsume;
     //单局游戏中使用次数
     public int UseTime;
 
@@ -216,7 +217,7 @@ public enum eEffectType
     CostAll,
     Dual,
     GetArmor,
-    GainCardWithPossibility,
+    GainCard,
     DiscardCards,
     GetHot,
 

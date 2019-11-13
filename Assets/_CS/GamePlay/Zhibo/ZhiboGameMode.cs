@@ -225,7 +225,7 @@ public class ZhiboGameMode : GameModeBase
         state.Score = 0;
         state.MaxScore = 100;
 
-        state.Qifen = 300;
+        state.Qifen = 400;
         state.Tili = 10;
 
         state.Hp = 80;
@@ -269,7 +269,7 @@ public class ZhiboGameMode : GameModeBase
         {
             AddHp(-(pRoleMgr.GetBadLevel()+mBuffManager.BadRateDiff)*2);
         }
-        isFirstTurn = false;
+
 
         RemoveTmpHp();
 
@@ -282,6 +282,10 @@ public class ZhiboGameMode : GameModeBase
         state.TurnTimeLeft = 30f;
         state.Tili = 10;
         int cardNum = (int)(state.Qifen / 100);
+        if (isFirstTurn)
+        {
+            cardNum += 1;
+        }
         for (int i = 0; i < cardNum; i++)
         {
             AddCardFromDeck();
@@ -324,6 +328,10 @@ public class ZhiboGameMode : GameModeBase
         SecTimer = 0;
         state.NowSuperDanmuIdx = 0;
 
+        isFirstTurn = false;
+
+        mUICtrl.UpdateTili();
+        mUICtrl.UpdateHp();
     }
 
 
@@ -826,6 +834,14 @@ public class ZhiboGameMode : GameModeBase
     public void GenTili(int v)
     {
         state.Tili += v;
+        if (state.Tili > 10)
+        {
+            state.Tili = 10;
+        }
+        if (state.Tili < 0)
+        {
+            state.Tili = 0;
+        }
         mUICtrl.UpdateTili();
     }
 
@@ -962,15 +978,15 @@ public class ZhiboGameMode : GameModeBase
         state.Cards.Add(info);
     }
 
-    public void GainNewCardWithPossiblity(string cardId, int possibility)
-    {
-        int randInt = Random.Range(0, 100);
-        if (randInt >= possibility)
-        {
-            return;
-        }
-        GainNewCard(cardId);
-    }
+    //public void GainNewCardWithPossiblity(string cardId, int possibility)
+    //{
+    //    int randInt = Random.Range(0, 100);
+    //    if (randInt >= possibility)
+    //    {
+    //        return;
+    //    }
+    //    GainNewCard(cardId);
+    //}
 
     public void AddCardsFromDeck(int num)
     {
@@ -1157,7 +1173,7 @@ public class ZhiboGameMode : GameModeBase
             state.Cards.Remove(cinfo);
         }
 
-        if (cinfo.UseLeft > 0)
+        if (!cinfo.ca.IsConsume || cinfo.UseLeft > 0)
         {
             state.CardUsed.Add(cinfo);
         }
@@ -1348,7 +1364,7 @@ public class ZhiboGameMode : GameModeBase
             }
 
         }
-        if (card.UseLeft > 0)
+        if (card.ca.IsConsume && card.UseLeft > 0)
         {
             card.UseLeft -= 1;
         }
@@ -1547,8 +1563,8 @@ public class ZhiboGameMode : GameModeBase
                 case eEffectType.GetArmor:
                     AddTmpHp(int.Parse(args[0]));
                     break;
-                case eEffectType.GainCardWithPossibility:
-                    GainNewCardWithPossiblity(args[0], int.Parse(args[1]));
+                case eEffectType.GainCard:
+                    GainNewCard(args[0]);
                     break;
                 case eEffectType.DiscardCards:
                     DiscardRandomCards(int.Parse(args[0]));

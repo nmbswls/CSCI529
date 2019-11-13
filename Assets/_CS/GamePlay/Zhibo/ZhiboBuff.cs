@@ -108,7 +108,7 @@ public class ZhiboBuff : MonoBehaviour
 
     public bool isBasedOn(eBuffLastType type)
     {
-        if((BuffLastType | (int)type) > 0)
+        if((BuffLastType & (int)type) > 0)
         {
             return true;
         }

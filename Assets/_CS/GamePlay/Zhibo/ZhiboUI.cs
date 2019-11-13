@@ -172,7 +172,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         }
         if (points % 2 == 1)
         {
-            view.TiliPoints[points/2+1].color = Color.green;
+            view.TiliPoints[points/2].color = Color.green;
         }
         //view.TiliImage.fillAmount = (view.TiliMaxFillAmount - view.TiliMinFillAmount) * nowTili / 100 + view.TiliMinFillAmount;
 

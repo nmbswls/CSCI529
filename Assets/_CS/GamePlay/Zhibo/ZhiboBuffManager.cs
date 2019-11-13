@@ -186,6 +186,9 @@ public class ZhiboBuffManager
                 case eBuffType.Success_Rate_Multi:
                     ExtraChenggonglv += buff.bInfo.BuffLevel;
                     break;
+                case eBuffType.Success_Rate_Max:
+                    ExtraChenggonglv += 100;
+                    break;
                 default:
                     break;
             }
