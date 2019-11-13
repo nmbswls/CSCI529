@@ -163,6 +163,11 @@ public class RoleModule : ModuleBase, IRoleModule
         NowPlatformId = "begin";
     }
 
+    public int GetFensiReward(int extraLiuliang, float addrate)
+    {
+        float totalP = roleStats.fanying + roleStats.jiyi + roleStats.koucai + roleStats.meili + roleStats.tili;
+        return (int)((30 + TurnNum * 50 + (totalP * 10 + fen1Num * 0.2f + extraLiuliang) * 0.2f) *addrate);
+    }
 
     public void AddFensi(int type, int num)
     {

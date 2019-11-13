@@ -21,6 +21,7 @@ public interface IRoleModule : IModule{
 
     RoleStats GetStats();
 
+    int GetFensiReward(int extraLiuliang, float addrate);
 
     void AddMeili(float v);
     void AddTili(float v);

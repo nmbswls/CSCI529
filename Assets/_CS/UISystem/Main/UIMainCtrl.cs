@@ -380,7 +380,8 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         turn += 1;
         testStatus += turnStatus;
         testResource += 30 + 50 * turn;
-        testFans += 10 + 20 * turn + 10 * turn * turn;
+        int adddd = (int)((30 + turn * 50 + (testStatus * 10 + testFans * 0.2f + 0) * 0.2f) * 1f);
+        testFans += adddd;
         //nandu = 50 + 10 * Mathf.Pow(1.2f,turn);
         testUpdateWords();
         hasAddSkill = false;
