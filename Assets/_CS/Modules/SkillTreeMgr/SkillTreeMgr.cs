@@ -142,7 +142,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
             sa.MaxLevel = 1;
             sa.LevelDesp.Add("倍率0.8");
             sa.LevelStatusAdd.Add(5);
-            //sa.StatusBonus.Add(new float[] { 0, 0, 1, 1, 1 });
+            sa.StatusBonus.Add(new float[] { 0, 0, 1, 1, 1 });
 
             {
                 sa.BaseCardList.Add(string.Format("test_{0:00}", i + 1));
