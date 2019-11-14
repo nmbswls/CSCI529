@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: card0006
   m_EditorClassIdentifier: 
   CardId: card0006
-  CardName: "\u4E13\u6CE8\u6E38\u620F"
+  CardName: Focusing On Game
   CardDesp: "\u5728\u6253\u56E2\uFF0C\u6302\u4E86"
   CatdImageName: Image_Zhongchou
-  CardEffectDesp: "\u6280\u827A\u589E\u52A030\uFF0C\u53CD\u5E94\u964D\u4F4E10"
+  CardEffectDesp: Add 30 capability, reduce 10 reaction
   Picture: {fileID: 0}
   CardType: 1
   Tags: []

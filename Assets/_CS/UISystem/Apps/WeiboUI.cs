@@ -74,7 +74,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
             List<string> st = new List<string>();
             st.Add(cardName);
             pCardMdl.AddCards(st);
-            mUIMgr.ShowHint("获得卡牌" + cardName);
+            mUIMgr.ShowHint("Get Card" + cardName);
         }
     }
 
@@ -151,7 +151,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
                     }
                     else
                     {
-                        mUIMgr.ShowHint("啊，没什么瓜可以吃的，之后再来吧");
+                        mUIMgr.ShowHint("Oh, so much time on this! We need back to work!");
                         pWeiboMgr.disableRealRandom();
                     }
                 }

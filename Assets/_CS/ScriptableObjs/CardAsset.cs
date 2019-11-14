@@ -207,8 +207,6 @@ public enum eEffectType
     GetChouka,
     GetTili,
 
-    GetStatus,
-
     AddTurnBuff,
     AddRemoveAward,
     AddNextCardsBuff,

@@ -23,7 +23,7 @@ public class ZhiboBuffManager
     public bool AvoidBadDanmu = false;
     public float ExtraChenggonglv = 0;
 
-    public float GenStatusExtraRate = 0;
+    public float GenHpExtraRate = 0;
 
     private IResLoader mResLoader;
     private ZhiboGameMode gameMode;

@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: card8002
   m_EditorClassIdentifier: 
   CardId: card8002
-  CardName: "\u6C99\u96D5\u7F51\u53CB"
-  CardDesp: "\u6BCF\u4E00\u4E2A\u6C99\u96D5\u7F51\u53CB\u90FD\u662F\u53E6\u4E00\u4E2A\u6C99\u96D5\u7F51\u53CB\u7684\u5FEB\u4E50\u6E90\u6CC9"
+  CardName: streaming friends
+  CardDesp: It is always confused why streaming friends are always happy
   CatdImageName: 
-  CardEffectDesp: 
+  CardEffectDesp: Add 25 Score
   Picture: {fileID: 21300000, guid: 2e7815e16d9db4fc9937851d8f147075, type: 3}
   CardType: 0
   Tags: []
   cost: 1
-  IsConsume: 0
   UseOnDiscard: 0
   HasTurnEffect: 0
   OverDueTurn: 0
+  IsConsume: 0
   UseTime: 0
   ModelCard: 
   StatusBonusNum: 0

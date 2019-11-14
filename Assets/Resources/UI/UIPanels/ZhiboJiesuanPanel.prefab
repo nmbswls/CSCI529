@@ -265,7 +265,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u53CD\u54CD\u70ED\u70C8\uFF01"
+  m_Text: Good Job!
 --- !u!1 &6187862766062892082
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,7 +342,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u786E\u8BA4"
+  m_Text: OK
 --- !u!1 &7999788794758630148
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +378,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 7, y: 198}
-  m_SizeDelta: {x: 269.2, y: 80}
+  m_SizeDelta: {x: 717.1, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5551658060326089753
 CanvasRenderer:
@@ -419,4 +419,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u5B8C\u6EE1\u7ED3\u675F"
+  m_Text: Perfectly Streaming

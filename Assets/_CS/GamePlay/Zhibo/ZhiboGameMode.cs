@@ -1029,7 +1029,12 @@ public class ZhiboGameMode : GameModeBase
 
     public string getRandomDanmu()
     {
-        return "你麻痹死了";
+        return "Good!";
+    }
+
+    public string getBadRandomDanmu()
+    {
+        return "Bad!";
     }
 
     public void FinishZhibo()
@@ -1134,7 +1139,7 @@ public class ZhiboGameMode : GameModeBase
         CardAsset ca = cinfo.ca;
         if (ca.cost>0 && state.Tili < ca.cost)
         {
-            mUIMgr.ShowHint("体力不足");
+            mUIMgr.ShowHint("Not Enough Energy");
             return false;
         }
 

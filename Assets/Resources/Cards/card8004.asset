@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: card8004
   m_EditorClassIdentifier: 
   CardId: card8004
-  CardName: "\u6D51\u8EAB\u96BE\u53D7"
-  CardDesp: "\u4E00\u5929\u4E0D\u559D\u5927\u529B\uFF0C\u6211\u6D51\u8EAB\u96BE\u53D7"
+  CardName: Uncomfortable
+  CardDesp: Oh, I'm uncomfortable
   CatdImageName: 
-  CardEffectDesp: "\u51CF\u5C1110\u70B9HP"
+  CardEffectDesp: reduce 10 HP
   Picture: {fileID: 21300000, guid: 0f2669ec470c14804b29843844d7e7f4, type: 3}
   CardType: 2
   Tags: []

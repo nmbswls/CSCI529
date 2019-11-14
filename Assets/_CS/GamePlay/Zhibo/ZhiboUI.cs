@@ -486,8 +486,13 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
         Danmu danmu = danmuGo.GetComponent<Danmu>();
 
-
-        danmu.init(gameMode.getRandomDanmu(), isBad,gameMode);
+        if(isBad)
+        {
+            danmu.init(gameMode.getBadRandomDanmu(), isBad, gameMode);
+        } else
+        {
+            danmu.init(gameMode.getRandomDanmu(), isBad, gameMode);
+        }
         danmuGo.transform.SetParent(view.DanmuFieldNormal, false);
         danmu.rect.anchoredPosition = new Vector3(width + 30, -posY, 0);
 

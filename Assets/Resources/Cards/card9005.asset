@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: card9005
   m_EditorClassIdentifier: 
   CardId: card9005
-  CardName: "\u5E73\u53F0\u4E13\u5C5E"
-  CardDesp: "\u5E73\u53F0\u4E13\u5C5E"
+  CardName: Platform Customized
+  CardDesp: Restore 3 cost
   CatdImageName: Image_Banka
-  CardEffectDesp: "\u6062\u590D3\u70B9\u4F53\u529B"
+  CardEffectDesp: Restore 3 cost
   Picture: {fileID: 0}
   CardType: 1
   Tags: []

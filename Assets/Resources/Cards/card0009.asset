@@ -52,7 +52,7 @@ MonoBehaviour:
     BranchType: 
     BranchEffectStrings: []
   - EMode: 0
-    effectType: 19
+    effectType: 18
     isNegEffect: 0
     Possibility: 30
     turnEffect: 

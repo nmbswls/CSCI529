@@ -240,7 +240,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\u4F60\u9EBB\u75F9\u6B7B\u4E86"
+  m_Text: Good!
 --- !u!1 &2584381785218580700
 GameObject:
   m_ObjectHideFlags: 0

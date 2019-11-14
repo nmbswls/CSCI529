@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: gailvup
   m_EditorClassIdentifier: 
   CardId: gailvup
-  CardName: "\u6982\u7387up"
+  CardName: Probability up
   CardDesp: 
   CatdImageName: Image_Duguai
-  CardEffectDesp: "\u5FC5\u5B9A\u6210\u529F"
+  CardEffectDesp: Necessarily Successful
   Picture: {fileID: 0}
   CardType: 1
   Tags: []
