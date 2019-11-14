@@ -30,23 +30,23 @@ public class ZhiboEmergencyManager
         {
             EmergencyAsset ea = new EmergencyAsset();
             ea.EmId = "em01";
-            ea.EmName = "老爸出现！";
-            ea.EmDesp = "老爸突然闯了进来！";
+            ea.EmName = "Oh my father！";
+            ea.EmDesp = "My father is coming！";
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "装傻";
+                choice.Content = "Ignore";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "向观众介绍";
+                choice.Content = "Introduce him to the audience";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "喷走";
+                choice.Content = "Drive away";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
@@ -56,23 +56,23 @@ public class ZhiboEmergencyManager
         {
             EmergencyAsset ea = new EmergencyAsset();
             ea.EmId = "em02";
-            ea.EmName = "老妈出现！";
-            ea.EmDesp = "老妈突然闯了进来！";
+            ea.EmName = "Oh my mother！";
+            ea.EmDesp = "My mother is coming！";
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "装傻";
+                choice.Content = "Ignore";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "向观众介绍";
+                choice.Content = "Introduce her to the audience";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "喷走";
+                choice.Content = "Drive away";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }

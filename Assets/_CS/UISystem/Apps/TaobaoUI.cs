@@ -171,7 +171,7 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
         fakeList = new List<TaobaoItemInfo>();
         for(int i = 0; i < 35; i++)
         {
-            fakeList.Add(new TaobaoItemInfo("道具" + i, i * 50, string.Format("item_{0:00}", i + 1)));
+            fakeList.Add(new TaobaoItemInfo("Property Card" + i, i * 50, string.Format("item_{0:00}", i + 1)));
         }
     }
 
@@ -240,12 +240,12 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
             if(info.LeftInStock == 0)
             {
                 view.ItemList[idx].SelloutMark.SetActive(true);
-                view.ItemList[idx].InStock.text = "库存"+info.LeftInStock;
+                view.ItemList[idx].InStock.text = "Left "+info.LeftInStock;
             }
             else
             {
                 view.ItemList[idx].SelloutMark.SetActive(false);
-                view.ItemList[idx].InStock.text = "库存"+info.LeftInStock;
+                view.ItemList[idx].InStock.text = "Left "+info.LeftInStock;
             }
 
             view.ItemList[idx].root.gameObject.SetActive(true);
@@ -272,17 +272,17 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
         int cost = fakeList[idxInList].Cost;
         if(fakeList[idxInList].LeftInStock == 0)
         {
-            mUIMgr.ShowHint("无货");
+            mUIMgr.ShowHint("Out Of Stack");
             return;
         }
         if (pRoleMgr.Money > cost)
         {
             wantBuyIdx = idxInList;
-            mUIMgr.ShowConfirmBox("确认购买？", ConfirmBuy);
+            mUIMgr.ShowConfirmBox("Confirm Purchase？", ConfirmBuy);
         }
         else
         {
-            mUIMgr.ShowHint("金币不足");
+            mUIMgr.ShowHint("Insufficient Funds");
         }
     }
 

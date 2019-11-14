@@ -423,7 +423,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardName = "Skill";
             ca.CardType = eCardType.ABILITY;
             ca.CardId = string.Format("test_{0:00}", i + 1);
-            ca.CardEffectDesp = "Level " + (i + 1) + "的Attack Skill";
+            ca.CardEffectDesp = "Level " + (i + 1) + "Attack Skill";
             ca.CatdImageName = "Image_Bangyigegezuibangla";
             ca.BaseSkillId = string.Format("test_{0:00}", (i)/5+1); ;
             ca.cost = 2;
@@ -479,10 +479,10 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         for (int i = 0; i < 40; i++)
         {
             CardAsset ca = new CardAsset();
-            ca.CardName = "道具卡";
+            ca.CardName = "Property Card";
             ca.CardType = eCardType.ITEM;
             ca.CardId = string.Format("item_{0:00}", i + 1);
-            ca.CardEffectDesp = "等级" + (i + 1) + "的道具卡,每回合增加"+ ((i + 1))+"点属性";
+            ca.CardEffectDesp = "Level" + (i + 1) + "property card ,add "+ ((i + 1))+" attribute per round";
             ca.CatdImageName = "Image_Longju";
             ca.BaseSkillId = null;
             ca.cost = 0;

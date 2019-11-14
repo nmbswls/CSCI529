@@ -487,7 +487,7 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
     public void UpdateActionCost()
     {
-        view.ActionCost.text = "消耗" + mainGameMode.GetPracticeCost() + "点";
+        view.ActionCost.text = "Cost " + mainGameMode.GetPracticeCost() + "";
     }
     //public void UnloadSchedule(ScheduleSlot vv)
     //{

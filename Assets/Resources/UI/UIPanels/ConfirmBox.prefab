@@ -76,7 +76,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u53D6\u6D88"
+  m_Text: 'Cancel
+
+'
 --- !u!1 &2693480040891864266
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,7 +460,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u786E\u8BA4"
+  m_Text: Confirm
 --- !u!1 &6573252326480500794
 GameObject:
   m_ObjectHideFlags: 0
