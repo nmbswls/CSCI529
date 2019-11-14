@@ -60,7 +60,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
 
 
 
-            for(int n = 0; n < 10; n++)
+            for(int n = 0; n < 5; n++)
             {
                 ExtentSkillAsset sa = new ExtentSkillAsset();
 
@@ -73,8 +73,19 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
                 sa.MaxLevel = 5;
                 for (int j = 0; j < 5; j++)
                 {
+                    if (n < 2)
+                    {
+                        sa.LevelDesp.Add(string.Format("将一张基础攻击卡升级为test_{0:00}", i + 1 + j + 1));
+                    }else if(n < 4)
+                    {
+                        sa.LevelDesp.Add(string.Format("将一张基础防御卡升级为test_armor_{0:00}", i + 1 + j + 1));
+                    }
+                    else
+                    {
+                        sa.LevelDesp.Add(string.Format("将一张基础加血卡升级为test_xue_{0:00}", i + 1 + j + 1));
+                    }
                     sa.Difficulties.Add(i * 3 + j);
-                    sa.LevelDesp.Add(string.Format("将一张基础卡升级为test_{0:00}", i + 1 + j + 1));
+
                     sa.LevelStatusAdd.Add(i + j);
                 }
                 for (int j = 0; j < 5; j++)
@@ -86,8 +97,25 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
 
                     opt1.opt = eCardOperatorMode.Replace;
 
-                    opt1.from = string.Format("test_{0:00}", i + 1);
-                    opt1.to = string.Format("test_{0:00}", i + 1 + j + 1);
+
+                    if (n < 2)
+                    {
+                        opt1.from = string.Format("test_{0:00}", i + 1);
+                        opt1.to = string.Format("test_{0:00}", i + 1 + j + 1);
+                    }
+                    else if (n < 4)
+                    {
+                        opt1.from = string.Format("test_armor_{0:00}", i + 1);
+                        opt1.to = string.Format("test_armor_{0:00}", i + 1 + j + 1);
+                    }
+                    else
+                    {
+                        opt1.from = string.Format("test_xue_{0:00}", i + 1);
+                        opt1.to = string.Format("test_xue_{0:00}", i + 1 + j + 1);
+                    }
+
+                    //opt1.from = string.Format("test_{0:00}", i + 1);
+                    //opt1.to = string.Format("test_{0:00}", i + 1 + j + 1);
 
                     attached.operators.Add(opt1);
 
@@ -112,7 +140,9 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
             sa.SkillName = string.Format("基础技能{0:00}", i + 1);
             sa.SkingDesp = string.Format("这是测试用的基础技能{0:00}", i + 1);
             sa.MaxLevel = 1;
-            sa.StatusBonus.Add(new float[] { 0, 0, 1, 1, 1 });
+            sa.LevelDesp.Add("倍率0.8");
+            sa.LevelStatusAdd.Add(5);
+            //sa.StatusBonus.Add(new float[] { 0, 0, 1, 1, 1 });
 
             {
                 sa.BaseCardList.Add(string.Format("test_{0:00}", i + 1));
@@ -120,6 +150,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
             {
                 sa.BaseCardList.Add(string.Format("test_{0:00}", i + 1));
             }
+
             {
 
                 sa.BaseCardList.Add(string.Format("test_xue_{0:00}", i + 1));

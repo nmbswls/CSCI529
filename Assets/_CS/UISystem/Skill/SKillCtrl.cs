@@ -304,12 +304,13 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
             UpdateExp(info);
 
 
+
             view.CurLevelCards.text = sa.LevelDesp[info.SkillLvl-1];
             view.CurLevelAward.text = "属性+" + sa.LevelStatusAdd[info.SkillLvl-1];
 
             if (info.SkillLvl == sa.MaxLevel)
             {
-                view.CurLevel.gameObject.SetActive(false);
+                view.NextLevel.gameObject.SetActive(false);
             }
             else
             {
