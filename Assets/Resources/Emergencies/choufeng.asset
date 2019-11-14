@@ -18,10 +18,10 @@ MonoBehaviour:
   Choices:
   - Content: "\u5BF9\u55B7"
     NextEmId: 
-    Ret: 
+    Ret: Hot
   - Content: "\u8DEA\u8214"
     NextEmId: 
-    Ret: 
+    Ret: Hot
   - Content: "\u65E0\u89C6"
     NextEmId: 
-    Ret: 
+    Ret: Hot

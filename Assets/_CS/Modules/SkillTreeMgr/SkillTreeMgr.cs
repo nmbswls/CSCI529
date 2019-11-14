@@ -11,6 +11,7 @@ public class SkillInfo
     public float NowExp;
     public int SkillLvl;
     public SkillAsset sa;
+    public bool isOn = true;
 
     public SkillInfo()
     {
