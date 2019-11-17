@@ -13,6 +13,7 @@ public class UIMgr : ModuleBase, IUIMgr
 
 	private int lockCount = 0;
     private ModelMask mask;
+    public bool CanMaskClose { get; set; }
 
 	private readonly Dictionary<string, IUIBaseCtrl> mUIPanelMap = new Dictionary<string, IUIBaseCtrl>();
 	public readonly Dictionary<string, Type> mUITypeMap = new Dictionary<string, Type>();
@@ -72,6 +73,7 @@ public class UIMgr : ModuleBase, IUIMgr
         mUITypeMap["WeiboPanel"] = typeof(WeiboUI);
 
         mUITypeMap["ZhiboPanel"] = typeof(ZhiboUI);
+        mUITypeMap["ZhiboPanelMode2"] = typeof(ZhiboMode2UICtrl);
         mUITypeMap["ActBranch"] = typeof(ActBranchCtrl);
 
         mUITypeMap["HintCtrl"] = typeof(HintCtrl);
@@ -154,7 +156,7 @@ public class UIMgr : ModuleBase, IUIMgr
     {
         return mCamera;
     }
-    public IUIBaseCtrl ShowPanel (string panelStr, bool modal = true)
+    public IUIBaseCtrl ShowPanel (string panelStr, bool modal = true, bool canClose = true)
     {
 		string nname = panelStr;
         IUIBaseCtrl UICtrl = null;
@@ -178,11 +180,11 @@ public class UIMgr : ModuleBase, IUIMgr
 				mUILayerList.Add(UICtrl);
 			}
 		}
-		AdjustLayerOrder (modal);
+		AdjustLayerOrder (modal, canClose);
         return UICtrl;
     }
 
-	private void AdjustLayerOrder(bool modal = true){
+	private void AdjustLayerOrder(bool modal = true, bool canClose = true){
 
 		for (int i = 0; i < mUILayerList.Count-1; i++) {
 			Transform tr = mUILayerList [i].GetTransform ();
@@ -207,6 +209,7 @@ public class UIMgr : ModuleBase, IUIMgr
         {
             mask.GetTransform().gameObject.SetActive(false);
         }
+        CanMaskClose = canClose;
         if (mUILayerList.Count > 0)
         {
             mUILayerList[mUILayerList.Count - 1].GetTransform().SetSiblingIndex(mUILayerList.Count);

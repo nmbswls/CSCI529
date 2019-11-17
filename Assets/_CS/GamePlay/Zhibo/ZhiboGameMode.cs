@@ -517,11 +517,7 @@ public class ZhiboGameMode : GameModeBase
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            AddHp(30);
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            AddHp(-10);
+            ApplyGemHit(new int[] { 0, 1, 1, 0, 0, 0 });
         }
 
         if (Input.GetKeyDown(KeyCode.F))
@@ -559,6 +555,18 @@ public class ZhiboGameMode : GameModeBase
         //    }
         //}
 
+        for(int i = nowAudiences.Count - 1; i >= 0; i--)
+        {
+            if(nowAudiences[i].AttractLeftTurn > 0)
+            {
+                nowAudiences[i].AttractLeftTurn -= 1;
+                if(nowAudiences[i].AttractLeftTurn == 0)
+                {
+                    //mUICtrl.remove audience
+                }
+            }
+
+        }
         //handle card chain
         if (state.UseCardChain.Count > 0)
         {
@@ -1055,7 +1063,7 @@ public class ZhiboGameMode : GameModeBase
 
     public void FinishZhibo()
     {
-        ZhiboJiesuanUI p = mUIMgr.ShowPanel("ZhiboJiesuanPanel") as ZhiboJiesuanUI;
+        ZhiboJiesuanUI p = mUIMgr.ShowPanel("ZhiboJiesuanPanel",true, false) as ZhiboJiesuanUI;
         spdRate = 0;
         if (true || state.Score > state.MaxScore)
         {
@@ -1391,6 +1399,15 @@ public class ZhiboGameMode : GameModeBase
             string[] args = ce.effectString.Split(',');
             switch (ce.effectType)
             {
+                case eEffectType.HitGem:
+                    int[] damage = new int[6];
+                    for(int i = 0; i < args.Length; i++)
+                    {
+                        damage[i] = int.Parse(args[i]);
+                    }
+
+                    ApplyGemHit(new int[] {1,0,0,0,0,0});
+                    break;
                 case eEffectType.SpawnGift:
                     GenSpecial(args[0], int.Parse(args[1]));
                     break;
@@ -1448,7 +1465,8 @@ public class ZhiboGameMode : GameModeBase
                             score = score + count * perExtra;
                         }
                         GainScore(score);
-                        mUICtrl.ShowNewAudience();
+                        //mUICtrl.ShowNewAudience();
+                        ShowNewAudience();
                         mUICtrl.ShowDanmuEffect(mUICtrl.GetCardContainer().cards[state.Cards.IndexOf(NowExecuteCard)].transform.position);
                     }
                     break;
@@ -1482,7 +1500,9 @@ public class ZhiboGameMode : GameModeBase
 
 
                     GainScore(originScore, add);
-                    mUICtrl.ShowNewAudience();
+
+                    ShowNewAudience();
+                    //mUICtrl.ShowNewAudience();
 
 
                     mUICtrl.ShowDanmuEffect(mUICtrl.GetCardContainer().GetCardPosition(NowExecuteCard));
@@ -1875,4 +1895,50 @@ public class ZhiboGameMode : GameModeBase
         //}
         AutoDisappear(danmu);
     }
+
+    public List<ZhiboAudience> nowAudiences = new List<ZhiboAudience>();
+
+    public void ShowNewAudience()
+    {
+
+        ZhiboAudience audience = new ZhiboAudience();
+        {
+            audience.Type = eAudienceType.Normal;
+            audience.GemHp[0] = 1;
+            audience.GemHp[1] = 0;
+            audience.GemHp[2] = 0;
+            audience.GemHp[3] = 0;
+            audience.GemHp[4] = 0;
+            audience.GemHp[5] = 0;
+        }
+        mUICtrl.ShowNewAudience(audience);
+        nowAudiences.Add(audience);
+    }
+
+    public void ApplyGemHit(int[] damage)
+    {
+        for(int i= nowAudiences.Count - 1; i >= 0; i--)
+        {
+            if(nowAudiences[i].state == 1)
+            {
+                continue;
+            }
+            bool ret = nowAudiences[i].ApplyDamage(damage);
+            if (ret)
+            {
+                mUICtrl.ShowAudienceHit(nowAudiences[i]);
+            }
+            if (nowAudiences[i].isDead())
+            {
+                //根据 nowAudiences[i].GemMaxHp 获得热度
+                GainScore(nowAudiences[i].Level*10);
+                mUICtrl.ShowAudienceEffect(nowAudiences[i]);
+                mUICtrl.AudienceAttracted(nowAudiences[i]);
+                nowAudiences[i].Attracted();
+            }
+            mUICtrl.UpdateAudienceHp(nowAudiences[i]);
+        }
+    }
+
+
 }

@@ -54,11 +54,11 @@ public class ZhiboView : BaseView
     public RectTransform SpeField;
 
 }
-public class OperatorView
-{
-    public Image ActiveButton;
-    public Image Outline;
-}
+//public class OperatorView
+//{
+//    public Image ActiveButton;
+//    public Image Outline;
+//}
 public class ZhiboModel : BaseModel
 {
 
@@ -178,6 +178,86 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.TurnLeft.text = (int)turn + "";
     }
 
+    public void ShowAudienceHit(ZhiboAudience audience)
+    {
+        for (int i = 0; i < view.LittleTvList.Count; i++)
+        {
+            if (view.LittleTvList[i].TargetAudience == audience)
+            {
+                ShowDamageAmountEffect(view.LittleTvList[i].transform.position, 0);
+            }
+        }
+    }
+
+    public void ShowDamageAmountEffect(Vector3 pos, int value)
+    {
+        GameObject go = mResLoader.Instantiate("ZhiboMode2/DamageNumber", root);
+        Text t = go.GetComponentInChildren<Text>();
+        if (value >= 0)
+        {
+            t.text = "+" + value;
+            t.color = Color.green;
+        }
+        else
+        {
+            t.text = value + "";
+            t.color = Color.red;
+        }
+
+        go.transform.position = pos;
+        float time = 1.5f;
+        Vector3 TargetPos = pos + Vector3.up * time * 1f;
+        DOTween.To
+            (
+                () => go.transform.position,
+                (x) => go.transform.position = x,
+                TargetPos,
+                time
+            ).OnComplete(delegate ()
+            {
+                mResLoader.ReleaseGO("ZhiboMode2/DamageNumber", go);
+            });
+
+    }
+
+    public void UpdateAudienceHp(ZhiboAudience audience)
+    {
+        for(int i=0;i< view.LittleTvList.Count; i++)
+        {
+            if(view.LittleTvList[i].TargetAudience == audience)
+            {
+                view.LittleTvList[i].UpdateHp();
+            }
+        }
+
+    }
+
+    public void ShowAudienceEffect(ZhiboAudience audience)
+    {
+        for (int i = 0; i < view.LittleTvList.Count; i++)
+        {
+            if (view.LittleTvList[i].TargetAudience == audience)
+            {
+                ShowDanmuEffect(view.LittleTvList[i].transform.position);
+            }
+        }
+    }
+
+    public void ShowNewAudience(ZhiboAudience audience)
+    {
+        if (model.EmptyTVList.Count == 0)
+        {
+            return;
+        }
+        int idx = Random.Range(0, model.EmptyTVList.Count);
+
+        idx = model.EmptyTVList[idx];
+
+        model.EmptyTVList.Remove(idx);
+
+        view.LittleTvList[idx].Show(audience);
+    }
+
     public void ShowNewAudience()
     {
         if (model.EmptyTVList.Count == 0)
@@ -193,19 +273,17 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.LittleTvList[idx].Show();
     }
 
-    public void AttractAudience()
-    {
-        int idx = Random.Range(0, view.LittleTvList.Count);
-        while (true)
-        {
-            if (view.LittleTvList[idx].IsEmpty == false)
-            {
-                break;
-            }
-            idx = (idx + 1) % view.LittleTvList.Count;
-        }
 
-        view.LittleTvList[idx].Attract();
+
+    public void AudienceAttracted(ZhiboAudience audience)
+    {
+        for (int i = 0; i < view.LittleTvList.Count; i++)
+        {
+            if (view.LittleTvList[i].TargetAudience == audience)
+            {
+                view.LittleTvList[i].Attract();
+            }
+        }
     }
 
     public void UpdateQifen()
@@ -222,7 +300,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         foreach (Transform tv in view.TVContainer)
         {
             ZhiboLittleTV vv = tv.GetComponent<ZhiboLittleTV>();
-            vv.Init(tv, this);
+            vv.Init(this);
             view.LittleTvList.Add(vv);
         }
         for (int i = 0; i < view.LittleTvList.Count; i++)
@@ -290,6 +368,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     //    }
     //}
+
 
     public void ShowDanmuEffect(Vector3 pos)
     {

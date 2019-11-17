@@ -9,7 +9,7 @@ public interface IUIMgr : IModule
 	void LockUI();
 	void UnlockUI();
 
-	IUIBaseCtrl ShowPanel (string panelStr,bool modal = true);
+	IUIBaseCtrl ShowPanel (string panelStr,bool modal = true, bool canClose = true);
 	void CloseFirstPanel();
 	void CloseCertainPanel (IUIBaseCtrl toClose);
 	//mainMask
@@ -28,5 +28,7 @@ public interface IUIMgr : IModule
 
     void ShowMsgBox(string content);
     void ShowConfirmBox(string content, Action cb);
+
+    bool CanMaskClose { get; set; }
 }
 

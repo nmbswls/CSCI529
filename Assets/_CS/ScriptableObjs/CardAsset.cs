@@ -230,6 +230,7 @@ public enum eEffectType
     EndFollowingEffect,
     AddHp,
 
+    HitGem,
     //前置条件
     HavaCost,
     MaxCount,

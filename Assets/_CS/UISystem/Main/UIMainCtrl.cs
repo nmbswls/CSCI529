@@ -473,7 +473,27 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         {
             ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
             mUIMgr.CloseCertainPanel(this);
-            cm.ChangeScene("Zhibo", null,delegate {
+            cm.ChangeScene("Zhibo", delegate {
+                ZhiboGameMode2 gm = pCoreMgr.GetGameMode() as ZhiboGameMode2;
+                if(gm != null)
+                {
+                    List<string> ll = new List<string>();
+                    {
+                        ll.Add("0");
+                    }
+                    {
+                        ll.Add("1");
+                    }
+                    {
+                        ll.Add("2");
+                    }
+                    {
+                        ll.Add("3");
+                    }
+                    gm.SetPresetInfo(ll);
+                }
+
+            },delegate {
                 MainGameMode gm = pCoreMgr.GetGameMode() as MainGameMode;
                 if (gm == null)
                 {
