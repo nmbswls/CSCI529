@@ -555,8 +555,10 @@ public class ZhiboAudienceMgr
                 TargetList[i].LastTurn -= 1;
                 if(TargetList[i].LastTurn <= 0)
                 {
+                    Debug.Log("i = " + i + ", size = " + TargetList.Count);
                     LittleTvList[TargetList[i].BindViewIdx].Disappear();
-                    TargetList.RemoveAt(i);
+                    Debug.Log("i = " + i + ", size = " + TargetList.Count);
+                    //TargetList.RemoveAt(i);
                 }
             }else if (TargetList[i].state == eAudienceState.Attracted)
             {
