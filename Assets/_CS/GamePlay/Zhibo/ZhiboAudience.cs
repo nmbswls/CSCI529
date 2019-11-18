@@ -1,29 +1,73 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum eAudienceType
 {
     Normal,
     Good,
+    Heizi,
 }
 
+public enum eAudienceState {
+    None,
+    Normal,
+    Attracted,
+}
+
+public enum eAudienceBonusType
+{
+    None,
+    AddHp,
+    Damage,
+    Dual,
+    Discard,
+    Aoe,
+    Score,
+}
+
+public class ZhiboAudienceBonus
+{
+    public bool isGood;
+    public eAudienceBonusType Type;
+    public string effectString;
+
+}
 
 public class ZhiboAudience
 {
+    //static property
     public eAudienceType Type;
     public int Level = 1;
+    public int HpModeIdx = 0;
 
-    public int state = 0; //0 normal 1 attracted
+    public int LastTurn = 0;
+
+    public List<ZhiboAudienceBonus> Bonus = new List<ZhiboAudienceBonus>();
+
+
+    //run time property
+    public eAudienceState state = eAudienceState.None; 
+    public int BindViewIdx = -1;
     public int[] GemHp = new int[6];
     public int[] GemMaxHp = new int[6];
-
+    public int BlackHp = 0;
+    public int MaxBlackHp = 0;
     public int AttractLeftTurn = 0;
+    public float NowScore = 0;
+    public List<AudienceToken> Tokens = new List<AudienceToken>();
+
 
     public float GetBaseBonus()
     {
         return Level * 10;
     }
 
+
+    public void AddScore(float amount)
+    {
+        NowScore += amount;
+    }
 
     public bool isDead()
     {
@@ -41,16 +85,20 @@ public class ZhiboAudience
 
     public bool ApplyDamage(int[] damage)
     {
+        if(Type == eAudienceType.Heizi)
+        {
+            return false;
+        }
         int damageOverflow = 0;
         bool CauseDamage = false;
         for(int i = 1; i < damage.Length; i++)
         {
             if (damage[i] > 0)
-            {
+             {
                 if(GemHp[i] > 0)
                 {
                     CauseDamage = true;
-                    GemHp[i] -= damage[i];
+                    GemHp[i] -= damage[ i];
                     if(GemHp[i] < 0)
                     {
                         damageOverflow += (-GemHp[i]);
@@ -86,7 +134,7 @@ public class ZhiboAudience
         }
 
         damageOverflow += damage[0];
-        if (GemHp[0] > 0)
+        if (GemHp[0] > 0 )
         {
             if(damageOverflow > 0)
             {
@@ -105,12 +153,12 @@ public class ZhiboAudience
 
     public void Attracted()
     {
-        if(state == 1)
+        if(state == eAudienceState.Attracted)
         {
             return;
         }
-        Debug.Log("attracted");
-        state = 1;
+
+        state = eAudienceState.Attracted;
         AttractLeftTurn = 2;
     }
 }

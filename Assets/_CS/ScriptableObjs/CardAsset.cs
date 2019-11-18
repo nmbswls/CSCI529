@@ -137,6 +137,8 @@ public class CardAsset : ScriptableObject
 
     public string BaseSkillId;// is exist
 
+    public int[] Gems = new int[6];
+
     public List<CardEffect> UseConditions = new List<CardEffect>();
     public List<CardEffect> Effects = new List<CardEffect>();
     public List<CardEffect> TurnEffects = new List<CardEffect>();

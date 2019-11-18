@@ -4,11 +4,17 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class ZhiboLittleTvView{
+
+    public CanvasGroup rootCG;
     public Image Content;
     public Animator animator;
 
     public Transform GemsTr;
     public List<Image> GemList = new List<Image>();
+
+    public Transform TokenContainer;
+
+    public Text NowScore;
 }
 
 
@@ -17,7 +23,7 @@ public class ZhiboLittleTV : MonoBehaviour
 {
     public static int MaxGem = 16;
 
-    public ZhiboUI zhiboUI;
+    public ZhiboAudienceMgr audienceMgr;
     public bool IsEmpty;
     public RectTransform rt;
 
@@ -25,14 +31,14 @@ public class ZhiboLittleTV : MonoBehaviour
 
     public ZhiboAudience TargetAudience;
 
-    public float TimeLeft;
+    //public float TimeLeft;
 
     public IResLoader pResLoader;
 
-    public void Init(ZhiboUI zhiboUI)
+    public void Init(ZhiboAudienceMgr audienceMgr)
     {
 
-        this.zhiboUI = zhiboUI;
+        this.audienceMgr = audienceMgr;
         this.rt = transform as RectTransform;
         view = new ZhiboLittleTvView();
         BindView();
@@ -40,6 +46,8 @@ public class ZhiboLittleTV : MonoBehaviour
         pResLoader = GameMain.GetInstance().GetModule<ResLoader>();
         view.animator = GetComponent<Animator>();
         view.animator.Play("Empty");
+        gameObject.SetActive(false);
+        view.rootCG.alpha = 1;
         //animator.ResetTrigger("");
     }
 
@@ -48,8 +56,13 @@ public class ZhiboLittleTV : MonoBehaviour
 
     private void BindView()
     {
+        view.rootCG = transform.GetComponent<CanvasGroup>();
         view.Content = transform.Find("Bg").GetComponent<Image>();
         view.GemsTr = transform.Find("Bg").Find("Gems");
+
+        view.NowScore = transform.Find("Bg").Find("Score").GetComponent<Text>();
+        view.TokenContainer = transform.Find("Bg").Find("Tokens");
+
         view.GemList.Clear();
         for (int i = 0; i < MaxGem; i++)
         {
@@ -58,44 +71,27 @@ public class ZhiboLittleTV : MonoBehaviour
         }
     }
 
-    public void TickSec()
-    {
-        if(TimeLeft > 0)
-        {
-            TimeLeft -= 1;
-            if (TimeLeft <= 0)
-            {
-                Disappear();
-            }
-        }
 
-    }
 
-    public void Show()
-    {
-        TimeLeft = 20f;
-        //animator.SetTrigger("start");
-        view.animator.SetTrigger("Appear");
-    }
+
 
     public void Show(ZhiboAudience TargetAudience)
     {
-        TimeLeft = 20f;
-        //animator.SetTrigger("start");
+        gameObject.SetActive(true);
         view.animator.SetTrigger("Appear");
         this.TargetAudience = TargetAudience;
-
         UpdateHp();
-
-        //view.Content.sprite =  
     }
 
+    public void UpdateScore()
+    {
 
+    }
 
-    public void Attract()
+    public void Affected()
     {
         //TimeLeft += 10f;
-        //animator.SetTrigger("attracted");
+        view.animator.SetTrigger("Affected");
     }
 
     public void Disappear()
@@ -103,12 +99,12 @@ public class ZhiboLittleTV : MonoBehaviour
         view.animator.SetTrigger("Disappear");
         if(TargetAudience != null)
         {
-            int idx = zhiboUI.gameMode.nowAudiences.IndexOf(TargetAudience);
+            int idx = audienceMgr.gameMode.nowAudiences.IndexOf(TargetAudience);
             if(idx == -1)
             {
                 return;
             }
-            zhiboUI.gameMode.nowAudiences.Remove(TargetAudience);
+            audienceMgr.gameMode.nowAudiences.Remove(TargetAudience);
         }
     }
 
@@ -116,6 +112,14 @@ public class ZhiboLittleTV : MonoBehaviour
     public void UpdateHp()
     {
         int idx = 0;
+
+        for(int j = 0; j < TargetAudience.BlackHp; j++)
+        {
+            view.GemList[idx].gameObject.SetActive(true);
+            view.GemList[idx].sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/6");
+            idx++;
+        }
+
         for (int i = 0; i < TargetAudience.GemHp.Length; i++)
         {
             for (int j = 0; j < TargetAudience.GemHp[i]; j++)

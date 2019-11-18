@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class MiniCardView
 {
@@ -18,7 +19,24 @@ public class MiniCardView
     public Text TimeLeft;
     public Animator ClockAnimator;
     public Text Cost;
+
+
+    public Transform GemContainer;
+    public List<CardGemView> CardGemList = new List<CardGemView>();
 }
+
+public class CardGemView
+{
+    public Text Num;
+    public Image Icon;
+
+    public void BindView(Transform root)
+    {
+        Icon = root.Find("Icon").GetComponent<Image>();
+        Num = root.Find("Text").GetComponent<Text>();
+    }
+}
+
 public class MiniCard : MonoBehaviour
 {
 
@@ -111,6 +129,27 @@ public class MiniCard : MonoBehaviour
 
         }
 
+        foreach(Transform child in view.GemContainer)
+        {
+            container.mResLoader.ReleaseGO("Zhibo/CardGem",child.gameObject);
+        }
+
+        view.CardGemList.Clear();
+
+        for (int i = 0; i < cardInfo.OverrideGems.Length; i++)
+        {
+            if (cardInfo.OverrideGems[i] > 0)
+            {
+                GameObject go = container.mResLoader.Instantiate("Zhibo/CardGem",view.GemContainer);
+                CardGemView vv = new CardGemView();
+                vv.BindView(go.transform);
+                view.CardGemList.Add(vv);
+                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                vv.Num.text = cardInfo.OverrideGems[i] + "";
+            }
+        }
+
+
 
 
         nowDegree = 20f;
@@ -133,6 +172,8 @@ public class MiniCard : MonoBehaviour
 
         view.CardCG.blocksRaycasts = true;
         CancelHighLight();
+
+        transform.localEulerAngles = Vector3.zero;
 
     }
 
@@ -215,11 +256,14 @@ public class MiniCard : MonoBehaviour
         view.root = transform as RectTransform;
         view.CardFace = transform.Find("CardFace") as RectTransform;
         view.CardCG = view.CardFace.GetComponent<CanvasGroup>();
-        view.Bg = view.CardFace.GetComponent<Image>();
+        view.Bg = view.CardFace.Find("Outline").GetComponent<Image>();
         view.Picture = view.CardFace.Find("Picture").GetComponent<Image>();
         view.Name = view.CardFace.Find("Name").GetComponent<Text>();
         view.Desp = view.CardFace.Find("Desp").GetComponent<Text>();
         view.Cost = view.CardFace.Find("Cost").GetComponent<Text>();
+
+        view.GemContainer = view.CardFace.Find("Gems");
+
 
         view.TimeLeftComp = view.CardFace.Find("TimeLeft");
         view.TimeLeft = view.TimeLeftComp.Find("Text").GetComponent<Text>();
@@ -329,6 +373,15 @@ public class MiniCard : MonoBehaviour
 
         };
 
+        listener.OnClickEvent += delegate(PointerEventData ed) {
+
+            if(ed.button == PointerEventData.InputButton.Right)
+            {
+                Debug.Log("r c");
+                UseCardGem();
+            }
+        };
+
     }
 
     public void MinimizeIgnoreBacking()
@@ -372,12 +425,14 @@ public class MiniCard : MonoBehaviour
 
     public void SetHighLight()
     {
-        view.Bg.color = Color.red;
+        //view.Bg.color = Color.red;
+        view.Bg.enabled = true;
     }
 
     public void CancelHighLight()
     {
-        view.Bg.color = Color.white;
+        //view.Bg.color = Color.white;
+        view.Bg.enabled = false;
     }
 
     private void UseCard()
@@ -385,6 +440,22 @@ public class MiniCard : MonoBehaviour
         if (container.UseCard(this))
         {
             //Disappaer();
+        }
+        else
+        {
+            //晃动
+            nowValue = 0;
+            CancelHighLight();
+            MinimizeIgnoreBacking();
+        }
+    }
+
+    private void UseCardGem()
+    {
+        if (container.UseCardGem(this))
+        {
+            //Disappaer();
+            Fanmian();
         }
         else
         {
@@ -428,4 +499,16 @@ public class MiniCard : MonoBehaviour
     //    float a = Mathf.Abs(1 - (leftTime - (int)(leftTime / FlashInterval) * FlashInterval) / FlashInterval * 2);
     //    view.CardCG.alpha = MinAlpha + a * (BasicAlpha - MinAlpha);
     //}
+
+
+    public void Fanmian()
+    {
+        DOTween.To
+        (
+            () => transform.localEulerAngles,
+            (x) => { transform.localEulerAngles = x; },
+            new Vector3(0,180,0f),
+            0.5f
+        );
+    }
 }

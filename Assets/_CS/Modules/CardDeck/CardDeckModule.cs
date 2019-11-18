@@ -425,7 +425,8 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardId = string.Format("test_{0:00}", i + 1);
             ca.CardEffectDesp = "等级" + (i + 1) + "的攻击卡";
             ca.CatdImageName = "Image_Bangyigegezuibangla";
-            ca.BaseSkillId = string.Format("test_{0:00}", (i)/5+1); ;
+            ca.BaseSkillId = string.Format("test_{0:00}", (i)/5+1);
+            ca.Gems = new int[] {2,2,0,0,0,0};
             ca.cost = 2;
             {
                 CardEffect ce = new CardEffect();
@@ -444,7 +445,8 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardId = string.Format("test_xue_{0:00}", i + 1);
             ca.CardEffectDesp = "等级" + (i + 1) + "的回血卡";
             ca.CatdImageName = "Image_Kongqibanfan";
-            ca.BaseSkillId = string.Format("test_{0:00}", (i) / 5+1); ;
+            ca.BaseSkillId = string.Format("test_{0:00}", (i) / 5+1);
+            ca.Gems = new int[] { 2, 0, 2, 0, 0, 0 };
             ca.cost = 2;
             {
                 CardEffect ce = new CardEffect();
@@ -462,7 +464,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardType = eCardType.ABILITY;
             ca.CardId = string.Format("test_armor_{0:00}", i + 1);
             ca.CardEffectDesp = "等级" + (i + 1) + "的防御卡";
-
+            ca.Gems = new int[] { 1, 1, 1, 0, 0, 0 };
             ca.CatdImageName = "Image_Zhaohuanshuijun";
             ca.BaseSkillId = string.Format("test_{0:00}", (i) / 5); ;
             ca.cost = 2;

@@ -12,7 +12,7 @@ public class ZhiboView : BaseView
     public Button NextTurnBtn;
 
     public Transform TVContainer;
-    public List<ZhiboLittleTV> LittleTvList = new List<ZhiboLittleTV>();
+    //public List<ZhiboLittleTV> LittleTvList = new List<ZhiboLittleTV>();
 
     public Transform container;
     public Slider Score;
@@ -62,7 +62,7 @@ public class ZhiboView : BaseView
 public class ZhiboModel : BaseModel
 {
 
-    public List<int> EmptyTVList = new List<int>();
+    //public List<int> EmptyTVList = new List<int>();
     public int nowScoreText = 0;
 }
 
@@ -178,16 +178,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.TurnLeft.text = (int)turn + "";
     }
 
-    public void ShowAudienceHit(ZhiboAudience audience)
-    {
-        for (int i = 0; i < view.LittleTvList.Count; i++)
-        {
-            if (view.LittleTvList[i].TargetAudience == audience)
-            {
-                ShowDamageAmountEffect(view.LittleTvList[i].transform.position, 0);
-            }
-        }
-    }
+
 
     public void ShowDamageAmountEffect(Vector3 pos, int value)
     {
@@ -219,72 +210,26 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             });
 
     }
-
-    public void UpdateAudienceHp(ZhiboAudience audience)
+    public void ShowAudienceHitEffect(Vector3 pos)
     {
-        for(int i=0;i< view.LittleTvList.Count; i++)
-        {
-            if(view.LittleTvList[i].TargetAudience == audience)
+        GameObject go = mResLoader.Instantiate("Zhibo/AudienceEffect", root);
+        Text t = go.GetComponentInChildren<Text>();
+        go.transform.position = pos;
+        //Vector3 TargetPos = pos + Vector3.up * time * 1f;
+        DOTween.To
+            (
+                () => go.transform.localScale,
+                (x) => go.transform.localScale = x,
+                Vector3.one,
+                1.5f
+            ).OnComplete(delegate ()
             {
-                view.LittleTvList[i].UpdateHp();
-            }
-        }
+                mResLoader.ReleaseGO("Zhibo/AudienceEffect", go);
+            });
 
     }
 
-    public void ShowAudienceEffect(ZhiboAudience audience)
-    {
-        for (int i = 0; i < view.LittleTvList.Count; i++)
-        {
-            if (view.LittleTvList[i].TargetAudience == audience)
-            {
-                ShowDanmuEffect(view.LittleTvList[i].transform.position);
-            }
-        }
-    }
 
-    public void ShowNewAudience(ZhiboAudience audience)
-    {
-        if (model.EmptyTVList.Count == 0)
-        {
-            return;
-        }
-        int idx = Random.Range(0, model.EmptyTVList.Count);
-
-        idx = model.EmptyTVList[idx];
-
-        model.EmptyTVList.Remove(idx);
-
-        view.LittleTvList[idx].Show(audience);
-    }
-
-    public void ShowNewAudience()
-    {
-        if (model.EmptyTVList.Count == 0)
-        {
-            return;
-        }
-        int idx = Random.Range(0, model.EmptyTVList.Count);
-
-        idx = model.EmptyTVList[idx];
-
-        model.EmptyTVList.Remove(idx);
-
-        view.LittleTvList[idx].Show();
-    }
-
-
-
-    public void AudienceAttracted(ZhiboAudience audience)
-    {
-        for (int i = 0; i < view.LittleTvList.Count; i++)
-        {
-            if (view.LittleTvList[i].TargetAudience == audience)
-            {
-                view.LittleTvList[i].Attract();
-            }
-        }
-    }
 
     public void UpdateQifen()
     {
@@ -295,18 +240,8 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     {
         view.TurnLeft = root.Find("TurnLeft").GetComponentInChildren<Text>();
 
-
         view.TVContainer = root.Find("Audience");
-        foreach (Transform tv in view.TVContainer)
-        {
-            ZhiboLittleTV vv = tv.GetComponent<ZhiboLittleTV>();
-            vv.Init(this);
-            view.LittleTvList.Add(vv);
-        }
-        for (int i = 0; i < view.LittleTvList.Count; i++)
-        {
-            model.EmptyTVList.Add(i);
-        }
+
 
         view.DanmuField = (RectTransform)(root.Find("DanmuField"));
         view.DanmuFieldNormal = (RectTransform)(view.DanmuField.Find("Normal"));
@@ -384,6 +319,24 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             ).OnComplete(delegate ()
             {
                 mResLoader.ReleaseGO("Zhibo/Effect", go);
+            });
+
+    }
+
+    public void ShowDamageEffect(Vector3 pos)
+    {
+        GameObject go = mResLoader.Instantiate("Zhibo/DamageEffect", root);
+        go.transform.position = pos;
+        float time = (view.HpBar.transform.position - go.transform.position).magnitude / 10f;
+        DOTween.To
+            (
+                () => go.transform.position,
+                (x) => go.transform.position = x,
+                view.HpBar.transform.position,
+                time
+            ).OnComplete(delegate ()
+            {
+                mResLoader.ReleaseGO("Zhibo/DamageEffect", go);
             });
 
     }
@@ -487,27 +440,13 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             triggerSec = true;
         }
 
-        if (triggerSec)
-        {
-            for (int i = view.LittleTvList.Count - 1; i >= 0; i--)
-            {
-                view.LittleTvList[i].TickSec();
-                if (view.LittleTvList[i].TimeLeft <= 0)
-                {
-                    if (!model.EmptyTVList.Contains(i))
-                    {
-                        model.EmptyTVList.Add(i);
-                    }
-                }
-            }
-            //view.TurnTimeValue.text = (int)gameMode.state.TurnTimeLeft+"";
-        }
+
         view.TurnTimeBar.fillAmount = gameMode.state.TurnTimeLeft / 30;
         //view.TurnTimeBar.fillAmount = (view.TurnTimeMaxFillAmount - view.TurnTimeMinFillAmount) * gameMode.state.TurnTimeLeft / 30 + view.TurnTimeMinFillAmount;
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            ShowNewAudience();
+            //ShowNewAudience();
         }
 
     }
@@ -648,5 +587,9 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         return ret;
     }
 
-    
+    public Transform GetAudienceRoot()
+    {
+        return view.TVContainer;
+    }
+
 }
