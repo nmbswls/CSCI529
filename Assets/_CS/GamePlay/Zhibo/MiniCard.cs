@@ -9,7 +9,11 @@ public class MiniCardView
 {
 
     public RectTransform root;
+
+    public RectTransform CardRoot;
+    public RectTransform RotateArea;
     public RectTransform CardFace;
+    public RectTransform CardBack;
     public CanvasGroup CardCG;
     public Image Bg;
     public Image Picture;
@@ -63,6 +67,7 @@ public class MiniCard : MonoBehaviour
     public bool isInChain = false;
 
 
+
     public RectTransform rt;
     public Animator anim;
 
@@ -80,6 +85,10 @@ public class MiniCard : MonoBehaviour
     private static float TriggerValue = 100f;
 
     float preY = 0;
+
+    public bool isFaceUp = true;
+
+    private bool IsFanmian = false;
 
     public void Init(CardInZhibo cardInfo, CardContainerLayout container)
     {
@@ -167,14 +176,16 @@ public class MiniCard : MonoBehaviour
         view.CardCG.alpha = 1f;
 
         nowValue = 0;
-        view.CardFace.anchoredPosition = Vector2.zero;
-        view.CardFace.localScale = MinimizeScale;
+        view.CardRoot.anchoredPosition = Vector2.zero;
+        view.CardRoot.localScale = MinimizeScale;
 
         view.CardCG.blocksRaycasts = true;
         CancelHighLight();
 
         transform.localEulerAngles = Vector3.zero;
-
+        isFaceUp = true;
+        IsFanmian = false;
+        TurnToFace();
     }
 
     public void Tick(float dTime)
@@ -217,7 +228,7 @@ public class MiniCard : MonoBehaviour
 
     public void CheckIsHighlight()
     {
-        bool isUI = RectTransformUtility.RectangleContainsScreenPoint(view.CardFace, Input.mousePosition);
+        bool isUI = RectTransformUtility.RectangleContainsScreenPoint(view.CardRoot, Input.mousePosition);
         if (!isUI)
         {
             return;
@@ -238,8 +249,8 @@ public class MiniCard : MonoBehaviour
         }
 
 
-        view.CardFace.localScale = NormalScale;
-        view.CardFace.anchoredPosition = new Vector3(0, 0 + NormalYOffset, 0);
+        view.CardRoot.localScale = NormalScale;
+        view.CardRoot.anchoredPosition = new Vector3(0, 0 + NormalYOffset, 0);
 
     }
     public void setTargetPosition(Vector2 position)
@@ -254,8 +265,14 @@ public class MiniCard : MonoBehaviour
     private void BindView()
     {
         view.root = transform as RectTransform;
-        view.CardFace = transform.Find("CardFace") as RectTransform;
-        view.CardCG = view.CardFace.GetComponent<CanvasGroup>();
+        view.CardRoot = transform.Find("CardRoot") as RectTransform;
+        view.RotateArea = view.CardRoot.Find("RotateArea") as RectTransform;
+
+        view.CardFace = view.RotateArea.Find("CardFace") as RectTransform;
+        view.CardBack = view.RotateArea.Find("CardBack") as RectTransform;
+        view.CardBack.gameObject.SetActive(false);
+        view.CardCG = view.CardRoot.GetComponent<CanvasGroup>();
+
         view.Bg = view.CardFace.Find("Outline").GetComponent<Image>();
         view.Picture = view.CardFace.Find("Picture").GetComponent<Image>();
         view.Name = view.CardFace.Find("Name").GetComponent<Text>();
@@ -275,10 +292,10 @@ public class MiniCard : MonoBehaviour
     {
 
 
-        DragEventListener listener = view.CardFace.gameObject.GetComponent<DragEventListener>();
+        DragEventListener listener = view.CardRoot.gameObject.GetComponent<DragEventListener>();
         if (listener == null)
         {
-            listener = view.CardFace.gameObject.AddComponent<DragEventListener>();
+            listener = view.CardRoot.gameObject.AddComponent<DragEventListener>();
 
         }
         listener.ClearDragEvent();
@@ -319,7 +336,14 @@ public class MiniCard : MonoBehaviour
             }
             if(nowValue >= TriggerValue)
             {
-                UseCard();
+                if (isFaceUp)
+                {
+                    UseCard();
+                }
+                else
+                {
+                    UseCardGem();
+                }
             }
             else
             {
@@ -353,8 +377,8 @@ public class MiniCard : MonoBehaviour
             }
 
 
-            view.CardFace.localScale = NormalScale;
-            view.CardFace.anchoredPosition = new Vector3(0,0+ NormalYOffset, 0);
+            view.CardRoot.localScale = NormalScale;
+            view.CardRoot.anchoredPosition = new Vector3(0,0+ NormalYOffset, 0);
         };
 
         listener.PointerExitEvent += delegate (PointerEventData eventData) {
@@ -377,8 +401,8 @@ public class MiniCard : MonoBehaviour
 
             if(ed.button == PointerEventData.InputButton.Right)
             {
-                Debug.Log("r c");
-                UseCardGem();
+                Fanmian();
+                //UseCardGem();
             }
         };
 
@@ -389,15 +413,15 @@ public class MiniCard : MonoBehaviour
         nowValue = 0;
         DOTween.To
                     (
-                        () => view.CardFace.localScale,
-                        (x) => { view.CardFace.localScale = x; },
+                        () => view.CardRoot.localScale,
+                        (x) => { view.CardRoot.localScale = x; },
                         MinimizeScale,
                         0.1f
                     );
         DOTween.To
             (
-                () => view.CardFace.anchoredPosition,
-                (x) => { view.CardFace.anchoredPosition = x; },
+                () => view.CardRoot.anchoredPosition,
+                (x) => { view.CardRoot.anchoredPosition = x; },
                 Vector2.zero,
                 0.1f
             );
@@ -418,9 +442,9 @@ public class MiniCard : MonoBehaviour
         {
             CancelHighLight();
         }
-        view.CardFace.anchoredPosition = new Vector3(0, NormalYOffset + 0.4f* nowValue, 0);
+        view.CardRoot.anchoredPosition = new Vector3(0, NormalYOffset + 0.4f* nowValue, 0);
         float scaleRate = 1f + DragScaleRate * nowValue / TriggerValue;
-        view.CardFace.localScale = new Vector3(scaleRate, scaleRate,1);
+        view.CardRoot.localScale = new Vector3(scaleRate, scaleRate,1);
     }
 
     public void SetHighLight()
@@ -501,14 +525,67 @@ public class MiniCard : MonoBehaviour
     //}
 
 
-    public void Fanmian()
+    public bool Fanmian()
     {
+        if (IsFanmian)
+        {
+            return false;
+        }
+        if (!container.Fanmian(this))
+        {
+            return false;
+        }
+        IsFanmian = true;
         DOTween.To
         (
-            () => transform.localEulerAngles,
-            (x) => { transform.localEulerAngles = x; },
-            new Vector3(0,180,0f),
-            0.5f
-        );
+            () => view.RotateArea.localEulerAngles,
+            (x) => { view.RotateArea.localEulerAngles = x; },
+            new Vector3(0,90,0f),
+            0.075f
+        ).OnComplete(delegate {
+
+            if (isFaceUp)
+            {
+                TurnToBack();
+            }
+            else
+            {
+                TurnToFace();
+            }
+
+            DOTween.To
+            (
+                () => view.RotateArea.localEulerAngles,
+                (x) => { view.RotateArea.localEulerAngles = x; },
+                new Vector3(0, 0, 0f),
+                0.075f
+            ).OnComplete(delegate {
+
+                IsFanmian = false;
+            });
+        });
+        return true;
+    }
+
+    public void TurnToFace()
+    {
+        if (isFaceUp)
+        {
+            return;
+        }
+        view.CardFace.gameObject.SetActive(true);
+        view.CardBack.gameObject.SetActive(false);
+        isFaceUp = !isFaceUp;
+    }
+
+    public void TurnToBack()
+    {
+        if (!isFaceUp)
+        {
+            return;
+        }
+        view.CardFace.gameObject.SetActive(false);
+        view.CardBack.gameObject.SetActive(true);
+        isFaceUp = !isFaceUp;
     }
 }

@@ -132,19 +132,20 @@ public class ZhiboAudienceMgr
                 affectedAudiences.Add(i);
                 ShowAudienceHit(TargetList[i]);
                 PlaceToken(TargetList[i], token);
+                UpdateAudienceHp(TargetList[i]);
             }
             if (TargetList[i].isDead())
             {
                 //根据 观众血量类型 及 放置的代币 计算加成
                 HandleGetScore(TargetList[i]);
                 //根据 nowAudiences[i].GemMaxHp 获得热度
-
-                ShowAudienceEffect(TargetList[i]);
+                //ShowAudienceEffect(TargetList[i]);
                 KilledAudience.Add(TargetList[i]);
                 //AudienceAttracted(TargetList[i]);
                 TargetList[i].Attracted();
+                //LittleTvList[TargetList[i].BindViewIdx].Attracted();
             }
-            UpdateAudienceHp(TargetList[i]);
+
         }
 
         Queue<int[]> damageChain = new Queue<int[]>();
@@ -196,7 +197,6 @@ public class ZhiboAudienceMgr
 
         if (audience.BindViewIdx != -1)
         {
-            LittleTvList[audience.BindViewIdx].Disappear();
             //
             gameMode.GainScore(audience.NowScore);
             // handle all audience.Tokens();
@@ -274,7 +274,7 @@ public class ZhiboAudienceMgr
 
         if (audience.BindViewIdx != -1)
         {
-            LittleTvList[audience.BindViewIdx].UpdateHp();
+            LittleTvList[audience.BindViewIdx].HpFadeOut();
         }
     }
 
@@ -285,8 +285,6 @@ public class ZhiboAudienceMgr
         {
             gameMode.mUICtrl.ShowDanmuEffect(LittleTvList[audience.BindViewIdx].transform.position);
         }
-
-
     }
 
 
@@ -304,12 +302,12 @@ public class ZhiboAudienceMgr
         EachTurnMaxEnemyNum[5] = 4;
         EachTurnMaxEnemyNum[6] = 5;
 
-
+        int originLevel = 1;
         {
             for(int i = 0; i < 50; i++)
             {
                 ZhiboAudience audience = new ZhiboAudience();
-                audience.Level = 1 + i / 3;
+                audience.Level = originLevel + i / 3;
                 if (i % 4 == 2)
                 {
                     audience.Type = eAudienceType.Heizi;
@@ -455,7 +453,6 @@ public class ZhiboAudienceMgr
             audience.GemHp[3] = 0;
             audience.GemHp[4] = 0;
             audience.GemHp[5] = 0;
-            audience.GemHp[6] = 0;
             audience.state = eAudienceState.Normal;
         }
         int idx = ShowNewAudience(audience);

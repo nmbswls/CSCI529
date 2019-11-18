@@ -90,7 +90,7 @@ public class ZhiboGameState
 
     public List<Danmu> Danmus = new List<Danmu>();
     public List<SuperDanmu> SuperDanmus = new List<SuperDanmu>();
-    public List<int> SuperDanmuShowTimeList;
+    public List<int> SuperDanmuShowTimeList = new List<int>();
     public int NowSuperDanmuIdx;
 
 
@@ -116,7 +116,7 @@ public class ZhiboGameState
     public float ScoreArmor = 0;
     public float Hot = 30;
 
-    public float TurnTimeLeft = 30;
+    //public float TurnTimeLeft = 30;
     public float Qifen = 0;
     //public int ChoukaYuzhi = 100;
     public int Tili = 0;
@@ -185,6 +185,7 @@ public class ZhiboGameMode : GameModeBase
     private int EmergencyShowTime;
     private int emergencyIdx;
 
+    public static int MaxTili = 5;
 
 
     private Dictionary<string, List<string>> DanmuDict = new Dictionary<string, List<string>>();
@@ -227,13 +228,13 @@ public class ZhiboGameMode : GameModeBase
         state.OriginTurn = 12;
         state.TurnLeft = state.OriginTurn;
         state.NowTurn = 0;
-        state.TurnTimeLeft = 30f;
+        //state.TurnTimeLeft = 3000f;
 
         state.Score = 0;
         state.MaxScore = 100;
 
         state.Qifen = 500;
-        state.Tili = 10;
+        state.Tili = MaxTili;
 
         state.Hp = pRoleMgr.GetXinqingLevel()*10;
         state.MaxHp = 200;
@@ -302,8 +303,8 @@ public class ZhiboGameMode : GameModeBase
         waitingForNextTurn = false;
         state.TurnLeft -= 1;
         state.NowTurn += 1;
-        state.TurnTimeLeft = 30f;
-        state.Tili = 10;
+        //state.TurnTimeLeft = 30f;
+        state.Tili = MaxTili;
 
         //{
         //    int cardNum = (int)(state.Qifen / 100);
@@ -317,8 +318,8 @@ public class ZhiboGameMode : GameModeBase
         //    }
         //}
 
-
-        for (int i = 0; i < CardMaxMaintain - state.Cards.Count; i++)
+        int num = CardMaxMaintain - state.Cards.Count;
+        for (int i = 0; i < num; i++)
         {
             AddCardFromDeck();
         }
@@ -347,10 +348,10 @@ public class ZhiboGameMode : GameModeBase
 
         state.TurnSpecials.Clear();
 
-        InitSuperDanmu();
+        //InitSuperDanmu();
         //生成
         mUICtrl.UpdateTurnLeft(state.TurnLeft);
-        mUICtrl.ChangeTurnTime(state.TurnTimeLeft);
+        //mUICtrl.ChangeTurnTime(state.TurnTimeLeft);
         mUICtrl.LockNextTurnBtn();
         mUICtrl.UpdateDeckLeft();
 
@@ -710,28 +711,28 @@ public class ZhiboGameMode : GameModeBase
 
 
 
-        lastTick += dTime * spdRate;
-        if (lastTick > nextTick)
-        {
+        //lastTick += dTime * spdRate;
+        //if (lastTick > nextTick)
+        //{
 
-            GenDanmu();
-            lastTick -= nextTick;
-            nextTick = 1.0f / state.DanmuFreq;
-            if (state.danmuGroups.Count == 0)
-            {
-                state.DanmuFreq = 3f;
-            }
-            else
-            {
-                state.DanmuFreq = 15f;
-            }
-        }
+        //    GenDanmu();
+        //    lastTick -= nextTick;
+        //    nextTick = 1.0f / state.DanmuFreq;
+        //    if (state.danmuGroups.Count == 0)
+        //    {
+        //        state.DanmuFreq = 3f;
+        //    }
+        //    else
+        //    {
+        //        state.DanmuFreq = 15f;
+        //    }
+        //}
 
-        state.TurnTimeLeft -= dTime * spdRate;
-        if (state.TurnTimeLeft <= 0)
-        {
-            NextTurnCaller();
-        }
+        //state.TurnTimeLeft -= dTime * spdRate;
+        //if (state.TurnTimeLeft <= 0)
+        //{
+        //    NextTurnCaller();
+        //}
     }
 
 
@@ -745,7 +746,6 @@ public class ZhiboGameMode : GameModeBase
         actrl.ActBranchEvent += delegate (int idx) {
             spdRate = 1f;
             EmergencyChoice c = ea.Choices[idx];
-            Debug.Log(c.Content);
             if (c.NextEmId != null && c.NextEmId != string.Empty)
             {
 
@@ -835,10 +835,9 @@ public class ZhiboGameMode : GameModeBase
 
         //mUIMgr.ShowHint("获得热度" + (int)score);
         mUICtrl.UpdateScore();
-
-
-
     }
+
+
     public void GenTili(int v)
     {
         state.Tili += v;
@@ -1193,8 +1192,18 @@ public class ZhiboGameMode : GameModeBase
         cinfo.isTmp = false;
     }
 
+    public bool Fanmian(int cardIdx)
+    {
+        if (cardIdx < 0 || cardIdx >= state.Cards.Count)
+        {
+            return false;
+        }
+        CardInZhibo cinfo = state.Cards[cardIdx];
+        return true;
+    }
 
-    public bool TryUseCardGem(int cardIdx)
+
+        public bool TryUseCardGem(int cardIdx)
     {
         if (cardIdx < 0 || cardIdx >= state.Cards.Count)
         {

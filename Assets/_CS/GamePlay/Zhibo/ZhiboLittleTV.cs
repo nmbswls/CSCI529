@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class ZhiboLittleTvView{
 
@@ -99,21 +100,27 @@ public class ZhiboLittleTV : MonoBehaviour
         view.animator.SetTrigger("Disappear");
         if(TargetAudience != null)
         {
-            int idx = audienceMgr.gameMode.nowAudiences.IndexOf(TargetAudience);
-            if(idx == -1)
-            {
-                return;
-            }
-            audienceMgr.gameMode.nowAudiences.Remove(TargetAudience);
+            //int idx = audienceMgr.gameMode.nowAudiences.IndexOf(TargetAudience);
+            //if(idx == -1)
+            //{
+            //    return;
+            //}
+            //audienceMgr.gameMode.nowAudiences.Remove(TargetAudience);
         }
     }
 
+    public void Attracted()
+    {
+        view.rootCG.alpha = 0.4f;
+    }
 
-    public void UpdateHp()
+    Tween preTween;
+
+    private void UpdateHp()
     {
         int idx = 0;
 
-        for(int j = 0; j < TargetAudience.BlackHp; j++)
+        for (int j = 0; j < TargetAudience.BlackHp; j++)
         {
             view.GemList[idx].gameObject.SetActive(true);
             view.GemList[idx].sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/6");
@@ -133,6 +140,55 @@ public class ZhiboLittleTV : MonoBehaviour
         {
             view.GemList[i].gameObject.SetActive(false);
         }
+        if (TargetAudience.isDead())
+        {
+            audienceMgr.ShowAudienceEffect(TargetAudience);
+            Attracted();
+        }
+    }
+
+    public void HpFadeOut()
+    {
+
+        float alpha = 1;
+        List<int> toFadeOut = new List<int>();
+
+        int preIdx = 0;
+        for(int i = 0; i < 6; i++)
+        {
+            int num = TargetAudience.preHp[i] - TargetAudience.GemHp[i];
+            for(int j= preIdx+ TargetAudience.GemHp[i]; j < num; j++)
+            {
+                toFadeOut.Add(j);
+            }
+            preIdx = preIdx + TargetAudience.preHp[i];
+        }
+
+        if(preTween != null)
+        {
+            preTween.Kill();
+        }
+
+        preTween = DOTween.To
+        (
+            () => alpha,
+            (x) => { alpha = x; },
+            0,
+            1f
+        ).OnUpdate(delegate { 
+
+            for(int i=0;i< toFadeOut.Count; i++)
+            {
+                view.GemList[toFadeOut[i]].color = new Color(0,0,0,alpha);
+            }
+
+        }).OnComplete(delegate {
+
+            UpdateHp();
+            preTween = null;
+        }).OnKill(delegate {
+            UpdateHp();
+        });
     }
 
     public void Hit()

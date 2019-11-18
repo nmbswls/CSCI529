@@ -180,6 +180,12 @@ public class CardContainerLayout : MonoBehaviour
         }
     }
 
+    public bool Fanmian(MiniCard card)
+    {
+        int cardIdx = cards.IndexOf(card);
+        return gameMode.Fanmian(cardIdx);
+    }
+
     public void removeCard(MiniCard toRemove)
     {
         if(DraggingIdx == cards.IndexOf(toRemove)){

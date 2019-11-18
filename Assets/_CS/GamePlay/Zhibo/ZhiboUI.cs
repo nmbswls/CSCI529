@@ -154,15 +154,20 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             view.TiliPoints[i].color = Color.white;
         }
         Color fullColor = Color.white;
+
         ColorUtility.TryParseHtmlString("#40AB0D", out fullColor);
-        for (int i = 0; i < points / 2; i++)
+        for (int i = 0; i < points; i++)
         {
             view.TiliPoints[i].color = fullColor;
         }
-        if (points % 2 == 1)
-        {
-            view.TiliPoints[points/2].color = Color.green;
-        }
+        //for (int i = 0; i < points / 2; i++)
+        //{
+        //    view.TiliPoints[i].color = fullColor;
+        //}
+        //if (points % 2 == 1)
+        //{
+        //    view.TiliPoints[points/2].color = Color.green;
+        //}
         //view.TiliImage.fillAmount = (view.TiliMaxFillAmount - view.TiliMinFillAmount) * nowTili / 100 + view.TiliMinFillAmount;
 
     }
@@ -441,7 +446,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         }
 
 
-        view.TurnTimeBar.fillAmount = gameMode.state.TurnTimeLeft / 30;
+        //view.TurnTimeBar.fillAmount = gameMode.state.TurnTimeLeft / 30;
         //view.TurnTimeBar.fillAmount = (view.TurnTimeMaxFillAmount - view.TurnTimeMinFillAmount) * gameMode.state.TurnTimeLeft / 30 + view.TurnTimeMinFillAmount;
 
         if (Input.GetKeyDown(KeyCode.T))

@@ -58,6 +58,8 @@ public class ZhiboAudience
     public List<AudienceToken> Tokens = new List<AudienceToken>();
 
 
+    public int[] preHp = new int[6];
+
     public float GetBaseBonus()
     {
         return Level * 10;
@@ -72,7 +74,11 @@ public class ZhiboAudience
     public bool isDead()
     {
         bool ret = true;
-        for(int i = 0; i < GemHp.Length; i++)
+        if(BlackHp > 0)
+        {
+            return false;
+        }
+        for (int i = 0; i < GemHp.Length; i++)
         {
             if (GemHp[i] > 0)
             {
@@ -89,6 +95,12 @@ public class ZhiboAudience
         {
             return false;
         }
+
+        for(int i = 0; i < 6; i++)
+        {
+            preHp[i] = GemHp[i];
+        }
+
         int damageOverflow = 0;
         bool CauseDamage = false;
         for(int i = 1; i < damage.Length; i++)
@@ -125,7 +137,7 @@ public class ZhiboAudience
                     }
                     else
                     {
-                        GemHp[i] -= damage[i];
+                        GemHp[i] -= damage[0];
                         damage[0] = 0;
                     }
 
