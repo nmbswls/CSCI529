@@ -7,10 +7,15 @@ public class ZhiboEmergencyManager
     public ZhiboGameMode gameMode;
 
     public IResLoader mResLoader;
+    public IUIMgr mUIMgr;
     public EmergencyAsset nowEmergency = null;
 
     private Dictionary<string, EmergencyAsset> EmergencyDict = new Dictionary<string, EmergencyAsset>();
-    
+
+
+    private int emergencyIdx;
+
+    private int EmergencyShowTime;
 
     private void InitEmergency()
     {
@@ -22,8 +27,55 @@ public class ZhiboEmergencyManager
     {
         this.gameMode = gameMode;
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
+        mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
         InitEmergency();
     }
+
+    public void NewTurn()
+    {
+
+        if (emergencyIdx < gameMode.state.ComingEmergencies.Count && gameMode.state.ComingEmergencies[emergencyIdx].Key == gameMode.state.NowTurn)
+        {
+            EmergencyShowTime = Random.Range(5, 8);
+            emergencyIdx++;
+        }
+        else
+        {
+            EmergencyShowTime = -1;
+        }
+    }
+
+    public void CheckEmergencySec(int sec)
+    {
+        if (EmergencyShowTime != -1 && EmergencyShowTime == sec)
+        {
+            //已经加过了 要-1
+            ShowEmergency(gameMode.state.ComingEmergencies[emergencyIdx - 1].Value);
+        }
+    }
+
+    public void ShowEmergency(string emergencyId)
+    {
+        gameMode.Pause();
+        mUIMgr.ShowPanel("ActBranch", true, false);
+        ActBranchCtrl actrl = mUIMgr.GetCtrl("ActBranch") as ActBranchCtrl;
+        EmergencyAsset ea = GetEmergencyAsset(emergencyId);
+        actrl.SetEmergency(ea);
+        actrl.ActBranchEvent += delegate (int idx) {
+            gameMode.Resume();
+            EmergencyChoice c = ea.Choices[idx];
+            if (c.NextEmId != null && c.NextEmId != string.Empty)
+            {
+
+            }
+            if (c.Ret == "Hot")
+            {
+                gameMode.GainScore(idx * 50 + 50, 0);
+                mUIMgr.ShowHint("Get " + (idx * 50 + 50) + " Score");
+            }
+        };
+    }
+
 
     public void FakeEmergencies()
     {
@@ -92,5 +144,13 @@ public class ZhiboEmergencyManager
             return EmergencyDict[id];
         }
         return mResLoader.LoadResource<EmergencyAsset>("Emergencies/choufeng");
+    }
+
+    public void GenEmergency()
+    {
+
+        gameMode.state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(1, 2), "em01"));
+        gameMode.state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(7, 9), "em02"));
+        emergencyIdx = 0;
     }
 }

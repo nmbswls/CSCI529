@@ -182,8 +182,7 @@ public class ZhiboGameMode : GameModeBase
     private float CardDelayTimer = 0;
 
 
-    private int EmergencyShowTime;
-    private int emergencyIdx;
+
 
     public static int MaxTili = 5;
 
@@ -249,7 +248,7 @@ public class ZhiboGameMode : GameModeBase
 
         LoadDanmuDict();
         LoadCard();
-        GenEmergency();
+        mEmergencyManager.GenEmergency();
         mUICtrl = mUIMgr.ShowPanel("ZhiboPanel") as ZhiboUI;
 
         mAudienceMgr = new ZhiboAudienceMgr(this);
@@ -356,16 +355,8 @@ public class ZhiboGameMode : GameModeBase
         mUICtrl.UpdateDeckLeft();
 
         //如果当前回合有emergency
-        if (emergencyIdx < state.ComingEmergencies.Count && state.ComingEmergencies[emergencyIdx].Key == state.NowTurn)
-        {
-            EmergencyShowTime = Random.Range(5, 10);
-            emergencyIdx++;
-        }
-        else
-        {
-            EmergencyShowTime = -1;
-        }
 
+        mEmergencyManager.NewTurn();
 
 
 
@@ -377,13 +368,15 @@ public class ZhiboGameMode : GameModeBase
 
         mUICtrl.UpdateTili();
         mUICtrl.UpdateHp();
+
+        skillCd -= 1;
+        if(skillCd <= 0)
+        {
+            mUICtrl.SKillBtnEnable(true);
+        }
+
     }
-    public void GenEmergency()
-    {
-        state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(1,2),"em01"));
-        state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(7, 9), "em02"));
-        emergencyIdx = 0;
-    }
+
 
     public void ShowSuperDanmu(int idx)
     {
@@ -566,7 +559,7 @@ public class ZhiboGameMode : GameModeBase
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            ShowEmergency("choufeng");
+            mEmergencyManager.ShowEmergency("choufeng");
         }
 
 
@@ -666,11 +659,7 @@ public class ZhiboGameMode : GameModeBase
                 state.NowSuperDanmuIdx++;
             }
 
-            if (EmergencyShowTime != -1 && EmergencyShowTime == SecCount)
-            {
-                //已经加过了 要-1
-                ShowEmergency(state.ComingEmergencies[emergencyIdx-1].Value);
-            }
+            mEmergencyManager.CheckEmergencySec(SecCount);
 
             mAudienceMgr.TickSec();
 
@@ -735,27 +724,13 @@ public class ZhiboGameMode : GameModeBase
         //}
     }
 
-
-    public void ShowEmergency(string emergencyId)
+    public void Pause()
     {
         spdRate = 0f;
-        mUIMgr.ShowPanel("ActBranch",true,false);
-        ActBranchCtrl actrl = mUIMgr.GetCtrl("ActBranch") as ActBranchCtrl;
-        EmergencyAsset ea = mEmergencyManager.GetEmergencyAsset(emergencyId);
-        actrl.SetEmergency(ea);
-        actrl.ActBranchEvent += delegate (int idx) {
-            spdRate = 1f;
-            EmergencyChoice c = ea.Choices[idx];
-            if (c.NextEmId != null && c.NextEmId != string.Empty)
-            {
-
-            }
-            if (c.Ret == "Hot")
-            {
-                GainScore(idx*50+50, 0);
-                mUIMgr.ShowHint("Get "+(idx * 50 + 50) +" Score");
-            }
-        };
+    }
+    public void Resume()
+    {
+        spdRate = 1f;
     }
 
     public void GetQifenValue(float v)
@@ -841,9 +816,9 @@ public class ZhiboGameMode : GameModeBase
     public void GenTili(int v)
     {
         state.Tili += v;
-        if (state.Tili > 10)
+        if (state.Tili > MaxTili)
         {
-            state.Tili = 10;
+            state.Tili = MaxTili;
         }
         if (state.Tili < 0)
         {
@@ -1203,7 +1178,7 @@ public class ZhiboGameMode : GameModeBase
     }
 
 
-        public bool TryUseCardGem(int cardIdx)
+    public bool TryUseCardGem(int cardIdx)
     {
         if (cardIdx < 0 || cardIdx >= state.Cards.Count)
         {
@@ -1223,9 +1198,29 @@ public class ZhiboGameMode : GameModeBase
         }
         mUICtrl.UpdateTili();
 
-        mAudienceMgr.ApplyGemHit(cinfo.OverrideGems);
+        mAudienceMgr.HandleGemHit(cinfo.OverrideGems);
         RemoveCardToDiscarded(cinfo);
         return true;
+    }
+
+
+    int skillCd;
+
+    public void UseRoleSkill()
+    {
+        if(skillCd > 0)
+        {
+            return;
+        }
+        if(state.Tili < 3)
+        {
+            mUIMgr.ShowHint("体力不够");
+            return;
+        }
+        GenTili(-3);
+        Guopai(2);
+        skillCd = 2;
+        mUICtrl.SKillBtnEnable(false);
     }
 
     public bool TryUseCard(int cardIdx)
@@ -1487,7 +1482,7 @@ public class ZhiboGameMode : GameModeBase
                     }
                     //得到 NowExecuteCard.ca.Gems[]
                     //实施 
-                    AffectedAudience = mAudienceMgr.ApplyGemHit(new int[] {1,0,0,0,0,0});
+                    AffectedAudience = mAudienceMgr.HandleGemHit(new int[] {1,0,0,0,0,0});
 
                     //cause damage
                     for(int i=0;i< AffectedAudience.Count; i++)

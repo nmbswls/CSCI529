@@ -11,6 +11,8 @@ public class ZhiboView : BaseView
     public Text TurnLeft;
     public Button NextTurnBtn;
 
+    public Button RoleSkill;
+
     public Transform TVContainer;
     //public List<ZhiboLittleTV> LittleTvList = new List<ZhiboLittleTV>();
 
@@ -52,6 +54,8 @@ public class ZhiboView : BaseView
     public RectTransform SuperDanmuPreview;
 
     public RectTransform SpeField;
+
+    public GameObject TokenDetailPanel;
 
 }
 //public class OperatorView
@@ -246,7 +250,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.TurnLeft = root.Find("TurnLeft").GetComponentInChildren<Text>();
 
         view.TVContainer = root.Find("Audience");
-
+        view.TokenDetailPanel = root.Find("TokenDetail").gameObject;
 
         view.DanmuField = (RectTransform)(root.Find("DanmuField"));
         view.DanmuFieldNormal = (RectTransform)(view.DanmuField.Find("Normal"));
@@ -257,6 +261,8 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         Transform hotView = root.transform.Find("Score");
         view.Score = hotView.GetComponent<Slider>();
         view.hotValue = hotView.Find("Value").GetComponent<Text>();
+
+        view.RoleSkill = root.Find("RoleSkill").GetComponent<Button>();
 
         Transform lbArea = root.Find("LeftBottom");
 
@@ -380,6 +386,16 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             NextTurn();
         });
 
+
+        view.RoleSkill.onClick.AddListener(delegate
+        {
+            gameMode.UseRoleSkill();
+        });
+
+    }
+    public void SKillBtnEnable(bool enable)
+    {
+        view.RoleSkill.interactable = enable;
     }
 
     private void NextTurn()
@@ -595,6 +611,11 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     public Transform GetAudienceRoot()
     {
         return view.TVContainer;
+    }
+
+    public GameObject GetTokenDetailPanel()
+    {
+        return view.TokenDetailPanel;
     }
 
 }

@@ -14,6 +14,9 @@ public class ZhiboLittleTvView{
     public List<Image> GemList = new List<Image>();
 
     public Transform TokenContainer;
+    public GameObject TokenInfo;
+    public GameObject MoreToken;
+    public List<Image> TokenList=new List<Image>();
 
     public Text NowScore;
 }
@@ -36,6 +39,8 @@ public class ZhiboLittleTV : MonoBehaviour
 
     public IResLoader pResLoader;
 
+    public bool isAttracted = false;
+
     public void Init(ZhiboAudienceMgr audienceMgr)
     {
 
@@ -43,12 +48,18 @@ public class ZhiboLittleTV : MonoBehaviour
         this.rt = transform as RectTransform;
         view = new ZhiboLittleTvView();
         BindView();
-
+        RegisterEvents();
         pResLoader = GameMain.GetInstance().GetModule<ResLoader>();
         view.animator = GetComponent<Animator>();
         view.animator.Play("Empty");
         gameObject.SetActive(false);
         view.rootCG.alpha = 1;
+        isAttracted = false;
+
+        for(int i = 0; i < 3; i++)
+        {
+            view.TokenList[i].enabled = false;
+        }
         //animator.ResetTrigger("");
     }
 
@@ -63,6 +74,16 @@ public class ZhiboLittleTV : MonoBehaviour
 
         view.NowScore = transform.Find("Bg").Find("Score").GetComponent<Text>();
         view.TokenContainer = transform.Find("Bg").Find("Tokens");
+        view.MoreToken = transform.Find("Bg").Find("MoreToken").gameObject;
+        view.TokenInfo = transform.Find("Bg").Find("TokenInfo").gameObject;
+
+        view.MoreToken.SetActive(false);
+
+        view.TokenList.Clear();
+        foreach (Transform tr in view.TokenContainer)
+        {
+            view.TokenList.Add(tr.GetComponent<Image>());
+        }
 
         view.GemList.Clear();
         for (int i = 0; i < MaxGem; i++)
@@ -72,6 +93,25 @@ public class ZhiboLittleTV : MonoBehaviour
         }
     }
 
+    private void RegisterEvents() {
+
+        {
+            DragEventListener listener = view.TokenInfo.GetComponent<DragEventListener>();
+            if(listener == null)
+            {
+                listener = view.TokenInfo.AddComponent<DragEventListener>();
+                listener.PointerEnterEvent += delegate {
+                    audienceMgr.ShowTokenDetail(this);
+                };
+                listener.OnClickEvent += delegate {
+                    Debug.Log("cnm");
+                };
+                listener.PointerExitEvent += delegate {
+                    audienceMgr.HideTokenDetail();
+                };
+            }
+        }
+    }
 
 
 
@@ -79,13 +119,42 @@ public class ZhiboLittleTV : MonoBehaviour
     public void Show(ZhiboAudience TargetAudience)
     {
         gameObject.SetActive(true);
+        view.animator.Play("Empty");
         view.animator.SetTrigger("Appear");
         this.TargetAudience = TargetAudience;
         UpdateHp();
+        UpdateBuffs();
     }
 
     public void UpdateScore()
     {
+
+    }
+
+    public void UpdateBuffs()
+    {
+        if(TargetAudience.Bonus.Count > 3)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                view.TokenList[i].enabled = true;
+            }
+            view.MoreToken.SetActive(true);
+        }
+        else
+        {
+            for (int i = 0; i < TargetAudience.Bonus.Count; i++)
+            {
+                view.TokenList[i].enabled = true;
+            }
+            for (int i = TargetAudience.Bonus.Count; i < 3; i++)
+            {
+                view.TokenList[i].enabled = false;
+            }
+            view.MoreToken.SetActive(false);
+        }
+
+
 
     }
 
@@ -111,7 +180,10 @@ public class ZhiboLittleTV : MonoBehaviour
 
     public void Attracted()
     {
+        if (isAttracted) return;
+        isAttracted = true;
         view.rootCG.alpha = 0.4f;
+        audienceMgr.ShowAudienceKilledEffect(TargetAudience);
     }
 
     Tween preTween;
@@ -123,6 +195,7 @@ public class ZhiboLittleTV : MonoBehaviour
         for (int j = 0; j < TargetAudience.BlackHp; j++)
         {
             view.GemList[idx].gameObject.SetActive(true);
+            view.GemList[idx].color = Color.white;
             view.GemList[idx].sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/6");
             idx++;
         }
@@ -132,6 +205,7 @@ public class ZhiboLittleTV : MonoBehaviour
             for (int j = 0; j < TargetAudience.GemHp[i]; j++)
             {
                 view.GemList[idx].gameObject.SetActive(true);
+                view.GemList[idx].color = Color.white;
                 view.GemList[idx].sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
                 idx++;
             }
@@ -142,7 +216,7 @@ public class ZhiboLittleTV : MonoBehaviour
         }
         if (TargetAudience.isDead())
         {
-            audienceMgr.ShowAudienceEffect(TargetAudience);
+            //Affected();
             Attracted();
         }
     }
@@ -156,8 +230,8 @@ public class ZhiboLittleTV : MonoBehaviour
         int preIdx = 0;
         for(int i = 0; i < 6; i++)
         {
-            int num = TargetAudience.preHp[i] - TargetAudience.GemHp[i];
-            for(int j= preIdx+ TargetAudience.GemHp[i]; j < num; j++)
+            //int num = TargetAudience.preHp[i] - TargetAudience.GemHp[i];
+            for(int j= preIdx+ TargetAudience.GemHp[i]; j < preIdx+TargetAudience.preHp[i]; j++)
             {
                 toFadeOut.Add(j);
             }

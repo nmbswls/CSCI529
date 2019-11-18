@@ -17,21 +17,34 @@ public enum eAudienceState {
 
 public enum eAudienceBonusType
 {
-    None,
+    None = 0,
     AddHp,
     Damage,
     Dual,
     Discard,
     Aoe,
     Score,
+    Max,
 }
 
+public enum eAudienceAuraType
+{
+    LessScore,
+}
+
+[System.Serializable]
 public class ZhiboAudienceBonus
 {
     public bool isGood;
     public eAudienceBonusType Type;
     public string effectString;
+}
 
+[System.Serializable]
+public class ZhiboAudienceAura
+{
+    public eAudienceAuraType type;
+    public int level;
 }
 
 public class ZhiboAudience
@@ -44,6 +57,7 @@ public class ZhiboAudience
     public int LastTurn = 0;
 
     public List<ZhiboAudienceBonus> Bonus = new List<ZhiboAudienceBonus>();
+    public List<ZhiboAudienceAura> Aura = new List<ZhiboAudienceAura>();
 
 
     //run time property
@@ -89,14 +103,21 @@ public class ZhiboAudience
         return ret;
     }
 
-    public bool ApplyDamage(int[] damage)
+    public bool ApplyDamage(int[] inputDamage)
     {
         if(Type == eAudienceType.Heizi)
         {
             return false;
         }
 
+        int[] damage = new int[6];
+
         for(int i = 0; i < 6; i++)
+        {
+            damage[i] = inputDamage[i];
+        }
+
+        for (int i = 0; i < 6; i++)
         {
             preHp[i] = GemHp[i];
         }
@@ -171,7 +192,7 @@ public class ZhiboAudience
         }
 
         state = eAudienceState.Attracted;
-        AttractLeftTurn = 2;
+        AttractLeftTurn = 1;
     }
 }
 

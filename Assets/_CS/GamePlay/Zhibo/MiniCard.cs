@@ -14,6 +14,7 @@ public class MiniCardView
     public RectTransform RotateArea;
     public RectTransform CardFace;
     public RectTransform CardBack;
+
     public CanvasGroup CardCG;
     public Image Bg;
     public Image Picture;
@@ -27,8 +28,24 @@ public class MiniCardView
 
     public Transform GemContainer;
     public List<CardGemView> CardGemList = new List<CardGemView>();
+
+    public Transform GemBackContainer;
+    public List<CardGemBackView> CardGemBackList = new List<CardGemBackView>();
 }
 
+public class CardGemBackView
+{
+    public Text Num;
+    public Image Icon;
+    public Transform Content;
+
+    public void BindView(Transform root)
+    {
+        Content = root.Find("Content");
+        Icon = Content.Find("Icon").GetComponent<Image>();
+        Num = Content.Find("Text").GetComponent<Text>();
+    }
+}
 public class CardGemView
 {
     public Text Num;
@@ -159,6 +176,29 @@ public class MiniCard : MonoBehaviour
         }
 
 
+        foreach (Transform child in view.GemBackContainer)
+        {
+            container.mResLoader.ReleaseGO("Zhibo/CardGemBack", child.gameObject);
+        }
+
+        view.CardGemBackList.Clear();
+
+        for (int i = 0; i < cardInfo.OverrideGems.Length; i++)
+        {
+            if (cardInfo.OverrideGems[i] > 0)
+            {
+                GameObject go = container.mResLoader.Instantiate("Zhibo/CardGemBack", view.GemBackContainer);
+                CardGemBackView vv = new CardGemBackView();
+                vv.BindView(go.transform);
+                view.CardGemBackList.Add(vv);
+                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                vv.Num.text = cardInfo.OverrideGems[i] + "";
+
+                vv.Content.localPosition = new Vector3(i * 50, 0, 0);
+            }
+        }
+
+
 
 
         nowDegree = 20f;
@@ -183,7 +223,7 @@ public class MiniCard : MonoBehaviour
         CancelHighLight();
 
         transform.localEulerAngles = Vector3.zero;
-        isFaceUp = true;
+        isFaceUp = false;
         IsFanmian = false;
         TurnToFace();
     }
@@ -270,7 +310,6 @@ public class MiniCard : MonoBehaviour
 
         view.CardFace = view.RotateArea.Find("CardFace") as RectTransform;
         view.CardBack = view.RotateArea.Find("CardBack") as RectTransform;
-        view.CardBack.gameObject.SetActive(false);
         view.CardCG = view.CardRoot.GetComponent<CanvasGroup>();
 
         view.Bg = view.CardFace.Find("Outline").GetComponent<Image>();
@@ -280,6 +319,7 @@ public class MiniCard : MonoBehaviour
         view.Cost = view.CardFace.Find("Cost").GetComponent<Text>();
 
         view.GemContainer = view.CardFace.Find("Gems");
+        view.GemBackContainer = view.CardBack.Find("Gems");
 
 
         view.TimeLeftComp = view.CardFace.Find("TimeLeft");
