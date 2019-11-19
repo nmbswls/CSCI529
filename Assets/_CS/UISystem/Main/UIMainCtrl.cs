@@ -19,7 +19,7 @@ public class MainView : BaseView
 	public Button NextStage;
     public Button ScheduleBtn;
     public Button InspectBtn;
-    public Button DanmuGame;
+    public Button FightDanmuBtn;
 
     public Slider XinqingSlider;
     public Slider FumianSlider;
@@ -220,7 +220,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.InspectBtn = root.Find("Deck").GetComponent<Button>();
         view.ScheduleBtn = root.Find("Schedule").GetComponent<Button>();
         view.NextStage = root.Find("NextTurn").GetComponent<Button>();
-        view.DanmuGame = root.Find("DanmuPlay").GetComponent<Button>();
+        view.FightDanmuBtn = root.Find("FightDanmuBtn").GetComponent<Button>();
 
         view.XinqingSlider = root.Find("Property2").Find("Xintai").Find("Slider").GetComponent<Slider>();
         view.FumianSlider = root.Find("Property2").Find("Fumian").Find("Slider").GetComponent<Slider>();
@@ -471,13 +471,14 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
 
     public override void RegisterEvent(){
-        view.NextStage.onClick.AddListener(delegate ()
+
+        view.FightDanmuBtn.onClick.AddListener(delegate ()
         {
             ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
             mUIMgr.CloseCertainPanel(this);
-            cm.ChangeScene("Zhibo", delegate {
+            cm.ChangeScene("FightDanmu", delegate {
                 ZhiboGameMode2 gm = pCoreMgr.GetGameMode() as ZhiboGameMode2;
-                if(gm != null)
+                if (gm != null)
                 {
                     List<string> ll = new List<string>();
                     {
@@ -494,6 +495,34 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
                     }
                     gm.SetPresetInfo(ll);
                 }
+
+            });
+        });
+
+
+        view.NextStage.onClick.AddListener(delegate ()
+        {
+            ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
+            mUIMgr.CloseCertainPanel(this);
+            cm.ChangeScene("Zhibo", delegate {
+                //ZhiboGameMode gm = pCoreMgr.GetGameMode() as ZhiboGameMode;
+                //if(gm != null)
+                //{
+                //    List<string> ll = new List<string>();
+                //    {
+                //        ll.Add("0");
+                //    }
+                //    {
+                //        ll.Add("1");
+                //    }
+                //    {
+                //        ll.Add("2");
+                //    }
+                //    {
+                //        ll.Add("3");
+                //    }
+                //    gm.SetPresetInfo(ll);
+                //}
 
             },delegate {
                 MainGameMode gm = pCoreMgr.GetGameMode() as MainGameMode;

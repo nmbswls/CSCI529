@@ -86,6 +86,7 @@ public class UIMgr : ModuleBase, IUIMgr
 
 
         mUITypeMap["ZhiboJiesuanPanel"] = typeof(ZhiboJiesuanUI);
+        mUITypeMap["FightDanmuJiesuanPanel"] = typeof(FightDanmuJiesuanUI);
 
         mUITypeMap["TaobaoPanel"] = typeof(TaobaoUI);
 

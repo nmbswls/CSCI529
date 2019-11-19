@@ -206,9 +206,12 @@ public class ZhiboGameMode2 : GameModeBase
 
     public override void Tick(float dTime)
     {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            FinishZhibo();
+        }
 
-
-        if(state.AccelerateDur > 0)
+        if (state.AccelerateDur > 0)
         {
             state.AccelerateDur -= spdRate * dTime;
             if (state.AccelerateDur < 0)
@@ -332,7 +335,7 @@ public class ZhiboGameMode2 : GameModeBase
 
     public void FinishZhibo()
     {
-        ZhiboJiesuanUI p = mUIMgr.ShowPanel("ZhiboJiesuanPanel",true,false) as ZhiboJiesuanUI;
+        FightDanmuJiesuanUI p = mUIMgr.ShowPanel("FightDanmuJiesuanPanel", true,false) as FightDanmuJiesuanUI;
         spdRate = 0;
     }
 

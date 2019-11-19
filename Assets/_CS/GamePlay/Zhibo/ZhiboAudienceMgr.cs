@@ -126,10 +126,17 @@ public class ZhiboAudienceMgr
 
     public List<int> HandleGemHit(int[] damage, AudienceToken token = null)
     {
-        KilledAudience.Clear();
+        bool hasQueue = false;
+        if (KilledAudience.Count > 0)
+        {
+            hasQueue = true;
+        }
         List<int> oritinAffectedList = ApplyGemHit(damage,null);
 
-        GameMain.GetInstance().RunCoroutine(HandleKillingQueue());
+        if (!hasQueue)
+        {
+            GameMain.GetInstance().RunCoroutine(HandleKillingQueue());
+        }
 
         return oritinAffectedList;
     }
@@ -139,15 +146,15 @@ public class ZhiboAudienceMgr
         while (KilledAudience.Count > 0)
         {
             yield return new WaitForSeconds(0.5f);
-            if(KilledAudience.Count > 0)
-            {
+            //if(KilledAudience.Count > 0)
+            //{
                 ZhiboAudience a = KilledAudience.Dequeue();
                 if (a == null)
                 {
                     Debug.Log("errrrrrr");
                 }
                 AudienceAttracted(a);
-            }
+            //}
         }
     }
 

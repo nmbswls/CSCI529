@@ -2,13 +2,13 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class ZhiboJiesunView : BaseView
+public class FightDanmuJiesunView : BaseView
 {
     public Button OKBtn;
     public Text text;
 }
 
-public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
+public class FightDanmuJiesuanUI : UIBaseCtrl<BaseModel, FightDanmuJiesunView>
 {
 
     //public ZhiboGameMode gameMode;
@@ -30,8 +30,8 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
     {
         base.RegisterEvent();
         view.OKBtn.onClick.AddListener(delegate {
-            ZhiboGameMode gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as ZhiboGameMode;
-            Debug.Log(gameMode.mUICtrl==null);
+            ZhiboGameMode2 gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as ZhiboGameMode2;
+            Debug.Log(gameMode.mUICtrl == null);
             mUIMgr.CloseCertainPanel(gameMode.mUICtrl);
             mUIMgr.CloseCertainPanel(this);
             GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main");
@@ -41,6 +41,5 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
     public void SetContent(string bonusString)
     {
         view.text.text = bonusString;
-        view.text.text += "New Subscribers:";
     }
 }
