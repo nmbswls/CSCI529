@@ -54,7 +54,7 @@ public class ZhiboAudience
     public int Level = 1;
     public int HpModeIdx = 0;
 
-    public int LastTurn = 0;
+    public int LastTurn = 2;
 
     public List<ZhiboAudienceBonus> Bonus = new List<ZhiboAudienceBonus>();
     public List<ZhiboAudienceAura> Aura = new List<ZhiboAudienceAura>();

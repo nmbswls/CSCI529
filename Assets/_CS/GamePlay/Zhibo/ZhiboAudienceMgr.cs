@@ -555,10 +555,12 @@ public class ZhiboAudienceMgr
                 TargetList[i].LastTurn -= 1;
                 if(TargetList[i].LastTurn <= 0)
                 {
-                    Debug.Log("i = " + i + ", size = " + TargetList.Count);
+                    if (TargetList[i].BindViewIdx == -1)
+                    {
+                        return;
+                    }
                     LittleTvList[TargetList[i].BindViewIdx].Disappear();
-                    Debug.Log("i = " + i + ", size = " + TargetList.Count);
-                    //TargetList.RemoveAt(i);
+                    TargetList.RemoveAt(i);
                 }
             }else if (TargetList[i].state == eAudienceState.Attracted)
             {
@@ -611,8 +613,9 @@ public class ZhiboAudienceMgr
             return -1;
         }
 
-
+        
         int idx = Random.Range(0, EmptyTVList.Count);
+        
 
         idx = EmptyTVList[idx];
 
