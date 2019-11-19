@@ -188,7 +188,7 @@ public class ZhiboGameMode : GameModeBase
 
 
 
-    public static int MaxTili = 5;
+    public static int MaxTili = 6;
 
 
     private Dictionary<string, List<string>> DanmuDict = new Dictionary<string, List<string>>();
@@ -239,8 +239,9 @@ public class ZhiboGameMode : GameModeBase
         state.Qifen = 500;
         state.Tili = MaxTili;
 
-        state.Hp = pRoleMgr.GetXinqingLevel()*10;
-        state.MaxHp = 200;
+        //state.Hp = pRoleMgr.GetXinqingLevel()*10;
+        state.Hp = 30;
+        state.MaxHp = 50;
         state.MinHp = 0;
         state.TmpHp = 0;
 
