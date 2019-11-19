@@ -153,7 +153,7 @@ public class RoleModule : ModuleBase, IRoleModule
         roleStats.jiyi = ret.initProperties[3];
         roleStats.fanying = ret.initProperties[4];
 
-        money = ret.initMoney;
+        money = ret.initMoney+1000;
 
         pCardMdl.AddCards(ret.initCards);
         pCardMdl.AddCards(ret.initOwning);
@@ -357,6 +357,16 @@ public class RoleModule : ModuleBase, IRoleModule
     {
         roleStats.fanying += v;
     }
+
+    public void AddAllStatus(float v)
+    {
+        AddMeili(v);
+        AddTili(v);
+        AddKoucai(v);
+        AddJiyi(v);
+        AddFanying(v);
+    }
+
 
     public void AddActionPoints(float v)
     {

@@ -11,10 +11,10 @@ public class ZhiboJiesunView : BaseView
 public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
 {
 
-    public ZhiboGameMode gameMode;
+    //public ZhiboGameMode gameMode;
     public override void Init()
     {
-        gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as ZhiboGameMode;
+        //gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as ZhiboGameMode;
     }
 
     public override void PostInit()
@@ -30,6 +30,9 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
     {
         base.RegisterEvent();
         view.OKBtn.onClick.AddListener(delegate {
+            ZhiboGameMode gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as ZhiboGameMode;
+            //ZhiboGameMode2 gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as ZhiboGameMode2;
+            Debug.Log(gameMode.mUICtrl==null);
             mUIMgr.CloseCertainPanel(gameMode.mUICtrl);
             mUIMgr.CloseCertainPanel(this);
             GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main");

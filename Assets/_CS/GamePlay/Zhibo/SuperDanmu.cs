@@ -15,6 +15,7 @@ public enum eSuperDanmuType
     Jianpanxia,
     Penzi,
     Gangjing,
+    Max,
 }
 public class SuperDanmu : MonoBehaviour
 {

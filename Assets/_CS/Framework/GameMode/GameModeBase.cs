@@ -2,6 +2,16 @@
 using System.Collections;
 using System;
 
+public class GameStateBase
+{
+
+}
+
+public class HudBase
+{
+
+}
+
 public class GameModeBase
 {
     public Action GameFinishedCallback;

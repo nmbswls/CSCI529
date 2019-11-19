@@ -53,6 +53,8 @@ public class BaseSkillAsset : SkillAsset
     //每个等级 都有对应固定bonus加成
     public List<float[]> StatusBonus = new List<float[]>();
 
+
+
 }
 
 [CreateAssetMenu(fileName = "new extend skill", menuName = "Ctm/ExtendSkill")]
@@ -93,5 +95,8 @@ public class SkillAsset : ScriptableObject
 
     //每级效果说明
     public List<string> LevelDesp = new List<string>();
+
+    //每个等级 升到该等级需要的开销 普通技能只有第一级有开销
+    public List<int> Prices = new List<int>();
 
 }

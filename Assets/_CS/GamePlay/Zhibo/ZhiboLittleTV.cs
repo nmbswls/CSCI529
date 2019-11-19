@@ -1,59 +1,273 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using DG.Tweening;
+
+public class ZhiboLittleTvView{
+
+    public CanvasGroup rootCG;
+    public Image Content;
+    public Animator animator;
+
+    public Transform GemsTr;
+    public List<Image> GemList = new List<Image>();
+
+    public Transform TokenContainer;
+    public GameObject TokenInfo;
+    public GameObject MoreToken;
+    public List<Image> TokenList=new List<Image>();
+
+    public Text NowScore;
+}
+
+
 
 public class ZhiboLittleTV : MonoBehaviour
 {
+    public static int MaxGem = 16;
 
-    public ZhiboUI zhiboUI;
+    public ZhiboAudienceMgr audienceMgr;
     public bool IsEmpty;
-    public RectTransform root;
-    public Animator animator;
-    public Image content;
+    public RectTransform rt;
 
-    public float TimeLeft;
+    public ZhiboLittleTvView view;
 
-    public void Init(Transform root, ZhiboUI zhiboUI)
+    public ZhiboAudience TargetAudience;
+
+    //public float TimeLeft;
+
+    public IResLoader pResLoader;
+
+    public bool isAttracted = false;
+
+    public void Init(ZhiboAudienceMgr audienceMgr)
     {
 
-        this.zhiboUI = zhiboUI;
-        this.root = (RectTransform)root;
+        this.audienceMgr = audienceMgr;
+        this.rt = transform as RectTransform;
+        view = new ZhiboLittleTvView();
+        BindView();
+        RegisterEvents();
+        pResLoader = GameMain.GetInstance().GetModule<ResLoader>();
+        view.animator = GetComponent<Animator>();
+        view.animator.Play("Empty");
+        gameObject.SetActive(false);
+        view.rootCG.alpha = 1;
+        isAttracted = false;
 
-        animator = GetComponent<Animator>();
-        animator.Play("Empty");
+        for(int i = 0; i < 3; i++)
+        {
+            view.TokenList[i].enabled = false;
+        }
         //animator.ResetTrigger("");
-        content = transform.GetChild(0).GetComponent<Image>();
     }
 
-    public void TickSec()
+
+
+
+    private void BindView()
     {
-        if(TimeLeft > 0)
+        view.rootCG = transform.GetComponent<CanvasGroup>();
+        view.Content = transform.Find("Bg").GetComponent<Image>();
+        view.GemsTr = transform.Find("Bg").Find("Gems");
+
+        view.NowScore = transform.Find("Bg").Find("Score").GetComponent<Text>();
+        view.TokenContainer = transform.Find("Bg").Find("Tokens");
+        view.MoreToken = transform.Find("Bg").Find("MoreToken").gameObject;
+        view.TokenInfo = transform.Find("Bg").Find("TokenInfo").gameObject;
+
+        view.MoreToken.SetActive(false);
+
+        view.TokenList.Clear();
+        foreach (Transform tr in view.TokenContainer)
         {
-            TimeLeft -= 1;
-            if (TimeLeft <= 0)
-            {
-                Disappear();
-            }
+            view.TokenList.Add(tr.GetComponent<Image>());
         }
 
+        view.GemList.Clear();
+        for (int i = 0; i < MaxGem; i++)
+        {
+            Transform child = view.GemsTr.GetChild(i);
+            view.GemList.Add(child.GetComponent<Image>());
+        }
     }
 
-    public void Show()
-    {
-        TimeLeft = 20f;
-        //animator.SetTrigger("start");
-        animator.SetTrigger("Appear");
+    private void RegisterEvents() {
+
+        {
+            DragEventListener listener = view.TokenInfo.GetComponent<DragEventListener>();
+            if(listener == null)
+            {
+                listener = view.TokenInfo.AddComponent<DragEventListener>();
+                listener.PointerEnterEvent += delegate {
+                    audienceMgr.ShowTokenDetail(this);
+                };
+                listener.OnClickEvent += delegate {
+                    Debug.Log("cnm");
+                };
+                listener.PointerExitEvent += delegate {
+                    audienceMgr.HideTokenDetail();
+                };
+            }
+        }
     }
 
-    public void Attract()
+
+
+
+    public void Show(ZhiboAudience TargetAudience)
     {
-        TimeLeft += 10f;
-        //animator.SetTrigger("attracted");
+        gameObject.SetActive(true);
+        view.animator.Play("Empty");
+        view.animator.SetTrigger("Appear");
+        this.TargetAudience = TargetAudience;
+        UpdateHp();
+        UpdateBuffs();
+    }
+
+    public void UpdateScore()
+    {
+
+    }
+
+    public void UpdateBuffs()
+    {
+        if(TargetAudience.Bonus.Count > 3)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                view.TokenList[i].enabled = true;
+            }
+            view.MoreToken.SetActive(true);
+        }
+        else
+        {
+            for (int i = 0; i < TargetAudience.Bonus.Count; i++)
+            {
+                view.TokenList[i].enabled = true;
+            }
+            for (int i = TargetAudience.Bonus.Count; i < 3; i++)
+            {
+                view.TokenList[i].enabled = false;
+            }
+            view.MoreToken.SetActive(false);
+        }
+
+
+
+    }
+
+    public void Affected()
+    {
+        //TimeLeft += 10f;
+        view.animator.SetTrigger("Affected");
     }
 
     public void Disappear()
     {
-        animator.SetTrigger("Disappear");
+        view.animator.SetTrigger("Disappear");
+        if(TargetAudience != null)
+        {
+            //int idx = audienceMgr.gameMode.nowAudiences.IndexOf(TargetAudience);
+            //if(idx == -1)
+            //{
+            //    return;
+            //}
+            //audienceMgr.gameMode.nowAudiences.Remove(TargetAudience);
+        }
+    }
+
+    public void Attracted()
+    {
+        if (isAttracted) return;
+        isAttracted = true;
+        view.rootCG.alpha = 0.4f;
+        audienceMgr.ShowAudienceKilledEffect(TargetAudience);
+    }
+
+    Tween preTween;
+
+    private void UpdateHp()
+    {
+        int idx = 0;
+
+        for (int j = 0; j < TargetAudience.BlackHp; j++)
+        {
+            view.GemList[idx].gameObject.SetActive(true);
+            view.GemList[idx].color = Color.white;
+            view.GemList[idx].sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/6");
+            idx++;
+        }
+
+        for (int i = 0; i < TargetAudience.GemHp.Length; i++)
+        {
+            for (int j = 0; j < TargetAudience.GemHp[i]; j++)
+            {
+                view.GemList[idx].gameObject.SetActive(true);
+                view.GemList[idx].color = Color.white;
+                view.GemList[idx].sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                idx++;
+            }
+        }
+        for (int i = idx; i < MaxGem; i++)
+        {
+            view.GemList[i].gameObject.SetActive(false);
+        }
+        if (TargetAudience.isDead())
+        {
+            //Affected();
+            Attracted();
+        }
+    }
+
+    public void HpFadeOut()
+    {
+
+        float alpha = 1;
+        List<int> toFadeOut = new List<int>();
+
+        int preIdx = 0;
+        for(int i = 0; i < 6; i++)
+        {
+            //int num = TargetAudience.preHp[i] - TargetAudience.GemHp[i];
+            for(int j= preIdx+ TargetAudience.GemHp[i]; j < preIdx+TargetAudience.preHp[i]; j++)
+            {
+                toFadeOut.Add(j);
+            }
+            preIdx = preIdx + TargetAudience.preHp[i];
+        }
+
+        if(preTween != null)
+        {
+            preTween.Kill();
+        }
+
+        preTween = DOTween.To
+        (
+            () => alpha,
+            (x) => { alpha = x; },
+            0,
+            1f
+        ).OnUpdate(delegate { 
+
+            for(int i=0;i< toFadeOut.Count; i++)
+            {
+                view.GemList[toFadeOut[i]].color = new Color(0,0,0,alpha);
+            }
+
+        }).OnComplete(delegate {
+
+            UpdateHp();
+            preTween = null;
+        }).OnKill(delegate {
+            UpdateHp();
+        });
+    }
+
+    public void Hit()
+    {
+
     }
 
 }

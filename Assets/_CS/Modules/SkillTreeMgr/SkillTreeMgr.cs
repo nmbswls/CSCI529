@@ -44,7 +44,7 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
     {
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
         mCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
-        mRoleMdl = GameMain.GetInstance().GetModule<IRoleModule>();
+        mRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
 
         LoadAllSkills();
         GenFakeExtendSKills();
@@ -69,6 +69,8 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
 
                 sa.SkillName = string.Format("扩展技能{0:00}-{1:00}", i + 1, n + 1);
                 sa.SkingDesp = string.Format("这是测试用的扩展技能{0:00}-{1:00}", i + 1, n+1);
+
+                sa.Prices.Add(0);
 
                 sa.MaxLevel = 5;
                 for (int j = 0; j < 5; j++)
@@ -139,10 +141,22 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
             sa.SkillId = string.Format("test_{0:00}", i + 1);
             sa.SkillName = string.Format("基础技能{0:00}", i + 1);
             sa.SkingDesp = string.Format("这是测试用的基础技能{0:00}", i + 1);
-            sa.MaxLevel = 1;
-            sa.LevelDesp.Add("倍率0.8");
-            sa.LevelStatusAdd.Add(5);
-            sa.StatusBonus.Add(new float[] { 0, 0, 1, 1, 1 });
+            sa.MaxLevel = 2;
+            {
+                sa.LevelDesp.Add("倍率0.8");
+                sa.LevelStatusAdd.Add(5);
+                sa.Prices.Add(100);
+                sa.StatusBonus.Add(new float[] { 0, 0, 1, 1, 1 });
+            }
+            {
+                sa.LevelDesp.Add("倍率1.2");
+                sa.LevelStatusAdd.Add(10);
+                sa.Prices.Add(300);
+                sa.StatusBonus.Add(new float[] { 0, 0, 1, 1, 1 });
+            }
+
+
+
 
             {
                 sa.BaseCardList.Add(string.Format("test_{0:00}", i + 1));
@@ -238,7 +252,9 @@ public class SkillTreeMgr : ModuleBase, ISkillTreeMgr
             skillInfo.SkillLvl += 1;
         }
 
-        
+
+        mRoleMdl.AddAllStatus(sa.LevelStatusAdd[skillInfo.SkillLvl - 1]);
+        Debug.Log("加了" + sa.LevelStatusAdd[skillInfo.SkillLvl - 1]);
 
         ExtentSkillAsset esa = sa as ExtentSkillAsset;
         if (esa == null)

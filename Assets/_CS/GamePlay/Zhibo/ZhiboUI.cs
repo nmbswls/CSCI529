@@ -11,8 +11,10 @@ public class ZhiboView : BaseView
     public Text TurnLeft;
     public Button NextTurnBtn;
 
+    public Button RoleSkill;
+
     public Transform TVContainer;
-    public List<ZhiboLittleTV> LittleTvList = new List<ZhiboLittleTV>();
+    //public List<ZhiboLittleTV> LittleTvList = new List<ZhiboLittleTV>();
 
     public Transform container;
     public Slider Score;
@@ -53,16 +55,20 @@ public class ZhiboView : BaseView
 
     public RectTransform SpeField;
 
+    public GameObject TokenDetailPanel;
+
+    public Text targetValue;
+
 }
-public class OperatorView
-{
-    public Image ActiveButton;
-    public Image Outline;
-}
+//public class OperatorView
+//{
+//    public Image ActiveButton;
+//    public Image Outline;
+//}
 public class ZhiboModel : BaseModel
 {
 
-    public List<int> EmptyTVList = new List<int>();
+    //public List<int> EmptyTVList = new List<int>();
     public int nowScoreText = 0;
 }
 
@@ -141,8 +147,20 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     public void UpdateScore()
     {
         float nowScore = gameMode.state.Score;
-        view.hotValue.text = (int)nowScore + "";
+        if(nowScore>=1000)
+        {
+            int tenthValue = (int)nowScore / 100 - (int)(nowScore / 1000) * 10;
+            view.hotValue.text = (int)(nowScore/1000) +"."+ tenthValue + "K";
+        }
+        else
+        {
+            view.hotValue.text = (int)nowScore + "";
+        }
         view.Score.value = nowScore * 1.0f / gameMode.state.MaxScore;
+        if(nowScore>gameMode.state.Target)
+        {
+            UpdateTarget();
+        }
     }
 
     public void UpdateTili()
@@ -154,15 +172,20 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             view.TiliPoints[i].color = Color.white;
         }
         Color fullColor = Color.white;
+
         ColorUtility.TryParseHtmlString("#40AB0D", out fullColor);
-        for (int i = 0; i < points / 2; i++)
+        for (int i = 0; i < points; i++)
         {
             view.TiliPoints[i].color = fullColor;
         }
-        if (points % 2 == 1)
-        {
-            view.TiliPoints[points/2].color = Color.green;
-        }
+        //for (int i = 0; i < points / 2; i++)
+        //{
+        //    view.TiliPoints[i].color = fullColor;
+        //}
+        //if (points % 2 == 1)
+        //{
+        //    view.TiliPoints[points/2].color = Color.green;
+        //}
         //view.TiliImage.fillAmount = (view.TiliMaxFillAmount - view.TiliMinFillAmount) * nowTili / 100 + view.TiliMinFillAmount;
 
     }
@@ -178,35 +201,58 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.TurnLeft.text = (int)turn + "";
     }
 
-    public void ShowNewAudience()
+
+
+    public void ShowDamageAmountEffect(Vector3 pos, int value)
     {
-        if (model.EmptyTVList.Count == 0)
+        GameObject go = mResLoader.Instantiate("ZhiboMode2/DamageNumber", root);
+        Text t = go.GetComponentInChildren<Text>();
+        if (value >= 0)
         {
-            return;
+            t.text = "+" + value;
+            t.color = Color.green;
         }
-        int idx = Random.Range(0, model.EmptyTVList.Count);
-
-        idx = model.EmptyTVList[idx];
-
-        model.EmptyTVList.Remove(idx);
-
-        view.LittleTvList[idx].Show();
-    }
-
-    public void AttractAudience()
-    {
-        int idx = Random.Range(0, view.LittleTvList.Count);
-        while (true)
+        else
         {
-            if (view.LittleTvList[idx].IsEmpty == false)
+            t.text = value + "";
+            t.color = Color.red;
+        }
+
+        go.transform.position = pos;
+        float time = 1.5f;
+        Vector3 TargetPos = pos + Vector3.up * time * 1f;
+        DOTween.To
+            (
+                () => go.transform.position,
+                (x) => go.transform.position = x,
+                TargetPos,
+                time
+            ).OnComplete(delegate ()
             {
-                break;
-            }
-            idx = (idx + 1) % view.LittleTvList.Count;
-        }
+                mResLoader.ReleaseGO("ZhiboMode2/DamageNumber", go);
+            });
 
-        view.LittleTvList[idx].Attract();
     }
+    public void ShowAudienceHitEffect(Vector3 pos)
+    {
+        GameObject go = mResLoader.Instantiate("Zhibo/AudienceEffect", root);
+        Text t = go.GetComponentInChildren<Text>();
+        go.transform.position = pos;
+        //Vector3 TargetPos = pos + Vector3.up * time * 1f;
+        DOTween.To
+            (
+                () => go.transform.localScale,
+                (x) => go.transform.localScale = x,
+                Vector3.one,
+                1.5f
+            ).OnComplete(delegate ()
+            {
+                mResLoader.ReleaseGO("Zhibo/AudienceEffect", go);
+            });
+
+    }
+
+
 
     public void UpdateQifen()
     {
@@ -217,18 +263,8 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     {
         view.TurnLeft = root.Find("TurnLeft").GetComponentInChildren<Text>();
 
-
         view.TVContainer = root.Find("Audience");
-        foreach (Transform tv in view.TVContainer)
-        {
-            ZhiboLittleTV vv = tv.GetComponent<ZhiboLittleTV>();
-            vv.Init(tv, this);
-            view.LittleTvList.Add(vv);
-        }
-        for (int i = 0; i < view.LittleTvList.Count; i++)
-        {
-            model.EmptyTVList.Add(i);
-        }
+        view.TokenDetailPanel = root.Find("TokenDetail").gameObject;
 
         view.DanmuField = (RectTransform)(root.Find("DanmuField"));
         view.DanmuFieldNormal = (RectTransform)(view.DanmuField.Find("Normal"));
@@ -239,6 +275,9 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         Transform hotView = root.transform.Find("Score");
         view.Score = hotView.GetComponent<Slider>();
         view.hotValue = hotView.Find("Value").GetComponent<Text>();
+        view.targetValue = hotView.Find("TargetValue").GetComponent<Text>();
+
+        view.RoleSkill = root.Find("RoleSkill").GetComponent<Button>();
 
         Transform lbArea = root.Find("LeftBottom");
 
@@ -291,6 +330,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     //    }
     //}
 
+
     public void ShowDanmuEffect(Vector3 pos)
     {
         GameObject go = mResLoader.Instantiate("Zhibo/Effect",root);
@@ -305,6 +345,24 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             ).OnComplete(delegate ()
             {
                 mResLoader.ReleaseGO("Zhibo/Effect", go);
+            });
+
+    }
+
+    public void ShowDamageEffect(Vector3 pos)
+    {
+        GameObject go = mResLoader.Instantiate("Zhibo/DamageEffect", root);
+        go.transform.position = pos;
+        float time = (view.HpBar.transform.position - go.transform.position).magnitude / 10f;
+        DOTween.To
+            (
+                () => go.transform.position,
+                (x) => go.transform.position = x,
+                view.HpBar.transform.position,
+                time
+            ).OnComplete(delegate ()
+            {
+                mResLoader.ReleaseGO("Zhibo/DamageEffect", go);
             });
 
     }
@@ -343,6 +401,16 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             NextTurn();
         });
 
+
+        view.RoleSkill.onClick.AddListener(delegate
+        {
+            gameMode.UseRoleSkill();
+        });
+
+    }
+    public void SKillBtnEnable(bool enable)
+    {
+        view.RoleSkill.interactable = enable;
     }
 
     private void NextTurn()
@@ -408,27 +476,13 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             triggerSec = true;
         }
 
-        if (triggerSec)
-        {
-            for (int i = view.LittleTvList.Count - 1; i >= 0; i--)
-            {
-                view.LittleTvList[i].TickSec();
-                if (view.LittleTvList[i].TimeLeft <= 0)
-                {
-                    if (!model.EmptyTVList.Contains(i))
-                    {
-                        model.EmptyTVList.Add(i);
-                    }
-                }
-            }
-            //view.TurnTimeValue.text = (int)gameMode.state.TurnTimeLeft+"";
-        }
-        view.TurnTimeBar.fillAmount = gameMode.state.TurnTimeLeft / 30;
+
+        //view.TurnTimeBar.fillAmount = gameMode.state.TurnTimeLeft / 30;
         //view.TurnTimeBar.fillAmount = (view.TurnTimeMaxFillAmount - view.TurnTimeMinFillAmount) * gameMode.state.TurnTimeLeft / 30 + view.TurnTimeMinFillAmount;
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            ShowNewAudience();
+            //ShowNewAudience();
         }
 
     }
@@ -574,5 +628,30 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         return ret;
     }
 
-    
+    public Transform GetAudienceRoot()
+    {
+        return view.TVContainer;
+    }
+
+    public GameObject GetTokenDetailPanel()
+    {
+        return view.TokenDetailPanel;
+    }
+
+    public void UpdateTarget()
+    {
+        gameMode.updateTarget();
+        float nowTarget = gameMode.state.Target;
+        if(nowTarget>=1000)
+        {
+            int tenthValue = (int)nowTarget / 100 - (int)(nowTarget / 1000) * 10;
+            view.targetValue.text = (int)(nowTarget / 1000) +"."+ tenthValue + "K";
+        }
+        else
+        {
+            view.targetValue.text = (int)(nowTarget) + "";
+        }
+        
+    }
+
 }

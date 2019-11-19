@@ -33,6 +33,8 @@ public class CardInZhibo
     public bool NeedDiscard;
     public bool isTmp;
 
+    public int[] OverrideGems = new int[6];
+
     public CardInZhibo()
     {
 
@@ -46,6 +48,10 @@ public class CardInZhibo
     public CardInZhibo(CardAsset ca,bool isTmp = false)
     {
         this.CardId = ca.CardId;
+        for(int i = 0; i < 6; i++)
+        {
+            this.OverrideGems[i] = ca.Gems[i];
+        }
         //this.TimeLeft = ca.ValidTime;
         this.UseLeft = ca.UseTime;
         this.ca = ca;
@@ -84,7 +90,7 @@ public class ZhiboGameState
 
     public List<Danmu> Danmus = new List<Danmu>();
     public List<SuperDanmu> SuperDanmus = new List<SuperDanmu>();
-    public List<int> SuperDanmuShowTimeList;
+    public List<int> SuperDanmuShowTimeList = new List<int>();
     public int NowSuperDanmuIdx;
 
 
@@ -105,12 +111,14 @@ public class ZhiboGameState
     public int MinHp;
     public int Hp;
 
+    public float Target = 200;
+
     //public float ScoreArmor = 0;
 
     public float ScoreArmor = 0;
     public float Hot = 30;
 
-    public float TurnTimeLeft = 30;
+    //public float TurnTimeLeft = 30;
     public float Qifen = 0;
     //public int ChoukaYuzhi = 100;
     public int Tili = 0;
@@ -158,6 +166,7 @@ public class ZhiboGameMode : GameModeBase
     public ZhiboGameState state;
     public ZhiboBuffManager mBuffManager;
     public ZhiboEmergencyManager mEmergencyManager;
+    public ZhiboAudienceMgr mAudienceMgr;
 
     public float spdRate = 1.0f;
     public bool isFirstTurn = true;
@@ -169,14 +178,15 @@ public class ZhiboGameMode : GameModeBase
     private int bigOneCount = 0;
 
     public int CardMax = 10;
+    public int CardMaxMaintain = 5;
     private float SecTimer = 0;
     private int SecCount = 0;
     private float CardDelayTimer = 0;
 
 
-    private int EmergencyShowTime;
-    private int emergencyIdx;
 
+
+    public static int MaxTili = 5;
 
 
     private Dictionary<string, List<string>> DanmuDict = new Dictionary<string, List<string>>();
@@ -219,13 +229,13 @@ public class ZhiboGameMode : GameModeBase
         state.OriginTurn = 12;
         state.TurnLeft = state.OriginTurn;
         state.NowTurn = 0;
-        state.TurnTimeLeft = 30f;
+        //state.TurnTimeLeft = 3000f;
 
         state.Score = 0;
         state.MaxScore = 100;
 
         state.Qifen = 500;
-        state.Tili = 10;
+        state.Tili = MaxTili;
 
         state.Hp = pRoleMgr.GetXinqingLevel()*10;
         state.MaxHp = 200;
@@ -240,8 +250,11 @@ public class ZhiboGameMode : GameModeBase
 
         LoadDanmuDict();
         LoadCard();
-        GenEmergency();
+        mEmergencyManager.GenEmergency();
         mUICtrl = mUIMgr.ShowPanel("ZhiboPanel") as ZhiboUI;
+
+        mAudienceMgr = new ZhiboAudienceMgr(this);
+
 
         isFirstTurn = true;
         CalHpScoreRate();
@@ -257,14 +270,22 @@ public class ZhiboGameMode : GameModeBase
         GameMain.GetInstance().RunCoroutine(NextTurn());
     }
 
+
+
+
+
     IEnumerator NextTurn()
     {
 
-        for (int i = state.Cards.Count - 1; i >= 0; i--)
+        if(state.Cards.Count > CardMaxMaintain)
         {
-            DiscardCard(state.Cards[i], true);
-            //mUICtrl.GetCardContainer().RemoveCard(i);
+            for (int i = state.Cards.Count - CardMaxMaintain - 1; i >= 0; i--)
+            {
+                DiscardCard(state.Cards[i], true);
+                //mUICtrl.GetCardContainer().RemoveCard(i);
+            }
         }
+
         ClearAllDanmu(true);
 
         if (!isFirstTurn)
@@ -272,6 +293,7 @@ public class ZhiboGameMode : GameModeBase
             AddHp(-(pRoleMgr.GetBadLevel()+mBuffManager.BadRateDiff)*2);
         }
 
+        mAudienceMgr.FinishTurn();
 
         RemoveTmpHp();
 
@@ -282,17 +304,28 @@ public class ZhiboGameMode : GameModeBase
         waitingForNextTurn = false;
         state.TurnLeft -= 1;
         state.NowTurn += 1;
-        state.TurnTimeLeft = 30f;
-        state.Tili = 10;
-        int cardNum = (int)(state.Qifen / 100);
-        if (isFirstTurn)
-        {
-            //cardNum += 1;
-        }
-        for (int i = 0; i < cardNum; i++)
+        //state.TurnTimeLeft = 30f;
+        state.Tili = MaxTili;
+
+        //{
+        //    int cardNum = (int)(state.Qifen / 100);
+        //    if (isFirstTurn)
+        //    {
+        //        //cardNum += 1;
+        //    }
+        //    for (int i = 0; i < cardNum; i++)
+        //    {
+        //        AddCardFromDeck();
+        //    }
+        //}
+
+        int num = CardMaxMaintain - state.Cards.Count;
+        for (int i = 0; i < num; i++)
         {
             AddCardFromDeck();
         }
+
+
         if (state.TurnLeft <= 0)
         {
             FinishZhibo();
@@ -312,27 +345,20 @@ public class ZhiboGameMode : GameModeBase
         }
 
         mBuffManager.CalculateBuffExtras();
+        mAudienceMgr.NextTurn();
 
         state.TurnSpecials.Clear();
 
-        InitSuperDanmu();
+        //InitSuperDanmu();
         //生成
         mUICtrl.UpdateTurnLeft(state.TurnLeft);
-        mUICtrl.ChangeTurnTime(state.TurnTimeLeft);
+        //mUICtrl.ChangeTurnTime(state.TurnTimeLeft);
         mUICtrl.LockNextTurnBtn();
         mUICtrl.UpdateDeckLeft();
 
         //如果当前回合有emergency
-        if (emergencyIdx < state.ComingEmergencies.Count && state.ComingEmergencies[emergencyIdx].Key == state.NowTurn)
-        {
-            EmergencyShowTime = Random.Range(5, 10);
-            emergencyIdx++;
-        }
-        else
-        {
-            EmergencyShowTime = -1;
-        }
 
+        mEmergencyManager.NewTurn();
 
 
 
@@ -344,13 +370,15 @@ public class ZhiboGameMode : GameModeBase
 
         mUICtrl.UpdateTili();
         mUICtrl.UpdateHp();
+
+        skillCd -= 1;
+        if(skillCd <= 0)
+        {
+            mUICtrl.SKillBtnEnable(true);
+        }
+
     }
-    public void GenEmergency()
-    {
-        state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(1,2),"em01"));
-        state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(7, 9), "em02"));
-        emergencyIdx = 0;
-    }
+
 
     public void ShowSuperDanmu(int idx)
     {
@@ -456,7 +484,7 @@ public class ZhiboGameMode : GameModeBase
         {
             string eid = info.CardId;
             CardAsset ca = mCardMdl.GetCardInfo(eid);
-            CardInZhibo card = new CardInZhibo(eid, ca.UseTime);
+            CardInZhibo card = new CardInZhibo(ca);
             card.ca = ca;
             state.CardDeck.Add(card);
         }
@@ -466,7 +494,7 @@ public class ZhiboGameMode : GameModeBase
         {
             string eid = platformCards[i];
             CardAsset ca = mCardMdl.GetCardInfo(eid);
-            CardInZhibo card = new CardInZhibo(eid, ca.UseTime);
+            CardInZhibo card = new CardInZhibo(ca);
             card.ca = ca;
             state.CardDeck.Add(card);
         }
@@ -487,9 +515,6 @@ public class ZhiboGameMode : GameModeBase
     }
 
 
-
-
-
     private void LoadDanmuDict()
     {
         {
@@ -500,6 +525,8 @@ public class ZhiboGameMode : GameModeBase
             DanmuDict.Add("common", ll);
         }
     }
+
+
     public override void Tick(float dTime)
     {
         if (Input.GetKeyDown(KeyCode.K))
@@ -517,11 +544,11 @@ public class ZhiboGameMode : GameModeBase
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            AddHp(30);
+            mAudienceMgr.ShowRandomAudience();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            AddHp(-10);
+            mAudienceMgr.AudienceCauseDamage();
         }
 
         if (Input.GetKeyDown(KeyCode.F))
@@ -534,7 +561,7 @@ public class ZhiboGameMode : GameModeBase
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            ShowEmergency("choufeng");
+            mEmergencyManager.ShowEmergency("choufeng");
         }
 
 
@@ -558,6 +585,8 @@ public class ZhiboGameMode : GameModeBase
         //        AddCardFromDeck();
         //    }
         //}
+
+        mAudienceMgr.Tick();
 
         //handle card chain
         if (state.UseCardChain.Count > 0)
@@ -632,11 +661,9 @@ public class ZhiboGameMode : GameModeBase
                 state.NowSuperDanmuIdx++;
             }
 
-            if (EmergencyShowTime != -1 && EmergencyShowTime == SecCount)
-            {
-                //已经加过了 要-1
-                ShowEmergency(state.ComingEmergencies[emergencyIdx-1].Value);
-            }
+            mEmergencyManager.CheckEmergencySec(SecCount);
+
+            mAudienceMgr.TickSec();
 
             mBuffManager.TickSec();
         }
@@ -675,52 +702,37 @@ public class ZhiboGameMode : GameModeBase
 
 
 
-        lastTick += dTime * spdRate;
-        if (lastTick > nextTick)
-        {
+        //lastTick += dTime * spdRate;
+        //if (lastTick > nextTick)
+        //{
 
-            GenDanmu();
-            lastTick -= nextTick;
-            nextTick = 1.0f / state.DanmuFreq;
-            if (state.danmuGroups.Count == 0)
-            {
-                state.DanmuFreq = 3f;
-            }
-            else
-            {
-                state.DanmuFreq = 15f;
-            }
-        }
+        //    GenDanmu();
+        //    lastTick -= nextTick;
+        //    nextTick = 1.0f / state.DanmuFreq;
+        //    if (state.danmuGroups.Count == 0)
+        //    {
+        //        state.DanmuFreq = 3f;
+        //    }
+        //    else
+        //    {
+        //        state.DanmuFreq = 15f;
+        //    }
+        //}
 
-        state.TurnTimeLeft -= dTime * spdRate;
-        if (state.TurnTimeLeft <= 0)
-        {
-            NextTurnCaller();
-        }
+        //state.TurnTimeLeft -= dTime * spdRate;
+        //if (state.TurnTimeLeft <= 0)
+        //{
+        //    NextTurnCaller();
+        //}
     }
 
-
-    public void ShowEmergency(string emergencyId)
+    public void Pause()
     {
         spdRate = 0f;
-        mUIMgr.ShowPanel("ActBranch");
-        ActBranchCtrl actrl = mUIMgr.GetCtrl("ActBranch") as ActBranchCtrl;
-        EmergencyAsset ea = mEmergencyManager.GetEmergencyAsset(emergencyId);
-        actrl.SetEmergency(ea);
-        actrl.ActBranchEvent += delegate (int idx) {
-            spdRate = 1f;
-            EmergencyChoice c = ea.Choices[idx];
-            Debug.Log(c.Content);
-            if (c.NextEmId != null && c.NextEmId != string.Empty)
-            {
-
-            }
-            if (c.Ret == "Hot")
-            {
-                GainScore(idx*50+50, 0);
-                mUIMgr.ShowHint("Get "+(idx * 50 + 50) +" Score");
-            }
-        };
+    }
+    public void Resume()
+    {
+        spdRate = 1f;
     }
 
     public void GetQifenValue(float v)
@@ -800,16 +812,15 @@ public class ZhiboGameMode : GameModeBase
 
         //mUIMgr.ShowHint("获得热度" + (int)score);
         mUICtrl.UpdateScore();
-
-
-
     }
+
+
     public void GenTili(int v)
     {
         state.Tili += v;
-        if (state.Tili > 10)
+        if (state.Tili > MaxTili)
         {
-            state.Tili = 10;
+            state.Tili = MaxTili;
         }
         if (state.Tili < 0)
         {
@@ -917,6 +928,7 @@ public class ZhiboGameMode : GameModeBase
         //shuffle
         shuffle<CardInZhibo>(state.CardDeck);
     }
+
 
     public void GainNewCard(string cardId)
     {
@@ -1060,7 +1072,7 @@ public class ZhiboGameMode : GameModeBase
 
     public void FinishZhibo()
     {
-        ZhiboJiesuanUI p = mUIMgr.ShowPanel("ZhiboJiesuanPanel") as ZhiboJiesuanUI;
+        ZhiboJiesuanUI p = mUIMgr.ShowPanel("ZhiboJiesuanPanel",true, false) as ZhiboJiesuanUI;
         spdRate = 0;
         if (true || state.Score > state.MaxScore)
         {
@@ -1105,6 +1117,20 @@ public class ZhiboGameMode : GameModeBase
         //Resources.UnloadUnusedAssets();
     }
 
+    public void Guopai(int num)
+    {
+        if(num > state.Cards.Count)
+        {
+            num = state.Cards.Count;
+        }
+        for(int i = 0; i < num; i++)
+        {
+            DiscardCard(state.Cards[0], false);
+            AddCardFromDeck();
+        }
+    }
+
+
     private void DiscardCard(CardInZhibo cinfo, bool triggerEffect)
     {
         if (triggerEffect && cinfo.ca.UseOnDiscard)
@@ -1115,7 +1141,6 @@ public class ZhiboGameMode : GameModeBase
         {
             RemoveCardToDiscarded(cinfo);
         }
-
     }
 
     private void RemoveCardToDiscarded(CardInZhibo cinfo)
@@ -1147,6 +1172,62 @@ public class ZhiboGameMode : GameModeBase
             mUICtrl.GetCardContainer().RemoveCard(idx);
         }
         cinfo.isTmp = false;
+    }
+
+    public bool Fanmian(int cardIdx)
+    {
+        if (cardIdx < 0 || cardIdx >= state.Cards.Count)
+        {
+            return false;
+        }
+        CardInZhibo cinfo = state.Cards[cardIdx];
+        return true;
+    }
+
+
+    public bool TryUseCardGem(int cardIdx)
+    {
+        if (cardIdx < 0 || cardIdx >= state.Cards.Count)
+        {
+            return false;
+        }
+        CardInZhibo cinfo = state.Cards[cardIdx];
+
+        CardAsset ca = cinfo.ca;
+        if (ca.cost > 0 && state.Tili < ca.cost)
+        {
+            mUIMgr.ShowHint("体力不足");
+            return false;
+        }
+        if (ca.cost >= 0)
+        {
+            state.Tili -= ca.cost;
+        }
+        mUICtrl.UpdateTili();
+
+        mAudienceMgr.HandleGemHit(cinfo.OverrideGems);
+        RemoveCardToDiscarded(cinfo);
+        return true;
+    }
+
+
+    int skillCd;
+
+    public void UseRoleSkill()
+    {
+        if(skillCd > 0)
+        {
+            return;
+        }
+        if(state.Tili < 3)
+        {
+            mUIMgr.ShowHint("体力不够");
+            return;
+        }
+        GenTili(-3);
+        Guopai(2);
+        skillCd = 2;
+        mUICtrl.SKillBtnEnable(false);
     }
 
     public bool TryUseCard(int cardIdx)
@@ -1243,6 +1324,8 @@ public class ZhiboGameMode : GameModeBase
         mUICtrl.UpdateHp();
     }
 
+
+
     public void AddHp(int amount, int add = 0)
     {
         if(amount < 0)
@@ -1278,6 +1361,7 @@ public class ZhiboGameMode : GameModeBase
     }
 
     private CardInZhibo NowExecuteCard;
+    private List<int> AffectedAudience;
     private List<ZhiboBuff> ValidBuffs = new List<ZhiboBuff>();
     //处理有使用上限的卡片
     private bool IsNoEffect;
@@ -1290,6 +1374,7 @@ public class ZhiboGameMode : GameModeBase
         if (cardAsset != null)
         {
             NowExecuteCard = card;
+            AffectedAudience = null;
             IsNoEffect = false;
             if (cardAsset.CardType == eCardType.GENG)
             {
@@ -1396,6 +1481,23 @@ public class ZhiboGameMode : GameModeBase
             string[] args = ce.effectString.Split(',');
             switch (ce.effectType)
             {
+                case eEffectType.HitGem:
+                    int[] damage = new int[6];
+                    for(int i = 0; i < args.Length; i++)
+                    {
+                        damage[i] = int.Parse(args[i]);
+                    }
+                    //得到 NowExecuteCard.ca.Gems[]
+                    //实施 
+                    AffectedAudience = mAudienceMgr.HandleGemHit(new int[] {1,0,0,0,0,0});
+
+                    //cause damage
+                    for(int i=0;i< AffectedAudience.Count; i++)
+                    {
+                        mAudienceMgr.ApplyAddScore(AffectedAudience[i],10);
+                    }
+
+                    break;
                 case eEffectType.SpawnGift:
                     GenSpecial(args[0], int.Parse(args[1]));
                     break;
@@ -1453,7 +1555,8 @@ public class ZhiboGameMode : GameModeBase
                             score = score + count * perExtra;
                         }
                         GainScore(score);
-                        mUICtrl.ShowNewAudience();
+                        //mUICtrl.ShowNewAudience();
+                        mAudienceMgr.ShowRandomAudience();
                         mUICtrl.ShowDanmuEffect(mUICtrl.GetCardContainer().cards[state.Cards.IndexOf(NowExecuteCard)].transform.position);
                     }
                     break;
@@ -1487,8 +1590,9 @@ public class ZhiboGameMode : GameModeBase
 
 
                     GainScore(originScore, add);
-                    mUICtrl.ShowNewAudience();
 
+                    //mAudienceMgr.ShowRandomAudience();
+                    //mUICtrl.ShowNewAudience();
 
                     mUICtrl.ShowDanmuEffect(mUICtrl.GetCardContainer().GetCardPosition(NowExecuteCard));
                     break;
@@ -1663,8 +1767,8 @@ public class ZhiboGameMode : GameModeBase
 
         string eid = cardId;
         CardAsset ca = mCardMdl.GetCardInfo(eid);
-        Debug.Log(cardId);
-        CardInZhibo card = new CardInZhibo(eid, ca.UseTime);
+        //Debug.Log(cardId);
+        CardInZhibo card = new CardInZhibo(ca);
         card.ca = ca;
         state.CardDeck.Add(card);
     }
@@ -1879,5 +1983,12 @@ public class ZhiboGameMode : GameModeBase
         //    state.Danmus.Remove(danmu);
         //}
         AutoDisappear(danmu);
+    }
+
+    public List<ZhiboAudience> nowAudiences = new List<ZhiboAudience>();
+
+    public void updateTarget()
+    {
+        state.Target *= 2;
     }
 }

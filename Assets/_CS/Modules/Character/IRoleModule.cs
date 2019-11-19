@@ -29,6 +29,8 @@ public interface IRoleModule : IModule{
     void AddJiyi(float v); 
     void AddFanying(float v);
 
+    void AddAllStatus(float v);
+
     void AddActionPoints(float v);
     void RestoreActionPoints(float v);
 

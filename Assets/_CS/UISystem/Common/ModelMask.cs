@@ -24,7 +24,10 @@ public class ModelMask : UIBaseCtrl<BaseModel, MaskView>
         {
             listener = root.gameObject.AddComponent<ClickEventListerner>();
             listener.OnClickEvent += delegate (PointerEventData eventData) {
-                mUIMgr.CloseFirstPanel();
+                if (mUIMgr.CanMaskClose)
+                {
+                    mUIMgr.CloseFirstPanel();
+                }
             };
         }
     }

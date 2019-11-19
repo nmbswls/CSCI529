@@ -68,12 +68,13 @@ public class MainGameMode : GameModeBase
             UnHandledEvent.Enqueue(e);
 
         }
+        cachedEvents.Clear();
         HandleNextEvent();
     }
 
 
 
-
+    private List<string> cachedEvents = new List<string>();
 
 
     public void HandleNextEvent()
@@ -100,13 +101,26 @@ public class MainGameMode : GameModeBase
                     });
                 }else if (cmd[0] == "event")
                 {
-                    pEventMgr.AddListener(cmd[1]);
+                    cachedEvents.Add(cmd[1]);
+                    //pEventMgr.AddListener(cmd[1]);
                 }
 
             }
 
         }
+        else
+        {
+            AddCachedEvents();
+        }
 
+    }
+
+    public void AddCachedEvents()
+    {
+        for(int i = 0; i < cachedEvents.Count; i++)
+        {
+            pEventMgr.AddListener(cachedEvents[i]);
+        }
     }
 
 

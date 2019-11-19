@@ -25,7 +25,7 @@ public class CardContainerLayout : MonoBehaviour
     float DefaultIntervalDegree = 2f;
 
     public ZhiboGameMode gameMode;
-    IResLoader mResLoader;
+    public IResLoader mResLoader;
 
 
     public int DraggingIdx = -1;
@@ -160,13 +160,30 @@ public class CardContainerLayout : MonoBehaviour
         int cardIdx = cards.IndexOf(toUse);
         if (gameMode.TryUseCard(cardIdx))
         {
-            //removeCard(toUse);
             return true;
         }
         else
         {
             return false;
         }
+    }
+    public bool UseCardGem(MiniCard toUse)
+    {
+        int cardIdx = cards.IndexOf(toUse);
+        if (gameMode.TryUseCardGem(cardIdx))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool Fanmian(MiniCard card)
+    {
+        int cardIdx = cards.IndexOf(card);
+        return gameMode.Fanmian(cardIdx);
     }
 
     public void removeCard(MiniCard toRemove)

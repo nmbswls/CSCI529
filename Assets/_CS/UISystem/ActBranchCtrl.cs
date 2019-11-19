@@ -80,7 +80,7 @@ public class ActBranchCtrl : UIBaseCtrl<ActBranchModel, ActBranchView>
 
         //view.TimeLeft = root.Find("Timer").Find("TimeLeft").GetComponent<Image>();
         view.TimeLeft = root.Find("Timer").Find("TimeLeft").GetComponent<Text>();
-        Debug.Log(root.Find("Timer").Find("TimeLeft").GetComponent<Text>());
+        //Debug.Log(root.Find("Timer").Find("TimeLeft").GetComponent<Text>());
 
         foreach (Transform child in view.ChoiceContrainer)
         {

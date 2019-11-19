@@ -49,18 +49,22 @@ public class ScheduleView : BaseView
 
 
 
-    public Transform BeforeStudyPanel;
+    public Transform LearnPanel;
     public Text MoneyCost;
     public Text Prerequist;
 
-    public Transform AfterStudyPanel;
+
+    public Text LearningNextLevel;
+
+
+    public Transform PracticeePanel;
     public Text Level;
     public Slider ExpSlider;
     public Text ExpValue;
     public Text Difficulty;
 
-    public Transform CurLevel;
-    public Transform NextLevel;
+    public Transform CurLevelComp;
+    public Transform NextLevelComp;
 
     public Text CurLevelAward;
     public Text NextLevelAward;
@@ -72,6 +76,7 @@ public class ScheduleView : BaseView
 
     public Button LearnBtn;
     public Button PracticeBtn;
+    public Button UpgradeBtn;
 
 
 
@@ -200,24 +205,29 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         view.DetailDesp = view.Detail.Find("ContentBg").Find("Content").GetComponent<Text>();
         view.DetailMask = view.Detail.Find("Mask");
 
-        view.BeforeStudyPanel = view.Detail.Find("BeforeStudy");
-
-        view.LearnBtn = view.BeforeStudyPanel.Find("LearnBtn").GetComponent<Button>();
-        view.MoneyCost = view.BeforeStudyPanel.Find("Money").GetComponent<Text>();
-        view.Prerequist = view.BeforeStudyPanel.Find("Prerequists").GetComponent<Text>();
+        view.LearnPanel = view.Detail.Find("LearnPanel");
 
 
-        view.AfterStudyPanel = view.Detail.Find("AfterStudy");
+        view.MoneyCost = view.LearnPanel.Find("Money").GetComponent<Text>();
+        view.Prerequist = view.LearnPanel.Find("Prerequists").GetComponent<Text>();
+
+        view.LearningNextLevel = view.LearnPanel.Find("LearningNextLevel").GetComponent<Text>();
+
+
+        view.PracticeePanel = view.Detail.Find("PracticeePanel");
 
         //view.PracticeAward = view.AfterStudyPanel.Find("PracticeAward").Find("Content").GetComponent<Text>();
-        view.Difficulty = view.AfterStudyPanel.Find("Difficulty").GetComponent<Text>();
-        view.Level = view.AfterStudyPanel.Find("Level").GetComponent<Text>();
-        view.ExpSlider = view.AfterStudyPanel.Find("Exp").GetComponent<Slider>();
+        view.Difficulty = view.PracticeePanel.Find("Difficulty").GetComponent<Text>();
+        view.Level = view.PracticeePanel.Find("Level").GetComponent<Text>();
+        view.ExpSlider = view.PracticeePanel.Find("Exp").GetComponent<Slider>();
         view.ExpValue = view.ExpSlider.transform.GetChild(1).GetComponentInChildren<Text>();
-        view.PracticeBtn = view.AfterStudyPanel.Find("PracticeBtn").GetComponent<Button>();
 
-        view.CurLevel = view.Detail.Find("CurLevel");
-        view.NextLevel = view.Detail.Find("NextLevel");
+        view.PracticeBtn = view.Detail.Find("PracticeBtn").GetComponent<Button>();
+        view.LearnBtn = view.Detail.Find("LearnBtn").GetComponent<Button>();
+
+
+        view.CurLevelComp = view.Detail.Find("CurLevel");
+        view.NextLevelComp = view.Detail.Find("NextLevel");
 
         view.CurLevelAward = view.Detail.Find("CurLevel").Find("LevelAward").GetComponent<Text>();
         view.NextLevelAward = view.Detail.Find("NextLevel").Find("LevelAward").GetComponent<Text>();
@@ -252,7 +262,7 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
         if (sa == null)
         {
-            view.DetailMask.gameObject.SetActive(true);
+            HideDetail();
             return;
         }
 
@@ -262,12 +272,21 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         if(info == null)
         {
             //未学习技能
-            view.AfterStudyPanel.gameObject.SetActive(false);
-            view.BeforeStudyPanel.gameObject.SetActive(true);
+            view.PracticeePanel.gameObject.SetActive(false);
+            view.LearnPanel.gameObject.SetActive(true);
 
-            view.CurLevel.gameObject.SetActive(false);
+            view.LearnBtn.gameObject.SetActive(true);
+            {
+                view.MoneyCost.gameObject.SetActive(true);
+                view.MoneyCost.text = sa.Prices[0] + "";
+                view.LearningNextLevel.text = "(0->1)";
+            }
+            view.PracticeBtn.gameObject.SetActive(false);
 
-            view.MoneyCost.text = "1000";
+            view.CurLevelComp.gameObject.SetActive(false);
+            view.NextLevelComp.gameObject.SetActive(true);
+
+
             string s = "";
             for(int i = 0; i < sa.PrerequistSkills.Count; i++)
             {
@@ -295,11 +314,55 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         }
         else
         {
-            view.AfterStudyPanel.gameObject.SetActive(true);
-            view.BeforeStudyPanel.gameObject.SetActive(false);
-            view.Difficulty.text = "300";
+            BaseSkillAsset bsa = info.sa as BaseSkillAsset;
+            if (bsa == null)
+            {
+                //普通技能
+                view.PracticeePanel.gameObject.SetActive(true);
+                view.LearnPanel.gameObject.SetActive(false);
+                view.Difficulty.text = "300";
 
-            view.CurLevel.gameObject.SetActive(true);
+                if (info.SkillLvl == info.sa.MaxLevel)
+                {
+                    view.PracticeBtn.gameObject.SetActive(false);
+                }
+                else
+                {
+                    view.PracticeBtn.gameObject.SetActive(true);
+                }
+
+
+                view.LearnBtn.gameObject.SetActive(false);
+
+            }
+            else
+            {
+                //base技能
+                view.PracticeePanel.gameObject.SetActive(false);
+                view.LearnPanel.gameObject.SetActive(true);
+
+                if (info.SkillLvl == info.sa.MaxLevel)
+                {
+                    view.LearnBtn.gameObject.SetActive(false);
+                    view.MoneyCost.gameObject.SetActive(false);
+                    view.LearningNextLevel.text = "(已满级)";
+                }
+                else
+                {
+                    view.LearnBtn.gameObject.SetActive(true);
+                    view.MoneyCost.text = sa.Prices[info.SkillLvl] + "";
+                    view.MoneyCost.gameObject.SetActive(true);
+                    view.LearningNextLevel.text = "(" + (info.SkillLvl) +"->"+(info.SkillLvl+1) + ")";
+                }
+
+                view.PracticeBtn.gameObject.SetActive(false);
+
+
+            }
+
+
+
+            view.CurLevelComp.gameObject.SetActive(true);
 
             UpdateExp(info);
 
@@ -310,11 +373,11 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
             if (info.SkillLvl == sa.MaxLevel)
             {
-                view.NextLevel.gameObject.SetActive(false);
+                view.NextLevelComp.gameObject.SetActive(false);
             }
             else
             {
-                view.NextLevel.gameObject.SetActive(true);
+                view.NextLevelComp.gameObject.SetActive(true);
                 view.NextLevelCards.text = sa.LevelDesp[info.SkillLvl];
                 view.NextLevelAward.text = "属性+" + sa.LevelStatusAdd[info.SkillLvl];
             }
@@ -332,7 +395,8 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
         }
 
-        view.DetailMask.gameObject.SetActive(false);
+        //view.DetailMask.gameObject.SetActive(false);
+        view.Detail.gameObject.SetActive(true);
     }
 
     private void UpdateExp(SkillInfo info)
@@ -352,7 +416,8 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
 
     public void HideDetail()
     {
-        view.DetailMask.gameObject.SetActive(true);
+        //view.DetailMask.gameObject.SetActive(true);
+        view.Detail.gameObject.SetActive(false);
     }
 
     public void SwitchChoose(int newTab)
@@ -460,7 +525,7 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         {
             if (!lockLearnButton)
             {
-                LearnCurSkill();
+                PracticeSkill();
 
             }
         });
@@ -498,6 +563,45 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
     //    view.DespHint.gameObject.SetActive(false);
     //    SelectSchedule(null);
     //}
+    public void PracticeSkill()
+    {
+        if (selectedSkillId == "")
+        {
+            return;
+        }
+        string skillId = selectedSkillId;
+        SkillInfo skill = pSkillMgr.GetOwnedSkill(skillId);
+        if(skill == null)
+        {
+            return;
+        }
+        if (skill.SkillLvl == pSkillMgr.GetSkillAsset(skillId).MaxLevel)
+        {
+            return;
+        }
+        if((skill.sa as BaseSkillAsset) != null)
+        {
+            return;
+        }
+
+        if (!rmgr.CanPractice())
+        {
+            return;
+        }
+
+        rmgr.Practive();
+        pSkillMgr.GainExp(skillId);
+        lockLearnButton = true;
+
+        view.ExpSlider.DOValue(skill.NowExp * 0.01f, 0.3f).OnComplete(delegate
+            {
+                lockLearnButton = false;
+                ShowDetail(skillId);
+            }
+        );
+
+        UpdateActionCost();
+    }
 
     public void LearnCurSkill()
     {
@@ -514,35 +618,26 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         string skillId = selectedSkillId;
         SkillInfo skill = pSkillMgr.GetOwnedSkill(skillId);
 
-        if(skill == null)
+        //满级则返回
+        if(skill != null && skill.SkillLvl == pSkillMgr.GetSkillAsset(skillId).MaxLevel)
         {
-            pSkillMgr.GainSkills(skillId);
-            ShowDetail(skillId);
+            return;
         }
-        else
+        int targetLevel = 1;
+        if(skill != null)
         {
-
-            if (skill.SkillLvl == pSkillMgr.GetSkillAsset(skillId).MaxLevel)
-            {
-                return;
-            }
-            if (!rmgr.CanPractice())
-            {
-                return;
-            }
-            rmgr.Practive();
-            pSkillMgr.GainExp(skillId);
-            lockLearnButton = true;
-
-            view.ExpSlider.DOValue(skill.NowExp*0.01f,0.3f).OnComplete(delegate
-                {
-                    lockLearnButton = false;
-                    ShowDetail(skillId);
-                }
-            );
-
+            targetLevel = skill.SkillLvl+1;
         }
-        UpdateActionCost();
+        SkillAsset sa = pSkillMgr.GetSkillAsset(selectedSkillId);
+        if (rmgr.Money < sa.Prices[targetLevel - 1])
+        {
+            mUIMgr.ShowHint("没钱");
+            return;
+        }
+        rmgr.GainMoney(sa.Prices[targetLevel - 1]);
+
+        pSkillMgr.GainSkills(skillId);
+        ShowDetail(skillId);
     }
 
     public void SelectSkill(string vv)
@@ -599,6 +694,7 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
         //ChoicesScrollToOrigin();
 
         isSubLevel = false;
+        HideDetail();
     }
 
     public void ChooseSubskill(string id)
@@ -647,11 +743,12 @@ public class SKillCtrl : UIBaseCtrl<ScheduleModel, ScheduleView>
             ).OnComplete(delegate
             {
                 isChanging = false;
+                SelectSkill(choose.SkillId);
             });
             view.BackToTopLevel.gameObject.SetActive(true);
             isSubLevel = true;
             //ChoicesScrollTo(posScreen);
-
+            //ShowDetail(choose.SkillId);
         }
 
     }
