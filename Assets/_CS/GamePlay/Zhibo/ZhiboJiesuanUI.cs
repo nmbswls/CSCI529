@@ -6,6 +6,7 @@ public class ZhiboJiesunView : BaseView
 {
     public Button OKBtn;
     public Text text;
+    public Text fensi;
 }
 
 public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
@@ -25,6 +26,7 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
     {
         view.OKBtn = root.Find("OK").GetComponent<Button>();
         view.text = root.Find("Text").GetComponent<Text>();
+        view.fensi = root.Find("Fensi").GetComponent<Text>();
     }
     public override void RegisterEvent()
     {

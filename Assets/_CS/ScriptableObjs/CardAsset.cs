@@ -231,6 +231,7 @@ public enum eEffectType
     AddHp,
 
     HitGem,
+    PutScoreOnAudience,
     //前置条件
     HavaCost,
     MaxCount,

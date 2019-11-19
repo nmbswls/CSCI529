@@ -34,5 +34,22 @@ MonoBehaviour:
   BaseSkillId: 
   Gems: 000000000000000000000000030000000000000000000000
   UseConditions: []
-  Effects: []
+  Effects:
+  - EMode: 0
+    effectType: 27
+    isNegEffect: 0
+    Possibility: 0
+    turnEffect: 
+    effectString: 3
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
   TurnEffects: []

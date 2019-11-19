@@ -19,6 +19,10 @@ public class CardInfo{
 		this.CardId = CardId;
 		this.GainTime = GainTime;
 	}
+    public CardInfo(CardAsset ca)
+    {
+        this.CardId = ca.CardId;
+    }
 }
 
 public class CardDeckModule : ModuleBase, ICardDeckModule
@@ -56,7 +60,6 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 		CardDict.TryGetValue (cid, out aset);
 		if (aset == null) {
 			aset = Load (cid);
-
 		}
 		if (aset != null) {
             aset.ReplaceWithAmountInEffect();

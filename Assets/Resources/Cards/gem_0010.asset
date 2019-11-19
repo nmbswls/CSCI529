@@ -36,7 +36,7 @@ MonoBehaviour:
   UseConditions: []
   Effects:
   - EMode: 0
-    effectType: 7
+    effectType: 29
     isNegEffect: 0
     Possibility: 0
     turnEffect: 

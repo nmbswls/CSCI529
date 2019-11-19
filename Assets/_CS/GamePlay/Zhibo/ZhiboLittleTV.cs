@@ -126,35 +126,71 @@ public class ZhiboLittleTV : MonoBehaviour
         UpdateBuffs();
     }
 
+    Tween preTextTween;
+    int fromScore;
+    int refScore;
     public void UpdateScore()
     {
+        if(preTextTween != null)
+        {
+            preTextTween.Kill();
+            fromScore = (int)TargetAudience.preScore;
+            refScore = fromScore;
+        }
+        else
+        {
+            fromScore = refScore;
+        }
+        preTextTween = DOTween.To
+        (
+            () => refScore,
+            (x) => { refScore = x; },
+            (int)TargetAudience.NowScore,
+            0.3f
+        ).OnUpdate(delegate {
+            view.NowScore.text = refScore + "";
+        });
 
     }
 
     public void UpdateBuffs()
     {
-        if(TargetAudience.Bonus.Count > 3)
+
+        if(TargetAudience.Bonus.Count + TargetAudience.Aura.Count > 3)
         {
-            for (int i = 0; i < 3; i++)
+            //默认aura不会超过2个
+
+            for (int i = 0; i < TargetAudience.Aura.Count; i++)
             {
                 view.TokenList[i].enabled = true;
             }
+
+            for (int i = TargetAudience.Aura.Count; i < 3; i++)
+            {
+                view.TokenList[i].enabled = true;
+            }
+
             view.MoreToken.SetActive(true);
         }
         else
         {
+            int idx = 0;
+            for (int i = 0; i < TargetAudience.Aura.Count; i++)
+            {
+                view.TokenList[idx].enabled = true;
+                idx++;
+            }
             for (int i = 0; i < TargetAudience.Bonus.Count; i++)
             {
-                view.TokenList[i].enabled = true;
+                view.TokenList[idx].enabled = true;
+                idx++;
             }
-            for (int i = TargetAudience.Bonus.Count; i < 3; i++)
+            for (int i = idx; i < 3; i++)
             {
                 view.TokenList[i].enabled = false;
             }
             view.MoreToken.SetActive(false);
         }
-
-
 
     }
 
@@ -167,6 +203,7 @@ public class ZhiboLittleTV : MonoBehaviour
     public void Disappear()
     {
         view.animator.SetTrigger("Disappear");
+        audienceMgr.EmptimizeLittleTV(this);
         if(TargetAudience != null)
         {
             //int idx = audienceMgr.gameMode.nowAudiences.IndexOf(TargetAudience);
