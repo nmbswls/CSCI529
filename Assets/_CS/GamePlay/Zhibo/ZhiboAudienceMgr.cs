@@ -1,11 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine.UI;
 
 public class AudienceToken
 {
 
+}
+public class AudienceAuraBuff
+{
+    public int ScoreLess;
+}
+
+public class TokenDetailView
+{
+    public Transform root;
+    public Text Content;
+
+    public void BindView(Transform root)
+    {
+        this.root = root;
+        this.Content = root.Find("Content").GetComponent<Text>();
+    }
 }
 
 public class ZhiboAudienceMgr
@@ -15,7 +31,10 @@ public class ZhiboAudienceMgr
     List<ZhiboAudience> TargetList;
 
     List<ZhiboLittleTV> LittleTvList = new List<ZhiboLittleTV>();
+    //空电视索引表
     List<int> EmptyTVList = new List<int>();
+    //已归还的电视 将在下一回合再加回池中，除非当前已经占满必须立刻使用它们
+    List<int> WaitingReturnList = new List<int>();
 
     public IResLoader mResLoader;
     public List<ZhiboAudience> audienceSuq = new List<ZhiboAudience>();
@@ -25,7 +44,9 @@ public class ZhiboAudienceMgr
     private int[] EachTurnMaxEnemyNum;
     private int EnemyIdx;
 
-    GameObject tokenDetail;
+    //GameObject tokenDetail;
+    TokenDetailView tokenDetail;
+    AudienceAuraBuff audienceAuraBuff = new AudienceAuraBuff();
 
     public ZhiboAudienceMgr(ZhiboGameMode gameMode)
     {
@@ -54,44 +75,12 @@ public class ZhiboAudienceMgr
             EmptyTVList.Add(i);
         }
 
-
-        tokenDetail = gameMode.mUICtrl.GetTokenDetailPanel();
-    }
-
-    public void Tick()
-    {
-        //for (int i = gameMode.nowAudiences.Count - 1; i >= 0; i--)
-        //{
-        //    if (gameMode.nowAudiences[i].AttractLeftTurn > 0)
-        //    {
-        //        gameMode.nowAudiences[i].AttractLeftTurn -= 1;
-        //        if (gameMode.nowAudiences[i].AttractLeftTurn == 0)
-        //        {
-        //            //mUICtrl.remove audience
-        //        }
-        //    }
-
-        //}
-
+        GameObject go = gameMode.mUICtrl.GetTokenDetailPanel();
+        tokenDetail = new TokenDetailView();
+        tokenDetail.BindView(go.transform);
     }
 
 
-
-    public void TickSec()
-    {
-        //for (int i = LittleTvList.Count - 1; i >= 0; i--)
-        //{
-        //    LittleTvList[i].TickSec();
-        //    if (LittleTvList[i].TimeLeft <= 0)
-        //    {
-        //        if (!EmptyTVList.Contains(i))
-        //        {
-        //            EmptyTVList.Add(i);
-        //        }
-        //    }
-        //}
-            //view.TurnTimeValue.text = (int)gameMode.state.TurnTimeLeft+"";
-    }
 
 
     public void ApplyAddScore(int idx, float score)
@@ -154,6 +143,7 @@ public class ZhiboAudienceMgr
                     Debug.Log("errrrrrr");
                 }
                 AudienceAttracted(a);
+
             //}
         }
     }
@@ -179,7 +169,7 @@ public class ZhiboAudienceMgr
             if (TargetList[i].isDead())
             {
                 //根据 观众血量类型 及 放置的代币 计算加成
-                HandleGetScore(TargetList[i]);
+
                 //根据 nowAudiences[i].GemMaxHp 获得热度
                 //ShowAudienceEffect(TargetList[i]);
                 KilledAudience.Enqueue(TargetList[i]);
@@ -238,18 +228,30 @@ public class ZhiboAudienceMgr
             mRoleMgr.GetStats();
             //audience.GemMaxHp[i];
         }
-        gameMode.GainScore(audience.Level * 10);
+        float buffRate = (1 - audienceAuraBuff.ScoreLess * 0.01f);
+        if (buffRate < 0)
+        {
+            buffRate = 0;
+        }
+        gameMode.GainScore(audience.Level * 10 * buffRate);
     }
+
+
+
 
     public void AudienceAttracted(ZhiboAudience audience)
     {
+        if (audience.BindViewIdx == -1)
+        {
+            return;
+        }
 
-
-
+        CalculateAura();
+        HandleGetScore(audience);
         if (audience.BindViewIdx != -1)
         {
             //
-            gameMode.GainScore(audience.NowScore);
+            //gameMode.GainScore(audience.NowScore);
 
             // handle all audience.Tokens();
             for (int i = 0; i < audience.Bonus.Count; i++)
@@ -351,7 +353,21 @@ public class ZhiboAudienceMgr
 
 
 
-
+    public void PutScoreOnAudience(float score, bool and = true, List<int> target = null)
+    {
+        for(int i = 0; i < TargetList.Count; i++)
+        {
+            if(TargetList[i].state == eAudienceState.Normal)
+            {
+                if (TargetList[i].ApplyColorFilter(and, target))
+                {
+                    TargetList[i].AddScore(score);
+                    LittleTvList[TargetList[i].BindViewIdx].UpdateScore();
+                    
+                }
+            }
+        }
+    }
 
     public void GenAudienceSequence()
     {
@@ -418,12 +434,20 @@ public class ZhiboAudienceMgr
                         }
                         audience.Bonus.Add(bonus);
                     }
+                    else
+                    {
+                        ZhiboAudienceAura aura = new ZhiboAudienceAura();
+                        aura.type = eAudienceAuraType.LessScore;
+                        aura.level = 20;
+                        audience.Aura.Add(aura);
+                    }
                 }
-
                 audienceSuq.Add(audience);
             }
         }
     }
+
+
 
     public int[] GetHpTemplate(int level, float[] rate)
     {
@@ -494,8 +518,9 @@ public class ZhiboAudienceMgr
 
     public void FinishTurn()
     {
+        //先还再check 顺序重要
+        ReturnWaitingTVs();
         CheckOverdue();
-
         AudienceCauseDamage();
     }
 
@@ -620,14 +645,38 @@ public class ZhiboAudienceMgr
 
     }
 
+    public void EmptimizeLittleTV(ZhiboLittleTV tv)
+    {
+        int idx = LittleTvList.IndexOf(tv);
+        if (idx < 0)
+        {
+            return;
+        }
+        if (EmptyTVList.Contains(idx))
+        {
+            return;
+        }
+        WaitingReturnList.Add(idx);
+    }
+
+    public void ReturnWaitingTVs()
+    {
+        EmptyTVList.AddRange(WaitingReturnList);
+        WaitingReturnList.Clear();
+    }
+
     public int ShowNewAudience(ZhiboAudience audience)
     {
+        if (EmptyTVList.Count == 0)
+        {
+            ReturnWaitingTVs();
+
+        }
         if (EmptyTVList.Count == 0)
         {
             return -1;
         }
 
-        
         int idx = Random.Range(0, EmptyTVList.Count);
         
 
@@ -697,12 +746,58 @@ public class ZhiboAudienceMgr
 
     public void ShowTokenDetail(ZhiboLittleTV tvView)
     {
-        tokenDetail.SetActive(true);
-        tokenDetail.transform.position = tvView.transform.position + new Vector3(0.4f, 0.4f, 0);
+        tokenDetail.root.gameObject.SetActive(true);
+        string txt = "";
+        for(int i=0;i< tvView.TargetAudience.Aura.Count; i++)
+        {
+            txt += tvView.TargetAudience.Aura[i].type.ToString();
+            txt += "effect: " + tvView.TargetAudience.Aura[i].level;
+            txt += "\n";
+        }
+        for (int i = 0; i < tvView.TargetAudience.Bonus.Count; i++)
+        {
+            txt += tvView.TargetAudience.Bonus[i].Type.ToString();
+            txt += "effect: " + tvView.TargetAudience.Bonus[i].effectString;
+            txt += "\n";
+        }
+        if (txt == "")
+        {
+            txt = "无";
+        }
+        tokenDetail.Content.text = txt;
+
+        tokenDetail.root.position = tvView.view.TokenInfo.transform.position + new Vector3(0.15f, 0f, 0);
     }
 
     public void HideTokenDetail()
     {
-        tokenDetail.SetActive(false);
+        tokenDetail.root.gameObject.SetActive(false);
     }
+
+    public void CalculateAura()
+    {
+        int totalLess = 0;
+        for(int i = 0; i < TargetList.Count; i++)
+        {
+            if(TargetList[i].state == eAudienceState.Normal && TargetList[i].Aura.Count > 0)
+            {
+                for(int j=0;j< TargetList[i].Aura.Count; j++)
+                {
+                    switch (TargetList[i].Aura[j].type)
+                    {
+                        case eAudienceAuraType.LessScore:
+                            totalLess = Mathf.Max(TargetList[i].Aura[j].level, totalLess);
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
+            }
+        }
+
+        audienceAuraBuff.ScoreLess = totalLess;
+    }
+
+
 }

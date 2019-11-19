@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿#define DEMO
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
 
 
 public enum eReactorType
@@ -445,31 +447,31 @@ public class ZhiboGameMode : GameModeBase
 
     public void CalHpScoreRate()
     {
-        if(state.Hp > 90) {
-            state.HpScoreRate = 1.2f;
-        }else if (state.Hp > 80)
-        {
-            state.HpScoreRate = 1.1f;
-        }
-        else if (state.Hp > 70)
-        {
-            state.HpScoreRate = 1f;
-        }
-        else if (state.Hp > 60)
-        {
-            state.HpScoreRate = 0.8f;
-        }else if (state.Hp > 40)
-        {
-            state.HpScoreRate = 0.6f;
-        }else if (state.Hp > 20)
-        {
-            state.HpScoreRate = 0.4f;
-        }
-        else
-        {
-            state.HpScoreRate = 0.3f;
-        }
-
+        //if(state.Hp > 90) {
+        //    state.HpScoreRate = 1.2f;
+        //}else if (state.Hp > 80)
+        //{
+        //    state.HpScoreRate = 1.1f;
+        //}
+        //else if (state.Hp > 70)
+        //{
+        //    state.HpScoreRate = 1f;
+        //}
+        //else if (state.Hp > 60)
+        //{
+        //    state.HpScoreRate = 0.8f;
+        //}else if (state.Hp > 40)
+        //{
+        //    state.HpScoreRate = 0.6f;
+        //}else if (state.Hp > 20)
+        //{
+        //    state.HpScoreRate = 0.4f;
+        //}
+        //else
+        //{
+        //    state.HpScoreRate = 0.3f;
+        //}
+        state.HpScoreRate = 0;
     }
 
     public string GetBuffDesp(eBuffType buffType)
@@ -478,8 +480,18 @@ public class ZhiboGameMode : GameModeBase
     }
     private void LoadCard()
     {
-        List<CardInfo> infoList = mCardMdl.GetAllEnabledCards();
         state.CardDeck.Clear();
+#if DEMO
+        for (int i=1;i<=16;i++)
+        {
+            CardAsset ca = mCardMdl.GetCardInfo(string.Format("gem_{0:0000}",i));
+            CardInZhibo card = new CardInZhibo(ca);
+            state.CardDeck.Add(card);
+        }
+#else
+
+        List<CardInfo> infoList = mCardMdl.GetAllEnabledCards();
+
         foreach (CardInfo info in infoList)
         {
             string eid = info.CardId;
@@ -498,7 +510,7 @@ public class ZhiboGameMode : GameModeBase
             card.ca = ca;
             state.CardDeck.Add(card);
         }
-
+#endif
         shuffle<CardInZhibo>(state.CardDeck);
     }
 
@@ -575,18 +587,7 @@ public class ZhiboGameMode : GameModeBase
             state.AccelerateRate = 1f;
         }
 
-        //if (state.Qifen > 100)
-        //{
-        //    int cardNum = (int)(state.Qifen / 100);
-        //    state.Qifen -= cardNum * 100f;
-        //    mUICtrl.ChangeTurnTime(state.Qifen);
-        //    for(int i = 0; i < cardNum; i++)
-        //    {
-        //        AddCardFromDeck();
-        //    }
-        //}
 
-        mAudienceMgr.Tick();
 
         //handle card chain
         if (state.UseCardChain.Count > 0)
@@ -663,7 +664,7 @@ public class ZhiboGameMode : GameModeBase
 
             mEmergencyManager.CheckEmergencySec(SecCount);
 
-            mAudienceMgr.TickSec();
+            //mAudienceMgr.TickSec();
 
             mBuffManager.TickSec();
         }
@@ -782,6 +783,11 @@ public class ZhiboGameMode : GameModeBase
         }
         return finalValue;
 
+    }
+
+    public void PutScoreOnAudience(float score, bool and = true, List<int> target = null)
+    {
+        mAudienceMgr.PutScoreOnAudience(score, and, target);
     }
 
     public void GainScore(float score, int add=0)
@@ -1476,6 +1482,50 @@ public class ZhiboGameMode : GameModeBase
             string[] args = ce.effectString.Split(',');
             switch (ce.effectType)
             {
+                case eEffectType.PutScoreOnAudience:
+                    {
+                        int add = 0;
+                        for (int i = 0; i < ValidBuffs.Count; i++)
+                        {
+                            if (ValidBuffs[i].bInfo.BuffType == eBuffType.Next_Card_Extra_Score)
+                            {
+                                add += ValidBuffs[i].bInfo.BuffLevel;
+                            }
+
+                        }
+                        float originScore = GetScoreFromFormulation(args[0]);
+                        float finalScore = GetScoreAfterApplyingSkillBonus(NowExecuteCard, originScore);
+
+                        if (args.Length > 1)
+                        {
+                            bool isAnd = true;
+                            int idx = 1;
+                            List<int> filter = new List<int>();
+                            if (args[1] == "|")
+                            {
+                                isAnd = false;
+                                idx = 2;
+                            }
+                            else if(args[1] == "&")
+                            {
+                                isAnd = true;
+                                idx = 2;
+                            }
+                            for(int i = idx; i < args.Length; i++)
+                            {
+                                filter.Add(int.Parse(args[i]));
+                            }
+                            PutScoreOnAudience(finalScore,isAnd, filter);
+                        }
+                        else
+                        {
+                            PutScoreOnAudience(finalScore);
+
+                        }
+
+                    }
+
+                    break;
                 case eEffectType.HitGem:
                     int[] damage = new int[6];
                     for(int i = 0; i < args.Length; i++)
@@ -1484,14 +1534,7 @@ public class ZhiboGameMode : GameModeBase
                     }
                     //得到 NowExecuteCard.ca.Gems[]
                     //实施 
-                    AffectedAudience = mAudienceMgr.HandleGemHit(new int[] {1,0,0,0,0,0});
-
-                    //cause damage
-                    for(int i=0;i< AffectedAudience.Count; i++)
-                    {
-                        mAudienceMgr.ApplyAddScore(AffectedAudience[i],10);
-                    }
-
+                    AffectedAudience = mAudienceMgr.HandleGemHit(damage);
                     break;
                 case eEffectType.SpawnGift:
                     GenSpecial(args[0], int.Parse(args[1]));
@@ -1557,35 +1600,21 @@ public class ZhiboGameMode : GameModeBase
                     break;
                 case eEffectType.GetScore:
 
-                    int add = 0;
-                    for (int i = 0; i < ValidBuffs.Count; i++)
-                    {
-                        if (ValidBuffs[i].bInfo.BuffType == eBuffType.Next_Card_Extra_Score)
-                        {
-                            add += ValidBuffs[i].bInfo.BuffLevel;
-                        }
 
-                    }
-                    float originScore = GetScoreFromFormulation(args[0]);
-                    if (NowExecuteCard.ca.BaseSkillId != null)
                     {
-                        SkillInfo info = mSkillMdl.GetOwnedSkill(NowExecuteCard.ca.BaseSkillId);
-                        if (info != null)
+                        int add = 0;
+                        for (int i = 0; i < ValidBuffs.Count; i++)
                         {
-                            BaseSkillAsset bsa = info.sa as BaseSkillAsset;
-                            if (bsa != null)
+                            if (ValidBuffs[i].bInfo.BuffType == eBuffType.Next_Card_Extra_Score)
                             {
-                                float[] bonus = bsa.StatusBonus[info.SkillLvl - 1];
-                                //附加bonus
-                                originScore *= 10 * bonus[0];
+                                add += ValidBuffs[i].bInfo.BuffLevel;
                             }
 
                         }
+                        float originScore = GetScoreFromFormulation(args[0]);
+                        float finalScore = GetScoreAfterApplyingSkillBonus(NowExecuteCard, originScore);
+                        GainScore(finalScore, add);
                     }
-
-
-                    GainScore(originScore, add);
-
                     //mAudienceMgr.ShowRandomAudience();
                     //mUICtrl.ShowNewAudience();
 
@@ -1696,8 +1725,28 @@ public class ZhiboGameMode : GameModeBase
                     break;
             }
         }
+    }
 
 
+    public float GetScoreAfterApplyingSkillBonus(CardInZhibo toCalculate, float originScore)
+    {
+        float ret = originScore;
+        if (NowExecuteCard.ca.BaseSkillId != null)
+        {
+            SkillInfo info = mSkillMdl.GetOwnedSkill(NowExecuteCard.ca.BaseSkillId);
+            if (info != null)
+            {
+                BaseSkillAsset bsa = info.sa as BaseSkillAsset;
+                if (bsa != null)
+                {
+                    float[] bonus = bsa.StatusBonus[info.SkillLvl - 1];
+                    //附加bonus
+                    ret *= 10 * bonus[0];
+                }
+
+            }
+        }
+        return ret;
     }
 
     public void GetExtraMoney(int num)

@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene/Zhibo.unity
     guid: 73788ad6fbb43421d90010405b723dc1
+  - enabled: 1
+    path: Assets/Scene/FightDanmu.unity
+    guid: 0043980ff48fc4ba3ae08c2825da821f
   m_configObjects: {}

@@ -73,6 +73,7 @@ public class ZhiboAudience
 
 
     public int[] preHp = new int[6];
+    public float preScore = 0;
 
     public float GetBaseBonus()
     {
@@ -82,6 +83,7 @@ public class ZhiboAudience
 
     public void AddScore(float amount)
     {
+        preScore = NowScore;
         NowScore += amount;
     }
 
@@ -193,6 +195,37 @@ public class ZhiboAudience
 
         state = eAudienceState.Attracted;
         AttractLeftTurn = 1;
+    }
+
+    public bool ApplyColorFilter(bool isAnd, List<int> colors)
+    {
+        if(colors == null)
+        {
+            return true;
+        }
+        if (isAnd)
+        {
+
+            for (int i=0;i< colors.Count; i++)
+            {
+                if (GemHp[colors[i]] == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        else
+        {
+            for (int i = 0; i < colors.Count; i++)
+            {
+                if (GemHp[colors[i]] > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
 
