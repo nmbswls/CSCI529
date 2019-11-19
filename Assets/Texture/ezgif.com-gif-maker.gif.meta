@@ -97,7 +97,11 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
+<<<<<<< HEAD
     spriteID: d2fcabcef27e74b19be136c2202d6066
+=======
+    spriteID: 3b38c88c3fe2a42009d3c513297b3ee0
+>>>>>>> master_LittleTVPicture
     vertices: []
     indices: 
     edges: []

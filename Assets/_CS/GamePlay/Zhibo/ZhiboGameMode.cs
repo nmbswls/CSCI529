@@ -482,7 +482,7 @@ public class ZhiboGameMode : GameModeBase
     {
         state.CardDeck.Clear();
 #if DEMO
-        for (int i=1;i<=16;i++)
+        for (int i=1;i<=24;i++)
         {
             CardAsset ca = mCardMdl.GetCardInfo(string.Format("gem_{0:0000}",i));
             CardInZhibo card = new CardInZhibo(ca);

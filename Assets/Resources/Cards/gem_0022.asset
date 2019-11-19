@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fd9661ee098242fabfac0395aff7d51, type: 3}
-  m_Name: gem_0005
+  m_Name: gem_0022
   m_EditorClassIdentifier: 
-  CardId: gem_0005
-  CardName: Draw cards
-  CardDesp: Deal 1 Cyen Damage / Draw 2 cards and loss 1 health
+  CardId: gem_0022
+  CardName: Get Score
+  CardDesp: Deal 1 All-Color Damage / Get 4 Score
   CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 1 Cyen Damage / Draw 2 cards and loss 1 health
+  CardEffectDesp: Deal 1 All-Color Damage / Get 4 Score
   Picture: {fileID: 0}
   CardType: 1
   Tags: []
@@ -32,32 +32,15 @@ MonoBehaviour:
   SkillBonusType: 0
   SkillBonusNum: 0
   BaseSkillId: 
-  Gems: 000000000100000000000000000000000000000000000000
+  Gems: 010000000000000000000000000000000000000000000000
   UseConditions: []
   Effects:
   - EMode: 0
-    effectType: 17
+    effectType: 7
     isNegEffect: 0
     Possibility: 0
     turnEffect: 
-    effectString: 2
-    isAddBuff: 0
-    buffInfo:
-      BuffType: 0
-      BuffLevel: 0
-      AffectCard: 0
-      filterString: 
-      TurnLast: 0
-      CardNum: 0
-      SecLast: 0
-    BranchType: 
-    BranchEffectStrings: []
-  - EMode: 0
-    effectType: 27
-    isNegEffect: 0
-    Possibility: 0
-    turnEffect: 
-    effectString: -1
+    effectString: 4
     isAddBuff: 0
     buffInfo:
       BuffType: 0
