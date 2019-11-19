@@ -425,7 +425,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardId = string.Format("test_{0:00}", i + 1);
             ca.CardEffectDesp = "Level " + (i + 1) + "Attack Skill";
             ca.CatdImageName = "Image_Bangyigegezuibangla";
-            ca.BaseSkillId = string.Format("test_{0:00}", (i)/5+1); ;
+            ca.BaseSkillId = string.Format("test_{0:00}", (i)/5+1);
             ca.cost = 2;
             {
                 CardEffect ce = new CardEffect();
