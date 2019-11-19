@@ -44,6 +44,7 @@ public class CoreManager : ModuleBase, ICoreManager
         SceneInfoDict["Main"] = new SceneInfo("Main", typeof(MainGameMode));
         SceneInfoDict["Home"] = new SceneInfo("Main", typeof(HomeGameMode));
         SceneInfoDict["Zhibo"] = new SceneInfo("Zhibo", typeof(ZhiboGameMode));
+        SceneInfoDict["FightDanmu"] = new SceneInfo("FightDanmu", typeof(ZhiboGameMode2));
     }
 
     private void LoadInit()

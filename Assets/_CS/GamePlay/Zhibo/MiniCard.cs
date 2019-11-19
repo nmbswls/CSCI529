@@ -31,6 +31,7 @@ public class MiniCardView
 
     public Transform GemBackContainer;
     public List<CardGemBackView> CardGemBackList = new List<CardGemBackView>();
+    public Text CostBack;
 }
 
 public class CardGemBackView
@@ -139,10 +140,12 @@ public class MiniCard : MonoBehaviour
         if(ca.cost == -1)
         {
             view.Cost.text = "X";
+            view.CostBack.text = "1";
         }
         else
         {
             view.Cost.text = ca.cost + "";
+            view.CostBack.text = ca.cost + "";
         }
 
         if (ca.CatdImageName == null || ca.CatdImageName == string.Empty)
@@ -182,23 +185,32 @@ public class MiniCard : MonoBehaviour
         }
 
         view.CardGemBackList.Clear();
+        int types = 0;
 
         for (int i = 0; i < cardInfo.OverrideGems.Length; i++)
         {
             if (cardInfo.OverrideGems[i] > 0)
             {
+
                 GameObject go = container.mResLoader.Instantiate("Zhibo/CardGemBack", view.GemBackContainer);
                 CardGemBackView vv = new CardGemBackView();
                 vv.BindView(go.transform);
                 view.CardGemBackList.Add(vv);
                 vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
                 vv.Num.text = cardInfo.OverrideGems[i] + "";
+                types++;
 
-                vv.Content.localPosition = new Vector3(i * 50, 0, 0);
             }
         }
-
-
+        int offset = 0;
+        if (types > 1)
+        {
+            offset = 100 / (types - 1);
+        }
+        for (int i=0;i< view.CardGemBackList.Count; i++)
+        {
+            view.CardGemBackList[i].Content.localPosition = new Vector3(i * offset, 0, 0);
+        }
 
 
         nowDegree = 20f;
@@ -321,6 +333,7 @@ public class MiniCard : MonoBehaviour
         view.GemContainer = view.CardFace.Find("Gems");
         view.GemBackContainer = view.CardBack.Find("Gems");
 
+        view.CostBack = view.CardBack.Find("Cost").GetComponent<Text>();
 
         view.TimeLeftComp = view.CardFace.Find("TimeLeft");
         view.TimeLeft = view.TimeLeftComp.Find("Text").GetComponent<Text>();
