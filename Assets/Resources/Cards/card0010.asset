@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: card0010
   m_EditorClassIdentifier: 
   CardId: card0010
-  CardName: "\u66B4\u8D70\uFF01"
+  CardName: Rampage
   CardDesp: "Rampage\uFF01"
   CatdImageName: Image_Bujieshilianzhao
-  CardEffectDesp: "\u7ACB\u5373\u83B7\u5F97120\u70B9\u70ED\u5EA6\u3002\u83B7\u5F9730\u79D2\u9AD8\u70ED\u65F6\u95F4\u3002"
+  CardEffectDesp: 'add 120 Score. '
   Picture: {fileID: 0}
   CardType: 1
   Tags: []
@@ -32,6 +32,7 @@ MonoBehaviour:
   SkillBonusType: 0
   SkillBonusNum: 0
   BaseSkillId: 
+  Gems: 000000000000000000000000000000000000000000000000
   UseConditions: []
   Effects:
   - EMode: 0

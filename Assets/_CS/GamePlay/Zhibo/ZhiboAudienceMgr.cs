@@ -253,11 +253,11 @@ public class ZhiboAudienceMgr
                 switch (bonuw.Type)
                 {
                     case eAudienceBonusType.AddHp:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语回血");
+                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("Deathrattle: Recover Health");
                         gameMode.AddHp(int.Parse(bonuw.effectString));
                         break;
                     case eAudienceBonusType.Aoe:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语aoe");
+                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("Deathrattle: Deal damages to audience");
                         string[] args = bonuw.effectString.Split(',');
                         if(args.Length != 6)
                         {
@@ -273,19 +273,19 @@ public class ZhiboAudienceMgr
                         //gameMode.AddHp(int.Parse(bonuw.effectString));
                         break;
                     case eAudienceBonusType.Damage:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语伤血");
+                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("Deathrattle: Loss Health");
                         gameMode.AddHp(-int.Parse(bonuw.effectString));
                         break;
                     case eAudienceBonusType.Score:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语加分");
+                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("Deathrattle: Get Extra Score");
                         gameMode.GainScore(int.Parse(bonuw.effectString));
                         break;
                     case eAudienceBonusType.Dual:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语抽卡");
+                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("Deathrattle: Draw A Card");
                         gameMode.AddCardFromDeck();
                         break;
                     case eAudienceBonusType.Discard:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语弃卡");
+                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("Deathrattle: Discard A Random Card");
                         gameMode.DiscardRandomCards(1);
                         break;
                     default:

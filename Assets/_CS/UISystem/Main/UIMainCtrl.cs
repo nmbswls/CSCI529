@@ -408,7 +408,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     public void testUpdateWords()
     {
         string s = ""; 
-        s += "回合" + turn + "\n";
+        s += "Round: " + turn + "\n";
         view.showAll.text = s;
 
         view.SkillExpShow.text = testCardExp + "";

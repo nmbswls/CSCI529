@@ -1196,7 +1196,7 @@ public class ZhiboGameMode : GameModeBase
         CardAsset ca = cinfo.ca;
         if (ca.cost > 0 && state.Tili < ca.cost)
         {
-            mUIMgr.ShowHint("体力不足");
+            mUIMgr.ShowHint("Not Enough Energy!");
             return false;
         }
         if (ca.cost >= 0)
@@ -1221,7 +1221,7 @@ public class ZhiboGameMode : GameModeBase
         }
         if(state.Tili < 3)
         {
-            mUIMgr.ShowHint("体力不够");
+            mUIMgr.ShowHint("Not Enough Energy!");
             return;
         }
         GenTili(-3);

@@ -5264,10 +5264,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-<<<<<<< HEAD
   m_Text: Mentality
-=======
-  m_Text: "\u5FC3\u6001"
 --- !u!1 &5833255397477123225
 GameObject:
   m_ObjectHideFlags: 0
@@ -5382,7 +5379,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
->>>>>>> master
 --- !u!1 &5973708229176595430
 GameObject:
   m_ObjectHideFlags: 0
@@ -7263,7 +7259,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: reaction
+  m_Text: Reaction
 --- !u!1 &8099869339276113257
 GameObject:
   m_ObjectHideFlags: 0
