@@ -139,12 +139,15 @@ public class ZhiboAudienceMgr
         while (KilledAudience.Count > 0)
         {
             yield return new WaitForSeconds(0.5f);
-            ZhiboAudience a = KilledAudience.Dequeue();
-            if(a == null)
+            if(KilledAudience.Count > 0)
             {
-                Debug.Log("errrrrrr");
+                ZhiboAudience a = KilledAudience.Dequeue();
+                if (a == null)
+                {
+                    Debug.Log("errrrrrr");
+                }
+                AudienceAttracted(a);
             }
-            AudienceAttracted(a);
         }
     }
 
@@ -567,6 +570,10 @@ public class ZhiboAudienceMgr
                 TargetList[i].AttractLeftTurn -= 1;
                 if (TargetList[i].AttractLeftTurn <= 0)
                 {
+                    if (TargetList[i].BindViewIdx == -1)
+                    {
+                        return;
+                    }
                     LittleTvList[TargetList[i].BindViewIdx].Disappear();
                     TargetList.RemoveAt(i);
                 }

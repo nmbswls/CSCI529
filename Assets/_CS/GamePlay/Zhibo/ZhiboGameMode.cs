@@ -111,6 +111,8 @@ public class ZhiboGameState
     public int MinHp;
     public int Hp;
 
+    public float Target = 200;
+
     //public float ScoreArmor = 0;
 
     public float ScoreArmor = 0;
@@ -1584,9 +1586,8 @@ public class ZhiboGameMode : GameModeBase
 
                     GainScore(originScore, add);
 
-                    mAudienceMgr.ShowRandomAudience();
+                    //mAudienceMgr.ShowRandomAudience();
                     //mUICtrl.ShowNewAudience();
-
 
                     mUICtrl.ShowDanmuEffect(mUICtrl.GetCardContainer().GetCardPosition(NowExecuteCard));
                     break;
@@ -1981,9 +1982,8 @@ public class ZhiboGameMode : GameModeBase
 
     public List<ZhiboAudience> nowAudiences = new List<ZhiboAudience>();
 
-
-
-
-
-
+    public void updateTarget()
+    {
+        state.Target *= 2;
+    }
 }

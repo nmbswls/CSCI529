@@ -57,6 +57,8 @@ public class ZhiboView : BaseView
 
     public GameObject TokenDetailPanel;
 
+    public Text targetValue;
+
 }
 //public class OperatorView
 //{
@@ -145,8 +147,20 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     public void UpdateScore()
     {
         float nowScore = gameMode.state.Score;
-        view.hotValue.text = (int)nowScore + "";
+        if(nowScore>=1000)
+        {
+            int tenthValue = (int)nowScore / 100 - (int)(nowScore / 1000) * 10;
+            view.hotValue.text = (int)(nowScore/1000) +"."+ tenthValue + "K";
+        }
+        else
+        {
+            view.hotValue.text = (int)nowScore + "";
+        }
         view.Score.value = nowScore * 1.0f / gameMode.state.MaxScore;
+        if(nowScore>gameMode.state.Target)
+        {
+            UpdateTarget();
+        }
     }
 
     public void UpdateTili()
@@ -261,6 +275,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         Transform hotView = root.transform.Find("Score");
         view.Score = hotView.GetComponent<Slider>();
         view.hotValue = hotView.Find("Value").GetComponent<Text>();
+        view.targetValue = hotView.Find("TargetValue").GetComponent<Text>();
 
         view.RoleSkill = root.Find("RoleSkill").GetComponent<Button>();
 
@@ -616,6 +631,22 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     public GameObject GetTokenDetailPanel()
     {
         return view.TokenDetailPanel;
+    }
+
+    public void UpdateTarget()
+    {
+        gameMode.updateTarget();
+        float nowTarget = gameMode.state.Target;
+        if(nowTarget>=1000)
+        {
+            int tenthValue = (int)nowTarget / 100 - (int)(nowTarget / 1000) * 10;
+            view.targetValue.text = (int)(nowTarget / 1000) +"."+ tenthValue + "K";
+        }
+        else
+        {
+            view.targetValue.text = (int)(nowTarget) + "";
+        }
+        
     }
 
 }

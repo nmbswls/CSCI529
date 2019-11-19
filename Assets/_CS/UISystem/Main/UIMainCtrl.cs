@@ -19,6 +19,7 @@ public class MainView : BaseView
 	public Button NextStage;
     public Button ScheduleBtn;
     public Button InspectBtn;
+    public Button DanmuGame;
 
     public Slider XinqingSlider;
     public Slider FumianSlider;
@@ -219,6 +220,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.InspectBtn = root.Find("Deck").GetComponent<Button>();
         view.ScheduleBtn = root.Find("Schedule").GetComponent<Button>();
         view.NextStage = root.Find("NextTurn").GetComponent<Button>();
+        view.DanmuGame = root.Find("DanmuPlay").GetComponent<Button>();
 
         view.XinqingSlider = root.Find("Property2").Find("Xintai").Find("Slider").GetComponent<Slider>();
         view.FumianSlider = root.Find("Property2").Find("Fumian").Find("Slider").GetComponent<Slider>();
