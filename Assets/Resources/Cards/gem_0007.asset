@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardId: gem_0007
   CardName: Recover
-  CardDesp: Deal 2 Red Damage /  Gain 3 Armor
+  CardDesp: Deal 2 Cyen Damage /  Gain 3 Armor
   CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 2 Red Damage /  Gain 3 Armor
+  CardEffectDesp: Deal 2 Cyen Damage /  Gain 3 Armor
   Picture: {fileID: 0}
   CardType: 0
   Tags: []

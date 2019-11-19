@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardId: gem_0003
   CardName: Draw Cards 2
-  CardDesp: Deal 2 Blue Damage / Draw 2 cards and loss 1 health
+  CardDesp: Deal 2 Green Damage / Draw 2 cards and loss 1 health
   CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 2 Blue Damage / Draw 2 cards and loss 1 health
+  CardEffectDesp: Deal 2 Green Damage / Draw 2 cards and loss 1 health
   Picture: {fileID: 0}
   CardType: 1
   Tags: []
