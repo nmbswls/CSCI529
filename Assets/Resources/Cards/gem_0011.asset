@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardId: gem_0011
   CardName: Get Score
-  CardDesp: Deal 2 Green Damage / Gain 3 Score
+  CardDesp: Deal 2 Purple Damage / Gain 3 Score
   CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 2 Green Damage / Gain 3 Score
+  CardEffectDesp: Deal 2 Purple Damage / Gain 3 Score
   Picture: {fileID: 0}
   CardType: 1
   Tags: []

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardId: gem_0004
   CardName: Recover 3
-  CardDesp: Deal 3 Blue Damage / Recover 3 Health
+  CardDesp: Deal 3 Green Damage / Recover 3 Health
   CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 3 Blue Damage / Recover 3 Health
+  CardEffectDesp: Deal 3 Green Damage / Recover 3 Health
   Picture: {fileID: 0}
   CardType: 1
   Tags: []

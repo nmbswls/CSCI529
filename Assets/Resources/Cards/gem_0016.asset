@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardId: gem_0016
   CardName: Gain Armor
-  CardDesp: Deal 3 Yellow Damage / Gain 3 Armor
+  CardDesp: Deal 3 Blue Damage / Gain 3 Armor
   CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 3 Yellow Damage / Gain 3 Armor
+  CardEffectDesp: Deal 3 Blue Damage / Gain 3 Armor
   Picture: {fileID: 0}
   CardType: 1
   Tags: []
