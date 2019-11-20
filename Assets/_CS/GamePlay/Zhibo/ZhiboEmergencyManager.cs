@@ -70,8 +70,19 @@ public class ZhiboEmergencyManager
             }
             if (c.Ret == "Hot")
             {
-                gameMode.GainScore(idx * 50 + 50, 0);
-                mUIMgr.ShowHint("Get " + (idx * 50 + 50) + " Score");
+                if(idx == 0)
+                {
+                    gameMode.GainScore(-10);
+                    mUIMgr.ShowHint("Get " + "-10" + " Score");
+                } else if(idx == 1)
+                {
+                    gameMode.GainScore(15);
+                    mUIMgr.ShowHint("Get " + "15" + " Score");
+                } else
+                {
+                    gameMode.GainScore(30);
+                    mUIMgr.ShowHint("Get " + "30" + " Score");
+                }
             }
         };
     }

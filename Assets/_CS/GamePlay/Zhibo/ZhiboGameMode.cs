@@ -113,7 +113,7 @@ public class ZhiboGameState
     public int MinHp;
     public int Hp;
 
-    public float Target = 200;
+    public float Target = 300;
 
     //public float ScoreArmor = 0;
 
