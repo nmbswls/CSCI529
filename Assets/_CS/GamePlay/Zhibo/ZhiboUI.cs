@@ -43,8 +43,8 @@ public class ZhiboView : BaseView
 
     public Image TurnTimeBar;
 
-    public float TurnTimeMaxFillAmount = 0.35f;
-    public float TurnTimeMinFillAmount = 0.02f;
+    public float LeftBarMaxFillAmount = 0.35f;
+    public float LeftBarMinFillAmount = 0.02f;
     public float TiliMaxFillAmount = 0.5f;
     public float TiliMinFillAmount = 0.2f;
 
@@ -140,7 +140,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public void UpdateHp()
     {
-        view.HpBar.fillAmount = gameMode.state.Hp / 100;
+        view.HpBar.fillAmount = view.LeftBarMinFillAmount + (gameMode.state.Hp * 1.0f/ gameMode.state.MaxHp) * (view.LeftBarMaxFillAmount - view.LeftBarMinFillAmount);
         view.HpValue.text = gameMode.state.Hp + "<color=blue>"+"+" + gameMode.state.TmpHp+"</color>";
     }
 
