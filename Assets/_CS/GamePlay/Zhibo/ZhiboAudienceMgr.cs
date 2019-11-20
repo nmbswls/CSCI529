@@ -520,8 +520,8 @@ public class ZhiboAudienceMgr
     {
         //先还再check 顺序重要
         ReturnWaitingTVs();
-        CheckOverdue();
         AudienceCauseDamage();
+        CheckOverdue();
     }
 
     public void NextTurn()
@@ -615,6 +615,7 @@ public class ZhiboAudienceMgr
 
     public void AudienceCauseDamage()
     {
+        Debug.Log("Rest Target = " + TargetList.Count);
         for(int i = 0; i < TargetList.Count; i++)
         {
             if(TargetList[i].state == eAudienceState.Attracted
@@ -633,6 +634,8 @@ public class ZhiboAudienceMgr
             {
                 damage += TargetList[i].GemHp[j];
             }
+            damage += TargetList[i].BlackHp;
+            Debug.Log("Audience, type= " + TargetList[i].Type + ", hert=" + damage);
             gameMode.AddHp(-damage);
 
 

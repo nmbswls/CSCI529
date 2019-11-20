@@ -291,10 +291,10 @@ public class ZhiboGameMode : GameModeBase
 
         ClearAllDanmu(true);
 
-        if (!isFirstTurn)
-        {
-            AddHp(-(pRoleMgr.GetBadLevel()+mBuffManager.BadRateDiff)*2);
-        }
+        //if (!isFirstTurn)
+        //{
+        //    AddHp(-(pRoleMgr.GetBadLevel() + mBuffManager.BadRateDiff) * 2);
+        //}
 
         mAudienceMgr.FinishTurn();
 
