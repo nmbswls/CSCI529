@@ -375,7 +375,7 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
         }
         if(nowIdx == -1)
         {
-            view.skillDetail.CdLeft.text = "就绪";
+            view.skillDetail.CdLeft.text = "Ready";
             return;
         }
 
@@ -385,7 +385,7 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
         }
         else
         {
-            view.skillDetail.CdLeft.text = "就绪";
+            view.skillDetail.CdLeft.text = "Ready";
         }
 
 
@@ -415,7 +415,7 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
         view.skillDetail.SkillName.text = toSHow.Name;
         view.skillDetail.Desp.text = toSHow.Desp;
         view.skillDetail.CdLeft.text = toSHow.CdLeft+"";
-        view.skillDetail.Cost.text = string.Format("消耗 {0} 点能量\n冷却时间 {1}s",toSHow.EnegyCost,toSHow.Cd);
+        view.skillDetail.Cost.text = string.Format("Spend {0} Cost\n CoolDown: {1}s",toSHow.EnegyCost,toSHow.Cd);
 
 
         view.skillDetail.root.gameObject.SetActive(true);

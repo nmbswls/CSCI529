@@ -182,23 +182,23 @@ public class ZhiboGameMode2 : GameModeBase
     {
         {
             List<string> ll = new List<string>();
-            ll.Add("主播什么时候开播的");
-            ll.Add("日常打卡");
-            ll.Add("主播晚上好啊");
+            ll.Add("When did you start!");
+            ll.Add("(1/1) Daily Come");
+            ll.Add("Good Evening!");
             DanmuDict.Add(string.Empty, ll);
         }
         {
             List<string> ll = new List<string>();
-            ll.Add("主播什么时候开播的");
-            ll.Add("日常打卡");
-            ll.Add("主播晚上好啊");
+            ll.Add("When did you start!");
+            ll.Add("(1/1) Daily Come");
+            ll.Add("Good Evening!");
             DanmuDict.Add("1", ll);
         }
         {
             List<string> ll = new List<string>();
-            ll.Add("主播什么时候开播的");
-            ll.Add("日常打卡");
-            ll.Add("主播晚上好啊");
+            ll.Add("When did you start!");
+            ll.Add("(1/1) Daily Come");
+            ll.Add("Good Evening!");
             DanmuDict.Add("2", ll);
         }
     }
@@ -539,7 +539,7 @@ public class ZhiboGameMode2 : GameModeBase
             int idx = Random.Range(0, ll.Count);
             return ll[idx];
         }
-        return "主播长成这样也敢直播？";
+        return "Look yourself ***!";
     }
 
     public void RandomChangeJiezou()
@@ -589,11 +589,11 @@ public class ZhiboGameMode2 : GameModeBase
     {
         {
             ZhiboMode2Skill skill = new ZhiboMode2Skill();
-            skill.Name = "禁言套餐";
+            skill.Name = "Banned!";
             skill.PictureUrl = "Image_Yongjiufengjin";
             skill.Cd = 10f;
             skill.EnegyCost = 30;
-            skill.Desp = "都他妈闭嘴！\n消除30条负面弹，靠近屏幕左侧的将被优先消除";
+            skill.Desp = "Shut Up！\nElimate 30 negative Danmu\n Prioritize the removal of the leftmost danmu";
             skill.Ce = new CardEffect();
             skill.Ce.effectType = eEffectType.ClearDanmu;
             skill.Ce.effectString = "30";
@@ -602,11 +602,11 @@ public class ZhiboGameMode2 : GameModeBase
 
         {
             ZhiboMode2Skill skill = new ZhiboMode2Skill();
-            skill.Name = "回怼弹幕";
+            skill.Name = "Attack!";
             skill.PictureUrl = "Image_Bangyigegezuibangla";
             skill.Cd = 10f;
             skill.EnegyCost = 30;
-            skill.Desp = "和弹幕对。\n获得100点分数，但同时也会触怒粉丝，生成一批负面弹幕";
+            skill.Desp = "Counterattack。\n Get 100 Score, but will also generate more negative Danmu";
             skill.Ce = new CardEffect();
             skill.Ce.effectType = eEffectType.GetScore;
             skill.Ce.effectString = "100";
@@ -614,11 +614,11 @@ public class ZhiboGameMode2 : GameModeBase
         }
         {
             ZhiboMode2Skill skill = new ZhiboMode2Skill();
-            skill.Name = "休养生息";
+            skill.Name = "Rest!";
             skill.PictureUrl = "Image_Fanxiangdunai";
             skill.Cd = 10f;
             skill.EnegyCost = 30;
-            skill.Desp = "喘口气，喝点水，接着怼！\n回复10点体力";
+            skill.Desp = "Give me on second and will counterattack again！\n Restore 10 Health";
             skill.Ce = new CardEffect();
             skill.Ce.effectType = eEffectType.AddHp;
             skill.Ce.effectString = "10";
@@ -626,11 +626,11 @@ public class ZhiboGameMode2 : GameModeBase
         }
         {
             ZhiboMode2Skill skill = new ZhiboMode2Skill();
-            skill.Name = "专注直播";
+            skill.Name = "Focusing On Streaming!";
             skill.PictureUrl = "Image_Bujieshilianzhao";
             skill.Cd = 10f;
             skill.EnegyCost = 30;
-            skill.Desp = "专注直播，外物不可侵也\n接下来的8秒免疫负面弹幕伤害";
+            skill.Desp = "Streaming is the only thing I should do\n Invalidate the negative danmu for 8 seconds";
             skill.Ce = new CardEffect();
             skill.Ce.effectType = eEffectType.GetArmor;
             skill.Ce.effectString = "8";
@@ -638,11 +638,11 @@ public class ZhiboGameMode2 : GameModeBase
         }
         {
             ZhiboMode2Skill skill = new ZhiboMode2Skill();
-            skill.Name = "被动!";
+            skill.Name = "Passive!";
             skill.PictureUrl = "Image_Banka";
             skill.Cd = 10f;
             skill.EnegyCost = 30;
-            skill.Desp = "消除弹幕时获得额外1点分数";
+            skill.Desp = "Get more 1 score when elmiate a danmu";
             skill.Ce = new CardEffect();
             skill.Ce.effectType = eEffectType.GetHot;
             skill.Ce.effectString = "1";
@@ -710,7 +710,7 @@ public class ZhiboGameMode2 : GameModeBase
         }
 
     }
-    string[] superContent = new string[] { "主播你今天吃屎了吗？", "主播你今天吃屎了吗2？", "主播你今天吃屎了吗3？", "主播你今天吃屎了吗4？", "主播你今天吃屎了吗5？" };
+    string[] superContent = new string[] { "Did you eat *** today？", "Did you eat *** today2？", "Did you eat *** today3？", "Did you eat *** today4？", "Did you eat *** today5？" };
     public string GetSuperDanmuContent()
     {
         int randI = Random.Range(0, superContent.Length);

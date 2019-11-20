@@ -82,7 +82,7 @@ public class ZhiboEmergencyManager
         {
             EmergencyAsset ea = new EmergencyAsset();
             ea.EmId = "em01";
-            ea.EmName = "Oh my father！";
+            ea.EmName = "Oh My Father！";
             ea.EmDesp = "My father is coming！";
             {
                 EmergencyChoice choice = new EmergencyChoice();
@@ -108,7 +108,7 @@ public class ZhiboEmergencyManager
         {
             EmergencyAsset ea = new EmergencyAsset();
             ea.EmId = "em02";
-            ea.EmName = "Oh my mother！";
+            ea.EmName = "Oh My Mother！";
             ea.EmDesp = "My mother is coming！";
             {
                 EmergencyChoice choice = new EmergencyChoice();
