@@ -141,6 +141,12 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     public void UpdateHp()
     {
         view.HpBar.fillAmount = view.LeftBarMinFillAmount + (gameMode.state.Hp * 1.0f / gameMode.state.MaxHp) * (view.LeftBarMaxFillAmount - view.LeftBarMinFillAmount);
+        //if(gameMode.state.Hp > 20)view.HpBar.color = new Color(175,245,108,255);  //green
+        //else if(gameMode.state.Hp > 10) view.HpBar.color = new Color(245, 222, 108, 255);  //yellow
+        //else view.HpBar.color = new Color(245, 125, 108, 255);  //red
+        if (gameMode.state.Hp > 20) view.HpBar.color = Color.green;  //green
+        else if (gameMode.state.Hp > 10) view.HpBar.color = Color.yellow;  //yellow
+        else view.HpBar.color = Color.red;  //red
         view.HpValue.text = gameMode.state.Hp + "<color=blue>"+"+" + gameMode.state.TmpHp+"</color>";
     }
 
@@ -167,7 +173,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     {
         //view.TiliValue.text = (int)gameMode.state.Tili + "";
         int points = (int)gameMode.state.Tili;
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < view.TiliPoints.Count; i++)
         {
             view.TiliPoints[i].color = Color.white;
         }
