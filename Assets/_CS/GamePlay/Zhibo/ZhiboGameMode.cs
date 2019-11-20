@@ -333,6 +333,10 @@ public class ZhiboGameMode : GameModeBase
         {
             FinishZhibo();
         }
+        if (state.Hp<=0)
+        {
+            FinishZhibo();
+        }
         for (int i = state.ZhiboBuffs.Count - 1; i >= 0; i--)
         {
             if (!state.ZhiboBuffs[i].isBasedOn(eBuffLastType.TURN_BASE))
@@ -813,9 +817,10 @@ public class ZhiboGameMode : GameModeBase
             scoreReal *= 1 + (add * 0.01f) + (mBuffManager.GenScoreExtraRate);
         }
 
-        scoreReal *= state.HpScoreRate;
+        //scoreReal *= state.HpScoreRate;
         //scoreReal *= mBuffManager.
         state.Score += scoreReal;
+        Debug.Log(state.Score);
 
         //mUIMgr.ShowHint("获得热度" + (int)score);
         mUICtrl.UpdateScore();
@@ -1085,8 +1090,10 @@ public class ZhiboGameMode : GameModeBase
         {
             int fensi = pRoleMgr.GetFensiReward(state.ExtraLiuliang,1);
             pRoleMgr.AddFensi(0, fensi);
-
-            pRoleMgr.GainMoney(100);
+            double getMoney = state.Score>state.MaxScore? (state.Score - state.MaxScore/2) * 0.6 : 30;
+            pRoleMgr.GainMoney((int)getMoney);
+            p.showFensi(fensi);
+            p.showMoney((int)getMoney);
             //根据打过的卡牌 增加主属性 和 经验值
             int[] bonus = new int[5];
             for (int i = 0; i < state.UsedCardsToGetBonus.Count; i++)
