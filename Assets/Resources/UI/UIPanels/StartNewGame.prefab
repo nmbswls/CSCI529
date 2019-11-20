@@ -243,7 +243,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 79.3, y: -100.3}
-  m_SizeDelta: {x: 94.86, y: 37.94}
+  m_SizeDelta: {x: 120, y: 37.94}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222128246661542428
 CanvasRenderer:
@@ -284,7 +284,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u4F53\u9B44"
+  m_Text: Physique
 --- !u!1 &1088986076869790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1297,8 +1297,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 108.4, y: 19.6}
-  m_SizeDelta: {x: 94.86, y: 37.94}
+  m_AnchoredPosition: {x: 109, y: 20}
+  m_SizeDelta: {x: 120, y: 37.94}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222497939784865472
 CanvasRenderer:
@@ -1339,7 +1339,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u53E3\u624D"
+  m_Text: Eloquence
 --- !u!1 &1477536580546874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1849,7 +1849,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u521D\u59CB\u8D22\u4EA7"
+  m_Text: Property
 --- !u!1 &1577120742870460
 GameObject:
   m_ObjectHideFlags: 0
@@ -1926,7 +1926,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -40}
-  m_SizeDelta: {x: 116, y: 80}
+  m_SizeDelta: {x: 140, y: 80}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &222594184173547330
 CanvasRenderer:
@@ -1967,7 +1967,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u80FD\u529B\u70B9\u6570"
+  m_Text: Skill Points
 --- !u!1 &1592423587099142
 GameObject:
   m_ObjectHideFlags: 0
@@ -2075,7 +2075,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -80}
-  m_SizeDelta: {x: 116, y: 80}
+  m_SizeDelta: {x: 160, y: 80}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &222965838593435766
 CanvasRenderer:
@@ -2116,7 +2116,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u81EA\u7531\u7279\u957F"
+  m_Text: Distributable
 --- !u!1 &1635688271069062
 GameObject:
   m_ObjectHideFlags: 0
@@ -2151,7 +2151,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -115.7, y: 23.6}
+  m_AnchoredPosition: {x: -108, y: 24}
   m_SizeDelta: {x: 94.86, y: 37.94}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222260660790570472
@@ -2193,7 +2193,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u6280\u827A"
+  m_Text: Skill
 --- !u!1 &1672663021713268
 GameObject:
   m_ObjectHideFlags: 0
@@ -2346,7 +2346,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u9B45\u529B"
+  m_Text: Charm
 --- !u!1 &1682765934797466
 GameObject:
   m_ObjectHideFlags: 0
@@ -3065,8 +3065,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -74.5, y: -110}
-  m_SizeDelta: {x: 94.86, y: 37.94}
+  m_AnchoredPosition: {x: -70, y: -98}
+  m_SizeDelta: {x: 140, y: 37.94}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222441529485450010
 CanvasRenderer:
@@ -3107,4 +3107,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u5E94\u53D8"
+  m_Text: Adaptability

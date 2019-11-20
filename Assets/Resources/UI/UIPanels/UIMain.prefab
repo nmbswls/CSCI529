@@ -3978,7 +3978,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Fascination
+  m_Text: Charm
 --- !u!1 &4027590922304149367
 GameObject:
   m_ObjectHideFlags: 0
@@ -6038,7 +6038,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Capability
+  m_Text: Skill
 --- !u!1 &6543435888361893701
 GameObject:
   m_ObjectHideFlags: 0
@@ -6834,7 +6834,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Strength
+  m_Text: Physique
 --- !u!1 &7227314700852702587
 GameObject:
   m_ObjectHideFlags: 0
@@ -7410,7 +7410,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Reaction
+  m_Text: Adaptability
 --- !u!1 &8099869339276113257
 GameObject:
   m_ObjectHideFlags: 0

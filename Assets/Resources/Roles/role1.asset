@@ -12,15 +12,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee0f02c7ecba04b2caa2afce1c662452, type: 3}
   m_Name: role1
   m_EditorClassIdentifier: 
-  Name: "\u5927\u5C0F\u59D0"
-  Desp: "\u4F60\u4ECE\u5C0F\u4FBF\u662F\u4E07\u4F17\u77A9\u76EE\u7684\u7126\u70B9\u3002\u4F60\u6C38\u8FDC\u884C\u8D70\u5728\u8FFD\u6C42\u65B0\u9C9C\u4E8B\u7269\u7684\u8DEF\u4E0A\uFF0C\u800C\u4E14\u603B\u80FD\u505A\u7684\u5F88\u597D\u3002\n\u4F60\u76F8\u4FE1\u6210\u4E3A\u4E00\u540D\u5973\u4E3B\u64AD\u5BF9\u4F60\u6765\u8BF4\u540C\u6837\u8F7B\u800C\u6613\u4E3E\u3002"
+  Name: Spoiled Kid
+  Desp: Fragile and vulnerable to diseases, you are always been the focus of your
+    family.
   initProperties: 190000000f000000010000000f00000019000000
   initMoney: 100
   initFreePoint: 30
   initSkillPoint: 30
-  initOwing: f2030000f3030000f4030000
+  initOwning: []
+  initCards:
+  - gem_0001
+  - gem_0002
+  - gem_0003
+  - gem_0004
+  - gem_0005
+  - gem_0006
+  - gem_0007
+  - gem_0008
+  - gem_0009
+  - gem_0010
+  - gem_0011
+  - gem_0012
+  - gem_0013
+  - gem_0014
+  - gem_0015
+  - gem_0016
+  - gem_0017
+  - gem_0018
+  - gem_0019
+  - gem_0020
+  - gem_0021
+  - gem_0022
+  - gem_0023
+  - gem_0024
+  initSkills: []
   specialList:
-  - "\u5A07\u751F\u60EF\u517B\uFF0C\u4F53\u5F31\u591A\u75C5"
-  - "\u6709\u4E00\u4E2A\u597D\u7238\u7238\uFF0C\u4F46\u4E5F\u5E26\u6765\u9EBB\u70E6"
-  - "\u70ED\u60C5\u9000\u6563\u5F88\u5FEB"
+  - 'As a spoiled kid, you have a lot of pin money, but physically weak and not very
+    healthy.
+
+'
+  - 
+  - 
   imageStr: 

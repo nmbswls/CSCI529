@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee0f02c7ecba04b2caa2afce1c662452, type: 3}
   m_Name: role0
   m_EditorClassIdentifier: 
-  Name: "\u666E\u901A\u4EBA"
-  Desp: "\u4F60\u662F\u4E00\u4E2A\u5076\u7136\u5BF9\u76F4\u64AD\u884C\u4E1A\u4EA7\u751F\u5174\u8DA3\u7684\u666E\u901A\u4EBA\u3002\n\u9664\u4E86\u521D\u6765\u4E4D\u5230\u7684\u70ED\u60C5\u5916\uFF0C\u4F60\u4E00\u65E0\u6240\u6709\u3002"
+  Name: Average man
+  Desp: Overwhelmed by the flourishing streaming industry, you decide to take an attempt.
+    You are not very experienced but passion.
   initProperties: 0a0000000a0000000a0000000a0000000a000000
   initMoney: 5
   initFreePoint: 10
@@ -48,7 +49,9 @@ MonoBehaviour:
   - gem_0024
   initSkills: []
   specialList:
-  - "\u4F60\u6CA1\u6709\u591A\u5C11\u7ECF\u9A8C\uFF0C\u4F46\u5145\u6EE1\u70ED\u60C5"
-  - "\u6700\u539F\u6C41\u539F\u5473\u7684\u6E38\u620F\uFF0C\u63A8\u8350\u521D\u6B21\u5C1D\u8BD5"
+  - 'As the default character, you have balanced personal status and no drawbacks.
+
+'
+  - 
   - 
   imageStr: 
