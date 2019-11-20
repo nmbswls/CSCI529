@@ -83,22 +83,22 @@ public class ZhiboEmergencyManager
             EmergencyAsset ea = new EmergencyAsset();
             ea.EmId = "em01";
             ea.EmName = "Oh My Father！";
-            ea.EmDesp = "My father is coming！";
+            ea.EmDesp = "Your dad entering your room while you are streaming, what should you do?";
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "Ignore";
+                choice.Content = "Pretend to ignore him.";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "Introduce him to the audience";
+                choice.Content = "Introduce him to the audiences.";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "Drive away";
+                choice.Content = "Ask him to sit down and play together.";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
@@ -109,22 +109,22 @@ public class ZhiboEmergencyManager
             EmergencyAsset ea = new EmergencyAsset();
             ea.EmId = "em02";
             ea.EmName = "Oh My Mother！";
-            ea.EmDesp = "My mother is coming！";
+            ea.EmDesp = "Your mom entering your room while you are streaming, what should you do?";
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "Ignore";
+                choice.Content = "Pretend to ignore her.";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "Introduce her to the audience";
+                choice.Content = "Introduce her to the audiences.";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
             {
                 EmergencyChoice choice = new EmergencyChoice();
-                choice.Content = "Drive away";
+                choice.Content = "Ask her to sit down and play together.";
                 choice.Ret = "Hot";
                 ea.Choices.Add(choice);
             }
