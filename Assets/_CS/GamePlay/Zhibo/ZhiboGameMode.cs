@@ -532,9 +532,9 @@ public class ZhiboGameMode : GameModeBase
     {
         {
             List<string> ll = new List<string>();
-            ll.Add("主播什么时候开播的");
-            ll.Add("日常打卡");
-            ll.Add("主播晚上好啊");
+            ll.Add("When did you start!");
+            ll.Add("(1/1) Daily Come");
+            ll.Add("Good Evening!");
             DanmuDict.Add("common", ll);
         }
     }
