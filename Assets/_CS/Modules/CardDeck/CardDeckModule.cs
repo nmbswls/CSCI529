@@ -51,7 +51,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         InstId = 0;
         pRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
         pSKillMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
-        GenFakeCards();
+        //GenFakeCards();
     }
 
     public CardInfo GainNewCard (string cid)
@@ -414,6 +414,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
     //public void RemoveCard(CardInfo c){
     //	cards.Remove (c);
     //}
+
 
 
     public void GenFakeCards()

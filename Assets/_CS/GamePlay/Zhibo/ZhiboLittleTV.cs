@@ -20,6 +20,7 @@ public class ZhiboLittleTvView{
     public List<Image> TokenList=new List<Image>();
 
     public Text NowScore;
+    public Text tvName;
 
     
 }
@@ -87,6 +88,8 @@ public class ZhiboLittleTV : MonoBehaviour
         view.MoreToken = transform.Find("Bg").Find("MoreToken").gameObject;
         view.TokenInfo = transform.Find("Bg").Find("TokenInfo").gameObject;
 
+        view.tvName = transform.Find("Bg").Find("Text").GetComponent<Text>();
+
         view.MoreToken.SetActive(false);
 
         view.TokenList.Clear();
@@ -134,10 +137,12 @@ public class ZhiboLittleTV : MonoBehaviour
         this.TargetAudience = TargetAudience;
         if (TargetAudience.Type == eAudienceType.Heizi)
         {
+            view.tvName.text = "KeyBoard Man";
             view.AvaContent.sprite = audienceImage[1];
         }
         else
         {
+            view.tvName.text = "New Audience";
             view.AvaContent.sprite = audienceImage[0];
         }
         UpdateHp();

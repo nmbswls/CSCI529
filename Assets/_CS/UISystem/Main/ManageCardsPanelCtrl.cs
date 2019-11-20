@@ -300,5 +300,3 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 
     }
 }
-
-
