@@ -102,6 +102,9 @@ public class CardAsset : ScriptableObject
     [TextArea(3, 10)]
     public string CardEffectDesp = "";
 
+    [TextArea(3, 10)]
+    public string CardBackDesp = "";
+
     public Sprite Picture;
 
     public eCardType CardType;

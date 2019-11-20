@@ -19,6 +19,7 @@ public class MiniCardView
     public Image Bg;
     public Image Picture;
     public Text Desp;
+    public Text BackDesp;
     public Text Name;
     public Transform TimeLeftComp;
     public Text TimeLeft;
@@ -137,7 +138,8 @@ public class MiniCard : MonoBehaviour
         //初始化卡面
         view.Name.text = ca.CardName;
         view.Desp.text = ca.CardEffectDesp;
-        if(ca.cost == -1)
+        view.BackDesp.text = ca.CardBackDesp;
+        if (ca.cost == -1)
         {
             view.Cost.text = "X";
             view.CostBack.text = "1";
@@ -334,6 +336,7 @@ public class MiniCard : MonoBehaviour
         view.GemBackContainer = view.CardBack.Find("Gems");
 
         view.CostBack = view.CardBack.Find("Cost").GetComponent<Text>();
+        view.BackDesp = view.CardBack.Find("Desp").GetComponent<Text>();
 
         view.TimeLeftComp = view.CardFace.Find("TimeLeft");
         view.TimeLeft = view.TimeLeftComp.Find("Text").GetComponent<Text>();

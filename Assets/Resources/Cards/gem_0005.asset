@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: gem_0005
   m_EditorClassIdentifier: 
   CardId: gem_0005
-  CardName: Draw cards
-  CardDesp: Deal 1 Cyen Damage / Draw 2 cards and loss 1 health
-  CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 1 Cyen Damage / Draw 2 cards and loss 1 health
+  CardName: Lottery
+  CardDesp: My wallet is bleeding, but everyone is laughing. You will draw two cards
+    from the deck and lose 1 health point.
+  CatdImageName: Image_Huanledoudizhu
+  CardEffectDesp: Draw 2 cards and loss 1 health
+  CardBackDesp: Deal 1 Cyen Damage
   Picture: {fileID: 0}
   CardType: 1
   Tags: []
@@ -36,7 +38,7 @@ MonoBehaviour:
   UseConditions: []
   Effects:
   - EMode: 0
-    effectType: 17
+    effectType: 16
     isNegEffect: 0
     Possibility: 0
     turnEffect: 

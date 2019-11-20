@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: gem_0022
   m_EditorClassIdentifier: 
   CardId: gem_0022
-  CardName: Get Score
-  CardDesp: Deal 1 All-Color Damage / Get 4 Score
-  CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 1 All-Color Damage / Get 4 Score
+  CardName: Broadcasting
+  CardDesp: Actively talking to your audiences and get them interested in hour streaming.
+    More audiences will be attracted to your channel.
+  CatdImageName: Image_Jinpaijiangshi
+  CardEffectDesp: Get 4 Score
+  CardBackDesp: Deal 1 All-Color Damage
   Picture: {fileID: 0}
   CardType: 1
   Tags: []

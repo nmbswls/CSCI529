@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: gem_0019
   m_EditorClassIdentifier: 
   CardId: gem_0019
-  CardName: Gain Armor
-  CardDesp: Deal 2 Yellow Damage / Gain 5 Armor
-  CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 2 Yellow Damage / Gain 5 Armor
+  CardName: Jinx Yourself
+  CardDesp: '"I will get a triple kill in the next ten seconds" Get yourself ready
+    for the storm of commentaries. Increase armor for 5 points.'
+  CatdImageName: Image_Flag
+  CardEffectDesp: Gain 5 Armor
+  CardBackDesp: Deal 2 Yellow Damage
   Picture: {fileID: 0}
   CardType: 1
   Tags: []
@@ -36,7 +38,7 @@ MonoBehaviour:
   UseConditions: []
   Effects:
   - EMode: 0
-    effectType: 18
+    effectType: 17
     isNegEffect: 0
     Possibility: 0
     turnEffect: 
