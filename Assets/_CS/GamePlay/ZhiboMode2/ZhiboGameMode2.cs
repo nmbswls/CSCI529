@@ -375,6 +375,7 @@ public class ZhiboGameMode2 : GameModeBase
         if (state.BadNum > 0)
         {
             bad = true;
+            state.BadNum -= 1;
         }
         else
         {
