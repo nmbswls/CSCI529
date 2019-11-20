@@ -1089,9 +1089,9 @@ public class ZhiboGameMode : GameModeBase
         if (true || state.Score > state.MaxScore)
         {
             int fensi = pRoleMgr.GetFensiReward(state.ExtraLiuliang,1);
-            pRoleMgr.AddFensi(0, fensi);
             double getMoney = state.Score>state.MaxScore? (state.Score - state.MaxScore/2) * 0.6 : 30;
             pRoleMgr.GainMoney((int)getMoney);
+            pRoleMgr.AddFensi(0,fensi);
             p.showFensi(fensi);
             p.showMoney((int)getMoney);
             //根据打过的卡牌 增加主属性 和 经验值

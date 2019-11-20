@@ -428,7 +428,8 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
         view.MoneyShow.text = (int)testResource + "";
         view.NowSkillShow.text = beginSkillLevel + "->" + nowSkillLevel;
-        view.FansShow.text = testFans + "";
+        //view.FansShow.text = testFans + "";
+        view.FansShow.text = rm.Fensi + "";
         view.NextItemPrice.text = (nowItemLevel * 50) + "";
         view.SkillListShow.text = nowSkillLevel * 50 + "";
     }

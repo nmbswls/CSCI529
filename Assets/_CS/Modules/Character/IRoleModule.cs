@@ -43,6 +43,8 @@ public interface IRoleModule : IModule{
 
     float Money { get;  }
 
+    float Fensi { get; }
+
     void AddTrackExp(string type, int num);
     int GetTrackExp(string track);
 
