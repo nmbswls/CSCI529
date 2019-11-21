@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: gem_0013
   m_EditorClassIdentifier: 
   CardId: gem_0013
-  CardName: Jinx Yourself
+  CardName: Get Ready
   CardDesp: '"I will get a triple kill in the next ten seconds" Get yourself ready
     for the storm of commentaries. Increase armor for 3 points.'
   CatdImageName: Image_Flag
