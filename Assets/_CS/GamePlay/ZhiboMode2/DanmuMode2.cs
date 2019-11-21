@@ -402,7 +402,11 @@ public class DanmuMode2 : MonoBehaviour
 
     public void SetAsSpecial()
     {
-        this.isBad = true;
+        //this.isBad = true;
+        if(!isBad)
+        {
+            return;
+        }
         view.Content.color = Color.white;
         view.BadBG.gameObject.SetActive(true);
         view.SpeMark.gameObject.SetActive(true);

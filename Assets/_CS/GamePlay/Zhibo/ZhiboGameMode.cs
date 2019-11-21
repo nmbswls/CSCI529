@@ -536,9 +536,7 @@ public class ZhiboGameMode : GameModeBase
     {
         {
             List<string> ll = new List<string>();
-            ll.Add("When did you start!");
-            ll.Add("(1/1) Daily Come");
-            ll.Add("Good Evening!");
+            ll.Add("xxxx");
             DanmuDict.Add("common", ll);
         }
     }

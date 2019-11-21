@@ -189,16 +189,12 @@ public class ZhiboGameMode2 : GameModeBase
         }
         {
             List<string> ll = new List<string>();
-            ll.Add("When did you start!");
-            ll.Add("(1/1) Daily Come");
-            ll.Add("Good Evening!");
+            ll.Add("Negative comments");
             DanmuDict.Add("1", ll);
         }
         {
             List<string> ll = new List<string>();
-            ll.Add("When did you start!");
-            ll.Add("(1/1) Daily Come");
-            ll.Add("Good Evening!");
+            ll.Add("Negative comments");
             DanmuDict.Add("2", ll);
         }
     }
@@ -536,7 +532,20 @@ public class ZhiboGameMode2 : GameModeBase
     {
         if (DanmuDict.ContainsKey(state.NowDanmuJiezou))
         {
+            Debug.Log(state.NowDanmuJiezou);
             List<string> ll = DanmuDict[state.NowDanmuJiezou];
+            int idx = Random.Range(0, ll.Count);
+            return ll[idx];
+        }
+        return "Look yourself ***!";
+    }
+
+    public string GetHeiDanmuContent()
+    {
+        if (DanmuDict.ContainsKey("1"))
+        {
+            Debug.Log(state.NowDanmuJiezou);
+            List<string> ll = DanmuDict["1"];
             int idx = Random.Range(0, ll.Count);
             return ll[idx];
         }
