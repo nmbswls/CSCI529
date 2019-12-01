@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: gem_0007
   m_EditorClassIdentifier: 
   CardId: gem_0007
-  CardName: Recover
-  CardDesp: Deal 2 Cyen Damage /  Gain 3 Armor
-  CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 2 Cyen Damage /  Gain 3 Armor
+  CardName: Get Ready
+  CardDesp: '"I will get a triple kill in the next ten seconds" Get yourself ready
+    for the storm of commentaries. Increase armor for 4 points.'
+  CatdImageName: Image_Flag
+  CardEffectDesp: Gain 3 Armor
+  CardBackDesp: Deal 2 Cyen Damage
   Picture: {fileID: 0}
-  CardType: 0
+  CardType: 1
   Tags: []
   cost: 2
   UseOnDiscard: 0
@@ -51,5 +53,22 @@ MonoBehaviour:
       SecLast: 0
     BranchType: 
     BranchEffectStrings: []
-  Effects: []
+  Effects:
+  - EMode: 0
+    effectType: 17
+    isNegEffect: 0
+    Possibility: 0
+    turnEffect: 
+    effectString: 3
+    isAddBuff: 0
+    buffInfo:
+      BuffType: 0
+      BuffLevel: 0
+      AffectCard: 0
+      filterString: 
+      TurnLast: 0
+      CardNum: 0
+      SecLast: 0
+    BranchType: 
+    BranchEffectStrings: []
   TurnEffects: []

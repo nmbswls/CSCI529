@@ -496,8 +496,14 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
 
         DanmuMode2 danmu = danmuGo.GetComponent<DanmuMode2>();
 
-
-        danmu.init(gameMode.GetDanmuContent(), isBad, gameMode);
+        if (isBad)
+        {
+            danmu.init(gameMode.GetHeiDanmuContent(), isBad, gameMode);
+        }
+        else
+        {
+            danmu.init(gameMode.GetDanmuContent(), isBad, gameMode);
+        }
         danmuGo.transform.SetParent(view.DanmuField, false);
         danmu.rect.anchoredPosition = new Vector3(width + 30, -posY, 0);
 

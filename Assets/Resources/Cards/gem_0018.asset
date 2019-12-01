@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: gem_0018
   m_EditorClassIdentifier: 
   CardId: gem_0018
-  CardName: Recover
-  CardDesp: Deal 1 Yellow Damage / Recover 1 health
-  CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 1 Yellow Damage / Recover 1 health
+  CardName: AFK
+  CardDesp: Take a break and having a bottle of happy indoorsman soda, you feel this
+    is happiest moment of your life. Restore 1 health points.
+  CatdImageName: Image_Fanxiangdunai
+  CardEffectDesp: Recover 1 health
+  CardBackDesp: Deal 1 Yellow Damage
   Picture: {fileID: 0}
   CardType: 0
   Tags: []
@@ -36,7 +38,7 @@ MonoBehaviour:
   UseConditions: []
   Effects:
   - EMode: 0
-    effectType: 27
+    effectType: 26
     isNegEffect: 0
     Possibility: 0
     turnEffect: 

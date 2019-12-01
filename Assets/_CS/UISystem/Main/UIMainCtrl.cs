@@ -59,6 +59,9 @@ public class MainView : BaseView
     public Button Next30Turn;
     public Button BuyThings;
     public Button UpdateCards;
+
+    // 3 bars
+    public Text moneyValue;
 }
 
 public class PropertyMainView
@@ -234,6 +237,8 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.SkillExpShow = root.Find("SkillExp").Find("Value").GetComponent<Text>();
         view.CardPowerShow = root.Find("CardPower").Find("Value").GetComponent<Text>();
 
+        view.moneyValue = root.Find("Header").Find("money bar").Find("Value").GetComponent<Text>();
+
         view.Properties = root.Find("Properties");
 
         foreach(Transform child in view.Properties.Find("VBox"))
@@ -296,6 +301,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         });
         testUpdateWords();
 
+        updateInitalData();
 
     }
 
@@ -422,7 +428,8 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
         view.MoneyShow.text = (int)testResource + "";
         view.NowSkillShow.text = beginSkillLevel + "->" + nowSkillLevel;
-        view.FansShow.text = testFans + "";
+        //view.FansShow.text = testFans + "";
+        view.FansShow.text = rm.Fensi + "";
         view.NextItemPrice.text = (nowItemLevel * 50) + "";
         view.SkillListShow.text = nowSkillLevel * 50 + "";
     }
@@ -670,6 +677,10 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 		
 	}
 
+    public void updateInitalData()
+    {
+        view.moneyValue.text = rm.Money + "";
+    }
 
 }
 
