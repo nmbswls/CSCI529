@@ -76,13 +76,18 @@ public class ChooseStoryLineCtrl : UIBaseCtrl<ChooseStoryLineModel, ChooseStoryL
 			Debug.Log ("bind fail no root found");
 		}
 		view.DetailName = root.GetChild(2).GetChild(0).GetComponent<Text>();
-		view.properies = root.GetChild (2).GetChild (1).GetComponent<RadarPropertyUI> ();
+		//view.properies = root.GetChild (2).GetChild (1).GetComponent<RadarPropertyUI> ();
 
-		view.InitMoney = root.Find("Detail_left").Find("Ownings").Find("Text_p0_value").GetComponent<Text> ();
-		view.InitAttr = root.Find("Detail_left").Find("Ownings").Find("Text_p1_value").GetComponent<Text> ();
-		view.InitSkill = root.Find("Detail_left").Find("Ownings").Find("Text_p2_value").GetComponent<Text> ();
+		//view.InitMoney = root.Find("Detail_left").Find("Ownings").Find("Text_p0_value").GetComponent<Text> ();
+		//view.InitAttr = root.Find("Detail_left").Find("Ownings").Find("Text_p1_value").GetComponent<Text> ();
+		//view.InitSkill = root.Find("Detail_left").Find("Ownings").Find("Text_p2_value").GetComponent<Text> ();
 
-		view.DetailDesp = root.GetChild (3).GetChild (2).GetComponent<Text>();
+        view.InitMoney = root.Find("PanelCreatChrarcter").Find("Canvas_Left").Find("LeftBar").Find("Ownings").Find("Text_p0_value").GetComponent<Text>();
+        view.InitAttr = root.Find("PanelCreatChrarcter").Find("Canvas_Left").Find("LeftBar").Find("Ownings").Find("Text_p1_value").GetComponent<Text>();
+        view.InitSkill = root.Find("PanelCreatChrarcter").Find("Canvas_Left").Find("LeftBar").Find("Ownings").Find("Text_p2_value").GetComponent<Text>();
+        view.properies = root.Find("PanelCreatChrarcter").Find("Canvas_Left").Find("LeftBar").Find("Background").Find("PropertyInit").GetComponent<RadarPropertyUI>();
+
+        view.DetailDesp = root.GetChild (3).GetChild (2).GetComponent<Text>();
 		view.extraContainer = root.GetChild (3).GetChild (3);
 
 		view.roleContainer = root.GetChild (1).GetChild(0).GetChild(0).Find ("Content");
