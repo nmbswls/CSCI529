@@ -21,8 +21,6 @@ public class ZhiboLittleTvView{
 
     public Text NowScore;
     public Text tvName;
-
-    
 }
 
 
@@ -52,8 +50,6 @@ public class ZhiboLittleTV : MonoBehaviour
 
         this.audienceMgr = audienceMgr;
         this.rt = transform as RectTransform;
-        
-
         view = new ZhiboLittleTvView();
         BindView();
         RegisterEvents();

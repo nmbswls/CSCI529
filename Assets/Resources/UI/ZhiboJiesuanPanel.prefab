@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3305033751435808653}
   - component: {fileID: 2336162836381701378}
   m_Layer: 5
-  m_Name: FightDanmuJiesuanPanel
+  m_Name: ZhiboJiesuanPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,7 +224,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 7, y: 89}
-  m_SizeDelta: {x: 476.3, y: 50.5}
+  m_SizeDelta: {x: 269.2, y: 50.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7268271660109591016
 CanvasRenderer:
@@ -342,7 +342,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: OK
+  m_Text: "\u786E\u8BA4"
 --- !u!1 &7999788794758630148
 GameObject:
   m_ObjectHideFlags: 0

@@ -36,6 +36,8 @@ public class SuperDanmu : MonoBehaviour
 
     bool destroying = false;
 
+    bool statusEffectOn = false;
+
     string txt;
 
     int HpLeft = 0;
@@ -111,6 +113,10 @@ public class SuperDanmu : MonoBehaviour
         {
             return;
         }
+        if (!statusEffectOn) {
+            StatusEffect();
+            statusEffectOn = true;
+        }
         rect.anchoredPosition += Vector2.left * gameMode.state.DanmuSpd * dTime;
         if (rect.anchoredPosition.x < -100)
         {
@@ -122,6 +128,11 @@ public class SuperDanmu : MonoBehaviour
     {
         view.Hengfu.rectTransform.sizeDelta = new Vector2(hengfuSize, view.Hengfu.rectTransform.sizeDelta.y);
         view.Hengfu.rectTransform.SetAsLastSibling();
+    }
+
+    public void StatusEffect()
+    {
+        //gameMode.AddHp(-5);
     }
 
     public void Disappear()

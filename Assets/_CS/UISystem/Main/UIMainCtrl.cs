@@ -682,6 +682,5 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.moneyValue.text = rm.Money + "";
     }
 
-
 }
 

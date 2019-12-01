@@ -532,7 +532,6 @@ public class ZhiboGameMode2 : GameModeBase
     {
         if (DanmuDict.ContainsKey(state.NowDanmuJiezou))
         {
-            Debug.Log(state.NowDanmuJiezou);
             List<string> ll = DanmuDict[state.NowDanmuJiezou];
             int idx = Random.Range(0, ll.Count);
             return ll[idx];
