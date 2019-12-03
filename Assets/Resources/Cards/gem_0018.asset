@@ -20,7 +20,7 @@ MonoBehaviour:
   CardEffectDesp: Recover 1 health
   CardBackDesp: Deal 1 Yellow Damage
   Picture: {fileID: 0}
-  CardType: 0
+  CardType: 1
   Tags: []
   cost: 1
   UseOnDiscard: 0

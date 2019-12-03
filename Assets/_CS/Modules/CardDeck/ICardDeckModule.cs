@@ -30,4 +30,6 @@ public interface ICardDeckModule : IModule
     void ChangeSkillCard(string skillId, string fromCard, string toCard);
 
     List<CardInfo> GetSkillCards(string skillId);
+
+    CardAsset Load(string cid);
 }
