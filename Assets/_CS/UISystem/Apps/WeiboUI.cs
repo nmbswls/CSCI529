@@ -71,15 +71,11 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
             List<string> st = new List<string>();
             st.Add(cardName);
             pCardMdl.AddCards(st);
-<<<<<<< HEAD
-            mUIMgr.ShowHint("Get Card" + cardName);
-=======
             CardAsset ca = pCardMdl.Load(cardName);
             if(ca != null)
             {
-                mUIMgr.ShowHint("获得卡牌:" + ca.CardName);
+                mUIMgr.ShowHint("Gain Card:" + ca.CardName);
             }
->>>>>>> master
         }
     }
 

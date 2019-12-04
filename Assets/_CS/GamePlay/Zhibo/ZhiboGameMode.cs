@@ -1081,11 +1081,6 @@ public class ZhiboGameMode : GameModeBase
         return "Bad!";
     }
 
-    public string getBadRandomDanmu()
-    {
-        return "Bad!";
-    }
-
     public void FinishZhibo()
     {
         ZhiboJiesuanUI p = mUIMgr.ShowPanel("ZhiboJiesuanPanel",true, false) as ZhiboJiesuanUI;

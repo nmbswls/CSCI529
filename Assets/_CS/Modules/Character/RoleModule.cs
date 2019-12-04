@@ -106,11 +106,7 @@ public class RoleModule : ModuleBase, IRoleModule
     private float fen4Num;
 
     public float Fensi { get { return fen1Num + fen2Num + fen3Num + fen4Num; } }
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> master
     private float BadPoint = 5;
     private int XinqingLevel = 10;
 

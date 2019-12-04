@@ -74,7 +74,7 @@ public class MailUI : UIBaseCtrl<MailModel, MailView>
             List<string> st = new List<string>();
             st.Add(cardName);
             pCardMdl.AddCards(st);
-            mUIMgr.ShowHint("获得卡牌" + cardName);
+            mUIMgr.ShowHint("Gain Card" + cardName);
         }
     }
 

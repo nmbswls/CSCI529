@@ -3923,13 +3923,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u521D\u59CB\u8D22\u4EA7\n"
+  m_Text: Property
 --- !u!1 &2529777912895185537
 GameObject:
   m_ObjectHideFlags: 0
@@ -4756,13 +4756,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u81EA\u7531\u7279\u957F\n"
+  m_Text: Distributable
 --- !u!1 &5358164555384464293
 GameObject:
   m_ObjectHideFlags: 0
@@ -5572,13 +5572,15 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u80FD\u529B\u70B9\u6570\n\n"
+  m_Text: 'Skill Points
+
+'
 --- !u!1 &7688598605329037451
 GameObject:
   m_ObjectHideFlags: 0
