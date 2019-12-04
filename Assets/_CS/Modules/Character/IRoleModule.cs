@@ -42,6 +42,7 @@ public interface IRoleModule : IModule{
     void GainMoney(int amount);
 
     float Money { get;  }
+    float Fensi { get; }
 
     float Fensi { get; }
 

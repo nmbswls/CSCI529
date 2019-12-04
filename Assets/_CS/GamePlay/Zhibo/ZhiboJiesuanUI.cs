@@ -57,4 +57,14 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
     {
         view.money.text = score + "";
     }
+    
+    public void showFensi(int score)
+    {
+        view.fensi.text = score + "";
+    }
+
+    public void showMoney(int score)
+    {
+        view.money.text = score + "";
+    }
 }

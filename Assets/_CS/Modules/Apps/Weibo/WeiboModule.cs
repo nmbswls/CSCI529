@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class WeiboModule : ModuleBase, IWeiboModule
 {
-    private const int shuaTimeLimit = 3;     //每回合只有3次刷到牌的机会
+    private const int shuaTimeLimit = 4;     //每回合只有3次刷到牌的机会
     private int curShuaTime = 0;
 
     private bool isRealRandom = true;
@@ -19,25 +19,29 @@ public class WeiboModule : ModuleBase, IWeiboModule
     private int randName;
     private int randDescription;
 
-    private List<string> nameArr = new List<string>
-    {
-        {"Diliboli_sk" },
-        {"Dreamed guy" },
-        {"IronMan_2333" },
-        {"Brother Zhang" },
-        {"Wang Lao Ju" },
-        {"Old Tomato" }
-    };
 
-    private List<string> DescriArr = new List<string>
-    {
-        {"It's so great today" },
-        {"Always feel bad" },
-        {"WTF???" },
-        {"OMG" },
-        {"New video Already!!" },
-        {"Morning guys!" }
-    };
+    //private List<string> nameArr = new List<string>
+    //{
+    //    {"铜教授" },
+    //    {"追风干部刘没有" },
+    //    {"老铁" },
+    //    {"老张" },
+    //    {"王老菊" },
+    //    {"老番茄" }
+    //};
+
+    private List<string> nameArr = new List<string>();
+
+    private List<string> DescriArr = new List<string>();
+    //private List<string> DescriArr = new List<string>
+    //{
+    //    {"来今儿个给大家搞个二斤地瓜烧" },
+    //    {"当朝大学士，总共有五位，朕不得不罢免三位" },
+    //    {"转发这条锦鲤，也没什么卵用" },
+    //    {"卧槽" },
+    //    {"又发新视频了" },
+    //    {"早上起来，拥抱太阳" }
+    //};
 
     private bool isShuable = true;
 
@@ -51,6 +55,26 @@ public class WeiboModule : ModuleBase, IWeiboModule
         }
     }
     
+    public void LoadWeiboTxt()
+    {
+        //stage 1
+        WeiboContentList weiboContent1 = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<WeiboContentList>("WeiboTxt/WeiboContentList", false);
+        foreach (WeiboAsset c in weiboContent1.Entities)
+        {
+            nameArr.Add(c.Name);
+            DescriArr.Add(c.Desp);
+        }
+    }
+
+    public void LoadStage(int weiboStage)
+    {
+
+    }
+
+    public override void Setup()
+    {
+        LoadWeiboTxt();
+    }
 
     public int GetCurrentTurnShuaTime()
     {
@@ -73,13 +97,23 @@ public class WeiboModule : ModuleBase, IWeiboModule
         isRealRandom = true;
     }
 
-
-
     public string randomTime()
     {
         if(isRealRandom)
         {
-            randTime = UnityEngine.Random.Range(0, 80);
+            randTime = UnityEngine.Random.Range(0, 59);
+        }
+        if(randTime < 12)
+        {
+            int randTimeUnit = UnityEngine.Random.Range(0, 2);
+            if(randTimeUnit == 0)
+            {
+                return randTime + " 分钟前";
+            }
+            else
+            {
+                return randTime + " 小时前";
+            }
         }
         return randTime + " minitus ago";
     }
@@ -88,7 +122,7 @@ public class WeiboModule : ModuleBase, IWeiboModule
     {
         if (isRealRandom)
         {
-            randName = UnityEngine.Random.Range(0, 5);   
+            randName = UnityEngine.Random.Range(0, nameArr.Count);   
         }
         return nameArr[randName];
     }
@@ -97,7 +131,7 @@ public class WeiboModule : ModuleBase, IWeiboModule
     {
         if (isRealRandom)
         {
-            randDescription = UnityEngine.Random.Range(0, 5);
+            randDescription = UnityEngine.Random.Range(0, DescriArr.Count);
         }
         return DescriArr[randDescription];
     }

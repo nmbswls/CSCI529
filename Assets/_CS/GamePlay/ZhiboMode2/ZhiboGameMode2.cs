@@ -551,6 +551,18 @@ public class ZhiboGameMode2 : GameModeBase
         return "Look yourself ***!";
     }
 
+    public string GetHeiDanmuContent()
+    {
+        if (DanmuDict.ContainsKey("1"))
+        {
+            Debug.Log(state.NowDanmuJiezou);
+            List<string> ll = DanmuDict["1"];
+            int idx = Random.Range(0, ll.Count);
+            return ll[idx];
+        }
+        return "Look yourself ***!";
+    }
+
     public void RandomChangeJiezou()
     {
         List<string> keys = new List<string>(DanmuDict.Keys);

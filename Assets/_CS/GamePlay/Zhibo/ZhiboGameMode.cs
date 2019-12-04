@@ -291,10 +291,11 @@ public class ZhiboGameMode : GameModeBase
 
         ClearAllDanmu(true);
 
-        //if (!isFirstTurn)
-        //{
-        //    AddHp(-(pRoleMgr.GetBadLevel() + mBuffManager.BadRateDiff) * 2);
-        //}
+
+        // if (!isFirstTurn)
+        // {
+        //     AddHp(-(pRoleMgr.GetBadLevel()+mBuffManager.BadRateDiff)*2);
+        // }
 
         mAudienceMgr.FinishTurn();
 
@@ -815,7 +816,7 @@ public class ZhiboGameMode : GameModeBase
             scoreReal *= 1 + (add * 0.01f) + (mBuffManager.GenScoreExtraRate);
         }
 
-        //scoreReal *= state.HpScoreRate;
+        // scoreReal *= state.HpScoreRate;
         //scoreReal *= mBuffManager.
         state.Score += scoreReal;
         // Debug.Log(state.Score);
@@ -1080,6 +1081,11 @@ public class ZhiboGameMode : GameModeBase
         return "Bad!";
     }
 
+    public string getBadRandomDanmu()
+    {
+        return "Bad!";
+    }
+
     public void FinishZhibo()
     {
         ZhiboJiesuanUI p = mUIMgr.ShowPanel("ZhiboJiesuanPanel",true, false) as ZhiboJiesuanUI;
@@ -1089,7 +1095,8 @@ public class ZhiboGameMode : GameModeBase
             int fensi = pRoleMgr.GetFensiReward(state.ExtraLiuliang,1);
             double getMoney = state.Score>state.MaxScore? (state.Score - state.MaxScore/2) * 0.6 : 30;
             pRoleMgr.GainMoney((int)getMoney);
-            pRoleMgr.AddFensi(0,fensi);
+            pRoleMgr.AddFensi(0, fensi);
+
             p.showFensi(fensi);
             p.showMoney((int)getMoney);
             //根据打过的卡牌 增加主属性 和 经验值
