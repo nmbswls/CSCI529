@@ -18,9 +18,11 @@ public class MiniCardView
     public CanvasGroup CardCG;
     public Image Bg;
     public Image Picture;
+    public Image BackPicture;
     public Text Desp;
     public Text BackDesp;
     public Text Name;
+    public Text BackName;
     public Transform TimeLeftComp;
     public Text TimeLeft;
     public Animator ClockAnimator;
@@ -137,6 +139,7 @@ public class MiniCard : MonoBehaviour
 
         //初始化卡面
         view.Name.text = ca.CardName;
+        view.BackName.text = ca.CardName;
         view.Desp.text = ca.CardEffectDesp;
         view.BackDesp.text = ca.CardBackDesp;
         if (ca.cost == -1)
@@ -153,11 +156,12 @@ public class MiniCard : MonoBehaviour
         if (ca.CatdImageName == null || ca.CatdImageName == string.Empty)
         {
             view.Picture.sprite = ca.Picture;
+            view.BackPicture.sprite = ca.Picture;
         }
         else
         {
             view.Picture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardImage/" + ca.CatdImageName);
-
+            view.BackPicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardImage/" + ca.CatdImageName);
         }
 
         foreach(Transform child in view.GemContainer)
@@ -328,7 +332,9 @@ public class MiniCard : MonoBehaviour
 
         view.Bg = view.CardFace.Find("Outline").GetComponent<Image>();
         view.Picture = view.CardFace.Find("Picture").GetComponent<Image>();
+        view.BackPicture = view.CardBack.Find("Picture").GetComponent<Image>();
         view.Name = view.CardFace.Find("Name").GetComponent<Text>();
+        view.BackName = view.CardBack.Find("Name").GetComponent<Text>();
         view.Desp = view.CardFace.Find("Desp").GetComponent<Text>();
         view.Cost = view.CardFace.Find("Cost").GetComponent<Text>();
 

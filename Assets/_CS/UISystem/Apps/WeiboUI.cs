@@ -74,11 +74,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
             CardAsset ca = pCardMdl.Load(cardName);
             if(ca != null)
             {
-<<<<<<< HEAD
                 mUIMgr.ShowHint("Gain Card:" + ca.CardName);
-=======
-                mUIMgr.ShowHint("获得卡牌:" + ca.CardName);
->>>>>>> master
             }
         }
     }

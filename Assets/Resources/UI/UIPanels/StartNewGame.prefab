@@ -1256,8 +1256,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c5fb7fecfcce8d14ba7f649998c61d88, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: c5f42117d85e6443dac175bea7b4ed44, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3923,21 +3923,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-<<<<<<< HEAD
     m_Alignment: 3
-=======
-    m_Alignment: 4
->>>>>>> master
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-<<<<<<< HEAD
   m_Text: Property
-=======
-  m_Text: "\u521D\u59CB\u8D22\u4EA7\n"
->>>>>>> master
 --- !u!1 &2529777912895185537
 GameObject:
   m_ObjectHideFlags: 0
@@ -4764,21 +4756,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-<<<<<<< HEAD
     m_Alignment: 3
-=======
-    m_Alignment: 4
->>>>>>> master
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-<<<<<<< HEAD
   m_Text: Distributable
-=======
-  m_Text: "\u81EA\u7531\u7279\u957F\n"
->>>>>>> master
 --- !u!1 &5358164555384464293
 GameObject:
   m_ObjectHideFlags: 0
@@ -5588,23 +5572,15 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-<<<<<<< HEAD
     m_Alignment: 3
-=======
-    m_Alignment: 4
->>>>>>> master
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-<<<<<<< HEAD
   m_Text: 'Skill Points
 
 '
-=======
-  m_Text: "\u80FD\u529B\u70B9\u6570\n\n"
->>>>>>> master
 --- !u!1 &7688598605329037451
 GameObject:
   m_ObjectHideFlags: 0

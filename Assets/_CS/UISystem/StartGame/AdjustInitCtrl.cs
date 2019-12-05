@@ -100,25 +100,25 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 		{
 			Tezhi tezhi = new Tezhi ();
 			tezhi.Score = 2;
-			tezhi.Name = "身强力壮";
+			tezhi.Name = "Strong";
 			ret.Add (tezhi);
 		}
 		{
 			Tezhi tezhi = new Tezhi ();
 			tezhi.Score = 4;
-			tezhi.Name = "天命所归";
+			tezhi.Name = "Blessing";
 			ret.Add (tezhi);
 		}
 		{
 			Tezhi tezhi = new Tezhi ();
 			tezhi.Score = 1;
-			tezhi.Name = "口才";
+			tezhi.Name = "Linguistics";
 			ret.Add (tezhi);
 		}
 		{
 			Tezhi tezhi = new Tezhi ();
 			tezhi.Score = -3;
-			tezhi.Name = "自爆";
+			tezhi.Name = "Conceited";
 			ret.Add (tezhi);
 		}
 
