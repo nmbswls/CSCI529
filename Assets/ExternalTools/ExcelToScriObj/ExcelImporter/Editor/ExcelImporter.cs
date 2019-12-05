@@ -158,9 +158,10 @@ public class ExcelImporter : AssetPostprocessor
 			try
 			{
 				object fieldValue = CellToFieldObject(cell, entityField);
+                
 				entityField.SetValue(entity, fieldValue);
 			}
-			catch
+ 			catch
 			{
 				throw new Exception(string.Format("Invalid excel cell type at row {0}, column {1}, {2} sheet.", row.RowNum, cell.ColumnIndex, sheetName));
 			}
@@ -227,8 +228,6 @@ public class ExcelImporter : AssetPostprocessor
 			if(sheet == null) continue;
 
 			Type fieldType = assetField.FieldType;
-			Debug.Log(fieldType.Name);
-			Debug.Log("1");
 			if(! fieldType.IsGenericType || (fieldType.GetGenericTypeDefinition() != typeof(List<>))) continue;
 
 			Type[] types = fieldType.GetGenericArguments();

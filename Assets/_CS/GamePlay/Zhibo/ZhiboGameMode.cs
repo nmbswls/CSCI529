@@ -1088,13 +1088,22 @@ public class ZhiboGameMode : GameModeBase
         spdRate = 0;
         if (true || state.Score > state.MaxScore)
         {
-            int fensi = pRoleMgr.GetFensiReward(state.ExtraLiuliang,1);
-            double getMoney = state.Score>state.MaxScore? (state.Score - state.MaxScore/2) * 0.6 : 30;
+            //int fensi = pRoleMgr.GetFensiReward(state.ExtraLiuliang,1);
+            int fensi = state.Score > 30 ? (int) (state.Score * 0.65) : 20;
+            double getMoney = state.Score>state.MaxScore? (state.Score - state.MaxScore/2) * 0.6 : 10;
             pRoleMgr.GainMoney((int)getMoney);
             pRoleMgr.AddFensi(0, fensi);
             p.showFensi(fensi);
             p.showMoney((int)getMoney);
+
             //根据打过的卡牌 增加主属性 和 经验值
+
+            pRoleMgr.AddMeili((float)getMoney * 0.1f);
+            pRoleMgr.AddFanying((float)getMoney * 0.1f);
+            pRoleMgr.AddTili((float)getMoney * 0.1f);
+            pRoleMgr.AddJiyi((float)getMoney * 0.1f);
+            pRoleMgr.AddKoucai((float)getMoney * 0.1f);
+
             int[] bonus = new int[5];
             for (int i = 0; i < state.UsedCardsToGetBonus.Count; i++)
             {
