@@ -19,7 +19,6 @@ public class WeiboModule : ModuleBase, IWeiboModule
     private int randName;
     private int randDescription;
 
-
     //private List<string> nameArr = new List<string>
     //{
     //    {"铜教授" },

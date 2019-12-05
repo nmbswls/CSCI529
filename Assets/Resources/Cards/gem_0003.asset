@@ -42,7 +42,7 @@ MonoBehaviour:
     isNegEffect: 0
     Possibility: 0
     turnEffect: 
-    effectString: 1
+    effectString: 2
     isAddBuff: 0
     buffInfo:
       BuffType: 0

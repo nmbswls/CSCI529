@@ -47,7 +47,11 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
         view.text.text = bonusString;
         view.text.text += "New Subscribers:";
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> master
     public void showFensi(int score)
     {
         view.fensi.text = score + "";
@@ -57,5 +61,8 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
     {
         view.money.text = score + "";
     }
+<<<<<<< HEAD
     
+=======
+>>>>>>> master
 }
