@@ -32,6 +32,17 @@ public enum eAudienceAuraType
     LessScore,
 }
 
+public enum eAudienceHpType
+{
+    Any = 0,
+    T1,
+    T2,
+    T3,
+    T4,
+    T5,
+    Max
+}
+
 [System.Serializable]
 public class ZhiboAudienceBonus
 {
@@ -47,14 +58,20 @@ public class ZhiboAudienceAura
     public int level;
 }
 
+
+
 public class ZhiboAudience
 {
     //static property
     public eAudienceType Type;
+    public static int MAX_GEM_NUM = 16;
     public int Level = 1;
     public int HpModeIdx = 0;
 
-    public int LastTurn = 2;
+    public int LastTurn = 3;
+
+    //即时制属性
+    public int TimeLeft;
 
     public List<ZhiboAudienceBonus> Bonus = new List<ZhiboAudienceBonus>();
     public List<ZhiboAudienceAura> Aura = new List<ZhiboAudienceAura>();
@@ -63,8 +80,8 @@ public class ZhiboAudience
     //run time property
     public eAudienceState state = eAudienceState.None; 
     public int BindViewIdx = -1;
-    public int[] GemHp = new int[6];
-    public int[] GemMaxHp = new int[6];
+    public int[] GemHp = new int[(int)eAudienceHpType.Max];
+    public int[] GemMaxHp = new int[(int)eAudienceHpType.Max];
     public int BlackHp = 0;
     public int MaxBlackHp = 0;
     public int AttractLeftTurn = 0;
@@ -72,7 +89,7 @@ public class ZhiboAudience
     public List<AudienceToken> Tokens = new List<AudienceToken>();
 
 
-    public int[] preHp = new int[6];
+    public int[] preHp = new int[(int)eAudienceHpType.Max];
     public float preScore = 0;
 
     public float GetBaseBonus()
@@ -80,6 +97,52 @@ public class ZhiboAudience
         return Level * 10;
     }
 
+    public void addExtraHp(int type, int amount)
+    {
+        int totalHp = 0;
+        for(int i = 0; i < GemMaxHp.Length; i++)
+        {
+            totalHp += GemMaxHp[i];
+        }
+        if(totalHp >= MAX_GEM_NUM)
+        {
+            return;
+        }
+        GemMaxHp[type] += 1;
+        GemHp[type] += 1;
+        
+    }
+
+    public int HpChangeNum()
+    {
+        int ret = 0;
+        for (int i = 0; i < GemHp.Length; i++)
+        {
+            ret += GemHp[i]-preHp[i];
+        }
+        return ret;
+    }
+
+    public float HpRate()
+    {
+        int maxHp = 0;
+        for(int i=0;i< GemMaxHp.Length; i++)
+        {
+            maxHp += GemMaxHp[i];
+        }
+
+        int hp = 0;
+        for (int i = 0; i < GemHp.Length; i++)
+        {
+            hp += GemHp[i];
+        }
+        if (hp == 0)
+        {
+            return 0;
+        }
+
+        return hp * 1.0f / maxHp;
+    }
 
     public void AddScore(float amount)
     {

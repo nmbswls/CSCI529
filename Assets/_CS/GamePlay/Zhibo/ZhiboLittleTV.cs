@@ -122,7 +122,7 @@ public class ZhiboLittleTV : MonoBehaviour
         view.animator.Play("Empty");
         view.animator.SetTrigger("Appear");
         this.TargetAudience = TargetAudience;
-        UpdateHp();
+        ChangeHpGem();
         UpdateBuffs();
     }
 
@@ -225,7 +225,7 @@ public class ZhiboLittleTV : MonoBehaviour
 
     Tween preTween;
 
-    private void UpdateHp()
+    private void ChangeHpGem()
     {
         int idx = 0;
 
@@ -255,6 +255,19 @@ public class ZhiboLittleTV : MonoBehaviour
         {
             //Affected();
             Attracted();
+        }
+    }
+
+    public void UpdateHp()
+    {
+        int changes = TargetAudience.HpChangeNum();
+        if (changes > 0)
+        {
+            ChangeHpGem();
+        }
+        else
+        {
+            HpFadeOut();
         }
     }
 
@@ -295,10 +308,10 @@ public class ZhiboLittleTV : MonoBehaviour
 
         }).OnComplete(delegate {
 
-            UpdateHp();
+            ChangeHpGem();
             preTween = null;
         }).OnKill(delegate {
-            UpdateHp();
+            ChangeHpGem();
         });
     }
 

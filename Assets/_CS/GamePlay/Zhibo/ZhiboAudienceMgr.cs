@@ -215,6 +215,25 @@ public class ZhiboAudienceMgr
     //    }
     //}
 
+
+
+    public void HandleTurnLeftBonus(ZhiboAudience audience)
+    {
+        if(audience.LastTurn == 3)
+        {
+            gameMode.AddHp(3);
+        }
+        else if (audience.LastTurn == 2)
+        {
+            gameMode.AddHp(3);
+        }
+        else
+        {
+            gameMode.AddHp(3);
+        }
+    }
+
+
     public void HandleGetScore(ZhiboAudience audience)
     {
         float totalScore = audience.NowScore;
@@ -247,7 +266,12 @@ public class ZhiboAudienceMgr
         }
 
         CalculateAura();
+
+
+
         HandleGetScore(audience);
+        HandleTurnLeftBonus(audience);
+
         if (audience.BindViewIdx != -1)
         {
             //
@@ -336,7 +360,7 @@ public class ZhiboAudienceMgr
 
         if (audience.BindViewIdx != -1)
         {
-            LittleTvList[audience.BindViewIdx].HpFadeOut();
+            LittleTvList[audience.BindViewIdx].UpdateHp();
         }
     }
 
@@ -365,6 +389,18 @@ public class ZhiboAudienceMgr
                     LittleTvList[TargetList[i].BindViewIdx].UpdateScore();
                     
                 }
+            }
+        }
+    }
+
+    public void addExtraHp(int idx)
+    {
+        for(int i = 0; i < TargetList.Count; i++)
+        {
+            if(TargetList[i].state == eAudienceState.Normal)
+            {
+                TargetList[i].addExtraHp(idx,1);
+                UpdateAudienceHp(TargetList[i]);
             }
         }
     }
@@ -520,7 +556,9 @@ public class ZhiboAudienceMgr
     {
         //先还再check 顺序重要
         ReturnWaitingTVs();
+
         CheckOverdue();
+
         AudienceCauseDamage();
     }
 
@@ -581,6 +619,27 @@ public class ZhiboAudienceMgr
         TargetList.Add(audience);
     }
 
+    public void AudienceLeave(ZhiboAudience audience)
+    {
+
+        audience.state = eAudienceState.None;
+        float hprate = audience.HpRate();
+        if (hprate <= 0.1f)
+        {
+            addExtraHp(1);
+        }
+        else if (hprate <= 0.6f)
+        {
+            gameMode.AddHp(-3);
+        }
+        else
+        {
+            GenHeifen(5);
+        }
+    }
+
+
+
     public void CheckOverdue()
     {
         for (int i = TargetList.Count - 1; i >= 0; i--)
@@ -594,6 +653,7 @@ public class ZhiboAudienceMgr
                     {
                         return;
                     }
+                    AudienceLeave(TargetList[i]);
                     LittleTvList[TargetList[i].BindViewIdx].Disappear();
                     TargetList.RemoveAt(i);
                 }
@@ -664,6 +724,21 @@ public class ZhiboAudienceMgr
         EmptyTVList.AddRange(WaitingReturnList);
         WaitingReturnList.Clear();
     }
+
+
+    public void GenHeifen(int hp)
+    {
+        ZhiboAudience audience = new ZhiboAudience();
+        {
+            audience.Type = eAudienceType.Heizi;
+            audience.GemHp[6] = hp;
+            audience.state = eAudienceState.Normal;
+        }
+        int idx = ShowNewAudience(audience);
+        audience.BindViewIdx = idx;
+        TargetList.Add(audience);
+    }
+
 
     public int ShowNewAudience(ZhiboAudience audience)
     {

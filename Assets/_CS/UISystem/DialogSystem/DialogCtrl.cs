@@ -85,6 +85,8 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 
 	DialogModule dm;
 
+    IResLoader mResLoader;
+
 	public static float wordSpeed = 10f;
 
 	//状态
@@ -102,8 +104,8 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 
 	public override void Init(){
 		dm = GameMain.GetInstance ().GetModule<DialogModule> ();
-		
-	}
+        mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
+    }
 
     public void StartDialog(string dialogId, OnDialogEnd callback=null)
     {
@@ -264,8 +266,10 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
 						vv.BindView (l.transform);
 						vv.NeedMove = false;
 						vv.Target = Vector2.zero;
+                        vv.pic.sprite = mResLoader.LoadResource<Sprite>("Dialog/Lihui/"+ realFrame.Lids[i]);
 
-						view.LihuiList.Insert (realFrame.SlotIdxs [i],vv);
+
+                        view.LihuiList.Insert (realFrame.SlotIdxs [i],vv);
 					}else if(realFrame.Opts [i] == "Leave"){
 						model.LihuiIds.RemoveAt (realFrame.SlotIdxs [i]);
 						LihuiView vv = view.LihuiList [realFrame.SlotIdxs [i]];
@@ -425,7 +429,7 @@ public class DialogManager : UIBaseCtrl<DialogModel,DialogView>
         {
 
             ClearInfo();
-            StartDialog("d1");
+            StartDialog("d1", DiglogEndEvent);
         }
         else
         {

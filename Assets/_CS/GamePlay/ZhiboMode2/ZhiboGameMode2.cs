@@ -43,7 +43,7 @@ public class ZhiboGameMode2State
     private float danmuFreq = 3f;
 
     public float DanmuSpd { get { return danmuSpd * AccelerateRate; } }
-    private float danmuSpd = 200.0f;
+    private float danmuSpd = 160.0f;
 
     //public List<DanmuGroup> danmuGroups = new List<DanmuGroup>();
 

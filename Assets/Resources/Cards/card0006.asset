@@ -32,10 +32,11 @@ MonoBehaviour:
   SkillBonusType: 0
   SkillBonusNum: 0
   BaseSkillId: 
+  Gems: 000000000000000000000000000000000000000000000000
   UseConditions: []
   Effects:
   - EMode: 0
-    effectType: 0
+    effectType: 29
     isNegEffect: 0
     Possibility: 0
     turnEffect: 

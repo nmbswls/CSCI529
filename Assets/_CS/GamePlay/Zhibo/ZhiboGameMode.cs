@@ -472,7 +472,7 @@ public class ZhiboGameMode : GameModeBase
         //{
         //    state.HpScoreRate = 0.3f;
         //}
-        state.HpScoreRate = 0;
+        state.HpScoreRate = 1;
     }
 
     public string GetBuffDesp(eBuffType buffType)
@@ -570,7 +570,7 @@ public class ZhiboGameMode : GameModeBase
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
-            CardFilter.parseFilterFromString("{\n\t\"NameContain\": \"\",\n\t\"TypeMask\": 0,\n\t\"Tags\": [\"t0\"]\n}");
+            mAudienceMgr.addExtraHp(1);
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
