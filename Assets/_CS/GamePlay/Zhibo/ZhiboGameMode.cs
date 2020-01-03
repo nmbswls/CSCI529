@@ -113,7 +113,7 @@ public class ZhiboGameState
     public int MinHp;
     public int Hp;
 
-    public float Target = 200;
+    public float Target = 300;
 
     //public float ScoreArmor = 0;
 
@@ -291,10 +291,10 @@ public class ZhiboGameMode : GameModeBase
 
         ClearAllDanmu(true);
 
-        if (!isFirstTurn)
-        {
-            AddHp(-(pRoleMgr.GetBadLevel()+mBuffManager.BadRateDiff)*2);
-        }
+        // if (!isFirstTurn)
+        // {
+        //     AddHp(-(pRoleMgr.GetBadLevel()+mBuffManager.BadRateDiff)*2);
+        // }
 
         mAudienceMgr.FinishTurn();
 
@@ -330,6 +330,10 @@ public class ZhiboGameMode : GameModeBase
 
 
         if (state.TurnLeft <= 0)
+        {
+            FinishZhibo();
+        }
+        if (state.Hp<=0)
         {
             FinishZhibo();
         }
@@ -535,6 +539,7 @@ public class ZhiboGameMode : GameModeBase
             ll.Add("主播什么时候开播的");
             ll.Add("日常打卡");
             ll.Add("主播晚上好啊");
+            //ll.Add("xxxx");
             DanmuDict.Add("common", ll);
         }
     }
@@ -813,7 +818,7 @@ public class ZhiboGameMode : GameModeBase
             scoreReal *= 1 + (add * 0.01f) + (mBuffManager.GenScoreExtraRate);
         }
 
-        scoreReal *= state.HpScoreRate;
+        // scoreReal *= state.HpScoreRate;
         //scoreReal *= mBuffManager.
         state.Score += scoreReal;
 
@@ -1072,17 +1077,33 @@ public class ZhiboGameMode : GameModeBase
         return "你麻痹死了";
     }
 
+    public string getBadRandomDanmu()
+    {
+        return "Bad!";
+    }
+
     public void FinishZhibo()
     {
         ZhiboJiesuanUI p = mUIMgr.ShowPanel("ZhiboJiesuanPanel",true, false) as ZhiboJiesuanUI;
         spdRate = 0;
         if (true || state.Score > state.MaxScore)
         {
-            int fensi = pRoleMgr.GetFensiReward(state.ExtraLiuliang,1);
+            //int fensi = pRoleMgr.GetFensiReward(state.ExtraLiuliang,1);
+            int fensi = state.Score > 30 ? (int) (state.Score * 0.65) : 20;
+            double getMoney = state.Score>state.MaxScore? (state.Score - state.MaxScore/2) * 0.6 : 10;
+            pRoleMgr.GainMoney((int)getMoney);
             pRoleMgr.AddFensi(0, fensi);
+            p.showFensi(fensi);
+            p.showMoney((int)getMoney);
 
-            pRoleMgr.GainMoney(100);
             //根据打过的卡牌 增加主属性 和 经验值
+
+            pRoleMgr.AddMeili((float)getMoney * 0.1f);
+            pRoleMgr.AddFanying((float)getMoney * 0.1f);
+            pRoleMgr.AddTili((float)getMoney * 0.1f);
+            pRoleMgr.AddJiyi((float)getMoney * 0.1f);
+            pRoleMgr.AddKoucai((float)getMoney * 0.1f);
+
             int[] bonus = new int[5];
             for (int i = 0; i < state.UsedCardsToGetBonus.Count; i++)
             {

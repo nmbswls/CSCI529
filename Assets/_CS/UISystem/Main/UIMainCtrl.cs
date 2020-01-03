@@ -51,7 +51,11 @@ public class MainView : BaseView
     public Transform AppsContainer;
     public List<AppView> appViews = new List<AppView>();
 
-
+    public Text meili;
+    public Text fanying;
+    public Text tili;
+    public Text jiyi;
+    public Text koucai;
 
     //test
     public Text showAll;
@@ -59,6 +63,10 @@ public class MainView : BaseView
     public Button Next30Turn;
     public Button BuyThings;
     public Button UpdateCards;
+
+    // 3 bars
+    public Text moneyValue;
+
 }
 
 public class PropertyMainView
@@ -234,9 +242,18 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.SkillExpShow = root.Find("SkillExp").Find("Value").GetComponent<Text>();
         view.CardPowerShow = root.Find("CardPower").Find("Value").GetComponent<Text>();
 
+        view.moneyValue = root.Find("Header").Find("money bar").Find("Value").GetComponent<Text>();
+
         view.Properties = root.Find("Properties");
 
-        foreach(Transform child in view.Properties.Find("VBox"))
+        view.meili = view.Properties.Find("VBox").GetChild(0).GetChild(0).GetComponent<Text>();
+        view.fanying = view.Properties.Find("VBox").GetChild(1).GetChild(0).GetComponent<Text>();
+        view.tili = view.Properties.Find("VBox").GetChild(2).GetChild(0).GetComponent<Text>();
+        view.jiyi = view.Properties.Find("VBox").GetChild(3).GetChild(0).GetComponent<Text>();
+        view.koucai = view.Properties.Find("VBox").GetChild(4).GetChild(0).GetComponent<Text>();
+
+
+        foreach (Transform child in view.Properties.Find("VBox"))
         {
             PropertyMainView vv = new PropertyMainView();
             vv.BindView(child);
@@ -294,8 +311,10 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             testUpdateWords();
             pSkillMgr.PrintSkills();
         });
-        testUpdateWords();
+        //testUpdateWords();
+        UpdateWords();
 
+        updateInitalData();
 
     }
 
@@ -422,11 +441,11 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
         view.MoneyShow.text = (int)testResource + "";
         view.NowSkillShow.text = beginSkillLevel + "->" + nowSkillLevel;
-        view.FansShow.text = testFans + "";
+        //view.FansShow.text = testFans + "";
+        view.FansShow.text = rm.Fensi + "";
         view.NextItemPrice.text = (nowItemLevel * 50) + "";
         view.SkillListShow.text = nowSkillLevel * 50 + "";
     }
-
 
     public int turn = 1;
     public bool hasAddSkill = false;
@@ -670,6 +689,23 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 		
 	}
 
+    public void updateInitalData()
+    {
+        view.moneyValue.text = rm.Money + "";
+    }
+
+    public void UpdateWords()
+    {
+        RoleStats rs = rm.GetStats();
+
+        view.FansShow.text = (int)(rm.Fensi) + "";
+        view.meili.text = (int)(rs.meili) + "";
+        view.fanying.text = (int)(rs.fanying) + "";
+        view.tili.text = (int)(rs.tili) + "";
+        view.jiyi.text = (int)(rs.jiyi) + "";
+        view.koucai.text = (int)(rs.koucai) + "";
+
+    }
 
 }
 

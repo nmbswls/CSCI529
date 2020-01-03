@@ -90,16 +90,17 @@ public class MainGameMode : GameModeBase
                 string[] cmd = action.Split(',');
                 if (cmd[0] == "dialog")
                 {
-                    DialogManager dm = pUIMgr.ShowPanel("DialogManager") as DialogManager;
-                    if (dm == null)
-                    {
-                        Debug.LogError("dialog mgr load fail");
-                    }
-                    dm.StartDialog(cmd[1], delegate (string[] args)
-                    {
-                        HandleNextEvent();
-                    });
-                }else if (cmd[0] == "event")
+                    //DialogManager dm = pUIMgr.ShowPanel("DialogManager") as DialogManager;
+                    //if (dm == null)
+                    //{
+                    //    Debug.LogError("dialog mgr load fail");
+                    //}
+                    //dm.StartDialog(cmd[1], delegate (string[] args)
+                    //{
+                    //    HandleNextEvent();
+                    //});
+                }
+                else if (cmd[0] == "event")
                 {
                     cachedEvents.Add(cmd[1]);
                     //pEventMgr.AddListener(cmd[1]);

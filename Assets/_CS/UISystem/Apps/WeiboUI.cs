@@ -52,7 +52,6 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
         pUIMgr = GameMain.GetInstance().GetModule<IUIMgr>();
         pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
         pWeiboMgr = GameMain.GetInstance().GetModule<WeiboModule>();
-
     }
     public override void PostInit()
     {
@@ -62,9 +61,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
     public void getRandomCard()
     {
         int randInt = UnityEngine.Random.Range(1,5);
-        //string cardName = prefix + randInt.ToString().PadLeft(4,'0');
         cardName = "card800" + randInt.ToString();
-        Debug.Log(cardName);
     }
 
     public void insertCard(string cardName)
@@ -74,7 +71,11 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
             List<string> st = new List<string>();
             st.Add(cardName);
             pCardMdl.AddCards(st);
-            mUIMgr.ShowHint("获得卡牌" + cardName);
+            CardAsset ca = pCardMdl.Load(cardName);
+            if(ca != null)
+            {
+                mUIMgr.ShowHint("获得卡牌:" + ca.CardName);
+            }
         }
     }
 
@@ -94,8 +95,6 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
         view.TouXiang = view.GetGeng.transform.Find("TouXiang").GetComponent<Image>();
         view.WeiboImage = view.GetGeng.transform.Find("WeiboImage").GetComponent<Image>();
         view.Post = view.GetGeng.transform.Find("Post").GetComponent<Image>();
-
-
     }
 
     public override void RegisterEvent()
@@ -181,10 +180,10 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
             {
                 if(!isGengGet)
                 {
+                    Debug.Log("Press the post");
                     isGengGet = true;
                     pWeiboMgr.ReduceShuaTime();
                     insertCard(cardName);
-                    
                 }
             };
         }

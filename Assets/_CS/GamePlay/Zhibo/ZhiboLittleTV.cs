@@ -8,6 +8,7 @@ public class ZhiboLittleTvView{
 
     public CanvasGroup rootCG;
     public Image Content;
+    public Image AvaContent;
     public Animator animator;
 
     public Transform GemsTr;
@@ -19,6 +20,7 @@ public class ZhiboLittleTvView{
     public List<Image> TokenList=new List<Image>();
 
     public Text NowScore;
+    public Text tvName;
 }
 
 
@@ -41,6 +43,8 @@ public class ZhiboLittleTV : MonoBehaviour
 
     public bool isAttracted = false;
 
+    public List<Sprite> audienceImage;
+
     public void Init(ZhiboAudienceMgr audienceMgr)
     {
 
@@ -50,6 +54,8 @@ public class ZhiboLittleTV : MonoBehaviour
         BindView();
         RegisterEvents();
         pResLoader = GameMain.GetInstance().GetModule<ResLoader>();
+        audienceImage.Add(pResLoader.LoadResource<Sprite>("AudienceImage/" + "Normal"));
+        audienceImage.Add(pResLoader.LoadResource<Sprite>("AudienceImage/" + "Heizi"));
         view.animator = GetComponent<Animator>();
         view.animator.Play("Empty");
         gameObject.SetActive(false);
@@ -70,12 +76,15 @@ public class ZhiboLittleTV : MonoBehaviour
     {
         view.rootCG = transform.GetComponent<CanvasGroup>();
         view.Content = transform.Find("Bg").GetComponent<Image>();
+        view.AvaContent = transform.Find("Bg").Find("Content").GetComponent<Image>();     
         view.GemsTr = transform.Find("Bg").Find("Gems");
 
         view.NowScore = transform.Find("Bg").Find("Score").GetComponent<Text>();
         view.TokenContainer = transform.Find("Bg").Find("Tokens");
         view.MoreToken = transform.Find("Bg").Find("MoreToken").gameObject;
         view.TokenInfo = transform.Find("Bg").Find("TokenInfo").gameObject;
+
+        view.tvName = transform.Find("Bg").Find("Text").GetComponent<Text>();
 
         view.MoreToken.SetActive(false);
 
@@ -122,7 +131,18 @@ public class ZhiboLittleTV : MonoBehaviour
         view.animator.Play("Empty");
         view.animator.SetTrigger("Appear");
         this.TargetAudience = TargetAudience;
-        ChangeHpGem();
+
+        if (TargetAudience.Type == eAudienceType.Heizi)
+        {
+            view.tvName.text = "KeyBoard Man";
+            view.AvaContent.sprite = audienceImage[1];
+        }
+        else
+        {
+            view.tvName.text = "New Audience";
+            view.AvaContent.sprite = audienceImage[0];
+        }
+        UpdateHp();
         UpdateBuffs();
     }
 

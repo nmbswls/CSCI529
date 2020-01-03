@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12f2385731dca4dc780398ce48d97f99, type: 3}
+  m_Name: WeiboContentList
+  m_EditorClassIdentifier: 
+  Entities:
+  - Index: 0
+    Name: "\u8001\u5F20"
+    Desp: "\u6765\u4ECA\u513F\u4E2A\u7ED9\u5927\u5BB6\u641E\u4E2A\u4E8C\u65A4\u5730\u74DC\u70E7"
+    Time: Random
+    Avat: 
+  - Index: 1
+    Name: "\u8001\u5218"
+    Desp: "\u8F6C\u53D1\u8FD9\u6761\u9526\u9CA4\uFF0C\u4E5F\u6CA1\u4EC0\u4E48\u5375\u7528"
+    Time: Random
+    Avat: 
+  - Index: 2
+    Name: "\u94B1\u9F99"
+    Desp: "\u5F53\u671D\u5927\u5B66\u58EB\uFF0C\u603B\u5171\u6709\u4E94\u4F4D\uFF0C\u6715\u4E0D\u5F97\u4E0D\u7F62\u514D\u4E09\u4F4D"
+    Time: Random
+    Avat: 
+  - Index: 3
+    Name: "\u674E\u4E91\u9F99"
+    Desp: "\u610F\u5927\u5229\u70AE\u5835\u4E86"
+    Time: Random
+    Avat: 
+  - Index: 4
+    Name: "\u738B\u8001\u83CA"
+    Desp: "\u5367\u69FD"
+    Time: Random
+    Avat: 
+  - Index: 5
+    Name: "\u94DC\u6559\u6388"
+    Desp: "\u65E9\u4E0A\u8D77\u6765\uFF0C\u62E5\u62B1\u592A\u9633\u3002\u592A\u9633\u8BF4\uFF0C\u201C\u54CE\u561B\u6211\u70ED\u6B7B\u4E86\u201D"
+    Time: Random
+    Avat: 

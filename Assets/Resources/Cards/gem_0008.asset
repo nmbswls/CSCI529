@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: gem_0008
   m_EditorClassIdentifier: 
   CardId: gem_0008
-  CardName: Get Score
-  CardDesp: Deal 3 Cyen Damage / Gain 3 score
-  CatdImageName: Image_Zhibochouka
-  CardEffectDesp: Deal 3 Cyen Damage / Gain 3 score
+  CardName: Broadcasting
+  CardDesp: Actively talking to your audiences and get them interested in hour streaming.
+    More audiences will be attracted to your channel.
+  CatdImageName: Image_Jinpaijiangshi
+  CardEffectDesp: Gain 3 score
+  CardBackDesp: Deal 3 Cyen Damage
   Picture: {fileID: 0}
   CardType: 1
   Tags: []
@@ -36,7 +38,7 @@ MonoBehaviour:
   UseConditions: []
   Effects:
   - EMode: 0
-    effectType: 29
+    effectType: 7
     isNegEffect: 0
     Possibility: 0
     turnEffect: 

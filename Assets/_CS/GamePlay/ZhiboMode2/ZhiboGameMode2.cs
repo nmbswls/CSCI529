@@ -192,6 +192,7 @@ public class ZhiboGameMode2 : GameModeBase
             ll.Add("主播什么时候开播的");
             ll.Add("日常打卡");
             ll.Add("主播晚上好啊");
+            //ll.Add("Negative comments");
             DanmuDict.Add("1", ll);
         }
         {
@@ -199,6 +200,7 @@ public class ZhiboGameMode2 : GameModeBase
             ll.Add("主播什么时候开播的");
             ll.Add("日常打卡");
             ll.Add("主播晚上好啊");
+            //ll.Add("Negative comments");
             DanmuDict.Add("2", ll);
         }
     }
@@ -541,6 +543,18 @@ public class ZhiboGameMode2 : GameModeBase
             return ll[idx];
         }
         return "主播长成这样也敢直播？";
+    }
+
+    public string GetHeiDanmuContent()
+    {
+        if (DanmuDict.ContainsKey("1"))
+        {
+            Debug.Log(state.NowDanmuJiezou);
+            List<string> ll = DanmuDict["1"];
+            int idx = Random.Range(0, ll.Count);
+            return ll[idx];
+        }
+        return "Look yourself ***!";
     }
 
     public void RandomChangeJiezou()
