@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.Events;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public class ResLoader : ModuleBase, IResLoader
 {
@@ -235,5 +237,11 @@ public class ResLoader : ModuleBase, IResLoader
         HandleLoadWWWResAsync(path, callback);
     }
 
+
+    public void LoadCard()
+    {
+        TextAsset ta = LoadResource<TextAsset>("");
+        JsonConvert.DeserializeObject<Dictionary<string, string>>(ta.text);
+    }
 
 }

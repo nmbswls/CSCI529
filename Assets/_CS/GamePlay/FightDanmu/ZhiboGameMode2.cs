@@ -766,4 +766,35 @@ public class ZhiboGameMode2 : GameModeBase
         return ret;
     }
 
+    //public void ClearAllDanmu(bool getScore)
+    //{
+    //    for (int i = state.Danmus.Count - 1; i >= 0; i--)
+    //    {
+    //        Danmu danmu = state.Danmus[i];
+    //        danmu.OnDestroy();
+    //        state.Danmus.Remove(danmu);
+    //        mUICtrl.ShowDanmuEffect(danmu.transform.position);
+    //        if (danmu.isBad)
+    //        {
+    //            GainScore(-2);
+    //            //AddHp(-1);
+    //        }
+    //        else
+    //        {
+    //            GainScore(1);
+    //        }
+    //    }
+
+    //    for (int i = state.SuperDanmus.Count - 1; i >= 0; i--)
+    //    {
+    //        if (state.SuperDanmus[i].HasDisapeared)
+    //        {
+    //            continue;
+    //        }
+    //        state.SuperDanmus[i].Disappear();
+    //    }
+    //    state.SuperDanmus.Clear();
+    //    mUICtrl.ClearSuperDanmu();
+    //}
+
 }

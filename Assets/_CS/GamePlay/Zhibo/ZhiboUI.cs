@@ -89,8 +89,6 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     private string DanmuFengxiang;
 
-    public SuperDanmu[] SuperDanmuSlots = new SuperDanmu[8];
-    public List<int> EmptySuperDanmuSlot = new List<int>();
 
     IResLoader mResLoader;
     public ZhiboGameMode gameMode;
@@ -273,10 +271,10 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.TokenDetailPanel = root.Find("TokenDetail").gameObject;
 
         view.DanmuField = (RectTransform)(root.Find("DanmuField"));
-        view.DanmuFieldNormal = (RectTransform)(view.DanmuField.Find("Normal"));
-        view.DanmuFieldSuper = (RectTransform)(view.DanmuField.Find("Super"));
+        //view.DanmuFieldNormal = (RectTransform)(view.DanmuField.Find("Normal"));
+        //view.DanmuFieldSuper = (RectTransform)(view.DanmuField.Find("Super"));
 
-        view.SuperDanmuPreview = (RectTransform)(root.Find("SuperDanmuPreview"));
+        //view.SuperDanmuPreview = (RectTransform)(root.Find("SuperDanmuPreview"));
         //view.container = view.viewRoot.transform.Find("OperatorsContainer");
         Transform hotView = root.transform.Find("Score");
         view.Score = hotView.GetComponent<Slider>();
@@ -509,56 +507,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.TurnTimeBar.fillAmount = value / 30;
     }
 
-    public Danmu GenDanmu(bool isBad)
-    {
-        List<int> DanmuSlots = new List<int>();
 
-
-        for(int i=2;i< numOfGridVertical - 2; i++)
-        {
-            if (Time.time - preDanmuTime[i] > MinDanmuInterval)
-            {
-                DanmuSlots.Add(i);
-            }
-        }
-        int gridY;
-
-        if (DanmuSlots.Count == 0)
-        {
-            gridY = Random.Range(2, numOfGridVertical - 2);
-
-        }
-        else
-        {
-            gridY = DanmuSlots[Random.Range(0, DanmuSlots.Count)];
-        }
-
-
-
-        preDanmuGrid = gridY;
-
-        float posY = gridY * 1.0f / numOfGridVertical * height;
-        //posY += Random.Range(-3f, 3f);
-
-        preDanmuTime[gridY] = Time.time;
-
-        GameObject danmuGo = mResLoader.Instantiate("Zhibo/Danmu");
-
-        Danmu danmu = danmuGo.GetComponent<Danmu>();
-
-        if(isBad)
-        {
-            danmu.init(gameMode.getBadRandomDanmu(), isBad, gameMode);
-        } else
-        {
-            danmu.init(gameMode.getRandomDanmu(), isBad, gameMode);
-        }
-        danmuGo.transform.SetParent(view.DanmuFieldNormal, false);
-        danmu.rect.anchoredPosition = new Vector3(width + 30, -posY, 0);
-
-
-        return danmu;
-    }
 
 
 
@@ -570,53 +519,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     }
 
 
-    public SuperDanmu ShowSuperDanmu()
-    {
-        if(EmptySuperDanmuSlot.Count == 0)
-        {
-            return null;
-        }
-        GameObject danmuGo = mResLoader.Instantiate("Zhibo/SuperDanmu",view.SuperDanmuPreview);
-        SuperDanmu danmu = danmuGo.GetComponent<SuperDanmu>();
-        //
-        int randSlot = EmptySuperDanmuSlot[Random.Range(0, EmptySuperDanmuSlot.Count)];
-        EmptySuperDanmuSlot.Remove(randSlot);
 
-        SuperDanmuSlots[randSlot] = danmu;
-        danmu.transform.localPosition = new Vector3(0, randSlot*-80f,0);
-        danmu.init("maybe sssss asd",eSuperDanmuType.Jianpanxia,gameMode);
-        return danmu;
-    }
-
-    public void ClearSuperDanmu()
-    {
-        EmptySuperDanmuSlot.Clear();
-        for(int i = 0; i < 8; i++)
-        {
-            EmptySuperDanmuSlot.Add(i);
-        }
-        for(int i=0;i< SuperDanmuSlots.Length; i++)
-        {
-            SuperDanmuSlots[i] = null;
-        }
-    }
-
-
-    public void MoveSuperDanmu(SuperDanmu toMove)
-    {
-        toMove.transform.SetParent(view.DanmuFieldSuper, true);
-    }
-
-    public void AdjustSuperDanmuOrder()
-    {
-        for (int i = 0; i < SuperDanmuSlots.Length; i++)
-        {
-            if(SuperDanmuSlots[i] != null)
-            {
-                SuperDanmuSlots[i].transform.SetSiblingIndex(i);
-            }
-        }
-    }
 
     public void ShowHitEffect(Vector2 posIn2D)
     {
@@ -637,6 +540,10 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     public Transform GetAudienceRoot()
     {
         return view.TVContainer;
+    }
+    public Transform GetDanmuRoot()
+    {
+        return view.DanmuField;
     }
 
     public GameObject GetTokenDetailPanel()

@@ -97,6 +97,19 @@ public class ZhiboBuffManager
         CalculateBuffExtras();
     }
 
+    public List<ZhiboBuff> GetBackBuff()
+    {
+        List<ZhiboBuff> ret = new List<ZhiboBuff>();
+        for (int i = 0; i < CardCountedBuffs.Count; i++)
+        {
+            if (CardCountedBuffs[i].IsBackendEffect())
+            {
+                ret.Add(CardCountedBuffs[i]);
+            }
+        }
+        return ret;
+    }
+
     public List<ZhiboBuff> CheckValidBuff(CardInZhibo card)
     {
         List<ZhiboBuff> ret = new List<ZhiboBuff>();

@@ -113,14 +113,14 @@ public class ZhiboAudienceMgr
 
 
 
-    public List<int> HandleGemHit(int[] damage, AudienceToken token = null)
+    public List<int> HandleGemHit(int[] damage, int extra = 0, AudienceToken token = null)
     {
         bool hasQueue = false;
         if (KilledAudience.Count > 0)
         {
             hasQueue = true;
         }
-        List<int> oritinAffectedList = ApplyGemHit(damage,null);
+        List<int> oritinAffectedList = ApplyGemHit(damage, extra, null);
 
         if (!hasQueue)
         {
@@ -148,7 +148,7 @@ public class ZhiboAudienceMgr
         }
     }
 
-    public List<int> ApplyGemHit(int[] damage, AudienceToken token = null)
+    public List<int> ApplyGemHit(int[] damage, int extra, AudienceToken token = null)
     {
         List<int> affectedAudiences = new List<int>();
         //List<ZhiboAudience> KilledAudience = new List<ZhiboAudience>();
@@ -158,7 +158,12 @@ public class ZhiboAudienceMgr
             {
                 continue;
             }
-            bool ret = TargetList[i].ApplyDamage(damage);
+            int[] realDamage = new int[damage.Length];
+            for(int d = 0; d < realDamage.Length; d++)
+            {
+                realDamage[d] = (int)(damage[d] * (1 + extra * 0.01f));
+            }
+            bool ret = TargetList[i].ApplyDamage(realDamage);
             if (ret)
             {
                 affectedAudiences.Add(i);
@@ -301,7 +306,7 @@ public class ZhiboAudienceMgr
                         {
                             damaged[jj] = int.Parse(args[jj]);
                         }
-                        ApplyGemHit(damaged);
+                        ApplyGemHit(damaged,0);
                         //damageChain.Enqueue(damaged);
                         //gameMode.AddHp(int.Parse(bonuw.effectString));
                         break;

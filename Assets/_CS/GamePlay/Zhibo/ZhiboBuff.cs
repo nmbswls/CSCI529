@@ -26,8 +26,9 @@ public enum eBuffType
     Extra_Neg_Level,
     No_Neg_Danmu,
 
-    Next_Card_Extra_Score,
-    Next_Card_Extra_Status,
+    NC_Extra_Score,
+    NC_Extra_Status,
+    NC_Extra_Gem,
 
     Success_Rate_Multi,
     Success_Rate_Max,
@@ -164,6 +165,16 @@ public class ZhiboBuff : MonoBehaviour
         if (!card.ca.ApplyFilter(filter))
         {
             return false;
+        }
+        return false;
+    }
+
+
+    public bool IsBackendEffect()
+    {
+        if(bInfo.BuffType == eBuffType.NC_Extra_Gem)
+        {
+            return true;
         }
         return false;
     }

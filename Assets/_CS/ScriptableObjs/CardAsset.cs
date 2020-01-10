@@ -39,6 +39,8 @@ public class CardEffect
     public bool isNegEffect = false;
     public int Possibility = 100;
 
+
+
     public string turnEffect;
     [TextArea(1,2)]
     public string effectString;
@@ -59,6 +61,11 @@ public class CardEffect
         this.effectType = (eEffectType)Enum.Parse(typeof(eEffectType), effectId);
         this.effectString = effectString;
     }
+}
+
+public class CardTurnEffect
+{
+
 }
 
 public class CardFilter

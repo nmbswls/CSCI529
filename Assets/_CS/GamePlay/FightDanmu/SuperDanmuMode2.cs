@@ -3,6 +3,21 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public class SuperDanmuView
+{
+    public Text Content;
+    public Image Icon;
+    public Image Hengfu;
+}
+
+public enum eSuperDanmuType
+{
+    Jianpanxia,
+    Penzi,
+    Gangjing,
+    Max,
+}
+
 public class SuperDanmuMode2 : MonoBehaviour
 {
 
