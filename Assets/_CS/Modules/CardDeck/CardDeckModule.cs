@@ -98,38 +98,38 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         {
             if (info.ca.HasTurnEffect)
             {
-                foreach (CardEffect effect in info.ca.TurnEffects)
+                foreach (CardTurnEffect effect in info.ca.TurnEffects)
                 {
-                    switch (effect.turnEffect)
+                    switch (effect.type)
                     {
-                        case "jiyi+":
-                            pRoleMdl.AddJiyi(float.Parse(effect.effectString));
+                        case eCardTurnEffectType.Jiyi:
+                            pRoleMdl.AddJiyi(effect.value);
                             break;
 
-                        case "meili+":
-                            pRoleMdl.AddMeili(float.Parse(effect.effectString));
+                        case eCardTurnEffectType.Meili:
+                            pRoleMdl.AddMeili(effect.value);
                             break;
-                        case "fanying+":
-                            pRoleMdl.AddFanying(float.Parse(effect.effectString));
+                        case eCardTurnEffectType.Fanying:
+                            pRoleMdl.AddFanying(effect.value);
                             break;
-                        case "tili+":
-                            pRoleMdl.AddTili(float.Parse(effect.effectString));
+                        case eCardTurnEffectType.Tili:
+                            pRoleMdl.AddTili(effect.value);
                             break;
-                        case "koucai+":
-                            pRoleMdl.AddKoucai(float.Parse(effect.effectString));
+                        case eCardTurnEffectType.Koucai:
+                            pRoleMdl.AddKoucai(effect.value);
                             break;
-                        case "shuxing+":
-                            pRoleMdl.AddJiyi(float.Parse(effect.effectString));
-                            pRoleMdl.AddMeili(float.Parse(effect.effectString));
-                            pRoleMdl.AddFanying(float.Parse(effect.effectString));
-                            pRoleMdl.AddTili(float.Parse(effect.effectString));
-                            pRoleMdl.AddKoucai(float.Parse(effect.effectString));
+                        case eCardTurnEffectType.Shuxing:
+                            pRoleMdl.AddJiyi(effect.value);
+                            pRoleMdl.AddMeili(effect.value);
+                            pRoleMdl.AddFanying(effect.value);
+                            pRoleMdl.AddTili(effect.value);
+                            pRoleMdl.AddKoucai(effect.value);
                             break;
-                        case "fensi+":
-                            pRoleMdl.AddFensi(0,int.Parse(effect.effectString));
+                        case eCardTurnEffectType.Fensi:
+                            pRoleMdl.AddFensi(0, (int)effect.value);
                             break;
-                        case "action+":
-                            pRoleMdl.AddActionPoints(int.Parse(effect.effectString));
+                        case eCardTurnEffectType.Xingdongdian:
+                            pRoleMdl.AddActionPoints((int)effect.value);
                             break;
                         default:
                             break;
@@ -429,11 +429,11 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardEffectDesp = "等级" + (i + 1) + "的攻击卡";
             ca.CatdImageName = "Image_Bangyigegezuibangla";
             ca.BaseSkillId = string.Format("test_{0:00}", (i)/5+1);
-            ca.Gems = new int[] {2,2,0,0,0,0};
+            ca.GemString = "2,2,0,0,0,0";
+            //ca.Gems = new int[] {2,2,0,0,0,0};
             ca.cost = 2;
             {
                 CardEffect ce = new CardEffect();
-                ce.EMode = eCardEffectMode.SIMPLE;
                 ce.effectType = eEffectType.GetScore;
                 ce.effectString = ((i + 1) * 5) + "";
                 ca.Effects.Add(ce);
@@ -449,11 +449,11 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardEffectDesp = "等级" + (i + 1) + "的回血卡";
             ca.CatdImageName = "Image_Kongqibanfan";
             ca.BaseSkillId = string.Format("test_{0:00}", (i) / 5+1);
-            ca.Gems = new int[] { 2, 0, 2, 0, 0, 0 };
+            ca.GemString = "2,0,2,0,0,0";
+            //ca.Gems = new int[] { 2, 0, 2, 0, 0, 0 };
             ca.cost = 2;
             {
                 CardEffect ce = new CardEffect();
-                ce.EMode = eCardEffectMode.SIMPLE;
                 ce.effectType = eEffectType.AddHp;
                 ce.effectString = ((i + 1) * 1) + "";
                 ca.Effects.Add(ce);
@@ -467,13 +467,13 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.CardType = eCardType.ABILITY;
             ca.CardId = string.Format("test_armor_{0:00}", i + 1);
             ca.CardEffectDesp = "等级" + (i + 1) + "的防御卡";
-            ca.Gems = new int[] { 1, 1, 1, 0, 0, 0 };
+            ca.GemString = "1,1,1,0,0,0";
+            //ca.Gems = new int[] { 1, 1, 1, 0, 0, 0 };
             ca.CatdImageName = "Image_Zhaohuanshuijun";
             ca.BaseSkillId = string.Format("test_{0:00}", (i) / 5); ;
             ca.cost = 2;
             {
                 CardEffect ce = new CardEffect();
-                ce.EMode = eCardEffectMode.SIMPLE;
                 ce.effectType = eEffectType.GetArmor;
                 ce.effectString = ((i + 1) * 3) + "";
                 ca.Effects.Add(ce);
@@ -492,20 +492,21 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
             ca.BaseSkillId = null;
             ca.cost = 0;
             {
-                CardEffect ce = new CardEffect();
-                ce.EMode = eCardEffectMode.SIMPLE;
-                ce.turnEffect = "shuxing+";
-                ce.effectString = ((i + 1)) + "";
+                CardTurnEffect ce = new CardTurnEffect();
+                ce.type = eCardTurnEffectType.Shuxing;
+                ce.value = ((i + 1));
                 ca.TurnEffects.Add(ce);
             }
             {
                 CardEffect ce = new CardEffect();
-                ce.EMode = eCardEffectMode.SIMPLE;
                 ce.isAddBuff = true;
-                ce.buffInfo = new ZhiboBuffInfo();
-                ce.buffInfo.BuffType = eBuffType.Jiyi_Add;
-                ce.buffInfo.BuffLevel = 10+i*5;
-                ce.buffInfo.TurnLast = 2;
+                ZhiboBuffInfo buffInfo = new ZhiboBuffInfo();
+
+                buffInfo.BuffType = eBuffType.Jiyi_Add;
+                buffInfo.BuffLevel = 10+i*5;
+                buffInfo.TurnLast = 2;
+
+                ce.buffInfo.Add(buffInfo);
                 ca.Effects.Add(ce);
             }
             CardDict.Add(ca.CardId, ca);

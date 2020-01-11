@@ -50,9 +50,10 @@ public class CardInZhibo
     public CardInZhibo(CardAsset ca,bool isTmp = false)
     {
         this.CardId = ca.CardId;
-        for(int i = 0; i < 6; i++)
+        string[] gems = ca.GemString.Split(',');
+        for (int i = 0; i < 6; i++)
         {
-            this.OverrideGems[i] = ca.Gems[i];
+            this.OverrideGems[i] = int.Parse(gems[i].Trim());
         }
         //this.TimeLeft = ca.ValidTime;
         this.UseLeft = ca.UseTime;
@@ -988,7 +989,7 @@ public class ZhiboGameMode : GameModeBase
                 }
                 if (ca.StatusBonusType > 0)
                 {
-                    bonus[ca.StatusBonusType - 1] += ca.StatusBonusNum;
+                    bonus[(int)ca.StatusBonusType - 1] += ca.StatusBonusNum;
                 }
                 if (ca.SkillBonusType > 0)
                 {
@@ -1029,7 +1030,7 @@ public class ZhiboGameMode : GameModeBase
 
     private void DiscardCard(CardInZhibo cinfo, bool triggerEffect)
     {
-        if (triggerEffect && cinfo.ca.UseOnDiscard)
+        if (triggerEffect && cinfo.ca.TriggerOnDiscard)
         {
             PutCardInChain(cinfo);
         }
@@ -1090,6 +1091,11 @@ public class ZhiboGameMode : GameModeBase
         CardInZhibo cinfo = state.Cards[cardIdx];
 
         CardAsset ca = cinfo.ca;
+        if (!ca.canUseBack)
+        {
+            mUIMgr.ShowHint("无法盖放");
+            return false;
+        }
         if (ca.cost > 0 && state.Tili < ca.cost)
         {
             mUIMgr.ShowHint("体力不足");
@@ -1147,44 +1153,63 @@ public class ZhiboGameMode : GameModeBase
         CardInZhibo cinfo = state.Cards[cardIdx];
 
         CardAsset ca = cinfo.ca;
-        if (ca.cost>0 && state.Tili < ca.cost)
+        if ((ca.cost>0 && state.Tili < ca.cost) || (ca.isCostAll && state.Tili == 0) )
         {
             mUIMgr.ShowHint("体力不足");
             return false;
         }
+        
 
-
-        for (int i = 0; i < ca.UseConditions.Count; i++)
+        //检查是否超过上限
+        int maxCount = ca.maxUseAmountPerGame;
+        if(maxCount > 0)
         {
-            string[] args = ca.UseConditions[i].effectString.Split(',');
-            switch (ca.UseConditions[i].effectType)
+            if (state.CardUsedCount.ContainsKey(NowExecuteCard.CardId) && state.CardUsedCount[NowExecuteCard.CardId] >= maxCount)
             {
-                case eEffectType.MaxCount:
-                    int maxCount = int.Parse(args[0]);
-                    if (state.CardUsedCount.ContainsKey(NowExecuteCard.CardId) && state.CardUsedCount[NowExecuteCard.CardId] >= maxCount)
-                    {
-                        return false;
-                    }
-                    if (state.CardUsedCount.ContainsKey(NowExecuteCard.CardId))
-                    {
-                        state.CardUsedCount[NowExecuteCard.CardId] += 1;
-                    }
-                    else
-                    {
-                        state.CardUsedCount[NowExecuteCard.CardId] = 1;
-                    }
-                    break;
-                case eEffectType.HavaCost:
-                    if (state.Tili == 0)
-                    {
-                        return false;
-                    }
-                    break;
-                default:
-                    break;
+                return false;
+            }
+            if (state.CardUsedCount.ContainsKey(NowExecuteCard.CardId))
+            {
+                state.CardUsedCount[NowExecuteCard.CardId] += 1;
+            }
+            else
+            {
+                state.CardUsedCount[NowExecuteCard.CardId] = 1;
             }
         }
-        if(ca.cost >= 0)
+
+
+        //for (int i = 0; i < ca.UseConditions.Count; i++)
+        //{
+        //    string[] args = ca.UseConditions[i].effectString.Split(',');
+        //    switch (ca.UseConditions[i].effectType)
+        //    {
+        //        case eEffectType.MaxCount:
+        //            int maxCount = int.Parse(args[0]);
+        //            if (state.CardUsedCount.ContainsKey(NowExecuteCard.CardId) && state.CardUsedCount[NowExecuteCard.CardId] >= maxCount)
+        //            {
+        //                return false;
+        //            }
+        //            if (state.CardUsedCount.ContainsKey(NowExecuteCard.CardId))
+        //            {
+        //                state.CardUsedCount[NowExecuteCard.CardId] += 1;
+        //            }
+        //            else
+        //            {
+        //                state.CardUsedCount[NowExecuteCard.CardId] = 1;
+        //            }
+        //            break;
+        //        case eEffectType.HavaCost:
+        //            if (state.Tili == 0)
+        //            {
+        //                return false;
+        //            }
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
+        if (ca.cost >= 0)
         {
             state.Tili -= ca.cost;
         }
@@ -1291,16 +1316,25 @@ public class ZhiboGameMode : GameModeBase
                 mUICtrl.ShowGengEffect();
             }
 
+            //先确认分支 之后再后续处理
+            List<CardEffect> effectToHandle = new List<CardEffect>();
+            if(cardAsset.branchType == eBranchType.None)
+            {
+                effectToHandle = cardAsset.Effects;
+            }
+            else
+            {
+                effectToHandle = DecideEffectBranch(card);
+            }
             //几率触发或条件触发的效果 将放入该列表中后处理
             List<CardEffect> extraEffects = new List<CardEffect>();
 
             ValidBuffs = mBuffManager.CheckValidBuff(NowExecuteCard);
 
-            foreach (CardEffect ce in cardAsset.Effects)
+            foreach (CardEffect ce in effectToHandle)
             {
                 HandleOneCardEffect(ce, extraEffects);
             }
-
             for (int i = 0; i < extraEffects.Count; i++)
             {
                 HandleOneCardEffect(extraEffects[i], extraEffects);
@@ -1339,6 +1373,44 @@ public class ZhiboGameMode : GameModeBase
     }
 
 
+    public List<CardEffect> DecideEffectBranch(CardInZhibo card)
+    {
+        int value = 0;
+        switch (card.ca.branchType)
+        {
+
+            case eBranchType.Random:
+                value = Random.Range(0, 100);
+                for (int i = 0; i < card.ca.ExtraBranches.Count; i++)
+                {
+                    int yuzhi = int.Parse(card.ca.ExtraBranches[i].condition);
+                    if (value < yuzhi)
+                    {
+                        return card.ca.ExtraBranches[i].BranchEffects;
+                    }
+                }
+                return card.ca.Effects;
+            case eBranchType.NextCardCost:
+                CardInZhibo newCard = AddCardFromDeck();
+                if (newCard == null)
+                {
+                    break;
+                }
+                value = newCard.ca.cost;
+                for (int i = 0; i < card.ca.ExtraBranches.Count; i++)
+                {
+                    int yuzhi = int.Parse(card.ca.ExtraBranches[i].condition);
+                    if (value <= yuzhi)
+                    {
+                        return card.ca.ExtraBranches[i].BranchEffects;
+                    }
+                }
+                return card.ca.Effects;
+            default:
+                break;
+        }
+        return new List<CardEffect>();
+    }
 
     //public void AddArmor(float armor)
     //{
@@ -1372,77 +1444,67 @@ public class ZhiboGameMode : GameModeBase
         if (IsNoEffect) return;
 
 
-        if (ce.EMode == eCardEffectMode.SIMPLE)
+
+        int rate = (int)(ce.Possibility == 0 ? 100 : ce.Possibility * (1f + mBuffManager.ExtraChenggonglv));
+
+        if (rate < 100)
         {
-            int rate = (int)(ce.Possibility == 0 ? 100 : ce.Possibility * (1f + mBuffManager.ExtraChenggonglv));
-
-            if (rate < 100)
+            int rand = Random.Range(0, 100);
+            if (rand >= rate)
             {
-                int rand = Random.Range(0, 100);
-                if (rand >= rate)
-                {
-                    return;
-                }
-            }
-
-            if (ce.isAddBuff)
-            {
-
-                mBuffManager.GenBuff(ce.buffInfo);
                 return;
             }
+        }
 
-            string[] args = ce.effectString.Split(',');
-            switch (ce.effectType)
-            {
-                case eEffectType.PutScoreOnAudience:
+        if (ce.isAddBuff)
+        {
+
+            mBuffManager.GenBuff(ce.buffInfo[0]);
+            return;
+        }
+
+        string[] args = ce.effectString.Split(',');
+        switch (ce.effectType)
+        {
+            case eEffectType.PutScoreOnAudience:
+                {
+
+                    float originScore = int.Parse(args[0]);
+                    float finalScore = originScore;
+                    if (args.Length > 1)
                     {
-                        int add = 0;
-                        for (int i = 0; i < ValidBuffs.Count; i++)
+                        bool isAnd = true;
+                        int idx = 1;
+                        List<int> filter = new List<int>();
+                        if (args[1] == "|")
                         {
-                            if (ValidBuffs[i].bInfo.BuffType == eBuffType.NC_Extra_Score)
-                            {
-                                add += ValidBuffs[i].bInfo.BuffLevel;
-                                AppliedNCBuff.Add(ValidBuffs[i]);
-                            }
-
+                            isAnd = false;
+                            idx = 2;
                         }
-                        float originScore = GetScoreFromFormulation(args[0]);
-                        float finalScore = GetScoreAfterApplyingSkillBonus(NowExecuteCard, originScore);
-
-                        if (args.Length > 1)
+                        else if(args[1] == "&")
                         {
-                            bool isAnd = true;
-                            int idx = 1;
-                            List<int> filter = new List<int>();
-                            if (args[1] == "|")
-                            {
-                                isAnd = false;
-                                idx = 2;
-                            }
-                            else if(args[1] == "&")
-                            {
-                                isAnd = true;
-                                idx = 2;
-                            }
-                            for(int i = idx; i < args.Length; i++)
-                            {
-                                filter.Add(int.Parse(args[i]));
-                            }
-                            PutScoreOnAudience(finalScore,isAnd, filter);
+                            isAnd = true;
+                            idx = 2;
                         }
-                        else
+                        for(int i = idx; i < args.Length; i++)
                         {
-                            PutScoreOnAudience(finalScore);
-
+                            filter.Add(int.Parse(args[i]));
                         }
+                        PutScoreOnAudience(finalScore,isAnd, filter);
+                    }
+                    else
+                    {
+                        PutScoreOnAudience(finalScore);
 
                     }
 
-                    break;
-                case eEffectType.HitGem:
+                }
+
+                break;
+            case eEffectType.HitGem:
+                {
                     int[] damage = new int[6];
-                    for(int i = 0; i < args.Length; i++)
+                    for (int i = 0; i < args.Length; i++)
                     {
                         damage[i] = int.Parse(args[i]);
                     }
@@ -1450,193 +1512,155 @@ public class ZhiboGameMode : GameModeBase
                     //实施 
                     AffectedAudience = mAudienceMgr.HandleGemHit(damage);
                     break;
-                case eEffectType.SpawnGift:
-                    GenSpecial(args[0], int.Parse(args[1]));
-                    break;
-                case eEffectType.AddHp:
-                    AddHp(int.Parse(args[0]));
-                    break;
-                case eEffectType.MaxCount:
-                    int maxCount = int.Parse(args[0]);
-                    if (state.CardUsedCount.ContainsKey(NowExecuteCard.CardId) && state.CardUsedCount[NowExecuteCard.CardId] >= maxCount)
+                }
+
+            case eEffectType.HitGemRandomly:
+                {
+                    int[] damage = new int[6];
+                    for (int i = 0; i < args.Length; i++)
                     {
-                        IsNoEffect = true;
-                        break;
+                        damage[i] = int.Parse(args[i]);
                     }
-                    if (state.CardUsedCount.ContainsKey(NowExecuteCard.CardId))
+                    //得到 NowExecuteCard.ca.Gems[]
+                    //实施 
+                    AffectedAudience = mAudienceMgr.HandleGemHit(damage);
+                    break;
+                }
+            case eEffectType.SpawnGift:
+                GenSpecial(args[0], int.Parse(args[1]));
+                break;
+            case eEffectType.AddHp:
+                AddHp(int.Parse(args[0]));
+                break;
+            
+            //case eEffectType.SpeedUp:
+            //    GenSpeedUp(float.Parse(args[0]));
+            //    break;
+            //case eEffectType.GenGoodDanmu:
+            //    AddDanmuGroup(args[0], int.Parse(args[1]), 0);
+            //    break;
+            //case eEffectType.GenBadDanmu:
+            //    Debug.Log("random gen");
+            //    AddDanmuGroup(args[0], int.Parse(args[1]), int.Parse(args[1]));
+            //    break;
+            //case eEffectType.GenMixedDanmu:
+                //AddDanmuGroup(args[0], int.Parse(args[1]), int.Parse(args[2]));
+                //break;
+            case eEffectType.PickAndUse:
+                PickAndUse();
+                break;
+            case eEffectType.GetScoreWithZengfu:
+                {
+                    string[] newe = ce.effectString.Split(';');
+                    float baseScore = GetScoreFromFormulation(newe[0]);
+                    string[] arg2 = newe[1].Split(',');
+                    int count = CountCardInDeck(arg2[0]);
+                    string perCardExtra = arg2[1];
+                    float score = baseScore;
+                    if (perCardExtra[perCardExtra.Length - 1] == '%')
                     {
-                        state.CardUsedCount[NowExecuteCard.CardId] += 1;
+                        float perExtra = float.Parse(perCardExtra.Substring(0, perCardExtra.Length - 1));
+                        score = score * (1 + count * perExtra * 0.01f);
                     }
                     else
                     {
-                        state.CardUsedCount[NowExecuteCard.CardId] = 1;
+                        float perExtra = float.Parse(perCardExtra);
+                        score = score + count * perExtra;
                     }
-                    break;
-                case eEffectType.SpeedUp:
-                    GenSpeedUp(float.Parse(args[0]));
-                    break;
-                case eEffectType.GenGoodDanmu:
-                    AddDanmuGroup(args[0], int.Parse(args[1]), 0);
-                    break;
-                case eEffectType.GenBadDanmu:
-                    Debug.Log("random gen");
-                    AddDanmuGroup(args[0], int.Parse(args[1]), int.Parse(args[1]));
-                    break;
-                case eEffectType.GenMixedDanmu:
-                    AddDanmuGroup(args[0], int.Parse(args[1]), int.Parse(args[2]));
-                    break;
-                case eEffectType.PickAndUse:
-                    PickAndUse();
-                    break;
-                case eEffectType.GetScoreWithZengfu:
-                    {
-                        string[] newe = ce.effectString.Split(';');
-                        float baseScore = GetScoreFromFormulation(newe[0]);
-                        string[] arg2 = newe[1].Split(',');
-                        int count = CountCardInDeck(arg2[0]);
-                        string perCardExtra = arg2[1];
-                        float score = baseScore;
-                        if (perCardExtra[perCardExtra.Length - 1] == '%')
-                        {
-                            float perExtra = float.Parse(perCardExtra.Substring(0, perCardExtra.Length - 1));
-                            score = score * (1 + count * perExtra * 0.01f);
-                        }
-                        else
-                        {
-                            float perExtra = float.Parse(perCardExtra);
-                            score = score + count * perExtra;
-                        }
-                        GainScore(score);
-                        //mUICtrl.ShowNewAudience();
-                        mAudienceMgr.ShowRandomAudience();
-                        mUICtrl.ShowDanmuEffect(mUICtrl.GetCardContainer().cards[state.Cards.IndexOf(NowExecuteCard)].transform.position);
-                    }
-                    break;
-                case eEffectType.GetScore:
-
-
-                    {
-                        int add = 0;
-                        for (int i = 0; i < ValidBuffs.Count; i++)
-                        {
-                            if (ValidBuffs[i].bInfo.BuffType == eBuffType.NC_Extra_Score)
-                            {
-                                add += ValidBuffs[i].bInfo.BuffLevel;
-                                AppliedNCBuff.Add(ValidBuffs[i]);
-                            }
-
-                        }
-                        float originScore = GetScoreFromFormulation(args[0]);
-                        float finalScore = GetScoreAfterApplyingSkillBonus(NowExecuteCard, originScore);
-                        GainScore(finalScore, add);
-                    }
-                    //mAudienceMgr.ShowRandomAudience();
+                    GainScore(score);
                     //mUICtrl.ShowNewAudience();
+                    //mAudienceMgr.ShowRandomAudience();
+                    mUICtrl.ShowDanmuEffect(mUICtrl.GetCardContainer().cards[state.Cards.IndexOf(NowExecuteCard)].transform.position);
+                }
+                break;
+            case eEffectType.GetScore:
 
-                    mUICtrl.ShowDanmuEffect(mUICtrl.GetCardContainer().GetCardPosition(NowExecuteCard));
-                    break;
-                case eEffectType.GetChouka:
-                    GetQifenValue(int.Parse(args[0]));
-                    break;
-                case eEffectType.GetTili:
-                    GenTili(int.Parse(args[0]));
-                    break;
-                
-                
-                case eEffectType.AddCardToDeck:
-                    AddCardToDeck(args[0], int.Parse(args[1]));
-                    break;
-                case eEffectType.CostAll:
-                    int x = state.Tili;
-                    if (x == 0)
+
+                {
+                    int add = 0;
+                    for (int i = 0; i < ValidBuffs.Count; i++)
                     {
-                        break;
-                    }
-                    GenTili(-x);
-                    {
-                        //目前只支持调用一个函数的
-                        string cmd = ce.effectString;
-                        string[] newArgs = cmd.Split(',');
-                        float rr = float.Parse(newArgs[1]);
-                        float v = rr * x;
-                        string newString = v.ToString("f2");
-
-                        extraEffects.Add(new CardEffect(newArgs[0], newString));
-                    }
-
-                    break;
-                case eEffectType.Dual:
-                    AddCardsFromDeck((int)(float.Parse(args[0])));
-                    break;
-                case eEffectType.GetArmor:
-                    AddTmpHp(int.Parse(args[0]));
-                    break;
-                case eEffectType.GainCard:
-                    GainNewCard(args[0]);
-                    break;
-                case eEffectType.DiscardCards:
-                    DiscardRandomCards(int.Parse(args[0]));
-                    break;
-                case eEffectType.ExtraMoney:
-                    GetExtraMoney(int.Parse(args[0]));
-                    break;
-                case eEffectType.ExtraLiuliang:
-                    GetExtraLiuliang(int.Parse(args[0]));
-                    break;
-                case eEffectType.ScoreMultiple:
-                    ScorePercentChange(float.Parse(args[0]));
-                    break;
-                case eEffectType.GetHot:
-                    //ScorePercentChange(float.Parse(args[0]));
-                    break;
-                case eEffectType.GetCertainCard:
-                    AddCertainCardFromDeck(args[0]);
-                    break;
-                case eEffectType.EndFollowingEffect:
-                    IsNoEffect = true;
-                    break;
-                default:
-                    break;
-            }
-
-        }else if (ce.EMode == eCardEffectMode.BRANCHES)
-        {
-            int value;
-            switch (ce.BranchType)
-            {
-
-                case "random":
-                    value = Random.Range(0,100);
-                    for(int i = 0; i < ce.BranchEffectStrings.Count; i++)
-                    {
-                        if(value < ce.BranchEffectStrings[i].value)
+                        if (ValidBuffs[i].bInfo.BuffType == eBuffType.NC_Extra_Score)
                         {
-                            extraEffects.Add(new CardEffect(ce.BranchEffectStrings[i].effect, ce.BranchEffectStrings[i].effectString));
-                            break;
+                            add += ValidBuffs[i].bInfo.BuffLevel;
+                            AppliedNCBuff.Add(ValidBuffs[i]);
                         }
-                    }
-                    break;
-                case "NextCardCost":
-                    CardInZhibo newCard = AddCardFromDeck();
-                    if(newCard == null)
-                    {
-                        break;
-                    }
-                    value = newCard.ca.cost;
-                    for (int i = 0; i < ce.BranchEffectStrings.Count; i++)
-                    {
-                        if (value < ce.BranchEffectStrings[i].value)
-                        {
-                            extraEffects.Add(new CardEffect(ce.BranchEffectStrings[i].effect, ce.BranchEffectStrings[i].effectString));
-                            break;
-                        }
-                    }
-                    break;
 
-                default:
+                    }
+                    float originScore = GetScoreFromFormulation(args[0]);
+                    float finalScore = GetScoreAfterApplyingSkillBonus(NowExecuteCard, originScore);
+                    GainScore(finalScore, add);
+                }
+                //mAudienceMgr.ShowRandomAudience();
+                //mUICtrl.ShowNewAudience();
+
+                mUICtrl.ShowDanmuEffect(mUICtrl.GetCardContainer().GetCardPosition(NowExecuteCard));
+                break;
+            //case eEffectType.GetChouka:
+                //GetQifenValue(int.Parse(args[0]));
+                //break;
+            case eEffectType.GetTili:
+                GenTili(int.Parse(args[0]));
+                break;
+            case eEffectType.AddCardToDeck:
+                AddCardToDeck(args[0], int.Parse(args[1]));
+                break;
+            case eEffectType.CostAll:
+                int x = state.Tili;
+                if (x == 0)
+                {
                     break;
-            }
+                }
+                GenTili(-x);
+                {
+                    //目前只支持调用一个函数的
+                    string cmd = ce.effectString;
+                    string[] newArgs = cmd.Split(',');
+                    float rr = float.Parse(newArgs[1]);
+                    float v = rr * x;
+                    string newString = v.ToString("f2");
+
+                    extraEffects.Add(new CardEffect(newArgs[0], newString));
+                }
+
+                break;
+            case eEffectType.Dual:
+                AddCardsFromDeck((int)(float.Parse(args[0])));
+                break;
+            case eEffectType.GetArmor:
+                AddTmpHp(int.Parse(args[0]));
+                break;
+            case eEffectType.GainCard:
+                GainNewCard(args[0]);
+                break;
+            case eEffectType.DiscardCards:
+                DiscardRandomCards(int.Parse(args[0]));
+                break;
+            case eEffectType.ExtraMoney:
+                GetExtraMoney(int.Parse(args[0]));
+                break;
+            case eEffectType.ExtraLiuliang:
+                GetExtraLiuliang(int.Parse(args[0]));
+                break;
+            case eEffectType.ScoreMultiple:
+                ScorePercentChange(float.Parse(args[0]));
+                break;
+            //case eEffectType.GetHot:
+                ////ScorePercentChange(float.Parse(args[0]));
+                //break;
+            case eEffectType.GetCertainCard:
+                AddCertainCardFromDeck(args[0]);
+                break;
+            case eEffectType.EndFollowingEffect:
+                IsNoEffect = true;
+                break;
+            default:
+                break;
         }
+
+
+            
+
     }
 
 

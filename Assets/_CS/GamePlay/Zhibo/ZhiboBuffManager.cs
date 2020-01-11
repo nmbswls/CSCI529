@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class ZhiboBuffManager
 {
     //存储所有按卡计次的buff
-    public List<ZhiboBuff> CardCountedBuffs = new List<ZhiboBuff>();
+    public List<ZhiboBuff> AffectCardBuffs = new List<ZhiboBuff>();
 
 
     public int[] BuffAddValue = new int[5];
@@ -100,11 +100,11 @@ public class ZhiboBuffManager
     public List<ZhiboBuff> GetBackBuff()
     {
         List<ZhiboBuff> ret = new List<ZhiboBuff>();
-        for (int i = 0; i < CardCountedBuffs.Count; i++)
+        for (int i = 0; i < AffectCardBuffs.Count; i++)
         {
-            if (CardCountedBuffs[i].IsBackendEffect())
+            if (AffectCardBuffs[i].IsBackendEffect())
             {
-                ret.Add(CardCountedBuffs[i]);
+                ret.Add(AffectCardBuffs[i]);
             }
         }
         return ret;
@@ -113,11 +113,11 @@ public class ZhiboBuffManager
     public List<ZhiboBuff> CheckValidBuff(CardInZhibo card)
     {
         List<ZhiboBuff> ret = new List<ZhiboBuff>();
-        for (int i = 0; i < CardCountedBuffs.Count; i++)
+        for (int i = 0; i < AffectCardBuffs.Count; i++)
         {
-            if (CardCountedBuffs[i].WillAffectCard(card))
+            if (AffectCardBuffs[i].WillAffectCard(card))
             {
-                ret.Add(CardCountedBuffs[i]);
+                ret.Add(AffectCardBuffs[i]);
             }
         }
         return ret;
@@ -137,7 +137,7 @@ public class ZhiboBuffManager
             BuffAddValue[i] = 0;
             BuffAddPercent[i] = 0;
         }
-        CardCountedBuffs.Clear();
+        AffectCardBuffs.Clear();
         GenScoreExtraRate = 0;
         DanmuExtraReward = 0;
         GainScorePerSec = 0;
@@ -200,10 +200,19 @@ public class ZhiboBuffManager
                 default:
                     break;
             }
-            if (buff.bInfo.AffectCard)
+            if (isCardAffectBuff(buff.bInfo))
             {
-                CardCountedBuffs.Add(buff);
+                AffectCardBuffs.Add(buff);
             }
         }
+    }
+
+    public static bool isCardAffectBuff(ZhiboBuffInfo buff)
+    {
+        if(buff.BuffType > eBuffType.NC_First)
+        {
+            return true;
+        }
+        return false;
     }
 }

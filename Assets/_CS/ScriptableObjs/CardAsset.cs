@@ -7,25 +7,34 @@ using UnityEngine.UI;
 
 [System.Serializable]
 public enum eCardType{
+    None = 0,
 	ABILITY = 0x01,
 	GENG = 0x02,
 	ITEM = 0x04,
 	STATUS = 0x08
 }
 
+
+
 [System.Serializable]
-public enum eCardEffectMode
+public enum eCardStatusBonus
 {
-    SIMPLE=0,
-    BRANCHES=1,
+    None = 0,
+    Meili = 1,
+    Koucai = 2,
+    Tili = 3,
+    Jiyi = 4,
+    Fanying = 5,
 }
 
 [System.Serializable]
 public class CardEffectBranch
 {
-    public string effect;
-    public string effectString;
-    public int value;
+    //public string effect;
+    //public string effectString;
+    //public int value;
+    public string condition;
+    public List<CardEffect> BranchEffects = new List<CardEffect>();
 }
 
 
@@ -33,23 +42,17 @@ public class CardEffectBranch
 [System.Serializable]
 public class CardEffect
 {
-    public eCardEffectMode EMode;
     public eEffectType effectType;
-
-    public bool isNegEffect = false;
     public int Possibility = 100;
 
-
-
-    public string turnEffect;
     [TextArea(1,2)]
     public string effectString;
 
     public bool isAddBuff;
-    public ZhiboBuffInfo buffInfo;
+    public List<ZhiboBuffInfo> buffInfo = new List<ZhiboBuffInfo>();
 
-    public string BranchType;
-    public List<CardEffectBranch> BranchEffectStrings;
+    //public string BranchType;
+    //public List<CardEffectBranch> BranchEffectStrings;
 
     public CardEffect()
     {
@@ -63,9 +66,25 @@ public class CardEffect
     }
 }
 
+public enum eCardTurnEffectType
+{
+    None = 0,
+    Jiyi,
+    Meili,
+    Tili,
+    Koucai,
+    Fanying,
+    Shuxing,
+
+    Fensi,
+    Xingdongdian,
+
+
+}
 public class CardTurnEffect
 {
-
+    public eCardTurnEffectType type;
+    public float value;
 }
 
 public class CardFilter
@@ -118,40 +137,49 @@ public class CardAsset : ScriptableObject
 
     public List<string> Tags = new List<string>();
 
+    //消耗相关
+    public bool isCostAll;
     public int cost = 0;
 
 	
 
-    //public bool WillOverdue;
 
-    public bool UseOnDiscard;
+    public bool TriggerOnDiscard; //在被丢弃时发动效果
 
-    public bool HasTurnEffect;
+    public bool HasTurnEffect; //是否有单局外附加效果
+    public List<CardTurnEffect> TurnEffects = new List<CardTurnEffect>(); 
 
-    //过期回合数
-	public int OverDueTurn;
+    public int OverDueTurn; //持有超过一定回合数将被丢弃
 
-    public bool IsConsume;
-    //单局游戏中使用次数
-    public int UseTime;
+    public bool IsConsume; //单局内是否消耗
+    public int UseTime; // 消耗次数
+    public int maxUseAmountPerGame; //单局同名卡使用次数上限
 
-	public List<object> args = new List<object>();
 
-    public string ModelCard;
+    public string ModelCard; //暂无使用
 
-    public int StatusBonusNum;
-    public int StatusBonusType;
+    public int StatusBonusNum; //
+    public eCardStatusBonus StatusBonusType;
 
     public int SkillBonusType;
     public int SkillBonusNum;
 
     public string BaseSkillId;// is exist
 
-    public int[] Gems = new int[6];
+    public bool canUseFace = true;
+    public bool canUseBack = true;
 
-    public List<CardEffect> UseConditions = new List<CardEffect>();
+    public string GemString = "0,0,0,0,0,0";
+    //public int[] Gems = new int[6];
+
+
+    //public List<CardEffect> UseConditions = new List<CardEffect>();
+
     public List<CardEffect> Effects = new List<CardEffect>();
-    public List<CardEffect> TurnEffects = new List<CardEffect>();
+
+    public eBranchType branchType;
+    public List<CardEffectBranch> ExtraBranches = new List<CardEffectBranch>();
+
 
     public string ReplaceWithAmountInEffect()
     {
@@ -206,30 +234,31 @@ public class CardAsset : ScriptableObject
 
 public enum eEffectType
 {
-    SpawnGift = 0, // 刷新礼物 参数： 礼物类型 string, 礼物数量 int
+    None = 0,
+    SpawnGift, // 刷新礼物 参数： 礼物类型 string, 礼物数量 int
 
-    SpeedUp,
-    GenGoodDanmu,
-    GenBadDanmu,
-    GenMixedDanmu,
+    //SpeedUp,
+    //GenGoodDanmu,
+    //GenBadDanmu,
+    //GenMixedDanmu,
 
     PickAndUse,
     GetScoreWithZengfu,
     GetScore,
-    GetChouka,
+    //GetChouka,
     GetTili,
 
-    AddTurnBuff,
-    AddRemoveAward,
-    AddNextCardsBuff,
-    ClearDanmu,
+    //AddTurnBuff,
+    //AddRemoveAward,
+    //AddNextCardsBuff,
+    //ClearDanmu,
     AddCardToDeck,
     CostAll,
     Dual,
     GetArmor,
     GainCard,
     DiscardCards,
-    GetHot,
+    //GetHot,
 
     ScoreMultiple,
 
@@ -241,15 +270,17 @@ public enum eEffectType
     AddHp,
 
     HitGem,
+    HitGemRandomly,
     PutScoreOnAudience,
     //前置条件
-    HavaCost,
-    MaxCount,
+    //HavaCost,
+    //MaxCount,
 
 }
 
 public enum eBranchType
 {
+    None = 0,
     Random,
     NextCardCost,
 }

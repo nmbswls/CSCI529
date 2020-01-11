@@ -3,9 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+public enum eFightDanmuSkillEffectType
+{
+    AddHp,
+    GetArmor,
+    GetScore,
+    ClearDanmu,
+    GetHot,
+}
+public class FightDanmuSkillEffect
+{
+    public eFightDanmuSkillEffectType type;
+    public string effectString;
+}
+
 public class ZhiboMode2Skill
 {
-    public CardEffect Ce;
+    public FightDanmuSkillEffect Se;
     public string Name;
     public float Cd;
     public float CdLeft;
@@ -20,9 +34,9 @@ public class ZhiboMode2Skill
 
     public ZhiboMode2Skill(ZhiboMode2Skill other)
     {
-        this.Ce = new CardEffect();
-        this.Ce.effectType = other.Ce.effectType;
-        this.Ce.effectString = other.Ce.effectString;
+        this.Se = new FightDanmuSkillEffect();
+        this.Se.type = other.Se.type;
+        this.Se.effectString = other.Se.effectString;
         this.Name = other.Name;
         this.Cd = other.Cd;
         this.CdLeft = 0f;
@@ -415,7 +429,7 @@ public class ZhiboGameMode2 : GameModeBase
         }
         UseEnegy(state.PresetActions[idx].EnegyCost);
 
-        HandleEffect(state.PresetActions[idx].Ce);
+        HandleEffect(state.PresetActions[idx].Se);
 
         state.PresetActions[idx].CdLeft = state.PresetActions[idx].Cd;
     }
@@ -565,25 +579,25 @@ public class ZhiboGameMode2 : GameModeBase
     }
 
 
-    public void HandleEffect(CardEffect ce)
+    public void HandleEffect(FightDanmuSkillEffect ce)
     {
         string[] args = ce.effectString.Split(',');
-        switch (ce.effectType)
+        switch (ce.type)
         {
-            case eEffectType.AddHp:
+            case eFightDanmuSkillEffectType.AddHp:
                 AddHp(int.Parse(args[0]));
                 break;
-            case eEffectType.GetArmor:
+            case eFightDanmuSkillEffectType.GetArmor:
                 SetArmor(int.Parse(args[0]));
                 break;
-            case eEffectType.GetScore:
+            case eFightDanmuSkillEffectType.GetScore:
                 GetScore(int.Parse(args[0]));
                 AddBadDanmu(20);
                 break;
-            case eEffectType.ClearDanmu:
+            case eFightDanmuSkillEffectType.ClearDanmu:
                 DestroyBadRandomly(int.Parse(args[0]));
                 break;
-            case eEffectType.GetHot:
+            case eFightDanmuSkillEffectType.GetHot:
                 SlowDown(int.Parse(args[0]));
                 break;
             default:
@@ -609,9 +623,9 @@ public class ZhiboGameMode2 : GameModeBase
             skill.Cd = 10f;
             skill.EnegyCost = 30;
             skill.Desp = "都他妈闭嘴！\n消除30条负面弹，靠近屏幕左侧的将被优先消除";
-            skill.Ce = new CardEffect();
-            skill.Ce.effectType = eEffectType.ClearDanmu;
-            skill.Ce.effectString = "30";
+            skill.Se = new FightDanmuSkillEffect();
+            skill.Se.type = eFightDanmuSkillEffectType.ClearDanmu;
+            skill.Se.effectString = "30";
             ZhiboMode2SkillDict["0"] = skill;
         }
 
@@ -622,9 +636,9 @@ public class ZhiboGameMode2 : GameModeBase
             skill.Cd = 10f;
             skill.EnegyCost = 30;
             skill.Desp = "和弹幕对。\n获得100点分数，但同时也会触怒粉丝，生成一批负面弹幕";
-            skill.Ce = new CardEffect();
-            skill.Ce.effectType = eEffectType.GetScore;
-            skill.Ce.effectString = "100";
+            skill.Se = new FightDanmuSkillEffect();
+            skill.Se.type = eFightDanmuSkillEffectType.GetScore;
+            skill.Se.effectString = "100";
             ZhiboMode2SkillDict["1"] = skill;
         }
         {
@@ -634,9 +648,9 @@ public class ZhiboGameMode2 : GameModeBase
             skill.Cd = 10f;
             skill.EnegyCost = 30;
             skill.Desp = "喘口气，喝点水，接着怼！\n回复10点体力";
-            skill.Ce = new CardEffect();
-            skill.Ce.effectType = eEffectType.AddHp;
-            skill.Ce.effectString = "10";
+            skill.Se = new FightDanmuSkillEffect();
+            skill.Se.type = eFightDanmuSkillEffectType.AddHp;
+            skill.Se.effectString = "10";
             ZhiboMode2SkillDict["2"] = skill;
         }
         {
@@ -646,9 +660,9 @@ public class ZhiboGameMode2 : GameModeBase
             skill.Cd = 10f;
             skill.EnegyCost = 30;
             skill.Desp = "专注直播，外物不可侵也\n接下来的8秒免疫负面弹幕伤害";
-            skill.Ce = new CardEffect();
-            skill.Ce.effectType = eEffectType.GetArmor;
-            skill.Ce.effectString = "8";
+            skill.Se = new FightDanmuSkillEffect();
+            skill.Se.type = eFightDanmuSkillEffectType.GetArmor;
+            skill.Se.effectString = "8";
             ZhiboMode2SkillDict["3"] = skill;
         }
         {
@@ -658,9 +672,9 @@ public class ZhiboGameMode2 : GameModeBase
             skill.Cd = 10f;
             skill.EnegyCost = 30;
             skill.Desp = "消除弹幕时获得额外1点分数";
-            skill.Ce = new CardEffect();
-            skill.Ce.effectType = eEffectType.GetHot;
-            skill.Ce.effectString = "1";
+            skill.Se = new FightDanmuSkillEffect();
+            skill.Se.type = eFightDanmuSkillEffectType.GetHot;
+            skill.Se.effectString = "1";
             ZhiboMode2SkillDict["4"] = skill;
         }
 

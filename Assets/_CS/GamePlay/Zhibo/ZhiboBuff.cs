@@ -25,13 +25,13 @@ public enum eBuffType
     Score_Per_Turn,
     Extra_Neg_Level,
     No_Neg_Danmu,
+    Success_Rate_Multi,
+    Success_Rate_Max,
 
+    NC_First,
     NC_Extra_Score,
     NC_Extra_Status,
     NC_Extra_Gem,
-
-    Success_Rate_Multi,
-    Success_Rate_Max,
 }
 
 public enum eBuffLastType
@@ -48,14 +48,11 @@ public class ZhiboBuffInfo
     public eBuffType BuffType;
     public int BuffLevel;
 
-    public bool AffectCard;
     public string filterString;
 
     public int TurnLast = 0;
     public int CardNum = 0;
     public float SecLast = 0;
-
-
 }
 
 public class ZhiboBuff : MonoBehaviour
@@ -158,7 +155,7 @@ public class ZhiboBuff : MonoBehaviour
 
     public bool WillAffectCard(CardInZhibo card)
     {
-        if (!bInfo.AffectCard)
+        if (!ZhiboBuffManager.isCardAffectBuff(bInfo))
         {
             return false;
         }
