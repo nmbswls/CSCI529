@@ -176,16 +176,11 @@ public class ZhiboLittleTV : MonoBehaviour
     public void UpdateBuffs()
     {
 
-        if(TargetAudience.Bonus.Count + TargetAudience.Aura.Count > 3)
+        if(TargetAudience.Skills.Count > 3)
         {
             //默认aura不会超过2个
 
-            for (int i = 0; i < TargetAudience.Aura.Count; i++)
-            {
-                view.TokenList[i].enabled = true;
-            }
-
-            for (int i = TargetAudience.Aura.Count; i < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
                 view.TokenList[i].enabled = true;
             }
@@ -195,16 +190,16 @@ public class ZhiboLittleTV : MonoBehaviour
         else
         {
             int idx = 0;
-            for (int i = 0; i < TargetAudience.Aura.Count; i++)
+            for (int i = 0; i < TargetAudience.Skills.Count; i++)
             {
                 view.TokenList[idx].enabled = true;
                 idx++;
             }
-            for (int i = 0; i < TargetAudience.Bonus.Count; i++)
-            {
-                view.TokenList[idx].enabled = true;
-                idx++;
-            }
+            //for (int i = 0; i < TargetAudience.Bonus.Count; i++)
+            //{
+            //    view.TokenList[idx].enabled = true;
+            //    idx++;
+            //}
             for (int i = idx; i < 3; i++)
             {
                 view.TokenList[i].enabled = false;
@@ -271,6 +266,8 @@ public class ZhiboLittleTV : MonoBehaviour
         {
             view.GemList[i].gameObject.SetActive(false);
         }
+
+        //路径不对 该由逻辑层控制 视图变化！
         if (TargetAudience.isDead())
         {
             //Affected();

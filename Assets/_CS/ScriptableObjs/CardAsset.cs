@@ -272,6 +272,9 @@ public enum eEffectType
     HitGem,
     HitGemRandomly,
     PutScoreOnAudience,
+
+    KillHeizi,
+    HitHeizi,
     //前置条件
     //HavaCost,
     //MaxCount,

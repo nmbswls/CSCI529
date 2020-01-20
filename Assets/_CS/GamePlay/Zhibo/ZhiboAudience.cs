@@ -31,6 +31,19 @@ public enum eAudienceAuraType
 {
     LessScore,
 }
+public enum eAudiencePunishType
+{
+    None = 0,
+    Damage,
+    Discard,
+    Score,
+    Max,
+}
+public enum eAudienceTurnEffectType
+{
+    None = 0,
+    AddKoucaiReq,
+}
 
 public enum eAudienceHpType
 {
@@ -43,21 +56,45 @@ public enum eAudienceHpType
     Max
 }
 
-[System.Serializable]
-public class ZhiboAudienceBonus
+public enum eZhiboAudienceSkillType
 {
-    public bool isGood;
-    public eAudienceBonusType Type;
+    Bonus,
+    Aura,
+    Punish,
+    TurnEffect,
+}
+//[System.Serializable]
+//public class ZhiboAudienceBonus
+//{
+//    public bool isGood;
+//    public eAudienceBonusType Type;
+//    public string effectString;
+//}
+
+//[System.Serializable]
+//public class ZhiboAudienceAura
+//{
+//    public eAudienceAuraType type;
+//    public int level;
+//}
+[System.Serializable]
+public class ZhiboAudienceSkill
+{
+    public eZhiboAudienceSkillType skillType;
+    public int effectId;
     public string effectString;
-}
 
-[System.Serializable]
-public class ZhiboAudienceAura
-{
-    public eAudienceAuraType type;
-    public int level;
-}
+    public ZhiboAudienceSkill(int type)
+    {
+        this.skillType = (eZhiboAudienceSkillType)type;
+    }
 
+    public ZhiboAudienceSkill(eZhiboAudienceSkillType type)
+    {
+        this.skillType = type;
+    }
+
+}
 
 
 public class ZhiboAudience
@@ -73,13 +110,17 @@ public class ZhiboAudience
     //即时制属性
     public int TimeLeft;
 
-    public List<ZhiboAudienceBonus> Bonus = new List<ZhiboAudienceBonus>();
-    public List<ZhiboAudienceAura> Aura = new List<ZhiboAudienceAura>();
+    public List<ZhiboAudienceSkill> Skills = new List<ZhiboAudienceSkill>();
+
+    //public List<ZhiboAudienceBonus> Bonus = new List<ZhiboAudienceBonus>();
+    //public List<ZhiboAudienceAura> Aura = new List<ZhiboAudienceAura>();
 
 
     //run time property
     public eAudienceState state = eAudienceState.None; 
     public int BindViewIdx = -1;
+
+    public int[] NowManyi = new int[(int)eAudienceHpType.Max];
     public int[] GemHp = new int[(int)eAudienceHpType.Max];
     public int[] GemMaxHp = new int[(int)eAudienceHpType.Max];
     public int BlackHp = 0;

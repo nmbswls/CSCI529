@@ -15,7 +15,7 @@ public class ZhiboEmergencyManager
 
     private int emergencyIdx;
 
-    private int EmergencyShowTime;
+    //private int EmergencyShowTime;
 
     private void InitEmergency()
     {
@@ -36,23 +36,15 @@ public class ZhiboEmergencyManager
 
         if (emergencyIdx < gameMode.state.ComingEmergencies.Count && gameMode.state.ComingEmergencies[emergencyIdx].Key == gameMode.state.NowTurn)
         {
-            EmergencyShowTime = Random.Range(5, 8);
+            ShowEmergency(gameMode.state.ComingEmergencies[emergencyIdx].Value);
+            //EmergencyShowTime = Random.Range(5, 8);
             emergencyIdx++;
-        }
-        else
-        {
-            EmergencyShowTime = -1;
         }
     }
 
-    public void CheckEmergencySec(int sec)
-    {
-        if (EmergencyShowTime != -1 && EmergencyShowTime == sec)
-        {
-            //已经加过了 要-1
-            ShowEmergency(gameMode.state.ComingEmergencies[emergencyIdx - 1].Value);
-        }
-    }
+
+
+
 
     public void ShowEmergency(string emergencyId)
     {

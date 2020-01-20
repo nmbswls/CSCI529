@@ -109,6 +109,8 @@ public class MiniCard : MonoBehaviour
 
     private bool IsFanmian = false;
 
+    private Vector2 CardRootPosition = Vector2.zero;
+
     public void Init(CardInZhibo cardInfo, CardContainerLayout container)
     {
         rt = (RectTransform)transform;
@@ -239,7 +241,8 @@ public class MiniCard : MonoBehaviour
         transform.localEulerAngles = Vector3.zero;
         isFaceUp = false;
         IsFanmian = false;
-        TurnToFace();
+        //TurnToFace();
+        Reset();
     }
 
     public void Tick(float dTime)
@@ -266,6 +269,8 @@ public class MiniCard : MonoBehaviour
                 isBacking = false;
             }
         }
+
+        view.CardRoot.anchoredPosition = CardRootPosition + shakingVector;
     }
 
     public void UpdateView(CardInZhibo info)
@@ -304,7 +309,7 @@ public class MiniCard : MonoBehaviour
 
 
         view.CardRoot.localScale = NormalScale;
-        view.CardRoot.anchoredPosition = new Vector3(0, 0 + NormalYOffset, 0);
+        CardRootPosition = new Vector3(0, 0 + NormalYOffset, 0);
 
     }
     public void setTargetPosition(Vector2 position)
@@ -434,7 +439,7 @@ public class MiniCard : MonoBehaviour
 
 
             view.CardRoot.localScale = NormalScale;
-            view.CardRoot.anchoredPosition = new Vector3(0,0+ NormalYOffset, 0);
+            CardRootPosition = new Vector3(0,0+ NormalYOffset, 0);
         };
 
         listener.PointerExitEvent += delegate (PointerEventData eventData) {
@@ -476,8 +481,8 @@ public class MiniCard : MonoBehaviour
                     );
         DOTween.To
             (
-                () => view.CardRoot.anchoredPosition,
-                (x) => { view.CardRoot.anchoredPosition = x; },
+                () => CardRootPosition,
+                (x) => { CardRootPosition = x; },
                 Vector2.zero,
                 0.1f
             );
@@ -498,7 +503,7 @@ public class MiniCard : MonoBehaviour
         {
             CancelHighLight();
         }
-        view.CardRoot.anchoredPosition = new Vector3(0, NormalYOffset + 0.4f* nowValue, 0);
+        CardRootPosition = new Vector3(0, NormalYOffset + 0.4f* nowValue, 0);
         float scaleRate = 1f + DragScaleRate * nowValue / TriggerValue;
         view.CardRoot.localScale = new Vector3(scaleRate, scaleRate,1);
     }
@@ -530,22 +535,53 @@ public class MiniCard : MonoBehaviour
         }
     }
 
+    private void Reset()
+    {
+        TurnToFace();
+        IsFanmian = false;
+    }
+
     private void UseCardGem()
     {
         if (container.UseCardGem(this))
         {
-            //Disappaer();
-            Fanmian();
+            Disappaer();
+            //Fanmian();
+            //Reset();
         }
         else
         {
             //晃动
+            Shake();
             nowValue = 0;
             CancelHighLight();
             MinimizeIgnoreBacking();
         }
     }
 
+    private Vector2 shakingVector = Vector2.zero;
+    private Tween shakeTween = null;
+    private void Shake()
+    {
+        if(shakeTween != null)
+        {
+            shakeTween.Kill();
+        }
+
+        shakeTween = DOTween.Shake(() => shakingVector,
+                       (x) => { shakingVector = x; },
+                        0.5f,
+                       new Vector3(30, 0, 0))
+        .OnComplete(delegate {
+           shakingVector = Vector2.zero;
+
+        })
+        .OnKill(delegate {
+             shakingVector = Vector2.zero;
+
+         });
+
+    }
     public void Disappaer()
     {
         anim.SetTrigger("Disappear");
@@ -556,6 +592,7 @@ public class MiniCard : MonoBehaviour
 
     public void Recycle()
     {
+        Reset();
         container.RecycleCard(gameObject);
     }
 
@@ -589,6 +626,7 @@ public class MiniCard : MonoBehaviour
         }
         if (!container.Fanmian(this))
         {
+            Shake();
             return false;
         }
         IsFanmian = true;

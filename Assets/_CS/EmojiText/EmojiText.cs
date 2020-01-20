@@ -7,13 +7,16 @@ using System.Text.RegularExpressions;
 using System.Text;
 using UnityEngine.EventSystems;
 
-public class RichText : Text, IPointerClickHandler
+public class EmojiText : Text /*, IPointerClickHandler*/
 {
+
     private const bool EMOJI_LARGE = true;
     private static Dictionary<string, EmojiInfo> EmojiIndex = null;
+    //private static Dictionary<string, EmojiInfo> EmojiIndex = null;
 
     struct EmojiInfo
     {
+        //public int idx;
         public float x;
         public float y;
         public float size;
@@ -57,9 +60,9 @@ public class RichText : Text, IPointerClickHandler
                 {
                     string[] strs = lines[i].Split(new char[] { '\t', ' ' });
                     EmojiInfo info;
-                    info.x = float.Parse(strs[3]);
-                    info.y = float.Parse(strs[4]);
-                    info.size = float.Parse(strs[5]);
+                    info.x = float.Parse(strs[2]);
+                    info.y = float.Parse(strs[3]);
+                    info.size = float.Parse(strs[4]);
                     info.len = 0;
                     EmojiIndex.Add(strs[1], info);
                 }

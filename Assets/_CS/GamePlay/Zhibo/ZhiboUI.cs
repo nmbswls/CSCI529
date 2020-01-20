@@ -23,7 +23,7 @@ public class ZhiboView : BaseView
     public Transform BuffDetailPanel;
     public Text BuffDetail;
 
-    public Text hotValue;
+    public Text ScoreValue;
     public Text TiliValue;
 
     public Transform TiliBar;
@@ -49,6 +49,7 @@ public class ZhiboView : BaseView
     public float TiliMinFillAmount = 0.2f;
 
     public RectTransform DanmuField;
+    public ScrollRect DanmuFieldSR;
     public RectTransform DanmuFieldNormal;
     public RectTransform DanmuFieldSuper;
     public RectTransform SuperDanmuPreview;
@@ -154,11 +155,11 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         if(nowScore>=1000)
         {
             int tenthValue = (int)nowScore / 100 - (int)(nowScore / 1000) * 10;
-            view.hotValue.text = (int)(nowScore/1000) +"."+ tenthValue + "K";
+            view.ScoreValue.text = (int)(nowScore/1000) +"."+ tenthValue + "K";
         }
         else
         {
-            view.hotValue.text = (int)nowScore + "";
+            view.ScoreValue.text = (int)nowScore + "";
         }
         view.Score.value = nowScore * 1.0f / gameMode.state.MaxScore;
         if(nowScore>gameMode.state.Target)
@@ -265,21 +266,29 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public override void BindView()
     {
-        view.TurnLeft = root.Find("TurnLeft").GetComponentInChildren<Text>();
+
 
         view.TVContainer = root.Find("Audience");
         view.TokenDetailPanel = root.Find("TokenDetail").gameObject;
 
-        view.DanmuField = (RectTransform)(root.Find("DanmuField"));
+        view.DanmuFieldSR = root.Find("DanmuField").GetComponent<ScrollRect>();
+        view.DanmuField = (RectTransform)(view.DanmuFieldSR.content);
         //view.DanmuFieldNormal = (RectTransform)(view.DanmuField.Find("Normal"));
         //view.DanmuFieldSuper = (RectTransform)(view.DanmuField.Find("Super"));
 
         //view.SuperDanmuPreview = (RectTransform)(root.Find("SuperDanmuPreview"));
         //view.container = view.viewRoot.transform.Find("OperatorsContainer");
+
         Transform hotView = root.transform.Find("Score");
+
         view.Score = hotView.GetComponent<Slider>();
-        view.hotValue = hotView.Find("Value").GetComponent<Text>();
-        view.targetValue = hotView.Find("TargetValue").GetComponent<Text>();
+
+        Transform topField = root.Find("TopField");
+
+        view.targetValue = topField.Find("Goal").Find("Goal_value").GetComponent<Text>();
+
+        view.ScoreValue = topField.Find("NowScore").Find("NowScore_value").GetComponent<Text>();
+        view.TurnLeft = topField.Find("TurnLeft").Find("LeftTurn_value").GetComponentInChildren<Text>();
 
         view.RoleSkill = root.Find("RoleSkill").GetComponent<Button>();
 
@@ -305,7 +314,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.CardContainer = root.Find("CardsContainer").GetComponent<CardContainerLayout>();
         view.CardContainer.Init(gameMode);
 
-        view.hotAnimator = hotView.GetComponent<Animator>();
+        //view.hotAnimator = hotView.GetComponent<Animator>();
 
         view.BuffDetailPanel = root.Find("BuffDetail");
         view.BuffDetail = view.BuffDetailPanel.GetChild(0).GetComponent<Text>();
@@ -314,7 +323,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.BuffContainer = root.Find("BuffContainer") as RectTransform;
 
         view.Actions = root.Find("Actions").GetComponent<Image>();
-        view.DeckLeft = view.Actions.transform.GetChild(0).GetComponent<Text>();
+        view.DeckLeft = view.Actions.transform.Find("Left").GetComponent<Text>();
     }
 
     public void UpdateDeckLeft()
@@ -541,9 +550,9 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     {
         return view.TVContainer;
     }
-    public Transform GetDanmuRoot()
+    public ScrollRect GetDanmuRoot()
     {
-        return view.DanmuField;
+        return view.DanmuFieldSR;
     }
 
     public GameObject GetTokenDetailPanel()

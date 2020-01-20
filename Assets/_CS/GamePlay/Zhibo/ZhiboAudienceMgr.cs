@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Newtonsoft.Json;
 
 public class AudienceToken
 {
@@ -26,6 +27,42 @@ public class TokenDetailView
 
 public class ZhiboAudienceMgr
 {
+
+    Dictionary<eZhiboAudienceSkillType, Dictionary<int, string>> SkillDespDict = new Dictionary<eZhiboAudienceSkillType, Dictionary<int, string>>
+    {
+
+
+        { eZhiboAudienceSkillType.Aura, new Dictionary<int,string>{ 
+            {(int)eAudienceAuraType.LessScore, "观众存在时，获得分数减少{0}"} 
+
+
+            }},
+        { eZhiboAudienceSkillType.Bonus, new Dictionary<int,string>{
+            {(int)eAudienceBonusType.None,"无"},
+            {(int)eAudienceBonusType.AddHp,"恢复{0}点健康"},
+            {(int)eAudienceBonusType.Aoe,"全场满足{0}点需求"},
+            {(int)eAudienceBonusType.Damage,""},
+            {(int)eAudienceBonusType.Dual,"抽取{0}张卡"},
+            {(int)eAudienceBonusType.Score,"获得{0}点分数"},
+
+            }},
+        { eZhiboAudienceSkillType.Punish, new Dictionary<int,string>{
+            {(int)eAudiencePunishType.None,"无"},
+            {(int)eAudiencePunishType.Damage,"造成{0}点伤害"},
+            {(int)eAudiencePunishType.Discard,"丢弃{0}张卡"},
+            {(int)eAudiencePunishType.Score,"扣除{0}点分数"},
+
+            }},
+        { eZhiboAudienceSkillType.TurnEffect, new Dictionary<int,string>{
+            {(int)eAudienceTurnEffectType.None,"无"},
+            {(int)eAudienceTurnEffectType.AddKoucaiReq,"削减{0}点口才满意度"},
+
+            }},
+
+    };
+
+
+
     public ZhiboGameMode gameMode;
 
     List<ZhiboAudience> TargetList;
@@ -48,6 +85,8 @@ public class ZhiboAudienceMgr
     TokenDetailView tokenDetail;
     AudienceAuraBuff audienceAuraBuff = new AudienceAuraBuff();
 
+
+
     public ZhiboAudienceMgr(ZhiboGameMode gameMode)
     {
         this.gameMode = gameMode;
@@ -57,7 +96,23 @@ public class ZhiboAudienceMgr
         mRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
         GenAudienceMode();
         GenAudienceSequence();
+        //LoadSkillDespDict();
+
         InitUI();
+    }
+
+    private void LoadSkillDespDict()
+    {
+
+        TextAsset ta = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<TextAsset>("AudianceCfg/skillDesp", false);
+        if(ta == null)
+        {
+            Debug.Log("load audience skill desp fail");
+            return;
+        }
+        SkillDespDict = JsonConvert.DeserializeObject< Dictionary<eZhiboAudienceSkillType, Dictionary<int, string>>> (ta.text);
+
+        Debug.Log("load desp");
     }
 
     public void InitUI()
@@ -97,6 +152,20 @@ public class ZhiboAudienceMgr
 
     }
 
+    public void KillHeizi(int num)
+    {
+        for (int i = TargetList.Count - 1; i >= 0; i--)
+        {
+            if (TargetList[i].BlackHp > 0)
+            {
+                //AudienceAttracted(TargetList[i]);
+
+                LittleTvList[TargetList[i].BindViewIdx].Disappear();
+                TargetList.RemoveAt(i);
+            }
+        }
+    }
+
     public void ApplyBlackHit(int damage)
     {
         for (int i = TargetList.Count - 1; i >= 0; i--)
@@ -105,6 +174,9 @@ public class ZhiboAudienceMgr
             {
                 TargetList[i].BlackHp -= damage;
                 TargetList[i].BlackHp = TargetList[i].BlackHp < 0 ? 0 : TargetList[i].BlackHp;
+
+                ShowAudienceHit(TargetList[i]);
+                UpdateAudienceHp(TargetList[i]);
             }
         }
     }
@@ -130,6 +202,82 @@ public class ZhiboAudienceMgr
         return oritinAffectedList;
     }
 
+    public List<int> HandleGemRandomHit(int[] damage)
+    {
+        bool hasQueue = false;
+        if (KilledAudience.Count > 0)
+        {
+            hasQueue = true;
+        }
+        List<int> oritinAffectedList = ApplyRandomGemHit(damage);
+
+        if (!hasQueue)
+        {
+            GameMain.GetInstance().RunCoroutine(HandleKillingQueue());
+        }
+
+        return oritinAffectedList;
+    }
+
+    public List<int> ApplyRandomGemHit(int[] damage, int extra = 0)
+    {
+        //List<int> audienceToUpdateHp = new List<int>();
+
+        List<int> affectedAudiences = new List<int>();
+        for (int i = 0; i < damage.Length; i++)
+        {
+            int dAmount = damage[i];
+            List<int> targes = new List<int>();
+            for (int ti = TargetList.Count - 1; ti >= 0; ti--)
+            {
+                if (TargetList[ti].state != eAudienceState.Normal)
+                {
+                    continue;
+                }
+                if (TargetList[ti].GemMaxHp[i] > TargetList[ti].NowManyi[i])
+                {
+                    targes.Add(ti);
+                }
+            }
+            if (targes.Count == 0)
+            {
+                continue;
+            }
+            int idx = targes[Random.Range(0, targes.Count)];
+            TargetList[idx].NowManyi[i] += 1;
+
+
+
+            if (!affectedAudiences.Contains(idx))
+            {
+                affectedAudiences.Add(idx);
+            }
+        }
+
+        for (int i = 0; i < affectedAudiences.Count; i++)
+        {
+            int idx = affectedAudiences[i];
+
+            //affectedAudiences.Add(idx);
+            ShowAudienceHit(TargetList[idx]);
+            UpdateAudienceHp(TargetList[idx]);
+
+            if (TargetList[idx].isDead())
+            {
+
+                KilledAudience.Enqueue(TargetList[idx]);
+                TargetList[idx].Attracted();
+            }
+        }
+        //空伤害 触发队列
+
+        return affectedAudiences;
+    }
+
+
+
+
+
     IEnumerator HandleKillingQueue()
     {
         while (KilledAudience.Count > 0)
@@ -148,7 +296,7 @@ public class ZhiboAudienceMgr
         }
     }
 
-    public List<int> ApplyGemHit(int[] damage, int extra, AudienceToken token = null)
+    public List<int> ApplyGemHit(int[] damage, int extra = 0, AudienceToken token = null)
     {
         List<int> affectedAudiences = new List<int>();
         //List<ZhiboAudience> KilledAudience = new List<ZhiboAudience>();
@@ -283,12 +431,16 @@ public class ZhiboAudienceMgr
             //gameMode.GainScore(audience.NowScore);
 
             // handle all audience.Tokens();
-            for (int i = 0; i < audience.Bonus.Count; i++)
+            for (int i = 0; i < audience.Skills.Count; i++)
             {
-                ZhiboAudienceBonus bonuw = audience.Bonus[i];
+                if(audience.Skills[i].skillType != eZhiboAudienceSkillType.Bonus)
+                {
+                    continue;
+                }
+                ZhiboAudienceSkill bonuw = audience.Skills[i];
+                eAudienceBonusType type = (eAudienceBonusType)bonuw.effectId;
 
-
-                switch (bonuw.Type)
+                switch (type)
                 {
                     case eAudienceBonusType.AddHp:
                         GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语回血");
@@ -447,10 +599,10 @@ public class ZhiboAudienceMgr
                     }
                     if (Random.value < 0.5f)
                     {
-                        ZhiboAudienceBonus bonus = new ZhiboAudienceBonus();
-                        int randIdx = Random.Range(1, (int)eAudienceBonusType.Max);
-                        bonus.Type = (eAudienceBonusType)randIdx;
-                        switch (bonus.Type)
+                        ZhiboAudienceSkill bonus = new ZhiboAudienceSkill(eZhiboAudienceSkillType.Bonus);
+                        int randIdx = Random.Range(0, (int)eAudienceBonusType.Max);
+                        bonus.effectId = randIdx;
+                        switch ((eAudienceBonusType)bonus.effectId)
                         {
                             case eAudienceBonusType.AddHp:
                                 bonus.effectString = 1 + (originLevel / 5) + "";
@@ -473,14 +625,14 @@ public class ZhiboAudienceMgr
                             default:
                                 break;
                         }
-                        audience.Bonus.Add(bonus);
+                        audience.Skills.Add(bonus);
                     }
                     else
                     {
-                        ZhiboAudienceAura aura = new ZhiboAudienceAura();
-                        aura.type = eAudienceAuraType.LessScore;
-                        aura.level = 20;
-                        audience.Aura.Add(aura);
+                        ZhiboAudienceSkill aura = new ZhiboAudienceSkill(eZhiboAudienceSkillType.Aura);
+                        aura.effectId = (int)eAudienceAuraType.LessScore;
+                        aura.effectString = "20";
+                        audience.Skills.Add(aura);
                     }
                 }
                 audienceSuq.Add(audience);
@@ -565,6 +717,8 @@ public class ZhiboAudienceMgr
         CheckOverdue();
 
         AudienceCauseDamage();
+
+        AudienceTurnEffect();
     }
 
     public void NextTurn()
@@ -641,6 +795,23 @@ public class ZhiboAudienceMgr
         {
             GenHeifen(5);
         }
+
+        for(int i = 0; i < audience.Skills.Count; i++)
+        {
+            if(audience.Skills[i].skillType == eZhiboAudienceSkillType.Punish)
+            {
+                eAudiencePunishType type = (eAudiencePunishType)audience.Skills[i].effectId;
+                switch (type)
+                {
+                    case eAudiencePunishType.Damage:
+                        int damage = int.Parse(audience.Skills[i].effectString);
+                        gameMode.AddHp(damage);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
 
@@ -677,6 +848,45 @@ public class ZhiboAudienceMgr
             }
         }
     }
+
+
+    public void AudienceTurnEffect()
+    {
+        List<ZhiboAudienceSkill> skillsToHandle = new List<ZhiboAudienceSkill>();
+        for (int i = 0; i < TargetList.Count; i++)
+        {
+            if (TargetList[i].state == eAudienceState.Attracted
+                || TargetList[i].state == eAudienceState.None)
+            {
+                continue;
+            }
+
+            if (TargetList[i].BindViewIdx == -1)
+            {
+                continue;
+            }
+            for(int j = 0; j < TargetList[i].Skills.Count; j++)
+            {
+                if(TargetList[i].Skills[j].skillType == eZhiboAudienceSkillType.TurnEffect)
+                {
+                    eAudienceTurnEffectType type = (eAudienceTurnEffectType)TargetList[i].Skills[j].effectId;
+                    switch (type)
+                    {
+                        case eAudienceTurnEffectType.AddKoucaiReq:
+                            //决定怎么显示需求
+                            break;
+                        default:
+                            break;
+
+                    }
+                    skillsToHandle.Add(TargetList[i].Skills[j]);
+                }
+             }
+        }
+        
+    }
+
+    
 
     public void AudienceCauseDamage()
     {
@@ -828,18 +1038,14 @@ public class ZhiboAudienceMgr
     {
         tokenDetail.root.gameObject.SetActive(true);
         string txt = "";
-        for(int i=0;i< tvView.TargetAudience.Aura.Count; i++)
+        for(int i=0;i< tvView.TargetAudience.Skills.Count; i++)
         {
-            txt += tvView.TargetAudience.Aura[i].type.ToString();
-            txt += "effect: " + tvView.TargetAudience.Aura[i].level;
+            txt += GenSkillDesp(tvView.TargetAudience.Skills[i]);
+            //txt += tvView.TargetAudience.Skills[i].type.ToString();
+            //txt += "effect: " + tvView.TargetAudience.Aura[i].level;
             txt += "\n";
         }
-        for (int i = 0; i < tvView.TargetAudience.Bonus.Count; i++)
-        {
-            txt += tvView.TargetAudience.Bonus[i].Type.ToString();
-            txt += "effect: " + tvView.TargetAudience.Bonus[i].effectString;
-            txt += "\n";
-        }
+
         if (txt == "")
         {
             txt = "无";
@@ -847,6 +1053,26 @@ public class ZhiboAudienceMgr
         tokenDetail.Content.text = txt;
 
         tokenDetail.root.position = tvView.view.TokenInfo.transform.position + new Vector3(0.15f, 0f, 0);
+    }
+
+    private string GenSkillDesp(ZhiboAudienceSkill skill)
+    {
+
+        if(skill.effectString == null || skill.effectString == "")
+        {
+            return "";
+        }
+        Dictionary<int,string> subDict = SkillDespDict[skill.skillType];
+        if (subDict.ContainsKey(skill.effectId))
+        {
+            string f = subDict[skill.effectId];
+            string desp = string.Format(f,skill.effectString);
+            return desp;
+        }
+        return skill.skillType.ToString() + skill.effectId + skill.effectString;
+        //string desp = skill.skillType.ToString() + skill.effectId + skill.effectString;
+        //return desp;
+
     }
 
     public void HideTokenDetail()
@@ -859,14 +1085,20 @@ public class ZhiboAudienceMgr
         int totalLess = 0;
         for(int i = 0; i < TargetList.Count; i++)
         {
-            if(TargetList[i].state == eAudienceState.Normal && TargetList[i].Aura.Count > 0)
+            if(TargetList[i].state == eAudienceState.Normal && TargetList[i].Skills.Count > 0)
             {
-                for(int j=0;j< TargetList[i].Aura.Count; j++)
+                for(int j=0;j< TargetList[i].Skills.Count; j++)
                 {
-                    switch (TargetList[i].Aura[j].type)
+                    if(TargetList[i].Skills[j].skillType != eZhiboAudienceSkillType.Aura)
+                    {
+                        continue;
+                    }
+                    eAudienceAuraType type = (eAudienceAuraType)TargetList[i].Skills[j].effectId;
+                    switch (type)
                     {
                         case eAudienceAuraType.LessScore:
-                            totalLess = Mathf.Max(TargetList[i].Aura[j].level, totalLess);
+                            int nowLevel = int.Parse(TargetList[i].Skills[j].effectString);
+                            totalLess = Mathf.Max(nowLevel, totalLess);
                             break;
                         default:
                             break;

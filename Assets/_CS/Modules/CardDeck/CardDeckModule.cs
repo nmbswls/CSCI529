@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using Newtonsoft.Json;
 
 public class CardInfo{
 	public uint InstId;
@@ -52,6 +53,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         pRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
         pSKillMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
         //GenFakeCards();
+
     }
 
     public CardInfo GainNewCard (string cid)
@@ -289,10 +291,46 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         return ret;
     }
 
+    public CardAsset LoadFromJson(string cid)
+    {
+        string bundleId = cid.Substring(4).Substring(0,2);
+        if (LoadCards(bundleId))
+        {
+            if (CardDict.ContainsKey(cid))
+            {
+                return CardDict[cid];
+            }
+        }
+        return null;
+    }
+
+    public bool LoadCards(string bundleid)
+    {
+
+        TextAsset ta = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<TextAsset>("CardsJson/" + bundleid, false);
+        if(ta == null)
+        {
+            return false;
+        }
+        Dictionary<string, CardAsset> ret = JsonConvert.DeserializeObject<Dictionary<string, CardAsset>>(ta.text);
+        if(ret == null)
+        {
+            return false;
+        }
+        foreach (var kv in ret)
+        {
+            CardDict.Add(kv.Value.CardId,kv.Value);
+        }
+        return true;
+    }
 
     public CardAsset Load(string cid){
 		CardAsset c = GameMain.GetInstance ().GetModule<ResLoader> ().LoadResource<CardAsset> ("Cards/"+cid,false);
-		if (c != null) {
+        if(c == null)
+        {
+            c = LoadFromJson(cid);
+        }
+        if (c != null) {
 			CardDict [cid] = c;
 		}
 		return c;

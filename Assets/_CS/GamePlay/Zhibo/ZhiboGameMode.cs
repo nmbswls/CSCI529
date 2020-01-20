@@ -271,6 +271,13 @@ public class ZhiboGameMode : GameModeBase
     public void NextTurnCaller()
     {
         if (waitingForNextTurn) return;
+        ////当存在事件时 无法结束回合
+        //if (mEmergencyManager.hasEmergency())
+        //{
+
+        //}
+
+
         waitingForNextTurn = true;
         GameMain.GetInstance().RunCoroutine(NextTurn());
     }
@@ -533,15 +540,15 @@ public class ZhiboGameMode : GameModeBase
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            mUIMgr.ShowHint("这是一段提示测试行");
+            mAudienceMgr.HandleGemRandomHit(new int[] { 1,1,1,1,1,1});
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
-            mAudienceMgr.addExtraHp(1);
+            GainNewCard("card9914");
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            mZhiboDanmuMgr.ShowImportantDanmu(3);
+            mZhiboDanmuMgr.AddFengxiang(new List<string>() { "common"});
         }
 
 
@@ -601,7 +608,7 @@ public class ZhiboGameMode : GameModeBase
             SecCount += 1;
 
 
-            mEmergencyManager.CheckEmergencySec(SecCount);
+            //mEmergencyManager.CheckEmergencySec(SecCount);
 
             //mAudienceMgr.TickSec();
 
@@ -1078,6 +1085,10 @@ public class ZhiboGameMode : GameModeBase
             return false;
         }
         CardInZhibo cinfo = state.Cards[cardIdx];
+        if (!cinfo.ca.canUseBack)
+        {
+            return false;
+        }
         return true;
     }
 
@@ -1153,6 +1164,11 @@ public class ZhiboGameMode : GameModeBase
         CardInZhibo cinfo = state.Cards[cardIdx];
 
         CardAsset ca = cinfo.ca;
+        if (!ca.canUseFace)
+        {
+            mUIMgr.ShowHint("不可正面使用");
+            return false;
+        }
         if ((ca.cost>0 && state.Tili < ca.cost) || (ca.isCostAll && state.Tili == 0) )
         {
             mUIMgr.ShowHint("体力不足");
@@ -1523,9 +1539,27 @@ public class ZhiboGameMode : GameModeBase
                     }
                     //得到 NowExecuteCard.ca.Gems[]
                     //实施 
-                    AffectedAudience = mAudienceMgr.HandleGemHit(damage);
+                    AffectedAudience = mAudienceMgr.HandleGemRandomHit(damage);
                     break;
                 }
+            case eEffectType.KillHeizi:
+                {
+                    int num = int.Parse(args[0]);
+                    //得到 NowExecuteCard.ca.Gems[]
+                    //实施 
+                    mAudienceMgr.KillHeizi(num);
+                    break;
+                }
+            case eEffectType.HitHeizi:
+                {
+                    int damage = int.Parse(args[0]);
+
+                    //实施 
+                    mAudienceMgr.ApplyBlackHit(damage);
+                    break;
+                }
+
+
             case eEffectType.SpawnGift:
                 GenSpecial(args[0], int.Parse(args[1]));
                 break;
