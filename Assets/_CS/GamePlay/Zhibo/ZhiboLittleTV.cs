@@ -66,7 +66,7 @@ public class ZhiboLittleTV : MonoBehaviour
         {
             view.TokenList[i].enabled = false;
         }
-        //animator.ResetTrigger("");
+        //animator.ResetTrigger(""); 
     }
 
 
@@ -139,7 +139,7 @@ public class ZhiboLittleTV : MonoBehaviour
         }
         else
         {
-            view.tvName.text = "New Audience";
+            view.tvName.text = TargetAudience.showProfixName() + "New Audience" + TargetAudience.showSuffixName();
             view.AvaContent.sprite = audienceImage[0];
         }
         UpdateHp();

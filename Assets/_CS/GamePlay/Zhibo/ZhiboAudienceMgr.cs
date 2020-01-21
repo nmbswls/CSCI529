@@ -85,6 +85,8 @@ public class ZhiboAudienceMgr
     TokenDetailView tokenDetail;
     AudienceAuraBuff audienceAuraBuff = new AudienceAuraBuff();
 
+    TVSuffixList SuffixList = new TVSuffixList();
+    TVProfixList ProfixList = new TVProfixList();
 
 
     public ZhiboAudienceMgr(ZhiboGameMode gameMode)
@@ -94,10 +96,20 @@ public class ZhiboAudienceMgr
         EachTurnMaxEnemyNum = new int[gameMode.state.OriginTurn];
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
         mRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
+        if (loadSuffix())
+        {
+            Debug.Log("后缀加载成功 Count = " + SuffixList.suffixs.Count);
+        }
+        if (loadProfix())
+        {
+            Debug.Log("前缀加载成功 Count = " + ProfixList.profixs.Count);
+        }
+
         GenAudienceMode();
         GenAudienceSequence();
         //LoadSkillDespDict();
 
+        
         InitUI();
     }
 
@@ -564,6 +576,7 @@ public class ZhiboAudienceMgr
 
     public void GenAudienceSequence()
     {
+        
         int turn = gameMode.state.OriginTurn;
         EachTurnMaxEnemyNum[0] = 2;
         EachTurnMaxEnemyNum[1] = 3;
@@ -592,10 +605,32 @@ public class ZhiboAudienceMgr
                     int[] hp = GetHpTemplate(audience.Level, rate);
                     audience.GemMaxHp = new int[6];
                     audience.GemHp = new int[6];
-                    for(int j = 0; j < 6; j++)
+
+                    //add prefix & surfix here
+                    int pOfSuf = Random.Range(0, 2);
+                    int pOfPro = Random.Range(0, 2);
+                    int[] tmpSufHp = { 0, 0, 0, 0, 0, 0 };
+                    int[] tmpProHp = { 0, 0, 0, 0, 0, 0 };
+
+                    //50% 概率触发前缀 50%概率触发后缀
+                    if (pOfSuf==1)
                     {
-                        audience.GemMaxHp[j] = hp[j];
-                        audience.GemHp[j] = hp[j];
+                        TVSuffix appliedSuf = applySuffixEffect();
+                        tmpSufHp = loadSuffixEffect(appliedSuf);
+                        audience.tvSuffix = appliedSuf;
+                    }
+
+                    if (pOfPro==1)
+                    {
+                        TVProfix appliedPro = applyProfixEffect();
+                        tmpProHp = loadProfixEffect(appliedPro, hp);
+                        audience.tvProfix = appliedPro;
+                    }
+                   
+                    for (int j = 0; j < 6; j++)
+                    {
+                        audience.GemMaxHp[j] = hp[j] + + tmpProHp[j] + tmpSufHp[j];
+                        audience.GemHp[j] = hp[j] + tmpProHp[j] + tmpSufHp[j];
                     }
                     if (Random.value < 0.5f)
                     {
@@ -759,20 +794,33 @@ public class ZhiboAudienceMgr
         TargetList.Add(audience);
     }
 
-    public void ShowRandomAudience()
+    public void ShowRandomAudience(bool proAndSuf = false)
     {
-
+        
         ZhiboAudience audience = new ZhiboAudience();
+        int[] sufTmpHp = { 0, 0, 0, 0, 0, 0 };
+        int[] proTmpHp = { 0, 0, 0, 0, 0, 0 };
+        int[] oriHp = { 1, 0, 0, 0, 0, 0 };
+        if (proAndSuf)
+        {
+            TVSuffix appliedSuf = applySuffixEffect();
+            TVProfix appliedPro = applyProfixEffect();
+            sufTmpHp = loadSuffixEffect(appliedSuf);
+            proTmpHp = loadProfixEffect(appliedPro, oriHp);
+            audience.tvSuffix = appliedSuf;
+            audience.tvProfix = appliedPro;
+        }
         {
             audience.Type = eAudienceType.Normal;
-            audience.GemHp[0] = 1;
-            audience.GemHp[1] = 0;
-            audience.GemHp[2] = 0;
-            audience.GemHp[3] = 0;
-            audience.GemHp[4] = 0;
-            audience.GemHp[5] = 0;
+            audience.GemHp[0] = oriHp[0] + proTmpHp[0] + sufTmpHp[0];
+            audience.GemHp[1] = oriHp[1] + proTmpHp[1] + sufTmpHp[1];
+            audience.GemHp[2] = oriHp[2] + proTmpHp[2] + sufTmpHp[2];
+            audience.GemHp[3] = oriHp[3] + proTmpHp[3] + sufTmpHp[3];
+            audience.GemHp[4] = oriHp[4] + proTmpHp[4] + sufTmpHp[4];
+            audience.GemHp[5] = oriHp[5] + proTmpHp[5] + sufTmpHp[5];
             audience.state = eAudienceState.Normal;
         }
+        
         int idx = ShowNewAudience(audience);
         audience.BindViewIdx = idx;
         TargetList.Add(audience);
@@ -1111,5 +1159,176 @@ public class ZhiboAudienceMgr
         audienceAuraBuff.ScoreLess = totalLess;
     }
 
+    //Surfix
+    public bool loadSuffix()
+    {
+        
+        SuffixList.loadSuffix();
+        return SuffixList.suffixs.Count > 0;
+    }
+
+    public TVSuffix applySuffixEffect(int idx = 0, bool rand = true)
+    {
+        TVSuffix appliedSuf;
+        if (SuffixList == null || SuffixList.suffixs.Count == 0)
+        {
+            return null;
+        }
+
+        if (rand)
+        {
+            appliedSuf = randomSuffixEffect();
+        } else
+        {
+            appliedSuf = setSuffixEffect(idx);
+        }
+        return appliedSuf;
+    }
+    public int[] loadSuffixEffect(TVSuffix appliedSuf) {
+        int[] SuffixHpTmp = { 0, 0, 0, 0, 0, 0 };
+        for (int i = 0; i < appliedSuf.effects.Count; i++) { 
+            int[] tmpHp = handOneSuffixEffect(appliedSuf.effects[i],appliedSuf.values[i]);
+            for (int t = 0; t<6; t++)
+            {
+                SuffixHpTmp[t] += tmpHp[t];
+            }
+        }
+        return SuffixHpTmp;
+    }
+
+    public TVSuffix randomSuffixEffect()
+    {
+        int idx = Random.Range(0, SuffixList.suffixs.Count);
+        return setSuffixEffect(idx);
+    }
+
+    public TVSuffix setSuffixEffect(int idx)
+    {
+        return SuffixList.suffixs[idx];
+    }
+
+    public int[] handOneSuffixEffect(TVSuffixEffect efct, int value)
+    {
+        int[] hpTmp = { 0, 0, 0, 0, 0, 0 };
+        switch (efct)
+        {
+            case TVSuffixEffect.none:
+                break;
+            case TVSuffixEffect.requestKoucai:
+                hpTmp[1] += value;
+                //Koucai;
+                break;
+            case TVSuffixEffect.requestCaiyi:
+                hpTmp[2] += value;
+                //Koucai;
+                break;
+            case TVSuffixEffect.requestJishu:
+                hpTmp[3] += value;
+                //Koucai;
+                break;
+            case TVSuffixEffect.requestKangya:
+                hpTmp[4] += value;
+                //Koucai;
+                break;
+            case TVSuffixEffect.requestWaiguan:
+                hpTmp[5] += value;
+                //Koucai;
+                break;
+            case TVSuffixEffect.requestAll:
+                for(int t = 1; t<6; t++)
+                {
+                    hpTmp[t] += value;
+                }
+                break;
+        }
+        return hpTmp;
+    }
+
+    //Profix
+    public bool loadProfix()
+    {
+
+        ProfixList.loadProfix();
+        return ProfixList.profixs.Count > 0;
+    }
+
+    public TVProfix applyProfixEffect(int idx = 0, bool rand = true)
+    {
+        TVProfix appliedPro;
+        if (ProfixList == null || ProfixList.profixs.Count == 0)
+        {
+            return null;
+        }
+
+        if (rand)
+        {
+            appliedPro = randomProfixEffect();
+        }
+        else
+        {
+            appliedPro = setProfixEffect(idx);
+        }
+        return appliedPro;
+    }
+    public int[] loadProfixEffect(TVProfix appliedPro, int[] curHp)
+    {
+        int[] ProfixHpTmp = { 0, 0, 0, 0, 0, 0 };
+        for (int i = 0; i < appliedPro.effects.Count; i++)
+        {
+            int[] tmpHp = handOneProfixEffect(appliedPro.effects[i], appliedPro.values[i], curHp);
+            for (int t = 0; t < 6; t++)
+            {
+                ProfixHpTmp[t] += tmpHp[t];
+            }
+        }
+        return ProfixHpTmp;
+    }
+
+    public TVProfix randomProfixEffect()
+    {
+        int idx = Random.Range(0, ProfixList.profixs.Count);
+        return setProfixEffect(idx);
+    }
+
+    public TVProfix setProfixEffect(int idx)
+    {
+        return ProfixList.profixs[idx];
+    }
+
+    public int[] handOneProfixEffect(TVProfixEffect efct, int value, int[] curHp)
+    {
+        int[] hpTmp = { 0, 0, 0, 0, 0, 0 };
+        switch (efct)
+        {
+            case TVProfixEffect.none:
+                break;
+            case TVProfixEffect.addRequest:
+                //需求翻倍或减半;
+                for(int i = 0; i<6; i++)
+                {
+                    if(value>=1)
+                    {
+                        hpTmp[i] = curHp[i] * (value - 1);
+                    }
+                    else
+                    {
+                        hpTmp[i] = -curHp[i] * (1 - value);
+                    }
+                }
+                break;
+            case TVProfixEffect.extraRequest:
+                int idx = Random.Range(0, 6);
+                hpTmp[idx] += value;
+                //Koucai;
+                break;
+        }
+        for(int i = 0; i<6; i++)
+        {
+            Debug.Log("cur->"+i+":"+curHp[i]);
+            Debug.Log("then->"+i+":"+hpTmp[i]);
+        }
+        
+        return hpTmp;
+    }
 
 }
