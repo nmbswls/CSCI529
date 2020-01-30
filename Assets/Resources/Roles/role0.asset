@@ -22,30 +22,11 @@ MonoBehaviour:
   - card2000
   - card2000
   initCards:
-  - gem_0001
-  - gem_0002
-  - gem_0003
-  - gem_0004
-  - gem_0005
-  - gem_0006
-  - gem_0007
-  - gem_0008
-  - gem_0009
-  - gem_0010
-  - gem_0011
-  - gem_0012
-  - gem_0013
-  - gem_0014
-  - gem_0015
-  - gem_0016
-  - gem_0017
-  - gem_0018
-  - gem_0019
-  - gem_0020
-  - gem_0021
-  - gem_0022
-  - gem_0023
-  - gem_0024
+  - c0014
+  - c0015
+  - c0016
+  - c0017
+  - c0017
   initSkills: []
   specialList:
   - "\u4F60\u6CA1\u6709\u591A\u5C11\u7ECF\u9A8C\uFF0C\u4F46\u5145\u6EE1\u70ED\u60C5"
