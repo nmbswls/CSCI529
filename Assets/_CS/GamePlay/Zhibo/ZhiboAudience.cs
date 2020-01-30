@@ -133,6 +133,12 @@ public class ZhiboAudience
     public int[] preHp = new int[(int)eAudienceHpType.Max];
     public float preScore = 0;
 
+    //prefix & Suffix
+
+    public TVProfix tvProfix;
+    public TVSuffix tvSuffix;
+    
+
     public float GetBaseBonus()
     {
         return Level * 10;
@@ -330,6 +336,24 @@ public class ZhiboAudience
             }
             return false;
         }
+    }
+
+    public string showProfixName()
+    {
+        if(tvProfix==null)
+        {
+            return "";
+        }
+        return tvProfix.name;
+    }
+
+    public string showSuffixName()
+    {
+        if (tvSuffix == null)
+        {
+            return "";
+        }
+        return tvSuffix.name;
     }
 }
 
