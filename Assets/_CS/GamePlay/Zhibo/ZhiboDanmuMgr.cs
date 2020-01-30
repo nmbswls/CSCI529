@@ -53,6 +53,7 @@ public class ZhiboDanmuMgr
     public ZhiboGameMode gameMode;
 
     public int importantDanmu = 0;
+    public Queue<Vector3> impDanmuTarget = new Queue<Vector3>(); //存放 目标地点
 
     public ScrollRect danmuSR;
     private RectTransform danmuContent;
@@ -172,7 +173,7 @@ public class ZhiboDanmuMgr
 
 
         }
-
+        Canvas.ForceUpdateCanvases();
         danmuSlots[NowDanmuCount - 1].word.color = Color.white;
 
         if (importantDanmu > 0)
@@ -183,7 +184,7 @@ public class ZhiboDanmuMgr
             //Debug.Log("shjot");
             importantDanmu -= 1;
         }
-        Canvas.ForceUpdateCanvases();
+
         danmuSR.verticalNormalizedPosition = 0;
     }
     private Dictionary<string, List<string>> DanmuTagDict = new Dictionary<string, List<string>>();

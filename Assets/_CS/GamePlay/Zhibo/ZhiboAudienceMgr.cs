@@ -743,6 +743,8 @@ public class ZhiboAudienceMgr
             }
         }
 
+        gameMode.mZhiboDanmuMgr.ShowImportantDanmu(maxNum - nowCount);
+
         for (int i=0;i< maxNum - nowCount; i++)
         {
             ZhiboAudience a = audienceSuq[EnemyIdx];

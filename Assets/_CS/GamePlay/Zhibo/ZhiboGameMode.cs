@@ -360,6 +360,7 @@ public class ZhiboGameMode : GameModeBase
         }
 
         mBuffManager.CalculateBuffExtras();
+
         mAudienceMgr.NextTurn();
 
         state.TurnSpecials.Clear();
