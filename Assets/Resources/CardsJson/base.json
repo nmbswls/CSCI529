@@ -1,0 +1,372 @@
+{
+	"0": {
+		"CardId": "c0014",
+		"CardName": "深夜老司机",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0014",
+		"CardEffectDesp": "描述描述",
+		"CardBackDesp": "随机消除观众某一维度要求",
+		"CardType": 2,
+		"isCostAll": "False",
+		"cost": 1,
+		"GemString": "0,1,0,0,0,1",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 18,
+			"Possibility": "100",
+			"effectString": "1",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 1,
+			"value": "1"
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"1": {
+		"CardId": "c0015",
+		"CardName": "微博带货王",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0015",
+		"CardEffectDesp": "描述描述",
+		"CardBackDesp": "增加5金钱",
+		"CardType": 2,
+		"isCostAll": "False",
+		"cost": 1,
+		"GemString": "0,1,0,0,0,1",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 13,
+			"Possibility": "100",
+			"effectString": "5",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 1,
+			"value": "1"
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"2": {
+		"CardId": "c0016",
+		"CardName": "广场舞委员",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0016",
+		"CardEffectDesp": "描述描述",
+		"CardBackDesp": "减少10精神状态获得两张新卡",
+		"CardType": 1,
+		"isCostAll": "False",
+		"cost": 1,
+		"GemString": "0,1,0,0,0,1",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 0,
+			"Possibility": "100",
+			"effectString": "10",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 8,
+			"Possibility": "100",
+			"effectString": "2",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 1,
+			"value": "1"
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"3": {
+		"CardId": "c0017",
+		"CardName": "这！就是街舞",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0016",
+		"CardEffectDesp": "描述描述",
+		"CardBackDesp": "增加5精神状态值",
+		"CardType": 1,
+		"isCostAll": "False",
+		"cost": 1,
+		"GemString": "0,1,1,0,0,0",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 0,
+			"Possibility": "100",
+			"effectString": "5",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"IsConsume": "False",
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	}
+}

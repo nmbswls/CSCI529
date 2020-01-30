@@ -53,6 +53,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         pRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
         pSKillMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
         //GenFakeCards();
+        LoadBaseCard();
 
     }
 
@@ -304,6 +305,11 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         return null;
     }
 
+    private void LoadBaseCard()
+    {
+        LoadCards("base");
+    }
+
     public bool LoadCards(string bundleid)
     {
 
@@ -319,6 +325,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
         }
         foreach (var kv in ret)
         {
+            kv.Value.Simplifiy();
             CardDict.Add(kv.Value.CardId,kv.Value);
         }
         return true;

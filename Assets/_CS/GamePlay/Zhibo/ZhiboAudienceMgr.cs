@@ -778,22 +778,26 @@ public class ZhiboAudienceMgr
             }
         }
 
-        gameMode.mZhiboDanmuMgr.ShowImportantDanmu(maxNum - nowCount);
+        List<ZhiboLittleTV> targetLittleTv = new List<ZhiboLittleTV>();
 
         for (int i=0;i< maxNum - nowCount; i++)
         {
             ZhiboAudience a = audienceSuq[EnemyIdx];
-            ShowNextAudience(a);
+            int slotIdx = ShowNextAudience(a);
+            targetLittleTv.Add(LittleTvList[slotIdx]);
             EnemyIdx += 1;
         }
 
+        gameMode.mZhiboDanmuMgr.ShowImportantDanmu(maxNum - nowCount, targetLittleTv);
+
     }
 
-    public void ShowNextAudience(ZhiboAudience audience)
+    public int ShowNextAudience(ZhiboAudience audience)
     {
         int idx = ShowNewAudience(audience);
         audience.BindViewIdx = idx;
         TargetList.Add(audience);
+        return idx;
     }
 
     public void ShowRandomAudience(bool proAndSuf = false)
@@ -1024,7 +1028,7 @@ public class ZhiboAudienceMgr
 
         EmptyTVList.Remove(idx);
 
-        LittleTvList[idx].Show(audience);
+        LittleTvList[idx].InitLittleTvView(audience);
 
         audience.state = eAudienceState.Normal;
         return idx;
@@ -1326,8 +1330,8 @@ public class ZhiboAudienceMgr
         }
         for(int i = 0; i<6; i++)
         {
-            Debug.Log("cur->"+i+":"+curHp[i]);
-            Debug.Log("then->"+i+":"+hpTmp[i]);
+            //Debug.Log("cur->"+i+":"+curHp[i]);
+            //Debug.Log("then->"+i+":"+hpTmp[i]);
         }
         
         return hpTmp;

@@ -70,7 +70,10 @@ public class ZhiboLittleTV : MonoBehaviour
     }
 
 
-
+    public Vector3 GetPivotPos()
+    {
+        return transform.position;
+    }
 
     private void BindView()
     {
@@ -125,9 +128,10 @@ public class ZhiboLittleTV : MonoBehaviour
 
 
 
-    public void Show(ZhiboAudience TargetAudience)
+    public void InitLittleTvView(ZhiboAudience TargetAudience)
     {
-        gameObject.SetActive(true);
+
+        //gameObject.SetActive(true);
         view.animator.Play("Empty");
         view.animator.SetTrigger("Appear");
         this.TargetAudience = TargetAudience;
@@ -145,6 +149,23 @@ public class ZhiboLittleTV : MonoBehaviour
         UpdateHp();
         UpdateBuffs();
     }
+
+    public void Show(float delay)
+    {
+        int a = 0;
+        DOTween.To
+        (
+            () => a,
+            (x) => { a = x; },
+            0,
+            delay
+        ).OnComplete(delegate {
+            gameObject.SetActive(true);
+            view.animator.SetTrigger("Appear");
+        });
+
+    }
+
 
     Tween preTextTween;
     int fromScore;

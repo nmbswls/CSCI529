@@ -1,4 +1,4 @@
-﻿#define DEMO
+﻿//#define DEMO
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -472,7 +472,6 @@ public class ZhiboGameMode : GameModeBase
             string eid = info.CardId;
             CardAsset ca = mCardMdl.GetCardInfo(eid);
             CardInZhibo card = new CardInZhibo(ca);
-            card.ca = ca;
             state.CardDeck.Add(card);
         }
 
@@ -1479,7 +1478,10 @@ public class ZhiboGameMode : GameModeBase
             mBuffManager.GenBuff(ce.buffInfo[0]);
             return;
         }
-
+        if(ce.effectType == eEffectType.None)
+        {
+            return;
+        }
         string[] args = ce.effectString.Split(',');
         switch (ce.effectType)
         {

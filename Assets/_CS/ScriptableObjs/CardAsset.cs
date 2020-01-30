@@ -180,6 +180,20 @@ public class CardAsset : ScriptableObject
     public eBranchType branchType;
     public List<CardEffectBranch> ExtraBranches = new List<CardEffectBranch>();
 
+    public void Simplifiy()
+    {
+        if (!HasTurnEffect)
+        {
+            TurnEffects = new List<CardTurnEffect>();
+        }
+        for(int i = Effects.Count-1; i >= 0; i--)
+        {
+            if(Effects[i].effectType == eEffectType.None && !Effects[i].isAddBuff)
+            {
+                Effects.RemoveAt(i);
+            }
+        }
+    }
 
     public string ReplaceWithAmountInEffect()
     {

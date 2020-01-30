@@ -152,7 +152,7 @@ public class ZhiboEmergencyManager
     public void GenEmergency()
     {
 
-        gameMode.state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(1, 2), "em01"));
+        gameMode.state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(2, 3), "em01"));
         gameMode.state.ComingEmergencies.Add(new KeyValuePair<int, string>(Random.Range(7, 9), "em02"));
         emergencyIdx = 0;
     }

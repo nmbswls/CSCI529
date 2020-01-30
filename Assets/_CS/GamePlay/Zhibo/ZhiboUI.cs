@@ -344,6 +344,24 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
     //}
 
 
+    public void ShowNewReqEffect(Vector3 from, Vector3 to)
+    {
+        GameObject go = mResLoader.Instantiate("Zhibo/Effect", root);
+        go.transform.position = from;
+        float time = 0.3f;
+        DOTween.To
+            (
+                () => go.transform.position,
+                (x) => go.transform.position = x,
+                to,
+                time
+            ).OnComplete(delegate ()
+            {
+                mResLoader.ReleaseGO("Zhibo/Effect", go);
+            });
+    }
+
+
     public void ShowDanmuEffect(Vector3 pos)
     {
         GameObject go = mResLoader.Instantiate("Zhibo/Effect",root);

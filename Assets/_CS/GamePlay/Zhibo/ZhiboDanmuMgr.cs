@@ -53,7 +53,7 @@ public class ZhiboDanmuMgr
     public ZhiboGameMode gameMode;
 
     public int importantDanmu = 0;
-    public Queue<Vector3> impDanmuTarget = new Queue<Vector3>(); //存放 目标地点
+    public Queue<ZhiboLittleTV> impDanmuTarget = new Queue<ZhiboLittleTV>(); //存放 目标地点
 
     public ScrollRect danmuSR;
     private RectTransform danmuContent;
@@ -179,8 +179,10 @@ public class ZhiboDanmuMgr
         if (importantDanmu > 0)
         {
             danmuSlots[NowDanmuCount - 1].SetAsEnter("heipi");
+            ZhiboLittleTV targetLittleTv = impDanmuTarget.Dequeue();
             //danmuSlots[NowDanmuCount - 1].word.color = Color.red;
-            gameMode.mUICtrl.ShowDanmuEffect(danmuSlots[NowDanmuCount - 1].root.transform.position);
+            gameMode.mUICtrl.ShowNewReqEffect(danmuSlots[NowDanmuCount - 1].root.transform.position, targetLittleTv.GetPivotPos());
+            targetLittleTv.Show(0.3f);
             //Debug.Log("shjot");
             importantDanmu -= 1;
         }
@@ -254,9 +256,18 @@ public class ZhiboDanmuMgr
         return "user" + a;
     }
 
-    public void ShowImportantDanmu(int count)
+    public void ShowImportantDanmu(int count, List<ZhiboLittleTV> vector3s)
     {
+        if(count != vector3s.Count)
+        {
+            Debug.Log("刷新数目不相符");
+            return;
+        }
         importantDanmu += count;
+        for(int i = 0; i < count; i++)
+        {
+            impDanmuTarget.Enqueue(vector3s[i]);
+        }
         timer = 0;
     }
 
