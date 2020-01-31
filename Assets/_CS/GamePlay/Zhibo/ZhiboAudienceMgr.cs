@@ -756,7 +756,7 @@ public class ZhiboAudienceMgr
         AudienceTurnEffect();
     }
 
-    public void NextTurn()
+    private int GetMaxReqNum()
     {
         int maxNum = 0;
 
@@ -768,32 +768,59 @@ public class ZhiboAudienceMgr
         {
             maxNum = EachTurnMaxEnemyNum[gameMode.state.NowTurn - 1];
         }
+        return maxNum;
+    }
 
+    private int GetNowReqNum()
+    {
         int nowCount = 0;
-        for(int i = 0; i < TargetList.Count; i++)
+        for (int i = 0; i < TargetList.Count; i++)
         {
-            if(TargetList[i].state == eAudienceState.Normal)
+            if (TargetList[i].state == eAudienceState.Normal)
             {
                 nowCount++;
             }
         }
+        return nowCount;
+    }
+
+    public void NextTurn()
+    {
+        int maxNum = GetMaxReqNum();
+
+        int nowCount = GetNowReqNum();
 
         List<ZhiboLittleTV> targetLittleTv = new List<ZhiboLittleTV>();
 
         for (int i=0;i< maxNum - nowCount; i++)
         {
-            ZhiboAudience a = audienceSuq[EnemyIdx];
-            int slotIdx = ShowNextAudience(a);
+            //ZhiboAudience a = audienceSuq[EnemyIdx];
+            int slotIdx = ShowNextAudience();
+            if(slotIdx == -1)
+            {
+                Debug.Log("满怪了 异常");
+                return;
+            }
             targetLittleTv.Add(LittleTvList[slotIdx]);
-            EnemyIdx += 1;
+            //EnemyIdx += 1;
         }
 
         gameMode.mZhiboDanmuMgr.ShowImportantDanmu(maxNum - nowCount, targetLittleTv);
 
     }
 
-    public int ShowNextAudience(ZhiboAudience audience)
+    public bool canAddNewReq()
     {
+        int maxReq = GetMaxReqNum();
+        int nowReq = GetNowReqNum();
+        return nowReq < maxReq;
+    }
+
+    public int ShowNextAudience()
+    {
+
+        ZhiboAudience audience = audienceSuq[EnemyIdx];
+        EnemyIdx += 1;
         int idx = ShowNewAudience(audience);
         audience.BindViewIdx = idx;
         TargetList.Add(audience);
