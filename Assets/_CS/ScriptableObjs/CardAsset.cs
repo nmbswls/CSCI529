@@ -289,6 +289,7 @@ public enum eEffectType
 
     KillHeizi,
     HitHeizi,
+    NewRequest,
     //前置条件
     //HavaCost,
     //MaxCount,

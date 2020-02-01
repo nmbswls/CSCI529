@@ -27,6 +27,11 @@ public enum eBuffType
     No_Neg_Danmu,
     Success_Rate_Multi,
     Success_Rate_Max,
+    Add_Req_1_Per_Turn,
+    Add_Req_2_Per_Turn,
+    Add_Req_3_Per_Turn,
+    Add_Req_4_Per_Turn,
+    Add_Req_5_Per_Turn,
 
     NC_First,
     NC_Extra_Score,

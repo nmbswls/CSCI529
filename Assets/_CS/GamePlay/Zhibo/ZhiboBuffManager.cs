@@ -207,6 +207,42 @@ public class ZhiboBuffManager
         }
     }
 
+
+    public void HandlePerTurnEffect()
+    {
+        int[] req = new int[(int)eAudienceHpType.Max];
+        int score = 0;
+        for (int i = 0; i < gameMode.state.ZhiboBuffs.Count; i++)
+        {
+            ZhiboBuff buff = gameMode.state.ZhiboBuffs[i];
+            switch (buff.bInfo.BuffType)
+            {
+                case eBuffType.Score_Per_Turn:
+                    score += buff.bInfo.BuffLevel;
+                    break;
+                case eBuffType.Add_Req_1_Per_Turn:
+                    req[1] += buff.bInfo.BuffLevel;
+                    break;
+                case eBuffType.Add_Req_2_Per_Turn:
+                    req[2] += buff.bInfo.BuffLevel;
+                    break;
+                case eBuffType.Add_Req_3_Per_Turn:
+                    req[3] += buff.bInfo.BuffLevel;
+                    break;
+                case eBuffType.Add_Req_4_Per_Turn:
+                    req[4] += buff.bInfo.BuffLevel;
+                    break;
+                case eBuffType.Add_Req_5_Per_Turn:
+                    req[5] += buff.bInfo.BuffLevel;
+                    break;
+                default:
+                    break;
+            }
+        }
+        gameMode.GainScore(score);
+        gameMode.mAudienceMgr.HandleGemHit(req);
+    }
+
     public static bool isCardAffectBuff(ZhiboBuffInfo buff)
     {
         if(buff.BuffType > eBuffType.NC_First)

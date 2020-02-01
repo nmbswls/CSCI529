@@ -372,10 +372,11 @@ public class ZhiboGameMode : GameModeBase
         mUICtrl.LockNextTurnBtn();
         mUICtrl.UpdateDeckLeft();
 
+
         //如果当前回合有emergency
 
         mEmergencyManager.NewTurn();
-
+        mBuffManager.HandlePerTurnEffect();
 
 
         SecCount = 0;
@@ -391,6 +392,8 @@ public class ZhiboGameMode : GameModeBase
         {
             mUICtrl.SKillBtnEnable(true);
         }
+
+
 
     }
 
@@ -540,7 +543,11 @@ public class ZhiboGameMode : GameModeBase
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            mAudienceMgr.HandleGemRandomHit(new int[] { 1,1,1,1,1,1});
+            ZhiboBuffInfo binfo = new ZhiboBuffInfo();
+            binfo.BuffType = eBuffType.Add_Req_1_Per_Turn;
+            binfo.BuffLevel = 10;
+            mBuffManager.GenBuff(binfo);
+
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
@@ -1559,6 +1566,18 @@ public class ZhiboGameMode : GameModeBase
 
                     //实施 
                     mAudienceMgr.ApplyBlackHit(damage);
+                    break;
+                }
+            case eEffectType.NewRequest:
+                {
+                    if (mAudienceMgr.canAddNewReq())
+                    {
+                        mAudienceMgr.ShowNextAudience();
+                    }
+                    else
+                    {
+                        mUIMgr.ShowHint("需求已满");
+                    }
                     break;
                 }
 
