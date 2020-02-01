@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
+public enum eFieldEventResult
+{
+    Block,
+    Continue,
+}
 public class ClickableEventlistener2D : MonoBehaviour,ClickableSprite
 {
 	// 定义事件代理

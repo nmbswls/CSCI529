@@ -10,16 +10,27 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class ClickableManager2D : MonoBehaviour
 {
-
-	public Camera m_camera;
+    public static eFieldEventResult FieldEventResult;
+    public Camera m_camera;
 	// Use this for initialization
 	void Start ()
 	{
 
 	}
+
+    public static void BindClickEvent(GameObject target, ClickableEventlistener2D.FieldEventProxy Func)
+    {
+        ClickableEventlistener2D listener = target.GetComponent<ClickableEventlistener2D>();
+        if (listener == null)
+        {
+            listener = target.AddComponent<ClickableEventlistener2D>();
+            listener.ClickEvent += Func;
+        }
+    }
 
 	// Update is called once per frame
 	void Update ()
@@ -31,7 +42,8 @@ public class ClickableManager2D : MonoBehaviour
 	//坐标均为屏幕坐标系
 	Vector3 mouseDownPos;
 	Vector3 lastDragPos;
-	GameObject nowClickGO;
+    List<GameObject> nowClickedList;
+	//GameObject nowClickGO;
 
 	enum MouseState{
 		NONE,
@@ -41,7 +53,7 @@ public class ClickableManager2D : MonoBehaviour
 	MouseState nowMode = MouseState.NONE;
 
 
-	GameObject[] clickedObjs;
+	//GameObject[] clickedObjs;
 
 	public void checkTouch(){
 
@@ -71,16 +83,27 @@ public class ClickableManager2D : MonoBehaviour
 					Vector3 pos = m_camera.ScreenToWorldPoint (Input.mousePosition);
 					RaycastHit[] hits = null;
 					hits = Physics.RaycastAll (pos, Vector3.forward, Mathf.Infinity);
-                    int minDis = int.MaxValue;
-					if (hits.Length > 0) {    //检测是否射线接触物体
+					if (hits.Length > 1) {    //检测是否射线接触物体
 						mouseDownPos = Input.mousePosition;
-						nowClickGO = hits [0].collider.gameObject;
+                        nowClickedList = new List<GameObject>();
+                        List<RaycastHit> hitsList = new List<RaycastHit>(hits);
+
+                        hitsList.Sort((x,y) => {
+                            return x.distance.CompareTo(y.distance);
+                        });
+                        for (int i=0;i< hits.Length; i++)
+                        {
+                            nowClickedList.Add(hits[i].collider.gameObject);
+                        }
+                        //nowClickGO = hits [0].collider.gameObject;
 						nowMode = MouseState.CLICK;
-					}
-					clickedObjs = new GameObject[hits.Length];
-					for (int i = 0; i < hits.Length; i++) {
-						clickedObjs [i] = hits [i].collider.gameObject;
-					}
+					}else if (hits.Length > 0)
+                    {
+                        mouseDownPos = Input.mousePosition;
+                        nowClickedList = new List<GameObject>() { hits[0].collider.gameObject};
+                        nowMode = MouseState.CLICK;
+                    }
+					
 				}
 
 			}
@@ -99,20 +122,21 @@ public class ClickableManager2D : MonoBehaviour
 					//超过阀值 变为拖动
 					nowMode = MouseState.DRAG;
 					lastDragPos = Input.mousePosition;
-					if (nowClickGO == null || nowClickGO.GetComponentInParent<ClickableEventlistener2D> () == null) {
+                    
+					if (nowClickedList == null || nowClickedList.Count == 0|| nowClickedList[0].GetComponentInParent<ClickableEventlistener2D> () == null) {
 						//无法回调
 					} else {
-						nowClickGO.GetComponentInParent<ClickableSprite> ().startDrag (lastDragPos);
+                        nowClickedList[0].GetComponentInParent<ClickableSprite> ().startDrag (lastDragPos);
 					}
 
 				}
 			} else if (nowMode == MouseState.DRAG) {
 				Vector3 nowPos = Input.mousePosition;
 				Vector3 delta = nowPos - lastDragPos;
-				if (nowClickGO == null || nowClickGO.GetComponentInParent<ClickableSprite> () == null) {
+				if (nowClickedList == null || nowClickedList.Count == 0 || nowClickedList[0].GetComponentInParent<ClickableSprite> () == null) {
 					//无法回调
 				} else {
-					nowClickGO.GetComponentInParent<ClickableSprite> ().onDrag(delta);
+                    nowClickedList[0].GetComponentInParent<ClickableSprite> ().onDrag(delta);
 				}
 				lastDragPos = nowPos;
 			}
@@ -124,34 +148,39 @@ public class ClickableManager2D : MonoBehaviour
 			if (nowMode == MouseState.NONE) {
 
 			} else if (nowMode == MouseState.CLICK) {
-				if (nowClickGO == null || nowClickGO.GetComponentInParent<ClickableSprite> () == null) {
+				if (nowClickedList == null || nowClickedList.Count == 0  || nowClickedList[0].GetComponentInParent<ClickableSprite> () == null) {
 					//无法回调
 
 				} else {
-                    ClickableEventlistener2D cp = nowClickGO.GetComponentInParent<ClickableEventlistener2D>();
+                    
+                    {
+                        for (int i = 0; i < nowClickedList.Count; i++)
+                        {
+                            ClickableEventlistener2D cp = nowClickedList[i].GetComponentInParent<ClickableEventlistener2D>();
+                            if (cp == null || !cp.hasClickEvent())
+                            {
+                                continue;
+                            }
+                            if (cp != null && cp.hasClickEvent())
+                            {
+                                cp.onClick(Input.mousePosition);
+                                if(FieldEventResult == eFieldEventResult.Block)
+                                {
+                                    break;
+                                }
+                            }
+                        }
 
-                    if (cp == null || !cp.hasClickEvent()) {
-						int idx = 1;
-						if (clickedObjs != null) {
-							while (idx < clickedObjs.Length) {
-								nowClickGO = clickedObjs [idx];
-                                cp = nowClickGO.GetComponentInParent<ClickableEventlistener2D>();
-                                if (cp!=null && cp.hasClickEvent()) {
-                                    cp.onClick (Input.mousePosition);
-									break;
-								}
-								idx++;
-							}
-						}
-					} else {
-						cp.onClick (Input.mousePosition);
-					}
-				}
+                    }
+                    FieldEventResult = eFieldEventResult.Block;
+
+
+                }
 			} else if (nowMode == MouseState.DRAG) {
-				if (nowClickGO == null || nowClickGO.GetComponentInParent<ClickableSprite> () == null) {
+				if (nowClickedList == null || nowClickedList.Count == 0|| nowClickedList[0].GetComponentInParent<ClickableSprite> () == null) {
 					//无法回调
 				} else {
-					nowClickGO.GetComponentInParent<ClickableSprite> ().endDrag (Input.mousePosition);
+                    nowClickedList[0].GetComponentInParent<ClickableSprite> ().endDrag (Input.mousePosition);
 				}
 			}
 			nowMode = MouseState.NONE;

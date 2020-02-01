@@ -16,15 +16,63 @@ public class WildMap : MonoBehaviour
     public GameObject obstacles;
     public GameObject endGo;
 
+    public WildPlayer player;
+
     public List<WildObstacle> Obstacles = new List<WildObstacle>();
     public float ColDis = 0.3f;
-
+    public ClickableManager2D clickableManager;
     private List<Polygon> polygons;
+    public GameObject Mark;
     // Start is called before the first frame update
     void Start()
     {
+        clickableManager = GameObject.Find("ClickableManager").GetComponent<ClickableManager2D>();
+        Init();
         InitMap();
-        
+    }
+
+    void Init()
+    {
+        ClickableManager2D.BindClickEvent(gameObject, delegate (GameObject go, Vector3 pos) {
+            Debug.Log("Clicka");
+            Vector3 posInWorld = clickableManager.m_camera.ScreenToWorldPoint(pos);
+            Vector3 posLocal = transform.InverseTransformPoint(posInWorld);
+            posLocal.z = 0;
+            if (Mark != null)
+            {
+                Mark.transform.localPosition = posLocal;
+            }
+            player.FinishFollowPath();
+
+            List<Vector2> path = StartSearch(player.transform.localPosition, posLocal);
+            if(path.Count > 0)
+            {
+                player.FollowPath(path);
+            }
+            
+        });
+        {
+            ClickableEventlistener2D listener = gameObject.AddComponent<ClickableEventlistener2D>();
+            listener.BeginDragEvent += delegate (GameObject gb, Vector3 dragDir) {
+                
+            };
+
+            listener.OnDragEvent += delegate (GameObject gb, Vector3 dragDir) {
+                
+            };
+            listener.EndDragEvent += delegate (GameObject gb, Vector3 dragDir) {
+                
+            };
+        }
+    }
+
+    public static void TransformPositionToGamePosition()
+    {
+
+    }
+    public static void GamePositionToTransformPosition()
+    {
+
     }
 
     private List<Vector2> ShowPath(AstarSearchNode root)
@@ -36,6 +84,7 @@ public class WildMap : MonoBehaviour
             list.Add(p.pnt.Pos);
             p = p.pre;
         }
+        list.Reverse();
         return list;
     }
 
@@ -44,7 +93,9 @@ public class WildMap : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            StartSearch();
+            Vector2 startPos = startGo.transform.localPosition;
+            Vector2 endPos = endGo.transform.localPosition;
+            StartSearch(startPos, endPos);
         }
 
         if(pathToShow != null)
@@ -113,7 +164,7 @@ public class WildMap : MonoBehaviour
     }
 
     private List<Vector2> pathToShow;
-    public void StartSearch()
+    public List<Vector2> StartSearch(Vector2 startPos, Vector2 endPos)
     {
         pathToShow = null;
 
@@ -122,7 +173,7 @@ public class WildMap : MonoBehaviour
 
         if(polygons == null)
         {
-            return;
+            return new List<Vector2>();
         }
 
 
@@ -144,11 +195,17 @@ public class WildMap : MonoBehaviour
         }
 
 
-        Vector2 startPos = startGo.transform.localPosition;
-        Vector2 endPos = endGo.transform.localPosition;
+       
 
         PolygonPoint startPoint = new PolygonPoint(startPos);
         PolygonPoint endPoint = new PolygonPoint(null,PolyPoints.Count, endPos);
+
+
+        if(canPass(startPos, endPos))
+        {
+            Debug.Log("直线可达");
+            return new List<Vector2>() {startPos,endPos};
+        }
 
         for (int i = 0; i < polygons.Count; i++)
         {
@@ -156,7 +213,7 @@ public class WildMap : MonoBehaviour
             if(isPointOutPoly(startPos, polygons[i]) == -1)
             {
                 Debug.Log("初始卡住啦");
-                return;
+                return new List<Vector2>();
             }
             for(int j = 0; j < polygons[i].Num; j++)
             {
@@ -200,7 +257,7 @@ public class WildMap : MonoBehaviour
                 Debug.Log("you way");
                 pathToShow = ShowPath(pHead);
                 //found
-                return;
+                return new List<Vector2>(pathToShow);
             }
             if (disss[pHead.pnt.PntIdx] < float.MaxValue)
             {
@@ -236,7 +293,7 @@ public class WildMap : MonoBehaviour
         //返回minHNode
 
         pathToShow = ShowPath(minHNode);
-       
+        return new List<Vector2>(pathToShow);
     }
 
 

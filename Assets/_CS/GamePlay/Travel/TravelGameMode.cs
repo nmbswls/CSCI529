@@ -322,15 +322,15 @@ public class TravelGameMode : GameModeBase {
 				isMovingCamera = true;
 				isContinueMovingCamera = false;
 				CameraToMove = mainCamera.transform.localPosition;
-			};
+            };
 
 			listener.OnDragEvent += delegate(GameObject gb,Vector3 dragDir) {
 				UpdateMoveTarget(dragDir);
-			};
+            };
 			listener.EndDragEvent += delegate(GameObject gb,Vector3 dragDir) {
 				isContinueMovingCamera = true;
 				isMovingCamera = false;
-			};
+            };
 		}
 
 	}
