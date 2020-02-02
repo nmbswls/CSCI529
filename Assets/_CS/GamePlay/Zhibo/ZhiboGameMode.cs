@@ -534,7 +534,7 @@ public class ZhiboGameMode : GameModeBase
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            mAudienceMgr.ShowRandomAudience();
+            //mAudienceMgr.ShowRandomAudience();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {

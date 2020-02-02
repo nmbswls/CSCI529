@@ -20,6 +20,6 @@ public class WildInteractable : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("jinru");
+        Debug.Log(collision.gameObject.name);
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
 public class WildPlayer : MonoBehaviour
 {
     WildMap wildMap;
@@ -21,6 +20,7 @@ public class WildPlayer : MonoBehaviour
         followPath = false;
         ClickableManager2D.BindClickEvent(gameObject, delegate (GameObject go, Vector3 pos) {
             Debug.Log("Click player");
+            wildMap.mainCtrl.ShowPop(transform.position);
         });
     }
     //全局倍速
@@ -47,7 +47,10 @@ public class WildPlayer : MonoBehaviour
         dir = SquareProjectToCircle(dir);
         if (dir.magnitude > 0.1f)
         {
-            FinishFollowPath();
+            if (followPath)
+            {
+                FinishFollowPath();
+            }
             transform.position += Time.deltaTime * dir * 2f;
         }
         else
@@ -99,7 +102,7 @@ public class WildPlayer : MonoBehaviour
     {
         followPath = false;
         this.targets = null;
-        Debug.Log("寻路结束");
+        //Debug.Log("寻路结束");
     }
     public void FollowPath(List<Vector2> targets)
     {
@@ -116,5 +119,6 @@ public class WildPlayer : MonoBehaviour
     {
 
     }
+
 
 }

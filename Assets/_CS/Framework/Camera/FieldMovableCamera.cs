@@ -63,10 +63,10 @@ public class FieldMovableCamera : MonoBehaviour
 
     private void InitCameraControl(Rect activeArea)
     {
-        cameraBound[0] = -activeArea.xMin;
-        cameraBound[1] = -activeArea.yMin;
-        cameraBound[2] = activeArea.xMin;
-        cameraBound[3] = activeArea.yMin;
+        cameraBound[0] = activeArea.xMin;
+        cameraBound[1] = activeArea.yMin;
+        cameraBound[2] = activeArea.xMax;
+        cameraBound[3] = activeArea.yMax;
 
 
         mCamera.transform.position = new Vector3(0, 0, -10);

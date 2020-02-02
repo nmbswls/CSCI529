@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class WildMap : MonoBehaviour
 {
-
+    public WildExploreCtrl mainCtrl;
 
     public float meterPerUnit = 3; 
     public float Width = 100;
@@ -35,6 +35,9 @@ public class WildMap : MonoBehaviour
     {
         ClickableManager2D.BindClickEvent(gameObject, delegate (GameObject go, Vector3 pos) {
             Debug.Log("Clicka");
+            return;
+
+            mainCtrl.HidePop();
             Vector3 posInWorld = clickableManager.m_camera.ScreenToWorldPoint(pos);
             Vector3 posLocal = transform.InverseTransformPoint(posInWorld);
             posLocal.z = 0;
@@ -203,7 +206,7 @@ public class WildMap : MonoBehaviour
 
         if(canPass(startPos, endPos))
         {
-            Debug.Log("直线可达");
+            //Debug.Log("直线可达");
             return new List<Vector2>() {startPos,endPos};
         }
 
@@ -279,6 +282,7 @@ public class WildMap : MonoBehaviour
                     if (newF < disss[next.PntIdx])
                     {
                         pq.Push(newNode);
+                        disss[next.PntIdx] = newF;
                     }
 
                     if(newH < minHNode.h)
@@ -288,7 +292,7 @@ public class WildMap : MonoBehaviour
                 }
             }
         }
-        Debug.Log("no way");
+        //Debug.Log("no way");
         //如果没找到
         //返回minHNode
 

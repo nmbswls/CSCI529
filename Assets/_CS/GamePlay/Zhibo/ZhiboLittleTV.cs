@@ -12,7 +12,7 @@ public class ZhiboLittleTvView{
     public Animator animator;
 
     public Transform GemsTr;
-    public List<Image> GemList = new List<Image>();
+    public List<ZBAudienceReqView> GemList = new List<ZBAudienceReqView>();
 
     public Transform TokenContainer;
     public GameObject TokenInfo;
@@ -23,7 +23,12 @@ public class ZhiboLittleTvView{
     public Text tvName;
 }
 
-
+public class ZBAudienceReqView
+{
+    public GameObject root;
+    public Image bg;
+    public Image icon;
+}
 
 public class ZhiboLittleTV : MonoBehaviour
 {
@@ -101,7 +106,11 @@ public class ZhiboLittleTV : MonoBehaviour
         for (int i = 0; i < MaxGem; i++)
         {
             Transform child = view.GemsTr.GetChild(i);
-            view.GemList.Add(child.GetComponent<Image>());
+            ZBAudienceReqView reqView = new ZBAudienceReqView();
+            reqView.root = child.gameObject;
+            reqView.bg = child.Find("BG").GetComponent<Image>();
+            reqView.icon = child.Find("Front").GetComponent<Image>();
+            view.GemList.Add(reqView);
         }
     }
 
@@ -122,6 +131,20 @@ public class ZhiboLittleTV : MonoBehaviour
                     audienceMgr.HideTokenDetail();
                 };
             }
+        }
+        {
+            DragEventListener listener = view.Content.GetComponent<DragEventListener>();
+            if (listener == null)
+            {
+                listener = view.Content.gameObject.AddComponent<DragEventListener>();
+                listener.PointerEnterEvent += delegate {
+                    audienceMgr.gameMode.mUICtrl.MouseInputLittleTV(this);
+                };
+                listener.PointerExitEvent += delegate {
+                    audienceMgr.gameMode.mUICtrl.MouseOutLittleTV(this);
+                };
+            }
+
         }
     }
 
@@ -267,29 +290,36 @@ public class ZhiboLittleTV : MonoBehaviour
 
         for (int j = 0; j < TargetAudience.BlackHp; j++)
         {
-            view.GemList[idx].gameObject.SetActive(true);
-            view.GemList[idx].color = Color.white;
-            view.GemList[idx].sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/6");
+
+            view.GemList[idx].root.SetActive(true);
+            view.GemList[idx].bg.color = Color.white;
+            view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/6");
             idx++;
         }
 
-        for (int i = 0; i < TargetAudience.GemHp.Length; i++)
+        for (int i = 0; i < TargetAudience.MaxReq.Length; i++)
         {
-            for (int j = 0; j < TargetAudience.GemHp[i]; j++)
+            for (int j = 0; j < TargetAudience.MaxReq[i]; j++)
             {
-                view.GemList[idx].gameObject.SetActive(true);
-                view.GemList[idx].color = Color.white;
-                view.GemList[idx].sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                view.GemList[idx].root.SetActive(true);
+                view.GemList[idx].bg.color = Color.white;
+                view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                if (j < TargetAudience.NowReq[i])
+                {
+                    //有血量的部分
+                    view.GemList[idx].icon.color = Color.white;
+                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                }
                 idx++;
             }
         }
         for (int i = idx; i < MaxGem; i++)
         {
-            view.GemList[i].gameObject.SetActive(false);
+            view.GemList[i].root.SetActive(false);
         }
 
         //路径不对 该由逻辑层控制 视图变化！
-        if (TargetAudience.isDead())
+        if (TargetAudience.isSatisfied())
         {
             //Affected();
             Attracted();
@@ -298,64 +328,72 @@ public class ZhiboLittleTV : MonoBehaviour
 
     public void UpdateHp()
     {
-        int changes = TargetAudience.HpChangeNum();
-        if (changes > 0)
-        {
-            ChangeHpGem();
-        }
-        else
-        {
-            HpFadeOut();
-        }
+        int changes = TargetAudience.ReqChangeNum();
+        ChangeHpGem();
     }
 
-    public void HpFadeOut()
-    {
+    //public void HpFadeOut()
+    //{
 
-        float alpha = 1;
-        List<int> toFadeOut = new List<int>();
+    //    float alpha = 1;
+    //    List<int> toFadeOut = new List<int>();
 
-        int preIdx = 0;
-        for(int i = 0; i < 6; i++)
-        {
-            //int num = TargetAudience.preHp[i] - TargetAudience.GemHp[i];
-            for(int j= preIdx+ TargetAudience.GemHp[i]; j < preIdx+TargetAudience.preHp[i]; j++)
-            {
-                toFadeOut.Add(j);
-            }
-            preIdx = preIdx + TargetAudience.preHp[i];
-        }
+    //    int preIdx = 0;
+    //    for(int i = 0; i < 6; i++)
+    //    {
+    //        //int num = TargetAudience.preHp[i] - TargetAudience.GemHp[i];
+    //        for(int j= preIdx+ TargetAudience.GemHp[i]; j < preIdx+TargetAudience.preHp[i]; j++)
+    //        {
+    //            toFadeOut.Add(j);
+    //        }
+    //        preIdx = preIdx + TargetAudience.preHp[i];
+    //    }
 
-        if(preTween != null)
-        {
-            preTween.Kill();
-        }
+    //    if(preTween != null)
+    //    {
+    //        preTween.Kill();
+    //    }
 
-        preTween = DOTween.To
-        (
-            () => alpha,
-            (x) => { alpha = x; },
-            0,
-            1f
-        ).OnUpdate(delegate { 
+    //    preTween = DOTween.To
+    //    (
+    //        () => alpha,
+    //        (x) => { alpha = x; },
+    //        0,
+    //        1f
+    //    ).OnUpdate(delegate { 
 
-            for(int i=0;i< toFadeOut.Count; i++)
-            {
-                view.GemList[toFadeOut[i]].color = new Color(0,0,0,alpha);
-            }
+    //        for(int i=0;i< toFadeOut.Count; i++)
+    //        {
+    //            view.GemList[toFadeOut[i]].color = new Color(0,0,0,alpha);
+    //        }
 
-        }).OnComplete(delegate {
+    //    }).OnComplete(delegate {
 
-            ChangeHpGem();
-            preTween = null;
-        }).OnKill(delegate {
-            ChangeHpGem();
-        });
-    }
+    //        ChangeHpGem();
+    //        preTween = null;
+    //    }).OnKill(delegate {
+    //        ChangeHpGem();
+    //    });
+    //}
 
     public void Hit()
     {
 
+    }
+
+    private int originSiblingIdx;
+    public void HighLight()
+    {
+        originSiblingIdx = transform.GetSiblingIndex();
+        view.Content.transform.localScale = Vector3.one * 1.3f;
+        transform.SetAsLastSibling();
+    }
+
+    public void CancelHightLight()
+    {
+        view.Content.transform.localScale = Vector3.one;
+        transform.SetSiblingIndex(originSiblingIdx);
+        originSiblingIdx = -1;
     }
 
 }

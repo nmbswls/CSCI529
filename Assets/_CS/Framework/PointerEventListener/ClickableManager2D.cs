@@ -76,7 +76,8 @@ public class ClickableManager2D : MonoBehaviour
 			#else
 			//Debug.Log(Stage.inst.touchTarget.gameObject.name);	
 			if (EventSystem.current.IsPointerOverGameObject ()){
-			#endif
+#endif
+                Debug.Log("鼠标在ui上");
 				;} 
 			else {
 				if (nowMode == MouseState.NONE) {

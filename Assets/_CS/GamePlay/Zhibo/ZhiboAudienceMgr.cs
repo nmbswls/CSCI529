@@ -246,7 +246,7 @@ public class ZhiboAudienceMgr
                 {
                     continue;
                 }
-                if (TargetList[ti].GemMaxHp[i] > TargetList[ti].NowManyi[i])
+                if (TargetList[ti].MaxReq[i] > TargetList[ti].NowReq[i])
                 {
                     targes.Add(ti);
                 }
@@ -256,7 +256,7 @@ public class ZhiboAudienceMgr
                 continue;
             }
             int idx = targes[Random.Range(0, targes.Count)];
-            TargetList[idx].NowManyi[i] += 1;
+            TargetList[idx].NowReq[i] += 1;
 
 
 
@@ -274,11 +274,11 @@ public class ZhiboAudienceMgr
             ShowAudienceHit(TargetList[idx]);
             UpdateAudienceHp(TargetList[idx]);
 
-            if (TargetList[idx].isDead())
+            if (TargetList[idx].isSatisfied())
             {
 
                 KilledAudience.Enqueue(TargetList[idx]);
-                TargetList[idx].Attracted();
+                //TargetList[idx].Attracted();
             }
         }
         //空伤害 触发队列
@@ -302,7 +302,7 @@ public class ZhiboAudienceMgr
                 {
                     Debug.Log("errrrrrr");
                 }
-                AudienceAttracted(a);
+                AudienceSatisfied(a);
 
             //}
         }
@@ -331,7 +331,7 @@ public class ZhiboAudienceMgr
                 PlaceToken(TargetList[i], token);
                 UpdateAudienceHp(TargetList[i]);
             }
-            if (TargetList[i].isDead())
+            if (TargetList[i].isSatisfied())
             {
                 //根据 观众血量类型 及 放置的代币 计算加成
 
@@ -339,7 +339,6 @@ public class ZhiboAudienceMgr
                 //ShowAudienceEffect(TargetList[i]);
                 KilledAudience.Enqueue(TargetList[i]);
                 //AudienceAttracted(TargetList[i]);
-                TargetList[i].Attracted();
                 //LittleTvList[TargetList[i].BindViewIdx].Attracted();
             }
         }
@@ -421,9 +420,63 @@ public class ZhiboAudienceMgr
     }
 
 
+    private void HandleAudiennceBonus(ZhiboAudience audience)
+    {
+        for (int i = 0; i < audience.Skills.Count; i++)
+        {
+            if (audience.Skills[i].skillType != eZhiboAudienceSkillType.Bonus)
+            {
+                continue;
+            }
+            ZhiboAudienceSkill bonuw = audience.Skills[i];
+            eAudienceBonusType type = (eAudienceBonusType)bonuw.effectId;
 
+            switch (type)
+            {
+                case eAudienceBonusType.AddHp:
+                    GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语回血");
+                    gameMode.AddHp(int.Parse(bonuw.effectString));
+                    break;
+                case eAudienceBonusType.Aoe:
+                    GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语aoe");
+                    string[] args = bonuw.effectString.Split(',');
+                    if (args.Length != 6)
+                    {
+                        break;
+                    }
+                    int[] damaged = new int[6];
+                    for (int jj = 0; jj < args.Length; jj++)
+                    {
+                        damaged[jj] = int.Parse(args[jj]);
+                    }
+                    ApplyGemHit(damaged, 0);
+                    //damageChain.Enqueue(damaged);
+                    //gameMode.AddHp(int.Parse(bonuw.effectString));
+                    break;
+                case eAudienceBonusType.Damage:
+                    GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语伤血");
+                    gameMode.AddHp(-int.Parse(bonuw.effectString));
+                    break;
+                case eAudienceBonusType.Score:
+                    GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语加分");
+                    gameMode.GainScore(int.Parse(bonuw.effectString));
+                    break;
+                case eAudienceBonusType.Dual:
+                    GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语抽卡");
+                    gameMode.AddCardFromDeck();
+                    break;
+                case eAudienceBonusType.Discard:
+                    GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语弃卡");
+                    gameMode.DiscardRandomCards(1);
+                    break;
+                default:
+                    break;
+            }
 
-    public void AudienceAttracted(ZhiboAudience audience)
+        }
+    }
+
+    public void AudienceSatisfied(ZhiboAudience audience)
     {
         if (audience.BindViewIdx == -1)
         {
@@ -436,65 +489,13 @@ public class ZhiboAudienceMgr
 
         HandleGetScore(audience);
         HandleTurnLeftBonus(audience);
-
+        HandleAudiennceBonus(audience);
         if (audience.BindViewIdx != -1)
         {
-            //
-            //gameMode.GainScore(audience.NowScore);
 
             // handle all audience.Tokens();
-            for (int i = 0; i < audience.Skills.Count; i++)
-            {
-                if(audience.Skills[i].skillType != eZhiboAudienceSkillType.Bonus)
-                {
-                    continue;
-                }
-                ZhiboAudienceSkill bonuw = audience.Skills[i];
-                eAudienceBonusType type = (eAudienceBonusType)bonuw.effectId;
-
-                switch (type)
-                {
-                    case eAudienceBonusType.AddHp:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语回血");
-                        gameMode.AddHp(int.Parse(bonuw.effectString));
-                        break;
-                    case eAudienceBonusType.Aoe:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语aoe");
-                        string[] args = bonuw.effectString.Split(',');
-                        if(args.Length != 6)
-                        {
-                            break;
-                        }
-                        int[] damaged = new int[6];
-                        for(int jj = 0; jj < args.Length; jj++)
-                        {
-                            damaged[jj] = int.Parse(args[jj]);
-                        }
-                        ApplyGemHit(damaged,0);
-                        //damageChain.Enqueue(damaged);
-                        //gameMode.AddHp(int.Parse(bonuw.effectString));
-                        break;
-                    case eAudienceBonusType.Damage:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语伤血");
-                        gameMode.AddHp(-int.Parse(bonuw.effectString));
-                        break;
-                    case eAudienceBonusType.Score:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语加分");
-                        gameMode.GainScore(int.Parse(bonuw.effectString));
-                        break;
-                    case eAudienceBonusType.Dual:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语抽卡");
-                        gameMode.AddCardFromDeck();
-                        break;
-                    case eAudienceBonusType.Discard:
-                        GameMain.GetInstance().GetModule<UIMgr>().ShowHint("亡语弃卡");
-                        gameMode.DiscardRandomCards(1);
-                        break;
-                    default:
-                        break;
-                }
-
-            }
+            LittleTvList[audience.BindViewIdx].Disappear();
+            TargetList.Remove(audience);
         }
     }
 
@@ -603,8 +604,8 @@ public class ZhiboAudienceMgr
                     int randI = Random.Range(0,rates.Count);
                     float[] rate = rates[randI];
                     int[] hp = GetHpTemplate(audience.Level, rate);
-                    audience.GemMaxHp = new int[6];
-                    audience.GemHp = new int[6];
+                    audience.MaxReq = new int[6];
+                    audience.NowReq = new int[6];
 
                     //add prefix & surfix here
                     int pOfSuf = Random.Range(0, 2);
@@ -629,8 +630,8 @@ public class ZhiboAudienceMgr
                    
                     for (int j = 0; j < 6; j++)
                     {
-                        audience.GemMaxHp[j] = hp[j] + + tmpProHp[j] + tmpSufHp[j];
-                        audience.GemHp[j] = hp[j] + tmpProHp[j] + tmpSufHp[j];
+                        audience.MaxReq[j] = hp[j] + + tmpProHp[j] + tmpSufHp[j];
+                        //audience.NowReq[j] = hp[j] + tmpProHp[j] + tmpSufHp[j];
                     }
                     if (Random.value < 0.5f)
                     {
@@ -845,12 +846,12 @@ public class ZhiboAudienceMgr
         }
         {
             audience.Type = eAudienceType.Normal;
-            audience.GemHp[0] = oriHp[0] + proTmpHp[0] + sufTmpHp[0];
-            audience.GemHp[1] = oriHp[1] + proTmpHp[1] + sufTmpHp[1];
-            audience.GemHp[2] = oriHp[2] + proTmpHp[2] + sufTmpHp[2];
-            audience.GemHp[3] = oriHp[3] + proTmpHp[3] + sufTmpHp[3];
-            audience.GemHp[4] = oriHp[4] + proTmpHp[4] + sufTmpHp[4];
-            audience.GemHp[5] = oriHp[5] + proTmpHp[5] + sufTmpHp[5];
+            audience.MaxReq[0] = oriHp[0] + proTmpHp[0] + sufTmpHp[0];
+            audience.MaxReq[1] = oriHp[1] + proTmpHp[1] + sufTmpHp[1];
+            audience.MaxReq[2] = oriHp[2] + proTmpHp[2] + sufTmpHp[2];
+            audience.MaxReq[3] = oriHp[3] + proTmpHp[3] + sufTmpHp[3];
+            audience.MaxReq[4] = oriHp[4] + proTmpHp[4] + sufTmpHp[4];
+            audience.MaxReq[5] = oriHp[5] + proTmpHp[5] + sufTmpHp[5];
             audience.state = eAudienceState.Normal;
         }
         
@@ -863,12 +864,16 @@ public class ZhiboAudienceMgr
     {
 
         audience.state = eAudienceState.None;
-        float hprate = audience.HpRate();
-        if (hprate <= 0.1f)
+        LittleTvList[audience.BindViewIdx].Disappear();
+        TargetList.Remove(audience);
+
+
+        float stfRate = audience.ReqRate();
+        if (stfRate >= 0.9f)
         {
             addExtraHp(1);
         }
-        else if (hprate <= 0.6f)
+        else if (stfRate >= 0.6f)
         {
             gameMode.AddHp(-3);
         }
@@ -911,20 +916,7 @@ public class ZhiboAudienceMgr
                         return;
                     }
                     AudienceLeave(TargetList[i]);
-                    LittleTvList[TargetList[i].BindViewIdx].Disappear();
-                    TargetList.RemoveAt(i);
-                }
-            }else if (TargetList[i].state == eAudienceState.Attracted)
-            {
-                TargetList[i].AttractLeftTurn -= 1;
-                if (TargetList[i].AttractLeftTurn <= 0)
-                {
-                    if (TargetList[i].BindViewIdx == -1)
-                    {
-                        return;
-                    }
-                    LittleTvList[TargetList[i].BindViewIdx].Disappear();
-                    TargetList.RemoveAt(i);
+
                 }
             }
         }
@@ -936,8 +928,7 @@ public class ZhiboAudienceMgr
         List<ZhiboAudienceSkill> skillsToHandle = new List<ZhiboAudienceSkill>();
         for (int i = 0; i < TargetList.Count; i++)
         {
-            if (TargetList[i].state == eAudienceState.Attracted
-                || TargetList[i].state == eAudienceState.None)
+            if (TargetList[i].state == eAudienceState.None)
             {
                 continue;
             }
@@ -973,8 +964,7 @@ public class ZhiboAudienceMgr
     {
         for(int i = 0; i < TargetList.Count; i++)
         {
-            if(TargetList[i].state == eAudienceState.Attracted
-                || TargetList[i].state == eAudienceState.None)
+            if(TargetList[i].state == eAudienceState.None)
             {
                 continue;
             }
@@ -985,9 +975,9 @@ public class ZhiboAudienceMgr
             }
 
             int damage = 0;
-            for(int j=0;j< TargetList[i].GemHp.Length; j++)
+            for(int j=0;j< TargetList[i].NowReq.Length; j++)
             {
-                damage += TargetList[i].GemHp[j];
+                damage += TargetList[i].MaxReq[i] - TargetList[i].NowReq[j];
             }
             gameMode.AddHp(-damage);
 
@@ -1027,7 +1017,7 @@ public class ZhiboAudienceMgr
         ZhiboAudience audience = new ZhiboAudience();
         {
             audience.Type = eAudienceType.Heizi;
-            audience.GemHp[6] = hp;
+            audience.BlackHp = hp;
             audience.state = eAudienceState.Normal;
         }
         int idx = ShowNewAudience(audience);

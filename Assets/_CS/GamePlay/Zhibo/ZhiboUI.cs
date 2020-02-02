@@ -127,6 +127,32 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         HideBuffDetail();
     }
 
+    private List<ZhiboLittleTV> mouseOverStack = new List<ZhiboLittleTV>();
+
+    public void MouseInputLittleTV(ZhiboLittleTV tv)
+    {
+        if (!mouseOverStack.Contains(tv))
+        {
+            mouseOverStack.Add(tv);
+        }
+        if(mouseOverStack.Count > 0)
+        {
+            mouseOverStack[mouseOverStack.Count-1].HighLight();
+        }
+    }
+
+    public void MouseOutLittleTV(ZhiboLittleTV tv)
+    {
+        if (mouseOverStack.Contains(tv))
+        {
+            mouseOverStack.Remove(tv);
+            tv.CancelHightLight();
+        }
+        if (mouseOverStack.Count > 0)
+        {
+            mouseOverStack[mouseOverStack.Count - 1].HighLight();
+        }
+    }
 
     public void GainHotEffect(int num)
     {

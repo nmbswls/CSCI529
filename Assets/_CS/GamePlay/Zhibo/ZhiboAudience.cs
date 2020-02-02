@@ -12,7 +12,7 @@ public enum eAudienceType
 public enum eAudienceState {
     None,
     Normal,
-    Attracted,
+    //Attracted,
 }
 
 public enum eAudienceBonusType
@@ -101,7 +101,7 @@ public class ZhiboAudience
 {
     //static property
     public eAudienceType Type;
-    public static int MAX_GEM_NUM = 16;
+    public static int MAX_REQ_NUM = 16;
     public int Level = 1;
     public int HpModeIdx = 0;
 
@@ -120,9 +120,10 @@ public class ZhiboAudience
     public eAudienceState state = eAudienceState.None; 
     public int BindViewIdx = -1;
 
-    public int[] NowManyi = new int[(int)eAudienceHpType.Max];
-    public int[] GemHp = new int[(int)eAudienceHpType.Max];
-    public int[] GemMaxHp = new int[(int)eAudienceHpType.Max];
+    public int[] NowReq = new int[(int)eAudienceHpType.Max];
+    public int[] MaxReq = new int[(int)eAudienceHpType.Max];
+    //public int[] GemHp = new int[(int)eAudienceHpType.Max];
+    //public int[] GemMaxHp = new int[(int)eAudienceHpType.Max];
     public int BlackHp = 0;
     public int MaxBlackHp = 0;
     public int AttractLeftTurn = 0;
@@ -130,7 +131,7 @@ public class ZhiboAudience
     public List<AudienceToken> Tokens = new List<AudienceToken>();
 
 
-    public int[] preHp = new int[(int)eAudienceHpType.Max];
+    public int[] preReq = new int[(int)eAudienceHpType.Max];
     public float preScore = 0;
 
     //prefix & Suffix
@@ -146,49 +147,47 @@ public class ZhiboAudience
 
     public void addExtraHp(int type, int amount)
     {
-        int totalHp = 0;
-        for(int i = 0; i < GemMaxHp.Length; i++)
+        int totalReq = 0;
+        for(int i = 0; i < MaxReq.Length; i++)
         {
-            totalHp += GemMaxHp[i];
+            totalReq += MaxReq[i];
         }
-        if(totalHp >= MAX_GEM_NUM)
+        if(totalReq >= MAX_REQ_NUM)
         {
             return;
         }
-        GemMaxHp[type] += 1;
-        GemHp[type] += 1;
-        
+        MaxReq[type] += amount;
     }
 
-    public int HpChangeNum()
+    public int ReqChangeNum()
     {
         int ret = 0;
-        for (int i = 0; i < GemHp.Length; i++)
+        for (int i = 0; i < NowReq.Length; i++)
         {
-            ret += GemHp[i]-preHp[i];
+            ret += NowReq[i]-preReq[i];
         }
         return ret;
     }
 
-    public float HpRate()
+    public float ReqRate()
     {
-        int maxHp = 0;
-        for(int i=0;i< GemMaxHp.Length; i++)
+        int totalReq = 0;
+        for(int i=0;i< MaxReq.Length; i++)
         {
-            maxHp += GemMaxHp[i];
+            totalReq += MaxReq[i];
         }
 
-        int hp = 0;
-        for (int i = 0; i < GemHp.Length; i++)
+        int nowReq = 0;
+        for (int i = 0; i < NowReq.Length; i++)
         {
-            hp += GemHp[i];
+            nowReq += NowReq[i];
         }
-        if (hp == 0)
+        if (nowReq == 0)
         {
             return 0;
         }
 
-        return hp * 1.0f / maxHp;
+        return nowReq * 1.0f / totalReq;
     }
 
     public void AddScore(float amount)
@@ -197,22 +196,20 @@ public class ZhiboAudience
         NowScore += amount;
     }
 
-    public bool isDead()
+    public bool isSatisfied()
     {
-        bool ret = true;
         if(BlackHp > 0)
         {
             return false;
         }
-        for (int i = 0; i < GemHp.Length; i++)
+        for (int i = 0; i < NowReq.Length; i++)
         {
-            if (GemHp[i] > 0)
+            if (NowReq[i] < MaxReq[i])
             {
-                ret = false;
-                break;
+                return false;
             }
         }
-        return ret;
+        return true;
     }
 
     public bool ApplyDamage(int[] inputDamage)
@@ -231,7 +228,7 @@ public class ZhiboAudience
 
         for (int i = 0; i < 6; i++)
         {
-            preHp[i] = GemHp[i];
+            preReq[i] = NowReq[i];
         }
 
         int damageOverflow = 0;
@@ -240,14 +237,14 @@ public class ZhiboAudience
         {
             if (damage[i] > 0)
              {
-                if(GemHp[i] > 0)
+                if(NowReq[i] < MaxReq[i])
                 {
                     CauseDamage = true;
-                    GemHp[i] -= damage[ i];
-                    if(GemHp[i] < 0)
+                    NowReq[i] += damage[ i];
+                    if(NowReq[i] > MaxReq[i])
                     {
-                        damageOverflow += (-GemHp[i]);
-                        GemHp[i] = 0;
+                        damageOverflow += (NowReq[i] - MaxReq[i]);
+                        NowReq[i] = MaxReq[i];
                     }
                 }
                 else
@@ -260,17 +257,17 @@ public class ZhiboAudience
         {
             if (damage[0] > 0)
             {
-                if (GemHp[i] > 0)
+                if (NowReq[i] < MaxReq[i])
                 {
                     CauseDamage = true;
-                    if(damage[0] >= GemHp[i])
+                    if(damage[0] >= MaxReq[i] - NowReq[i])
                     {
-                        damage[0] -= GemHp[i];
-                        GemHp[i] = 0;
+                        damage[0] -= MaxReq[i] - NowReq[i];
+                        NowReq[i] = MaxReq[i];
                     }
                     else
                     {
-                        GemHp[i] -= damage[0];
+                        NowReq[i] += damage[0];
                         damage[0] = 0;
                     }
 
@@ -279,14 +276,14 @@ public class ZhiboAudience
         }
 
         damageOverflow += damage[0];
-        if (GemHp[0] > 0 )
+        if (NowReq[0] < MaxReq[0])
         {
             if(damageOverflow > 0)
             {
-                GemHp[0] -= damageOverflow;
-                if(GemHp[0] < 0)
+                NowReq[0] += damageOverflow;
+                if(NowReq[0] > MaxReq[0])
                 {
-                    GemHp[0] = 0;
+                    NowReq[0] = MaxReq[0];
                 }
                 CauseDamage = true;
             }
@@ -296,16 +293,18 @@ public class ZhiboAudience
         return CauseDamage;
     }
 
-    public void Attracted()
-    {
-        if(state == eAudienceState.Attracted)
-        {
-            return;
-        }
 
-        state = eAudienceState.Attracted;
-        AttractLeftTurn = 1;
-    }
+
+    //public void Attracted()
+    //{
+    //    if(state == eAudienceState.Attracted)
+    //    {
+    //        return;
+    //    }
+
+    //    state = eAudienceState.Attracted;
+    //    AttractLeftTurn = 1;
+    //}
 
     public bool ApplyColorFilter(bool isAnd, List<int> colors)
     {
@@ -318,7 +317,7 @@ public class ZhiboAudience
 
             for (int i=0;i< colors.Count; i++)
             {
-                if (GemHp[colors[i]] == 0)
+                if (NowReq[colors[i]] == MaxReq[colors[i]])
                 {
                     return false;
                 }
@@ -329,7 +328,7 @@ public class ZhiboAudience
         {
             for (int i = 0; i < colors.Count; i++)
             {
-                if (GemHp[colors[i]] > 0)
+                if (NowReq[colors[i]] < MaxReq[colors[i]])
                 {
                     return true;
                 }
