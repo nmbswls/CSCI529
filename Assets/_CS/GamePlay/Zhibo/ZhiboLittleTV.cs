@@ -21,7 +21,11 @@ public class ZhiboLittleTvView{
 
     public Text NowScore;
     public Text tvName;
+
+    public Text TurnLeft;
 }
+
+
 
 public class ZBAudienceReqView
 {
@@ -95,6 +99,8 @@ public class ZhiboLittleTV : MonoBehaviour
         view.tvName = transform.Find("Bg").Find("Text").GetComponent<Text>();
 
         view.MoreToken.SetActive(false);
+
+        view.TurnLeft = transform.Find("Bg").Find("TurnLeft").Find("Text").GetComponent<Text>();
 
         view.TokenList.Clear();
         foreach (Transform tr in view.TokenContainer)
@@ -171,6 +177,7 @@ public class ZhiboLittleTV : MonoBehaviour
         }
         UpdateHp();
         UpdateBuffs();
+        UpdateTurnLeft();
     }
 
     public void Show(float delay)
@@ -215,6 +222,15 @@ public class ZhiboLittleTV : MonoBehaviour
             view.NowScore.text = refScore + "";
         });
 
+    }
+
+    public void UpdateTurnLeft()
+    {
+        if(TargetAudience == null)
+        {
+            return;
+        }
+        view.TurnLeft.text = TargetAudience.LastTurn + "";
     }
 
     public void UpdateBuffs()

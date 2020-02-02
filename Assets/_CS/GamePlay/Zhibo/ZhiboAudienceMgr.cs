@@ -918,6 +918,10 @@ public class ZhiboAudienceMgr
                     AudienceLeave(TargetList[i]);
 
                 }
+                else
+                {
+                    LittleTvList[TargetList[i].BindViewIdx].UpdateTurnLeft();
+                }
             }
         }
     }
