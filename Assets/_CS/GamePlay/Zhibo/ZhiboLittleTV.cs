@@ -302,11 +302,18 @@ public class ZhiboLittleTV : MonoBehaviour
             for (int j = 0; j < TargetAudience.MaxReq[i]; j++)
             {
                 view.GemList[idx].root.SetActive(true);
-                view.GemList[idx].bg.color = Color.white;
+                view.GemList[idx].bg.color = new Color(1,1,1,0.3f);
                 view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
                 if (j < TargetAudience.NowReq[i])
                 {
                     //有血量的部分
+                    view.GemList[idx].icon.enabled = true;
+                    view.GemList[idx].icon.color = Color.white;
+                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                }
+                else
+                {
+                    view.GemList[idx].icon.enabled = false;
                     view.GemList[idx].icon.color = Color.white;
                     view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
                 }
@@ -319,11 +326,11 @@ public class ZhiboLittleTV : MonoBehaviour
         }
 
         //路径不对 该由逻辑层控制 视图变化！
-        if (TargetAudience.isSatisfied())
-        {
-            //Affected();
-            Attracted();
-        }
+        //if (TargetAudience.isSatisfied())
+        //{
+        //    //Affected();
+        //    Attracted();
+        //}
     }
 
     public void UpdateHp()

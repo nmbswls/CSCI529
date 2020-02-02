@@ -603,7 +603,7 @@ public class ZhiboAudienceMgr
                     audience.Type = eAudienceType.Good;
                     int randI = Random.Range(0,rates.Count);
                     float[] rate = rates[randI];
-                    int[] hp = GetHpTemplate(audience.Level, rate);
+                    int[] req = GetHpTemplate(audience.Level, rate);
                     audience.MaxReq = new int[6];
                     audience.NowReq = new int[6];
 
@@ -624,13 +624,13 @@ public class ZhiboAudienceMgr
                     if (pOfPro==1)
                     {
                         TVProfix appliedPro = applyProfixEffect();
-                        tmpProHp = loadProfixEffect(appliedPro, hp);
+                        tmpProHp = loadProfixEffect(appliedPro, req);
                         audience.tvProfix = appliedPro;
                     }
                    
                     for (int j = 0; j < 6; j++)
                     {
-                        audience.MaxReq[j] = hp[j] + + tmpProHp[j] + tmpSufHp[j];
+                        audience.MaxReq[j] = req[j] + tmpProHp[j] + tmpSufHp[j];
                         //audience.NowReq[j] = hp[j] + tmpProHp[j] + tmpSufHp[j];
                     }
                     if (Random.value < 0.5f)
@@ -1293,12 +1293,12 @@ public class ZhiboAudienceMgr
         }
         return appliedPro;
     }
-    public int[] loadProfixEffect(TVProfix appliedPro, int[] curHp)
+    public int[] loadProfixEffect(TVProfix appliedPro, int[] curReq)
     {
         int[] ProfixHpTmp = { 0, 0, 0, 0, 0, 0 };
         for (int i = 0; i < appliedPro.effects.Count; i++)
         {
-            int[] tmpHp = handOneProfixEffect(appliedPro.effects[i], appliedPro.values[i], curHp);
+            int[] tmpHp = handOneProfixEffect(appliedPro.effects[i], appliedPro.values[i], curReq);
             for (int t = 0; t < 6; t++)
             {
                 ProfixHpTmp[t] += tmpHp[t];
@@ -1318,7 +1318,7 @@ public class ZhiboAudienceMgr
         return ProfixList.profixs[idx];
     }
 
-    public int[] handOneProfixEffect(TVProfixEffect efct, int value, int[] curHp)
+    public int[] handOneProfixEffect(TVProfixEffect efct, int value, int[] curReq)
     {
         int[] hpTmp = { 0, 0, 0, 0, 0, 0 };
         switch (efct)
@@ -1331,11 +1331,11 @@ public class ZhiboAudienceMgr
                 {
                     if(value>=1)
                     {
-                        hpTmp[i] = curHp[i] * (value - 1);
+                        hpTmp[i] = curReq[i] * (value - 1);
                     }
                     else
                     {
-                        hpTmp[i] = -curHp[i] * (1 - value);
+                        hpTmp[i] = -curReq[i] * (1 - value);
                     }
                 }
                 break;
