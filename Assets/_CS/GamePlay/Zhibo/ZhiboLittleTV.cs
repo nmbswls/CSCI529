@@ -332,6 +332,11 @@ public class ZhiboLittleTV : MonoBehaviour
             view.GemList[idx].root.SetActive(true);
             view.GemList[idx].bg.color = Color.white;
             view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/6");
+
+            view.GemList[idx].icon.enabled = true;
+            view.GemList[idx].icon.color = Color.white;
+            view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/6");
+
             idx++;
         }
 

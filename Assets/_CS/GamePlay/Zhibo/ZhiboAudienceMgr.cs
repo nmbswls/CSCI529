@@ -1047,7 +1047,7 @@ public class ZhiboAudienceMgr
     }
 
 
-    public void GenHeifen(int hp)
+    public void GenHeifen(int hp, int idx = -1)
     {
         ZhiboAudience audience = new ZhiboAudience();
         {
@@ -1055,11 +1055,35 @@ public class ZhiboAudienceMgr
             audience.BlackHp = hp;
             audience.state = eAudienceState.Normal;
         }
-        int idx = ShowNewAudience(audience);
+        int realIdx = -1;
+        if(idx >= 0)
+        {
+            realIdx = ShowNewAudienceAtPos(audience,idx);
+        }
+        if (realIdx == -1)
+        {
+            realIdx = ShowNewAudience(audience);
+        }
+
         audience.BindViewIdx = idx;
         TargetList.Add(audience);
     }
 
+
+    public int ShowNewAudienceAtPos(ZhiboAudience audience, int slotIdx)
+    {
+        if (!EmptyTVList.Contains(slotIdx))
+        {
+            return -1;
+        }
+
+        EmptyTVList.Remove(slotIdx);
+
+        LittleTvList[slotIdx].InitLittleTvView(audience);
+
+        audience.state = eAudienceState.Normal;
+        return slotIdx;
+    }
 
     public int ShowNewAudience(ZhiboAudience audience)
     {
