@@ -108,7 +108,8 @@ public class ZhiboAudience
     public int LastTurn = 3;
 
     //即时制属性
-    public int TimeLeft;
+    public float OriginTimeLast;
+    public float TimeLeft;
 
     public List<ZhiboAudienceSkill> Skills = new List<ZhiboAudienceSkill>();
 

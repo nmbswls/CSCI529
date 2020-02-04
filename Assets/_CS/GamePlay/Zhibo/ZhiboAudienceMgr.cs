@@ -127,6 +127,35 @@ public class ZhiboAudienceMgr
         Debug.Log("load desp");
     }
 
+    float timeLeftChangeInterval = 0.2f;
+    public void Tick(float dTime)
+    {
+        timeLeftChangeInterval += dTime;
+        for (int i = TargetList.Count -1; i >= 0; i--)
+        {
+            if (timeLeftChangeInterval > 0.2f)
+            {
+                if (TargetList[i].BindViewIdx != -1)
+                {
+                    LittleTvList[TargetList[i].BindViewIdx].UpdateTimeLeft();
+                }
+            }
+            if (TargetList[i].TimeLeft > 0)
+            {
+                TargetList[i].TimeLeft -= dTime;
+                if(TargetList[i].TimeLeft <= 0)
+                {
+                    AudienceLeave(TargetList[i]);
+                }
+            }
+            
+        }
+        if (timeLeftChangeInterval > 0.2f)
+        {
+            timeLeftChangeInterval = 0;
+        }
+    }
+
     public void InitUI()
     {
         Transform root = gameMode.mUICtrl.GetAudienceRoot();
@@ -593,6 +622,8 @@ public class ZhiboAudienceMgr
             {
                 ZhiboAudience audience = new ZhiboAudience();
                 audience.Level = originLevel + i / 3;
+                audience.OriginTimeLast = 15f;
+                audience.TimeLeft = 15f;
                 if (i % 4 == 2)
                 {
                     audience.Type = eAudienceType.Heizi;

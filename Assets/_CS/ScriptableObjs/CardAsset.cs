@@ -135,6 +135,7 @@ public class CardAsset : ScriptableObject
 
     public eCardType CardType;
 
+    public string TagString;
     public List<string> Tags = new List<string>();
 
     //消耗相关

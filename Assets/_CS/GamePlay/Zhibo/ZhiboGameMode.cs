@@ -331,6 +331,7 @@ public class ZhiboGameMode : GameModeBase
         //}
 
         int num = CardMaxMaintain - state.Cards.Count;
+        Debug.Log(num);
         for (int i = 0; i < num; i++)
         {
             AddCardFromDeck();
@@ -555,6 +556,10 @@ public class ZhiboGameMode : GameModeBase
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
+            string tagString = "sss,aaa";
+            string[] tags = tagString.Split(',');
+            mZhiboDanmuMgr.AddFengxiang(new List<string>() { "common" });
+
             mZhiboDanmuMgr.AddFengxiang(new List<string>() { "common"});
         }
 
@@ -623,6 +628,7 @@ public class ZhiboGameMode : GameModeBase
         }
 
         mZhiboDanmuMgr.Tick(dTime * spdRate);
+        mAudienceMgr.Tick(dTime * spdRate);
         //for (int i = state.Cards.Count - 1; i >= 0; i--)
         //{
         //    if (state.Cards[i].ca.WillOverdue)
@@ -880,6 +886,7 @@ public class ZhiboGameMode : GameModeBase
         {
             return null;
         }
+
         CardInZhibo info = state.CardDeck[0];
         bool ret = mUICtrl.AddNewCard(info);
         if (!ret)
@@ -1238,6 +1245,7 @@ public class ZhiboGameMode : GameModeBase
         }
         mUICtrl.UpdateTili();
         PutCardInChain(cinfo);
+        mZhiboDanmuMgr.UseCardWithTags(ca.TagString);
         return true;
     }
 

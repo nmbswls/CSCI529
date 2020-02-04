@@ -23,6 +23,7 @@ public class ZhiboLittleTvView{
     public Text tvName;
 
     public Text TurnLeft;
+    public List<Image> TimeLeftBlocks = new List<Image>();
 }
 
 
@@ -46,7 +47,6 @@ public class ZhiboLittleTV : MonoBehaviour
 
     public ZhiboAudience TargetAudience;
 
-    //public float TimeLeft;
 
     public IResLoader pResLoader;
 
@@ -78,7 +78,23 @@ public class ZhiboLittleTV : MonoBehaviour
         //animator.ResetTrigger(""); 
     }
 
+    public void UpdateTimeLeft()
+    {
+        int count = view.TimeLeftBlocks.Count;
+        float timePerBlock = TargetAudience.OriginTimeLast / count;
+        int completeBlockCount = (int)(TargetAudience.TimeLeft / timePerBlock);
+        float extraRate = (TargetAudience.TimeLeft - completeBlockCount * timePerBlock) / timePerBlock;
+        for(int i = 0; i < completeBlockCount; i++)
+        {
+            view.TimeLeftBlocks[i].fillAmount = 1;
+        }
+        Debug.Log(completeBlockCount);
+        if(completeBlockCount < count && completeBlockCount >=0)
+        {
+            view.TimeLeftBlocks[completeBlockCount].fillAmount = extraRate;
+        }
 
+    }
     public Vector3 GetPivotPos()
     {
         return transform.position;
@@ -101,6 +117,12 @@ public class ZhiboLittleTV : MonoBehaviour
         view.MoreToken.SetActive(false);
 
         view.TurnLeft = transform.Find("Bg").Find("TurnLeft").Find("Text").GetComponent<Text>();
+
+        Transform timeLeftBLocks = transform.Find("Bg").Find("TimeLeft");
+        foreach(Transform child in timeLeftBLocks)
+        {
+            view.TimeLeftBlocks.Add(child.GetComponent<Image>());
+        }
 
         view.TokenList.Clear();
         foreach (Transform tr in view.TokenContainer)
@@ -178,6 +200,7 @@ public class ZhiboLittleTV : MonoBehaviour
         UpdateHp();
         UpdateBuffs();
         UpdateTurnLeft();
+        UpdateTimeLeft();
     }
 
     public void Show(float delay)
@@ -230,7 +253,7 @@ public class ZhiboLittleTV : MonoBehaviour
         {
             return;
         }
-        view.TurnLeft.text = TargetAudience.LastTurn + "";
+        //view.TurnLeft.text = TargetAudience.LastTurn + "";
     }
 
     public void UpdateBuffs()

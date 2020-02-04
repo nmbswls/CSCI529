@@ -97,10 +97,16 @@ public class ZhiboDanmuMgr
         //}
     }
 
+    public void UseCardWithTags(string tagString)
+    {
+        string[] tags = tagString.Split(',');
+        List<string> fengiang = new List<string>(tags);
+        AddFengxiang(fengiang);
+    }
     public void AddFengxiang(List<string> fengxaing)
     {
         this.nowFengxiang = new List<string>(fengxaing);
-        fengxiangLeftTime = 3f;
+        fengxiangLeftTime = 7.5f;
     }
 
     public void Tick(float dTime)

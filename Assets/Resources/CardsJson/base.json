@@ -4,11 +4,10 @@
 		"CardName": "深夜老司机",
 		"CardDesp": "描述描述描述",
 		"CatdImageName": "0014",
-		"CardEffectDesp": "描述描述",
-		"CardBackDesp": "随机消除观众某一维度要求",
+		"CardEffectDesp": "随机消除观众某一维度要求",
 		"CardType": 2,
 		"isCostAll": "False",
-		"cost": 1,
+		"cost": 2,
 		"GemString": "0,1,0,0,0,1",
 		"StatusBonusType": 0,
 		"StatusBonusNum": "0",
@@ -42,8 +41,7 @@
 		"maxUseAmountPerGame": 0,
 		"HasTurnEffect": "False",
 		"TurnEffects": [{
-			"type": 1,
-			"value": "1"
+			"type": 0
 		}, {
 			"type": 0
 		}, {
@@ -97,8 +95,7 @@
 		"CardName": "微博带货王",
 		"CardDesp": "描述描述描述",
 		"CatdImageName": "0015",
-		"CardEffectDesp": "描述描述",
-		"CardBackDesp": "增加5金钱",
+		"CardEffectDesp": "增加5金钱",
 		"CardType": 2,
 		"isCostAll": "False",
 		"cost": 1,
@@ -135,8 +132,7 @@
 		"maxUseAmountPerGame": 0,
 		"HasTurnEffect": "False",
 		"TurnEffects": [{
-			"type": 1,
-			"value": "1"
+			"type": 0
 		}, {
 			"type": 0
 		}, {
@@ -190,8 +186,7 @@
 		"CardName": "广场舞委员",
 		"CardDesp": "描述描述描述",
 		"CatdImageName": "0016",
-		"CardEffectDesp": "描述描述",
-		"CardBackDesp": "减少10精神状态获得两张新卡",
+		"CardEffectDesp": "减少10精神状态获得两张新卡",
 		"CardType": 1,
 		"isCostAll": "False",
 		"cost": 1,
@@ -201,9 +196,9 @@
 		"canUseFace": "True",
 		"canUseBack": "True",
 		"Effects": [{
-			"effectType": 0,
+			"effectType": 17,
 			"Possibility": "100",
-			"effectString": "10",
+			"effectString": "-10",
 			"isAddBuff": "False",
 			"buffInfo": [{
 				"BuffType": 0
@@ -230,8 +225,7 @@
 		"maxUseAmountPerGame": 0,
 		"HasTurnEffect": "False",
 		"TurnEffects": [{
-			"type": 1,
-			"value": "1"
+			"type": 0
 		}, {
 			"type": 0
 		}, {
@@ -284,24 +278,1248 @@
 		"CardId": "c0017",
 		"CardName": "这！就是街舞",
 		"CardDesp": "描述描述描述",
-		"CatdImageName": "0016",
-		"CardEffectDesp": "描述描述",
-		"CardBackDesp": "增加5精神状态值",
+		"CatdImageName": "0017",
+		"CardEffectDesp": "增加5精神状态值",
 		"CardType": 1,
 		"isCostAll": "False",
-		"cost": 1,
+		"cost": 2,
 		"GemString": "0,1,1,0,0,0",
 		"StatusBonusType": 0,
 		"StatusBonusNum": "0",
 		"canUseFace": "True",
 		"canUseBack": "True",
 		"Effects": [{
-			"effectType": 0,
+			"effectType": 17,
 			"Possibility": "100",
 			"effectString": "5",
 			"isAddBuff": "False",
 			"buffInfo": [{
 				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"4": {
+		"CardId": "c0018",
+		"CardName": "偶像练习生",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0018",
+		"CardEffectDesp": "获得1张新卡",
+		"CardType": 2,
+		"isCostAll": "False",
+		"cost": 2,
+		"GemString": "0,0,1,0,1,0",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 8,
+			"Possibility": "100",
+			"effectString": "1",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"5": {
+		"CardId": "c0019",
+		"CardName": "演员的诞生",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0019",
+		"CardEffectDesp": "持续3回合，每回合满足10%表演的需求",
+		"CardType": 4,
+		"isCostAll": "False",
+		"cost": 4,
+		"GemString": "0,0,0,0,1,1",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 0,
+			"isAddBuff": "True",
+			"buffInfo": [{
+				"BuffType": 19,
+				"BuffLevel": 1,
+				"TurnLast": 3
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"6": {
+		"CardId": "c0020",
+		"CardName": "实力装逼",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0020",
+		"CardEffectDesp": "打出卡后有50%几率失败并减少20点心情；有50%概率成功并抽取一张新卡",
+		"CardType": 1,
+		"isCostAll": "False",
+		"cost": 3,
+		"GemString": "0,0,0,1,0,1",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 8,
+			"Possibility": "50",
+			"effectString": "1",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 17,
+			"Possibility": "50",
+			"effectString": "-20",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"7": {
+		"CardId": "c0021",
+		"CardName": "陪玩大神",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0021",
+		"CardEffectDesp": "增加50热度",
+		"CardType": 1,
+		"isCostAll": "False",
+		"cost": 4,
+		"GemString": "0,0,0,1,1,0",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 4,
+			"Possibility": "100",
+			"effectString": "50",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"8": {
+		"CardId": "c0022",
+		"CardName": "户外钓鱼",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0022",
+		"CardEffectDesp": "召唤一个需求出来，在观众已满的时候用了无效",
+		"CardType": 2,
+		"isCostAll": "False",
+		"cost": 2,
+		"GemString": "0,0,0,2,0,0",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 23,
+			"Possibility": "100",
+			"effectString": "1",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"9": {
+		"CardId": "c0023",
+		"CardName": "K歌王",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0023",
+		"CardEffectDesp": "增加15热度",
+		"CardType": 1,
+		"isCostAll": "False",
+		"cost": 2,
+		"GemString": "0,0,1,0,0,1",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 4,
+			"Possibility": "100",
+			"effectString": "15",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"10": {
+		"CardId": "c0024",
+		"CardName": "吃播",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0024",
+		"CardEffectDesp": "打出卡后有50%几率失败并减少20点心情；有50%概率成功并获得100热度",
+		"CardType": 1,
+		"isCostAll": "False",
+		"cost": 3,
+		"GemString": "0,0,2,2,0,0",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 17,
+			"Possibility": "50",
+			"effectString": "-20",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 4,
+			"Possibility": "50",
+			"effectString": "100",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+  "11": {
+    "CardId": "c0025",
+    "CardName": "立Flag",
+    "CardDesp": "描述描述描述",
+    "CatdImageName": "0025",
+    "CardEffectDesp": "增加下张卡的成功几率",
+    "CardType": 1,
+    "isCostAll": "False",
+    "cost": 3,
+    "GemString": "0,2,0,0,0,0",
+    "StatusBonusType": 0,
+    "StatusBonusNum": "0",
+    "canUseFace": "True",
+    "canUseBack": "True",
+    "Effects": [
+      {
+        "effectType": 0,
+        "effectString": " ",
+        "isAddBuff": "True",
+        "buffInfo": [
+          {
+            "BuffType": 17,
+            "BuffLevel": 20
+          }
+        ]
+      },
+      {
+        "effectType": 0,
+        "isAddBuff": "False",
+        "buffInfo": [
+          {
+            "BuffType": 0
+          }
+        ]
+      },
+      {
+        "effectType": 0,
+        "isAddBuff": "False",
+        "buffInfo": [
+          {
+            "BuffType": 0
+          }
+        ]
+      }
+    ],
+    "TriggerOnDiscard": "False",
+    "OverDueTurn": 0,
+    "IsConsume": "False",
+    "UseTime": 0,
+    "maxUseAmountPerGame": 0,
+    "HasTurnEffect": "False",
+    "TurnEffects": [
+      {
+        "type": 0
+      },
+      {
+        "type": 0
+      },
+      {
+        "type": 0
+      }
+    ],
+    "branchType": 0,
+    "ExtraBranches": [
+      {
+        "BranchEffects": [
+          {
+            "effectType": 0,
+            "isAddBuff": "False",
+            "buffInfo": [
+              {
+                "BuffType": 0
+              }
+            ]
+          },
+          {
+            "effectType": 0,
+            "isAddBuff": "False",
+            "buffInfo": [
+              {
+                "BuffType": 0
+              }
+            ]
+          },
+          {
+            "effectType": 0,
+            "isAddBuff": "False",
+            "buffInfo": [
+              {
+                "BuffType": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "BranchEffects": [
+          {
+            "effectType": 0,
+            "isAddBuff": "False",
+            "buffInfo": [
+              {
+                "BuffType": 0
+              }
+            ]
+          },
+          {
+            "effectType": 0,
+            "isAddBuff": "False",
+            "buffInfo": [
+              {
+                "BuffType": 0
+              }
+            ]
+          },
+          {
+            "effectType": 0,
+            "isAddBuff": "False",
+            "buffInfo": [
+              {
+                "BuffType": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+	"12": {
+		"CardId": "c0026",
+		"CardName": "故事新编",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0026",
+		"CardEffectDesp": "获得5热度",
+		"CardType": 4,
+		"isCostAll": "False",
+		"cost": 1,
+		"GemString": "0,1,0,0,0,0",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 4,
+			"Possibility": "100",
+			"effectString": "5",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"13": {
+		"CardId": "c0027",
+		"CardName": "美颜相机",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0027",
+		"CardEffectDesp": "持续3回合，每回合满足10%外观的需求",
+		"CardType": 4,
+		"isCostAll": "False",
+		"cost": 4,
+		"GemString": "0,0,0,0,2,0",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 0,
+			"isAddBuff": "True",
+			"buffInfo": [{
+				"BuffType": 2,
+				"BuffLevel": 10,
+				"TurnLast": 3
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"14": {
+		"CardId": "c0028",
+		"CardName": "真香定律",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0028",
+		"CardEffectDesp": "打出卡后，下一张卡能带来的满意度全属性会增加1",
+		"CardType": 2,
+		"isCostAll": "False",
+		"cost": 4,
+		"GemString": "0,0,0,2,0,0",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 0,
+			"isAddBuff": "True",
+			"buffInfo": [{
+				"BuffType": 27,
+				"BuffLevel": 1
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"15": {
+		"CardId": "c0029",
+		"CardName": "战术野炊",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0029",
+		"CardEffectDesp": "打出卡后有50%几率失败并丢失手上一张手牌，有50%概率成功并回复30点心情",
+		"CardType": 2,
+		"isCostAll": "False",
+		"cost": 3,
+		"GemString": "0,0,2,0,0,0",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 17,
+			"Possibility": "50",
+			"effectString": "30",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 11,
+			"Possibility": "50",
+			"effectString": "1",
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}, {
+			"effectType": 0,
+			"isAddBuff": "False",
+			"buffInfo": [{
+				"BuffType": 0
+			}]
+		}],
+		"TriggerOnDiscard": "False",
+		"OverDueTurn": 0,
+		"IsConsume": "False",
+		"UseTime": 0,
+		"maxUseAmountPerGame": 0,
+		"HasTurnEffect": "False",
+		"TurnEffects": [{
+			"type": 0
+		}, {
+			"type": 0
+		}, {
+			"type": 0
+		}],
+		"branchType": 0,
+		"ExtraBranches": [{
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}, {
+			"BranchEffects": [{
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}, {
+				"effectType": 0,
+				"isAddBuff": "False",
+				"buffInfo": [{
+					"BuffType": 0
+				}]
+			}]
+		}]
+	},
+	"16": {
+		"CardId": "c0030",
+		"CardName": "女装大佬",
+		"CardDesp": "描述描述描述",
+		"CatdImageName": "0030",
+		"CardEffectDesp": "持续3回合，每次出卡获得额外热度",
+		"CardType": 4,
+		"isCostAll": "False",
+		"cost": 4,
+		"GemString": "0,2,0,0,0,0",
+		"StatusBonusType": 0,
+		"StatusBonusNum": "0",
+		"canUseFace": "True",
+		"canUseBack": "True",
+		"Effects": [{
+			"effectType": 0,
+			"isAddBuff": "True",
+			"buffInfo": [{
+				"BuffType": 12,
+				"BuffLevel": 25,
+				"TurnLast": 3
 			}]
 		}, {
 			"effectType": 0,
