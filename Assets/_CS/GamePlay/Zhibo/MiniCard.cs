@@ -538,6 +538,7 @@ public class MiniCard : MonoBehaviour
     private void Reset()
     {
         TurnToFace();
+        CardRootPosition = Vector2.zero;
         IsFanmian = false;
     }
 
@@ -545,7 +546,7 @@ public class MiniCard : MonoBehaviour
     {
         if (container.UseCardGem(this))
         {
-            Disappaer();
+            //Disappaer();
             //Fanmian();
             //Reset();
         }

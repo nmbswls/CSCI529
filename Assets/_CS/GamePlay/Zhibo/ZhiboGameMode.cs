@@ -331,7 +331,6 @@ public class ZhiboGameMode : GameModeBase
         //}
 
         int num = CardMaxMaintain - state.Cards.Count;
-        Debug.Log(num);
         for (int i = 0; i < num; i++)
         {
             AddCardFromDeck();

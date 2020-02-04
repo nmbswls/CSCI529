@@ -88,7 +88,6 @@ public class ZhiboLittleTV : MonoBehaviour
         {
             view.TimeLeftBlocks[i].fillAmount = 1;
         }
-        Debug.Log(completeBlockCount);
         if(completeBlockCount < count && completeBlockCount >=0)
         {
             view.TimeLeftBlocks[completeBlockCount].fillAmount = extraRate;

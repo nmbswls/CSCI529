@@ -40,7 +40,7 @@ public class ZhiboDanmuView
 }
 public class ZhiboDanmuMgr
 {
-    public float BaseRefreshFreq = 1f;
+    public float BaseRefreshFreq = 0.0000001f;
 
     public IResLoader mResLoader;
 
@@ -99,6 +99,10 @@ public class ZhiboDanmuMgr
 
     public void UseCardWithTags(string tagString)
     {
+        if(tagString == null || tagString == string.Empty)
+        {
+            return;
+        }
         string[] tags = tagString.Split(',');
         List<string> fengiang = new List<string>(tags);
         AddFengxiang(fengiang);

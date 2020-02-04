@@ -80,6 +80,10 @@ public class GameObjectPool
 
         public void Release(GameObject o)
         {
+            if (inactive.Contains(o))
+            {
+                return;
+            }
             o.SetActive(false);
             inactive.Push(o);
         }

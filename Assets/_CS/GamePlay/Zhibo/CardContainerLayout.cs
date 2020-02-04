@@ -66,11 +66,11 @@ public class CardContainerLayout : MonoBehaviour
 
     public bool AddTmpCard(CardInZhibo cardInfo)
     {
-        //IResLoader loader = GameMain.GetInstance().GetModule<ResLoader>();
+        IResLoader loader = GameMain.GetInstance().GetModule<ResLoader>();
 
-        //GameObject cardGo = loader.Instantiate("Zhibo/Card", FixedContainer);
-        GameObject cardPrefab = Resources.Load<GameObject>("Zhibo/Card");
-        GameObject cardGo = GameObject.Instantiate(cardPrefab, FixedContainer);
+        GameObject cardGo = loader.Instantiate("Zhibo/Card", FixedContainer);
+        //GameObject cardPrefab = Resources.Load<GameObject>("Zhibo/Card");
+        //GameObject cardGo = GameObject.Instantiate(cardPrefab, FixedContainer);
         if (cardGo == null)
         {
             return false;
@@ -86,8 +86,8 @@ public class CardContainerLayout : MonoBehaviour
 
     public void RecycleCard(GameObject go)
     {
-        GameObject.Destroy(go);
-        //mResLoader.ReleaseGO("Zhibo/Card",go);
+        //GameObject.Destroy(go);
+        mResLoader.ReleaseGO("Zhibo/Card",go);
     }
 
     private void Adjust()
