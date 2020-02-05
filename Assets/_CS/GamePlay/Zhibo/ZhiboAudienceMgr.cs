@@ -1342,15 +1342,15 @@ public class ZhiboAudienceMgr
                 hpTmp[2] += value;
                 //Koucai;
                 break;
-            case TVSuffixEffect.requestJishu:
+            case TVSuffixEffect.requestKangya:
                 hpTmp[3] += value;
                 //Koucai;
                 break;
-            case TVSuffixEffect.requestKangya:
+            case TVSuffixEffect.requestWaiguan:
                 hpTmp[4] += value;
                 //Koucai;
                 break;
-            case TVSuffixEffect.requestWaiguan:
+            case TVSuffixEffect.requestJishu:
                 hpTmp[5] += value;
                 //Koucai;
                 break;

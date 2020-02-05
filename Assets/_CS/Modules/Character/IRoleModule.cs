@@ -36,6 +36,10 @@ public interface IRoleModule : IModule{
 
     void AddTezhi(List<Tezhi> tezhis);
 
+    void AllocateStats(int[] extra);
+
+    int[] LoadStates(string roleId);
+
     void InitRole(string roleId);
     void AddFensi(int type, int num);
 

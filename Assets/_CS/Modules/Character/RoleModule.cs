@@ -146,14 +146,26 @@ public class RoleModule : ModuleBase, IRoleModule
 
     public int OverDueSchedule { get { return overDueSchedule; } set { overDueSchedule = value; } }
 
+    public int[] LoadStates(string roleId)
+    {
+        RoleStoryAsset ret = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<RoleStoryAsset>("Roles/role" + roleId);
+        return new int[] {
+            ret.initProperties[0],
+            ret.initProperties[1],
+            ret.initProperties[2],
+            ret.initProperties[3],
+            ret.initProperties[4]
+        };
+    }
+
     public void InitRole(string roleId)
     {
         RoleStoryAsset ret = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<RoleStoryAsset>("Roles/role" + roleId);
         roleStats.meili = ret.initProperties[0];
-        roleStats.tili = ret.initProperties[1];
-        roleStats.koucai = ret.initProperties[2];
+        roleStats.fanying = ret.initProperties[1];
+        roleStats.tili = ret.initProperties[2];
         roleStats.jiyi = ret.initProperties[3];
-        roleStats.fanying = ret.initProperties[4];
+        roleStats.koucai = ret.initProperties[4];
 
         money = ret.initMoney+1000;
 
@@ -165,6 +177,15 @@ public class RoleModule : ModuleBase, IRoleModule
 
         FakePlatformInfo();
         NowPlatformId = "begin";
+    }
+
+    public void AllocateStats(int[] extra)
+    {
+        roleStats.meili += extra[0];
+        roleStats.fanying += extra[1];
+        roleStats.tili += extra[2];
+        roleStats.jiyi += extra[3];
+        roleStats.koucai += extra[4];
     }
 
     public int GetFensiReward(int extraLiuliang, float addrate)

@@ -20,7 +20,7 @@ public class AdjustInitModel : BaseModel{
 	public int LeftPoint = 10;
 	public int LeftSkillPoint = 10;
 
-	public int[] bas = new int[]{10,8,8,8,8};
+	public int[] bas = new int[]{1,10,10,10,10};
 	public int[] extra;
 }
 
@@ -82,15 +82,15 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
     public void SetRoleId(int idx)
     {
         model.roleId = idx + "";
-    }
+		model.bas = pRoleMgr.LoadStates(model.roleId);
+		BindView();//更新选择后的base
+	}
 
 
     public override void Init(){
 
         pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
-
-
-        model.extra = new int[5];
+		model.extra = new int[5];
         SetupAvailableTezhi();
 
     }
@@ -179,11 +179,14 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
         {
             AddTezhiList.Add(model.availabelTezhi[model.selectedOne[i]]);
         }
+        
         pRoleMgr.InitRole(model.roleId);
         pRoleMgr.AddTezhi(AddTezhiList);
+		pRoleMgr.AllocateStats(model.extra);
+
+	}
 
 
-    }
 
 
     public override void RegisterEvent(){
@@ -191,6 +194,7 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 		view.NextStage.onClick.AddListener (delegate() {
 			mUIMgr.CloseCertainPanel(this);
             SetupPlayerInfo();
+			
             GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main",delegate {
                 ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
                 MainGameMode gm = cm.GetGameMode() as MainGameMode;
