@@ -21,6 +21,7 @@ MonoBehaviour:
     Value1: 2
     Value2: 0
     Value3: 0
+    Probability: 20
   - Name: "\u61A8\u6279\u7684"
     Description: "\u89C2\u4F17\u6240\u6709\u7EF4\u5EA6\u9700\u6C42\u51CF\u534A"
     Effect1: addRequest
@@ -29,6 +30,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
+    Probability: 30
   - Name: "\u6311\u5254\u7684"
     Description: "\u89C2\u4F17\u4F1A\u989D\u5916\u591A\u4E00\u4E2A\u7EF4\u5EA6\u7684\u9700\u6C42"
     Effect1: extraRequest
@@ -37,3 +39,13 @@ MonoBehaviour:
     Value1: 1
     Value2: 0
     Value3: 0
+    Probability: 20
+  - Name: "\u8010\u5FC3\u7684"
+    Description: "\u89C2\u4F17\u4F1A\u7B49\u5F85\u66F4\u4E45"
+    Effect1: addWaitTime
+    Effect2: none
+    Effect3: none
+    Value1: 10
+    Value2: 0
+    Value3: 0
+    Probability: 10

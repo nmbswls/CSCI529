@@ -14,13 +14,15 @@ public class TVProfixLoader
     public int Value1;
     public int Value2;
     public int Value3;
+    public int Probability;
 }
 
 public enum TVProfixEffect
 {
     none,
     addRequest,
-    extraRequest
+    extraRequest,
+    addWaitTime
 }
 
 public class TVProfix
@@ -29,7 +31,7 @@ public class TVProfix
     public List<int> values = new List<int>();
     public string name;
     public string description;
-
+    public int probability;
 }
 
 public class TVProfixList
@@ -44,7 +46,7 @@ public class TVProfixList
             TVProfix tvsf = new TVProfix();
             tvsf.name = c.Name;
             tvsf.description = c.Description;
-
+            tvsf.probability = c.Probability;
             if (c.Effect1 != "none" && c.Effect1.Length != 0)
             {
                 TVProfixEffect sufEffect = (TVProfixEffect)System.Enum.Parse(typeof(TVProfixEffect), c.Effect1);
@@ -65,5 +67,6 @@ public class TVProfixList
             }
             profixs.Add(tvsf);
         }
+        
     }
 }

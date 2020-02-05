@@ -193,7 +193,14 @@ public class ZhiboLittleTV : MonoBehaviour
         }
         else
         {
-            view.tvName.text = TargetAudience.showProfixName() + "New Audience" + TargetAudience.showSuffixName();
+            if(TargetAudience.showSuffixName().Length>0)
+            {
+                view.tvName.text = TargetAudience.showProfixName() + TargetAudience.showSuffixName();
+            } else
+            {
+                view.tvName.text = "New Audience";
+            }
+            
             view.AvaContent.sprite = audienceImage[0];
         }
         UpdateHp();

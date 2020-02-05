@@ -13,6 +13,18 @@ public class AudienceAuraBuff
     public int ScoreLess;
 }
 
+public class AudienceProfixEffect
+{
+    public int[] hp = {0,0,0,0,0,0};
+    public int waitTime = 0;
+}
+
+public class AudienceSuffixEffect
+{
+    public int[] hp = {0,0,0,0,0,0};
+    public int waitTime = 0;
+}
+
 public class TokenDetailView
 {
     public Transform root;
@@ -639,29 +651,37 @@ public class ZhiboAudienceMgr
                     audience.NowReq = new int[6];
 
                     //add prefix & surfix here
-                    int pOfSuf = Random.Range(0, 2);
-                    int pOfPro = Random.Range(0, 2);
+
                     int[] tmpSufHp = { 0, 0, 0, 0, 0, 0 };
                     int[] tmpProHp = { 0, 0, 0, 0, 0, 0 };
+                    int tmpWaitTime = 0;
+                    
+                    TVSuffix appliedSuf = applySuffixEffect();
+                    tmpSufHp = loadSuffixEffect(appliedSuf);
+                    audience.tvSuffix = appliedSuf;
 
-                    //50% 概率触发前缀 50%概率触发后缀
-                    if (pOfSuf==1)
+                    TVProfix appliedPro = applyProfixEffect();
+                    if(appliedPro!=null)
                     {
-                        TVSuffix appliedSuf = applySuffixEffect();
-                        tmpSufHp = loadSuffixEffect(appliedSuf);
-                        audience.tvSuffix = appliedSuf;
-                    }
-
-                    if (pOfPro==1)
-                    {
-                        TVProfix appliedPro = applyProfixEffect();
-                        tmpProHp = loadProfixEffect(appliedPro, req);
+                        AudienceProfixEffect audienceProfixEffect = loadProfixEffect(appliedPro, req);
+                        tmpProHp = audienceProfixEffect.hp;
+                        tmpWaitTime = audienceProfixEffect.waitTime;
                         audience.tvProfix = appliedPro;
                     }
                    
                     for (int j = 0; j < 6; j++)
                     {
-                        audience.MaxReq[j] = req[j] + tmpProHp[j] + tmpSufHp[j];
+                        int tmpMaxReq = req[j] + tmpProHp[j] + tmpSufHp[j];
+                        if(audience.MaxReq[j] == 0 &&tmpMaxReq <=0)
+                        {
+                            audience.MaxReq[j] = 0;
+                        } else if(audience.MaxReq[j] == -tmpMaxReq)
+                        {
+                            //如果之前颜色的需求不为0禁止将同一色完全归0;
+                        } else
+                        {
+                            audience.MaxReq[j] = tmpMaxReq;
+                        }
                         //audience.NowReq[j] = hp[j] + tmpProHp[j] + tmpSufHp[j];
                     }
                     if (Random.value < 0.5f)
@@ -865,15 +885,23 @@ public class ZhiboAudienceMgr
         ZhiboAudience audience = new ZhiboAudience();
         int[] sufTmpHp = { 0, 0, 0, 0, 0, 0 };
         int[] proTmpHp = { 0, 0, 0, 0, 0, 0 };
+        int tmpWaitTime = 0;
         int[] oriHp = { 1, 0, 0, 0, 0, 0 };
         if (proAndSuf)
         {
             TVSuffix appliedSuf = applySuffixEffect();
             TVProfix appliedPro = applyProfixEffect();
             sufTmpHp = loadSuffixEffect(appliedSuf);
-            proTmpHp = loadProfixEffect(appliedPro, oriHp);
-            audience.tvSuffix = appliedSuf;
-            audience.tvProfix = appliedPro;
+
+            if(appliedPro!=null)
+            {
+                AudienceProfixEffect audienceProfixEffect = loadProfixEffect(appliedPro, oriHp);
+                proTmpHp = audienceProfixEffect.hp;
+                tmpWaitTime = audienceProfixEffect.waitTime;
+                audience.tvProfix = appliedPro;
+            }
+            
+            audience.tvSuffix = appliedSuf;   
         }
         {
             audience.Type = eAudienceType.Normal;
@@ -930,7 +958,6 @@ public class ZhiboAudienceMgr
             }
         }
     }
-
 
 
     public void CheckOverdue()
@@ -1281,10 +1308,21 @@ public class ZhiboAudienceMgr
     public TVSuffix randomSuffixEffect()
     {
         int idx = Random.Range(0, SuffixList.suffixs.Count);
-        return setSuffixEffect(idx);
+        return setFixedSuffixEffect(idx);
     }
 
     public TVSuffix setSuffixEffect(int idx)
+    {
+        int prop = SuffixList.suffixs[idx].probability;
+        int randValue = Random.Range(0, 100);
+        if (randValue <= prop)
+        {
+            return SuffixList.suffixs[idx];
+        }
+        return null;
+    }
+
+    public TVSuffix setFixedSuffixEffect(int idx)
     {
         return SuffixList.suffixs[idx];
     }
@@ -1348,22 +1386,24 @@ public class ZhiboAudienceMgr
         }
         else
         {
-            appliedPro = setProfixEffect(idx);
+            appliedPro = setFixedProfixEffect(idx);
         }
         return appliedPro;
     }
-    public int[] loadProfixEffect(TVProfix appliedPro, int[] curReq)
+    public AudienceProfixEffect loadProfixEffect(TVProfix appliedPro, int[] curReq)
     {
-        int[] ProfixHpTmp = { 0, 0, 0, 0, 0, 0 };
+        
+        AudienceProfixEffect audienceProfixEffect = new AudienceProfixEffect();
         for (int i = 0; i < appliedPro.effects.Count; i++)
         {
-            int[] tmpHp = handOneProfixEffect(appliedPro.effects[i], appliedPro.values[i], curReq);
-            for (int t = 0; t < 6; t++)
+            AudienceProfixEffect ape = handOneProfixEffect(appliedPro.effects[i], appliedPro.values[i], curReq);
+            for(int t = 0; t<6; t++)
             {
-                ProfixHpTmp[t] += tmpHp[t];
+                audienceProfixEffect.hp[t] += ape.hp[t];
             }
+            audienceProfixEffect.waitTime += ape.waitTime;
         }
-        return ProfixHpTmp;
+        return audienceProfixEffect;
     }
 
     public TVProfix randomProfixEffect()
@@ -1374,12 +1414,25 @@ public class ZhiboAudienceMgr
 
     public TVProfix setProfixEffect(int idx)
     {
+        int prop = ProfixList.profixs[idx].probability;
+        int randValue = Random.Range(0, 100);
+        if(randValue<=prop)
+        {
+            return ProfixList.profixs[idx];
+        }
+        return null;   
+    }
+
+    public TVProfix setFixedProfixEffect(int idx)
+    {
         return ProfixList.profixs[idx];
     }
 
-    public int[] handOneProfixEffect(TVProfixEffect efct, int value, int[] curReq)
+    public AudienceProfixEffect handOneProfixEffect(TVProfixEffect efct, int value, int[] curReq)
     {
+        AudienceProfixEffect audienceProfixEffect = new AudienceProfixEffect();
         int[] hpTmp = { 0, 0, 0, 0, 0, 0 };
+        int waitTimeTmp = 0;
         switch (efct)
         {
             case TVProfixEffect.none:
@@ -1403,14 +1456,22 @@ public class ZhiboAudienceMgr
                 hpTmp[idx] += value;
                 //Koucai;
                 break;
+            case TVProfixEffect.addWaitTime:
+                waitTimeTmp += value;
+                break;
         }
         for(int i = 0; i<6; i++)
         {
             //Debug.Log("cur->"+i+":"+curHp[i]);
             //Debug.Log("then->"+i+":"+hpTmp[i]);
         }
-        
-        return hpTmp;
+
+        audienceProfixEffect.hp = hpTmp;
+        audienceProfixEffect.waitTime = waitTimeTmp;
+
+        return audienceProfixEffect;
     }
+
+    
 
 }

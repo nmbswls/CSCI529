@@ -16,6 +16,7 @@ public class TVSuffixLoader
     public int Value2;
     public int Value3;
     public int Value4;
+    public int Probability;
 }
 
 public enum TVSuffixEffect
@@ -35,7 +36,7 @@ public class TVSuffix
     public List<int> values = new List<int>();
     public string name;
     public string description;
-
+    public int probability;
 }
 
 public class TVSuffixList
@@ -50,6 +51,7 @@ public class TVSuffixList
             TVSuffix tvsf = new TVSuffix();
             tvsf.name = c.Name;
             tvsf.description = c.Description;
+            tvsf.probability = c.Probability;
 
             if(c.Effect1 != "none" && c.Effect1.Length != 0)
             {
