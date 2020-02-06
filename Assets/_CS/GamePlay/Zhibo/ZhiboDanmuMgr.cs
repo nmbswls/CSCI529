@@ -40,7 +40,7 @@ public class ZhiboDanmuView
 }
 public class ZhiboDanmuMgr
 {
-    public float BaseRefreshFreq = 0.0000001f;
+    public float BaseRefreshFreq = 1f;
 
     public IResLoader mResLoader;
 

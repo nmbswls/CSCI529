@@ -43,8 +43,8 @@ public class ZhiboView : BaseView
 
     public Image TurnTimeBar;
 
-    public float LeftBarMaxFillAmount = 0.35f;
-    public float LeftBarMinFillAmount = 0.02f;
+    public float LeftBarMaxFillAmount = 1f;
+    public float LeftBarMinFillAmount = 0f;
     public float TiliMaxFillAmount = 0.5f;
     public float TiliMinFillAmount = 0.2f;
 

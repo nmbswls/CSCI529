@@ -634,8 +634,8 @@ public class ZhiboAudienceMgr
             {
                 ZhiboAudience audience = new ZhiboAudience();
                 audience.Level = originLevel + i / 3;
-                audience.OriginTimeLast = 15f;
-                audience.TimeLeft = 15f;
+                audience.OriginTimeLast = 40f;
+                audience.TimeLeft = 40f;
                 if (i % 4 == 2)
                 {
                     audience.Type = eAudienceType.Heizi;
@@ -1193,6 +1193,10 @@ public class ZhiboAudienceMgr
 
     public void ShowTokenDetail(ZhiboLittleTV tvView)
     {
+        if(tvView.TargetAudience == null)
+        {
+            return;
+        }
         tokenDetail.root.gameObject.SetActive(true);
         string txt = "";
         for(int i=0;i< tvView.TargetAudience.Skills.Count; i++)

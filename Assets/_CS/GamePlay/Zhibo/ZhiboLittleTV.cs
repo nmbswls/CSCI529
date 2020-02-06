@@ -22,7 +22,6 @@ public class ZhiboLittleTvView{
     public Text NowScore;
     public Text tvName;
 
-    public Text TurnLeft;
     public List<Image> TimeLeftBlocks = new List<Image>();
 }
 
@@ -71,7 +70,7 @@ public class ZhiboLittleTV : MonoBehaviour
         view.rootCG.alpha = 1;
         isAttracted = false;
 
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < 5; i++)
         {
             view.TokenList[i].enabled = false;
         }
@@ -106,7 +105,7 @@ public class ZhiboLittleTV : MonoBehaviour
         view.AvaContent = transform.Find("Bg").Find("Content").GetComponent<Image>();     
         view.GemsTr = transform.Find("Bg").Find("Gems");
 
-        view.NowScore = transform.Find("Bg").Find("Score").GetComponent<Text>();
+        view.NowScore = transform.Find("Bg").Find("Score").Find("Text").GetComponent<Text>();
         view.TokenContainer = transform.Find("Bg").Find("Tokens");
         view.MoreToken = transform.Find("Bg").Find("MoreToken").gameObject;
         view.TokenInfo = transform.Find("Bg").Find("TokenInfo").gameObject;
@@ -115,7 +114,7 @@ public class ZhiboLittleTV : MonoBehaviour
 
         view.MoreToken.SetActive(false);
 
-        view.TurnLeft = transform.Find("Bg").Find("TurnLeft").Find("Text").GetComponent<Text>();
+        //view.TurnLeft = transform.Find("Bg").Find("TurnLeft").Find("Text").GetComponent<Text>();
 
         Transform timeLeftBLocks = transform.Find("Bg").Find("TimeLeft");
         foreach(Transform child in timeLeftBLocks)
@@ -165,9 +164,11 @@ public class ZhiboLittleTV : MonoBehaviour
             {
                 listener = view.Content.gameObject.AddComponent<DragEventListener>();
                 listener.PointerEnterEvent += delegate {
+                    if (TargetAudience == null) return;
                     audienceMgr.gameMode.mUICtrl.MouseInputLittleTV(this);
                 };
                 listener.PointerExitEvent += delegate {
+                    if (TargetAudience == null) return;
                     audienceMgr.gameMode.mUICtrl.MouseOutLittleTV(this);
                 };
             }
@@ -265,11 +266,11 @@ public class ZhiboLittleTV : MonoBehaviour
     public void UpdateBuffs()
     {
 
-        if(TargetAudience.Skills.Count > 3)
+        if(TargetAudience.Skills.Count > 5)
         {
             //默认aura不会超过2个
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 5; i++)
             {
                 view.TokenList[i].enabled = true;
             }
@@ -289,7 +290,7 @@ public class ZhiboLittleTV : MonoBehaviour
             //    view.TokenList[idx].enabled = true;
             //    idx++;
             //}
-            for (int i = idx; i < 3; i++)
+            for (int i = idx; i < 5; i++)
             {
                 view.TokenList[i].enabled = false;
             }
@@ -310,6 +311,7 @@ public class ZhiboLittleTV : MonoBehaviour
         audienceMgr.EmptimizeLittleTV(this);
         if(TargetAudience != null)
         {
+            TargetAudience = null;
             //int idx = audienceMgr.gameMode.nowAudiences.IndexOf(TargetAudience);
             //if(idx == -1)
             //{
@@ -353,7 +355,7 @@ public class ZhiboLittleTV : MonoBehaviour
             {
                 view.GemList[idx].root.SetActive(true);
                 view.GemList[idx].bg.color = new Color(1,1,1,0.3f);
-                view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i + "_bg");
                 if (j < TargetAudience.NowReq[i])
                 {
                     //有血量的部分
