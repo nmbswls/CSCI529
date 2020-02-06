@@ -19,7 +19,9 @@ public class WeiboView : BaseView
     public Text Time;
     public Text Description;
 
-    public Image Post;
+    public Image ForwardButton;
+    public Image ReviewButton;
+    public Image Reviews;
 }
 
 public class WeiboModel : BaseModel
@@ -33,6 +35,10 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
     IResLoader pResLoader;
     IRoleModule pRoleMgr;
     WeiboModule pWeiboMgr;
+    Weibo curWeibo;
+
+    int curWeiboIdx = -1;
+    int lastWeiboIdx = -1;
 
     ICardDeckModule pCardMdl;
 
@@ -40,16 +46,15 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
 
     float originalY;
     float diffY;
-
-    bool isGengGet = false;
+    
+    bool isCardGot = false;
+    bool isBranchSelected = false;
     bool isValidDrag = false;
-
-    string cardName;
 
     public override void Init()
     {
         pCardMdl = GameMain.GetInstance().GetModule<CardDeckModule>();
-        pUIMgr = GameMain.GetInstance().GetModule<IUIMgr>();
+        pUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
         pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
         pWeiboMgr = GameMain.GetInstance().GetModule<WeiboModule>();
     }
@@ -58,11 +63,11 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
         randomWeibo();
     }
 
-    public void getRandomCard()
-    {
-        int randInt = UnityEngine.Random.Range(1,5);
-        cardName = "card800" + randInt.ToString();
-    }
+    //public void getRandomCard()
+    //{
+    //    int randInt = UnityEngine.Random.Range(1,5);
+    //    cardName = "card800" + randInt.ToString();
+    //}
 
     public void insertCard(string cardName)
     {
@@ -94,7 +99,37 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
 
         view.TouXiang = view.GetGeng.transform.Find("TouXiang").GetComponent<Image>();
         view.WeiboImage = view.GetGeng.transform.Find("WeiboImage").GetComponent<Image>();
-        view.Post = view.GetGeng.transform.Find("Post").GetComponent<Image>();
+        view.ForwardButton = view.GetGeng.transform.Find("Forward").GetComponent<Image>();
+        view.ReviewButton = view.GetGeng.transform.Find("Review").GetComponent<Image>();
+
+        view.Reviews = view.GetGeng.transform.Find("Reviews").GetComponent<Image>();
+
+        BindButtons();
+
+        
+    }
+
+    public void BindButtons()
+    {
+        if (isNotNullWeibo())
+        {
+            if (curWeibo.reviewable)
+            {
+                view.ReviewButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                view.ReviewButton.gameObject.SetActive(false);
+            }
+            if (curWeibo.forwardable)
+            {
+                view.ForwardButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                view.ForwardButton.gameObject.SetActive(false);
+            }
+        }
     }
 
     public override void RegisterEvent()
@@ -145,13 +180,13 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
                     if (pWeiboMgr.IsShuable)
                     {
                         randomWeibo();
-                        getRandomCard();
-                        isGengGet = false;
+                        isCardGot = false;
                     }
                     else
                     {
                         mUIMgr.ShowHint("啊，没什么瓜可以吃的，之后再来吧");
-                        pWeiboMgr.disableRealRandom();
+                        //TODO random切换
+                        //pWeiboMgr.disableRealRandom();
                     }
                 }
                 isValidDrag = false;
@@ -169,21 +204,74 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
                 mUIMgr.CloseCertainPanel(this);
             };
         }
+        registerBranchEvent();
+    }
+
+    public void registerBranchEvent()
+    {
         {
-            ClickEventListerner listener = view.Post.gameObject.GetComponent<ClickEventListerner>();
+            ClickEventListerner listener = view.ForwardButton.gameObject.GetComponent<ClickEventListerner>();
             if (listener == null)
             {
-                listener = view.Post.gameObject.AddComponent<ClickEventListerner>();
+                listener = view.ForwardButton.gameObject.AddComponent<ClickEventListerner>();
             }
 
             listener.OnClickEvent += delegate
             {
-                if(!isGengGet)
+                if (!isCardGot)
                 {
-                    Debug.Log("Press the post");
-                    isGengGet = true;
+                    Debug.Log("Press the forward");
+                    isCardGot = true;
+                    mUIMgr.ShowHint("转发完毕");
                     pWeiboMgr.ReduceShuaTime();
-                    insertCard(cardName);
+                    string cardName = curWeibo.gainCardId;
+                    if(cardName.Length>0)insertCard(cardName);
+                }
+            };
+        }
+        {
+            ClickEventListerner listener = view.ReviewButton.gameObject.GetComponent<ClickEventListerner>();
+            if (listener == null)
+            {
+                listener = view.ReviewButton.gameObject.AddComponent<ClickEventListerner>();
+            }
+
+            listener.OnClickEvent += delegate
+            {
+                if (!isCardGot)
+                {
+                    Debug.Log("Press the review");
+                    view.Reviews.gameObject.SetActive(true);
+                    int validReviews = curWeibo.reviews.Count; //2
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (i < validReviews)
+                        {
+                            view.Reviews.transform.GetChild(i).GetChild(0).GetComponent<Text>().text = curWeibo.reviews[i].content;
+                            view.Reviews.transform.GetChild(i).gameObject.SetActive(true);
+                            ClickEventListerner Optionlistener = view.Reviews.transform.GetChild(i).GetComponent<ClickEventListerner>();
+                            if (Optionlistener == null)
+                            {
+                                Optionlistener = view.Reviews.transform.GetChild(i).gameObject.AddComponent<ClickEventListerner>();
+                            }
+
+                            int tmp = i;//防止异步更新i值
+                            Optionlistener.OnClickEvent += delegate
+                            {
+                                if (!isCardGot)
+                                {
+                                    Debug.Log("idx = " + tmp);
+                                    handleReviewEffect(tmp);
+                                    isCardGot = true;
+                                    pWeiboMgr.ReduceShuaTime();
+                                }
+                            };
+                        }
+                        else
+                        {
+                            view.Reviews.transform.GetChild(i).gameObject.SetActive(false);
+                        }
+                    }
                 }
             };
         }
@@ -191,9 +279,28 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
 
     public void randomWeibo()
     {
+        //view.Time.text = randomTime();
+        //view.Name.text = randomName();
+        //view.Description.text = randomDescription();
+        int count = pWeiboMgr.weiboList.weibos.Count;
+        
+        while(curWeiboIdx == lastWeiboIdx)
+        {
+            curWeiboIdx = UnityEngine.Random.Range(0, count);
+        }
+        lastWeiboIdx = curWeiboIdx;
+        
+        curWeibo = pWeiboMgr.weiboList.weibos[curWeiboIdx];
+        loadWeibo();
+        BindButtons();
+        registerBranchEvent();
+    }
+
+    public void loadWeibo()
+    {
         view.Time.text = randomTime();
-        view.Name.text = randomName();
-        view.Description.text = randomDescription();
+        view.Name.text = curWeibo.name;
+        view.Description.text = curWeibo.content;
     }
 
     public string randomTime()
@@ -201,14 +308,66 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
         return pWeiboMgr.randomTime();
     }
 
-    public string randomName()
+    public void handleReviewEffect(int idx)
     {
-        return pWeiboMgr.randomName();
+        
+        int value = curWeibo.reviews[idx].value;
+        switch(curWeibo.reviews[idx].effect)
+        {
+            case WeiboReviewEffect.AddCaiyi:
+                pRoleMgr.AddFanying(value);
+                mUIMgr.ShowHint("才艺 + " + value);
+                break;
+            case WeiboReviewEffect.AddJishu:
+                pRoleMgr.AddJiyi(value);
+                mUIMgr.ShowHint("技术 + " + value);
+                break;
+            case WeiboReviewEffect.AddKangya:
+                pRoleMgr.AddTili(value);
+                mUIMgr.ShowHint("抗压 + " + value);
+                break;
+            case WeiboReviewEffect.AddWaiguan:
+                pRoleMgr.AddMeili(value);
+                mUIMgr.ShowHint("外观 + " + value);
+                break;
+            case WeiboReviewEffect.AddKoucai:
+                pRoleMgr.AddKoucai(value);
+                mUIMgr.ShowHint("口才 + " + value);
+                Debug.Log("ADDKOUCAI");
+                break;
+            case WeiboReviewEffect.AddAllState:
+                pRoleMgr.AddKoucai(value);
+                pRoleMgr.AddMeili(value);
+                pRoleMgr.AddTili(value);
+                pRoleMgr.AddJiyi(value);
+                pRoleMgr.AddFanying(value);
+                mUIMgr.ShowHint("所有属性 + " + value);
+                break;
+            case WeiboReviewEffect.AddFensi:
+                //TODO Addfensi
+                //pRoleMgr.AddFensi(value);
+                break;
+            case WeiboReviewEffect.none:
+                break;
+        }
+        UIMainCtrl mainui = (UIMainCtrl)pUIMgr.GetCtrl("UIMain") as UIMainCtrl;
+        mainui.UpdateWords();
     }
 
-    public string randomDescription()
+    //public string randomName()
+    //{
+    //    return pWeiboMgr.randomName();
+    //}
+
+    //public string randomDescription()
+    //{
+    //    return pWeiboMgr.randomDescription();
+    //}
+
+    public bool isNotNullWeibo()
     {
-        return pWeiboMgr.randomDescription();
+        return curWeibo != null;
     }
 
+    
 }

@@ -2,12 +2,187 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum WeiboReviewEffect
+{
+    none,
+    AddKoucai,
+    AddCaiyi,
+    AddJishu,
+    AddKangya,
+    AddWaiguan,
+    AddAllState,
+    AddFensi
+}
+
+public class Review
+{
+    public string content;
+    public WeiboReviewEffect effect;
+    public int value;
+}
+
+public class Weibo
+{
+    public int index;
+    public string name;
+    public string description;
+    public string content;
+    public string time;
+    public string avatar;
+    public bool forwardable;
+    public string gainCardId;
+    public bool reviewable;
+    public List<Review> reviews;
+
+}
+
+public class WeiboList
+{
+    public List<Weibo> weibos = new List<Weibo>();
+
+    public void loadWeibo()
+    {
+        WeiboContentList weiboContent = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<WeiboContentList>("WeiboTxt/WeiboContentList", false);
+        foreach(WeiboAsset w in weiboContent.Entities)
+        {
+            Weibo weibo = new Weibo();
+            weibo.index = w.Index;
+            weibo.name = w.Name;
+            weibo.content = w.Content;
+            weibo.time = w.Time;
+            weibo.avatar = w.Avatar;
+
+            weibo.forwardable = w.Forwardable == "Yes";
+            weibo.gainCardId = w.GainCard;
+
+            weibo.reviewable = w.Reviewable == "Yes";
+            if(weibo.reviewable)
+            {
+                List<Review> reviews = new List<Review>();
+                if (w.Review1 != "None" && w.Review1.Length > 0) { 
+                    Review review1 = new Review();
+                    review1.content = w.Review1;
+                    review1.effect = (WeiboReviewEffect)System.Enum.Parse(typeof(WeiboReviewEffect), w.Bonus1);
+                    review1.value = w.Value1;
+                    reviews.Add(review1);
+                }
+                if (w.Review2 != "None" && w.Review2.Length > 0)
+                {
+                    Review review2 = new Review();
+                    review2.content = w.Review2;
+                    review2.effect = (WeiboReviewEffect)System.Enum.Parse(typeof(WeiboReviewEffect), w.Bonus2);
+                    review2.value = w.Value2;
+                    reviews.Add(review2);
+                }
+                if (w.Review3 != "None" && w.Review3.Length > 0)
+                {
+                    Review review3 = new Review();
+                    review3.content = w.Review3;
+                    review3.effect = (WeiboReviewEffect)System.Enum.Parse(typeof(WeiboReviewEffect), w.Bonus3);
+                    review3.value = w.Value3;
+                    reviews.Add(review3);
+                }
+                weibo.reviews = reviews;
+            }
+            weibos.Add(weibo);
+        }
+    }
+}
+
 public class WeiboModule : ModuleBase, IWeiboModule
 {
     private const int shuaTimeLimit = 4;     //每回合只有3次刷到牌的机会
     private int curShuaTime = 0;
-
     private bool isRealRandom = true;
+
+    private int randTime;
+    private int randName;
+    private int randDescription;
+
+    private bool isShuable = true;
+
+    public bool IsShuable
+    {
+        get
+        {
+            return isShuable;
+        }
+        set
+        {
+            isShuable = value;
+        }
+    }
+
+    public WeiboList weiboList = new WeiboList();
+
+    public override void Setup()
+    {
+        weiboList.loadWeibo();
+    }
+
+    public int GetCurrentTurnShuaTime()
+    {
+        return shuaTimeLimit - curShuaTime;
+    }
+
+    public void ReduceShuaTime()
+    {
+        curShuaTime++;
+        if (curShuaTime == shuaTimeLimit)
+        {
+            IsShuable = false;
+        }
+    }
+
+    public void resetShua()
+    {
+        curShuaTime = 0;
+        isShuable = true;
+        isRealRandom = true;
+    }
+
+    public string randomTime()
+    {
+        if (isRealRandom)
+        {
+            randTime = UnityEngine.Random.Range(0, 59);
+        }
+        if (randTime < 12)
+        {
+            int randTimeUnit = UnityEngine.Random.Range(0, 2);
+            if (randTimeUnit == 0)
+            {
+                return randTime + " 分钟前";
+            }
+            else
+            {
+                return randTime + " 小时前";
+            }
+        }
+        return randTime + " 分钟前";
+    }
+
+    public void enableRealRandom()
+    {
+        isRealRandom = true;
+    }
+
+    public void disableRealRandom()
+    {
+        isRealRandom = false;
+    }
+}
+
+
+
+public class WeiboModule1 : ModuleBase, IWeiboModule
+{
+    private const int shuaTimeLimit = 4;     //每回合只有3次刷到牌的机会
+    private int curShuaTime = 0;
+    
+    private bool isRealRandom = true;
+
+
     //private bool isGetCard = true;
     //public bool IsGetCard
     //{
@@ -41,6 +216,8 @@ public class WeiboModule : ModuleBase, IWeiboModule
     //    {"又发新视频了" },
     //    {"早上起来，拥抱太阳" }
     //};
+
+    
 
     private bool isShuable = true;
 

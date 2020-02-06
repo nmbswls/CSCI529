@@ -56,7 +56,7 @@ public class MailUI : UIBaseCtrl<MailModel, MailView>
     }
     public override void PostInit()
     {
-        randomWeibo();
+        //randomWeibo();
     }
 
     public void getRandomCard()
@@ -145,7 +145,7 @@ public class MailUI : UIBaseCtrl<MailModel, MailView>
                 {
                     if (pWeiboMgr.IsShuable)
                     {
-                        randomWeibo();
+                        //randomWeibo();
                         getRandomCard();
                         isGengGet = false;
                     }
@@ -190,26 +190,26 @@ public class MailUI : UIBaseCtrl<MailModel, MailView>
         }
     }
 
-    public void randomWeibo()
-    {
-        view.Time.text = randomTime();
-        view.Name.text = randomName();
-        view.Description.text = randomDescription();
-    }
+    //public void randomWeibo()
+    //{
+    //    view.Time.text = randomTime();
+    //    view.Name.text = randomName();
+    //    view.Description.text = randomDescription();
+    //}
 
     public string randomTime()
     {
         return pWeiboMgr.randomTime();
     }
 
-    public string randomName()
-    {
-        return pWeiboMgr.randomName();
-    }
+    //public string randomName()
+    //{
+    //    return pWeiboMgr.randomName();
+    //}
 
-    public string randomDescription()
-    {
-        return pWeiboMgr.randomDescription();
-    }
+    //public string randomDescription()
+    //{
+    //    return pWeiboMgr.randomDescription();
+    //}
 
 }
