@@ -543,15 +543,11 @@ public class ZhiboGameMode : GameModeBase
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            ZhiboBuffInfo binfo = new ZhiboBuffInfo();
-            binfo.BuffType = eBuffType.Add_Req_1_Per_Turn;
-            binfo.BuffLevel = 10;
-            mBuffManager.GenBuff(binfo);
 
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
-            GainNewCard("card9914");
+            GainNewCard("c0014");
         }
         if (Input.GetKeyDown(KeyCode.S))
         {

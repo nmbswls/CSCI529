@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class CardContainerLayout : MonoBehaviour
 {
+    private int CardMode = 1; // 排列模式 0 弧形 1 水平
     public List<MiniCard> cards = new List<MiniCard>();
     public List<MiniCard> TmpCards = new List<MiniCard>();
 
@@ -20,9 +21,11 @@ public class CardContainerLayout : MonoBehaviour
     float Width = 1000f;
 
     float R = 0;
-    float MaxDegree = 10;
-    float CardMoveSpd = 5f;
-    float DefaultIntervalDegree = 2f;
+    float MaxDegree = 8;
+    float CardMoveSpdDegree = 5f;
+    float CardMoveSpd = 3000f;
+    float DefaultIntervalDegree = 1.7f;
+    float DefaultIntervalDis = 220f;
 
     public ZhiboGameMode gameMode;
     public IResLoader mResLoader;
@@ -43,8 +46,16 @@ public class CardContainerLayout : MonoBehaviour
 
     public void PutToInitPos(MiniCard card)
     {
-        card.rt.anchoredPosition = new Vector3(Mathf.Sin(MaxDegree*0.5f*Mathf.Deg2Rad) * R, Mathf.Cos(MaxDegree * 0.5f * Mathf.Deg2Rad) * R);
-        card.rt.localEulerAngles = new Vector3(0, 0, -MaxDegree);
+        if(CardMode == 0)
+        {
+            card.rt.anchoredPosition = new Vector3(Mathf.Sin(MaxDegree * 0.5f * Mathf.Deg2Rad) * R, Mathf.Cos(MaxDegree * 0.5f * Mathf.Deg2Rad) * R);
+            card.rt.localEulerAngles = new Vector3(0, 0, -MaxDegree);
+        }
+        else
+        {
+            card.NowPos = new Vector3(Width, 0);
+            card.rt.anchoredPosition = new Vector3(Width,0);
+        }
     }
 
     public bool AddCard(CardInZhibo cardInfo)
@@ -92,21 +103,40 @@ public class CardContainerLayout : MonoBehaviour
 
     private void Adjust()
     {
-        float interval = DefaultIntervalDegree;
-        if (cards.Count > 6)
+        if(CardMode == 0)
         {
-            interval = MaxDegree / cards.Count;
+            float interval = DefaultIntervalDegree;
+            if (cards.Count > 6)
+            {
+                interval = MaxDegree / cards.Count;
+            }
+
+            for (int i = 0; i < cards.Count; i++)
+            {
+                float angleDegree = i * interval - MaxDegree * 0.5f;
+                cards[i].transform.SetSiblingIndex(i);
+                cards[i].targetDegree = angleDegree;
+                cards[i].PosDirty = true;
+            }
+        }
+        else
+        {
+            float interval = DefaultIntervalDis;
+            if (cards.Count > 6)
+            {
+                interval = Width / cards.Count;
+            }
+
+            for (int i = 0; i < cards.Count; i++)
+            {
+                float dis = i * interval - Width * 0.5f;
+                cards[i].transform.SetSiblingIndex(i);
+                cards[i].TargetPos = new Vector2(dis,0);
+                cards[i].PosDirty = true;
+            }
         }
 
-        for (int i = 0; i < cards.Count; i++)
-        {
-            float angleDegree = i * interval - 10*0.5f;
-            cards[i].transform.SetSiblingIndex(i);
-            cards[i].targetDegree = angleDegree;
-            cards[i].PosDirty = true;
-            //Vector2 posInWorld = transform.localToWorldMatrix * new Vector4(i * interval, 0, 0, 1);
-            //cards[i].setTargetPosition(posInWorld);
-        }
+        
     }
 
     private void AdjustTmp()
@@ -131,15 +161,33 @@ public class CardContainerLayout : MonoBehaviour
             {
                 //card.SetFlashingColor(gameMode.state.Cards[i].TimeLeft);
             }
-            if (!card.PosDirty || Mathf.Abs(card.targetDegree - card.nowDegree) <= 1e-6)
+            if(CardMode == 0)
             {
-                card.PosDirty = false;
-                card.CheckIsHighlight();
-                continue;
+                if (!card.PosDirty || Mathf.Abs(card.targetDegree - card.nowDegree) <= 1e-6)
+                {
+                    card.PosDirty = false;
+                    card.CheckIsHighlight();
+                    continue;
+                }
+                card.nowDegree += (card.targetDegree - card.nowDegree) * dTime * CardMoveSpdDegree;
+                card.rt.anchoredPosition = new Vector3(Mathf.Sin(card.nowDegree * Mathf.Deg2Rad) * R, Mathf.Cos(card.nowDegree * Mathf.Deg2Rad) * R - R);
+                card.rt.localEulerAngles = new Vector3(0, 0, -card.nowDegree);
             }
-            card.nowDegree += (card.targetDegree - card.nowDegree) * dTime * CardMoveSpd;
-            card.rt.anchoredPosition = new Vector3(Mathf.Sin(card.nowDegree * Mathf.Deg2Rad) * R, Mathf.Cos(card.nowDegree * Mathf.Deg2Rad) * R - R);
-            card.rt.localEulerAngles = new Vector3(0, 0, -card.nowDegree);
+            else
+            {
+                if (!card.PosDirty || (card.TargetPos - card.NowPos).magnitude <= dTime * CardMoveSpd)
+                {
+                    card.NowPos = card.TargetPos;
+                    card.rt.anchoredPosition = new Vector3(card.NowPos.x, card.NowPos.y);
+                    card.PosDirty = false;
+                    card.CheckIsHighlight();
+                    continue;
+                }
+                card.NowPos += (card.TargetPos - card.NowPos).normalized * dTime * CardMoveSpd;
+                card.rt.anchoredPosition = new Vector3(card.NowPos.x, card.NowPos.y);
+            }
+            
+           
         }
 
         for(int i = 0; i < TmpCards.Count; i++)

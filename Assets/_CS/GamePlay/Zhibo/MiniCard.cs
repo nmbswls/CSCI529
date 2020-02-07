@@ -71,6 +71,7 @@ public class MiniCard : MonoBehaviour
 
     public bool isTmp;
     public Vector2 TargetPos;
+    public Vector2 NowPos;
 
     private float moveSpeed = 1500;
     private float returnSpeed = 1800;

@@ -190,7 +190,7 @@ public class ZhiboLittleTV : MonoBehaviour
         if (TargetAudience.Type == eAudienceType.Heizi)
         {
             view.tvName.text = "KeyBoard Man";
-            view.AvaContent.sprite = audienceImage[1];
+            //view.AvaContent.sprite = audienceImage[1];
         }
         else
         {
@@ -202,7 +202,7 @@ public class ZhiboLittleTV : MonoBehaviour
                 view.tvName.text = "New Audience";
             }
             
-            view.AvaContent.sprite = audienceImage[0];
+            //view.AvaContent.sprite = audienceImage[0];
         }
         UpdateHp();
         UpdateBuffs();

@@ -248,12 +248,14 @@ public class ZhiboDanmuMgr
                     //防止重复查必定没有的，应该将键保存
                     LoadDanmuContent(nowFengxiang[i]);
                 }
-                pool.AddRange(DanmuTagDict[nowFengxiang[i]]);
-                
+                if (DanmuTagDict.ContainsKey(nowFengxiang[i]))
+                {
+                    pool.AddRange(DanmuTagDict[nowFengxiang[i]]);
+                }
             }
             if(pool.Count == 0)
             {
-                return "主播碉堡了";
+                return danmuContents[Random.Range(0, danmuContents.Count)];
             }
             string ret = pool[Random.Range(0,pool.Count)];
             return ret;
