@@ -71,6 +71,7 @@ public class UIMgr : ModuleBase, IUIMgr
 
         mUITypeMap["SchedulePanel"] = typeof(SKillCtrl);
         mUITypeMap["WeiboPanel"] = typeof(WeiboUI);
+        mUITypeMap["MailPanel"] = typeof(MailUI);
 
         mUITypeMap["ZhiboPanel"] = typeof(ZhiboUI);
         mUITypeMap["ZhiboPanelMode2"] = typeof(ZhiboMode2UICtrl);
@@ -91,6 +92,8 @@ public class UIMgr : ModuleBase, IUIMgr
         mUITypeMap["TaobaoPanel"] = typeof(TaobaoUI);
 
         mUITypeMap["AdjustSkillCardsPanel"] = typeof(AdjustSkillCardCtrl);
+
+        
 
 
     }

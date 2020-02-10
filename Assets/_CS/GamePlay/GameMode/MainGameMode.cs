@@ -56,6 +56,7 @@ public class MainGameMode : GameModeBase
         GameMain.GetInstance().GetModule<CardDeckModule>().CheckTurnBonux();
         GameMain.GetInstance().GetModule<WeiboModule>().resetShua();
         GameMain.GetInstance().GetModule<WeiboModule>().enableRealRandom();
+        GameMain.GetInstance().GetModule<MailModule>().checkTurnStartToBeSentEmail();
         mainUI.ShowMsg(new List<TurnMsg>());
         TurnPracticeNum = 0;
     }

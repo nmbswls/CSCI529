@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c035c03fa874cc1afff80fef339fcb, type: 3}
+  m_Name: MailContentList
+  m_EditorClassIdentifier: 
+  Entities:
+  - Index: 0
+    Title: Welcome to play
+    Desp: 
+    Content: Welcome
+    From: System
+    Avatar: 
+    Time: Today
+    Condition: toRound
+    ConditionValue1: 1
+    ConditionValue2: 0
+    WithPicture: No
+    PictureLink: 
+    WithBonus: No
+    NumOfBonus: 0
+    BonusValue: 
+    BonusType: 
+    Tag: roundOnce
+  - Index: 1
+    Title: Welcome to play2
+    Desp: 
+    Content: Welcome2
+    From: System
+    Avatar: 
+    Time: Today
+    Condition: toRound
+    ConditionValue1: 2
+    ConditionValue2: 0
+    WithPicture: No
+    PictureLink: 
+    WithBonus: No
+    NumOfBonus: 0
+    BonusValue: 
+    BonusType: 
+    Tag: roundOnce
+  - Index: 2
+    Title: Welcome to play3
+    Desp: 
+    Content: Welcome to play3
+    From: System
+    Avatar: 
+    Time: Today
+    Condition: toRound
+    ConditionValue1: 3
+    ConditionValue2: 0
+    WithPicture: No
+    PictureLink: 
+    WithBonus: No
+    NumOfBonus: 0
+    BonusValue: 
+    BonusType: 
+    Tag: roundOnce
+  - Index: 3
+    Title: Welcome to play4
+    Desp: 
+    Content: Welcome to play4
+    From: System
+    Avatar: 
+    Time: Today
+    Condition: toRound
+    ConditionValue1: 4
+    ConditionValue2: 0
+    WithPicture: No
+    PictureLink: 
+    WithBonus: No
+    NumOfBonus: 0
+    BonusValue: 
+    BonusType: 
+    Tag: roundOnce

@@ -490,5 +490,10 @@ public class RoleModule : ModuleBase, IRoleModule
         mgm.TurnPracticeNum++;
     }
 
+    public int GetCurrentTurn()
+    {
+        return TurnNum;
+    }
+
 }
 
