@@ -42,6 +42,8 @@ public class ModuleMgr: IModuleMgr
         RegModuleList["WeiboModule"] = typeof(WeiboModule);
         RegModuleList["ShopMgr"] = typeof(ShopMgr);
 
+		RegModuleList["MailModule"] = typeof(MailModule);
+
 
 
         mMapType[typeof(CardDeckModule)] = "CardDeck";
@@ -55,6 +57,8 @@ public class ModuleMgr: IModuleMgr
         mMapType[typeof(WeiboModule)] = "WeiboModule";
 
         mMapType[typeof(ShopMgr)] = "ShopMgr";
+
+		mMapType[typeof(MailModule)] = "MailModule";
     }
 
 	public void Tick(float dTime){

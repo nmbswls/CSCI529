@@ -13,6 +13,7 @@ public interface IRoleModule : IModule{
     string[] getScheduled();
 
     void NextTurn();
+    int GetCurrentTurn();
 
     int ScheduleMax { get; set; }
     int OverDueSchedule { get; set; }

@@ -16,30 +16,57 @@ MonoBehaviour:
   - Index: 0
     Name: "\u8001\u5F20"
     Desp: "\u6765\u4ECA\u513F\u4E2A\u7ED9\u5927\u5BB6\u641E\u4E2A\u4E8C\u65A4\u5730\u74DC\u70E7"
+    Content: "\u6765\u4ECA\u513F\u4E2A\u7ED9\u5927\u5BB6\u641E\u4E2A\u4E8C\u65A4\u5730\u74DC\u70E7"
     Time: Random
-    Avat: 
+    Avatar: 
+    Forwardable: No
+    GainCard: 
+    Reviewable: Yes
+    NumOfReview: 2
+    Review1: "\u5965\u529B\u7ED9"
+    Bonus1: AddKoucai
+    Value1: 1
+    Review2: "\u597D\u5403\u4E2A\u7403"
+    Bonus2: AddJishu
+    Value2: 1
+    Review3: 
+    Bonus3: 
+    Value3: 0
   - Index: 1
     Name: "\u8001\u5218"
     Desp: "\u8F6C\u53D1\u8FD9\u6761\u9526\u9CA4\uFF0C\u4E5F\u6CA1\u4EC0\u4E48\u5375\u7528"
+    Content: "\u8F6C\u53D1\u8FD9\u6761\u9526\u9CA4\uFF0C\u4E5F\u6CA1\u4EC0\u4E48\u5375\u7528"
     Time: Random
-    Avat: 
+    Avatar: 
+    Forwardable: Yes
+    GainCard: 
+    Reviewable: No
+    NumOfReview: 0
+    Review1: 
+    Bonus1: 
+    Value1: 0
+    Review2: 
+    Bonus2: 
+    Value2: 0
+    Review3: 
+    Bonus3: 
+    Value3: 0
   - Index: 2
-    Name: "\u94B1\u9F99"
-    Desp: "\u5F53\u671D\u5927\u5B66\u58EB\uFF0C\u603B\u5171\u6709\u4E94\u4F4D\uFF0C\u6715\u4E0D\u5F97\u4E0D\u7F62\u514D\u4E09\u4F4D"
+    Name: "\u8001\u9A6C"
+    Desp: "\u3010\u4ECA\u65E5\u54F2\u5B66\u3011\u56E0\u4E3A\u4F60\u4E0D\u4F1A\uFF0C\u6240\u4EE5\u4F60\u624D\u4F1A"
+    Content: "\u3010\u4ECA\u65E5\u54F2\u5B66\u3011\u56E0\u4E3A\u4F60\u4E0D\u4F1A\uFF0C\u6240\u4EE5\u4F60\u624D\u4F1A"
     Time: Random
-    Avat: 
-  - Index: 3
-    Name: "\u674E\u4E91\u9F99"
-    Desp: "\u610F\u5927\u5229\u70AE\u5835\u4E86"
-    Time: Random
-    Avat: 
-  - Index: 4
-    Name: "\u738B\u8001\u83CA"
-    Desp: "\u5367\u69FD"
-    Time: Random
-    Avat: 
-  - Index: 5
-    Name: "\u94DC\u6559\u6388"
-    Desp: "\u65E9\u4E0A\u8D77\u6765\uFF0C\u62E5\u62B1\u592A\u9633\u3002\u592A\u9633\u8BF4\uFF0C\u201C\u54CE\u561B\u6211\u70ED\u6B7B\u4E86\u201D"
-    Time: Random
-    Avat: 
+    Avatar: 
+    Forwardable: Yes
+    GainCard: 
+    Reviewable: Yes
+    NumOfReview: 1
+    Review1: "\u4E0B\u996D\u554A\uFF0C\u8001\u9A6C"
+    Bonus1: AddKoucai
+    Value1: 3
+    Review2: 
+    Bonus2: 
+    Value2: 0
+    Review3: 
+    Bonus3: 
+    Value3: 0

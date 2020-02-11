@@ -648,7 +648,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         else if (view.appViews.IndexOf(vv) == 1)
         {
             //mail
-
+            mUIMgr.ShowPanel("MailPanel");
         }
         else if (view.appViews.IndexOf(vv) == 0)
         {
