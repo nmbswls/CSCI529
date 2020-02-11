@@ -15,9 +15,12 @@ public class WildExploreCtrl : MonoBehaviour
     public float gameTime;
     private int pauseCount;
 
+
+
     // Start is called before the first frame update
     void Start()
     {
+        //1次
         Rect activeRect = new Rect(wildMap.transform.position, new Vector2(wildMap.Width/ wildMap.meterPerUnit, wildMap.Height/ wildMap.meterPerUnit));
         fieldCamera.Init(Camera.main, activeRect);
         fieldCamera.MoveTo(wildMap.player.transform.position);
@@ -28,9 +31,13 @@ public class WildExploreCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         float gameDeltaTime = Time.deltaTime * GameTimeRate;
         gameTime += gameDeltaTime;
         UICtrl.UpdateTimer();
+
+        
+
 
         if (Input.GetKeyDown(KeyCode.K))
         {
