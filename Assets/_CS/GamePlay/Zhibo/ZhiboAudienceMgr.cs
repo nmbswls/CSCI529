@@ -938,7 +938,7 @@ public class ZhiboAudienceMgr
         }
         else
         {
-            GenHeifen(5);
+            GenHeifen(5, audience.BindViewIdx);
         }
 
         for(int i = 0; i < audience.Skills.Count; i++)
@@ -1099,13 +1099,14 @@ public class ZhiboAudienceMgr
 
     public int ShowNewAudienceAtPos(ZhiboAudience audience, int slotIdx)
     {
-        if (!EmptyTVList.Contains(slotIdx))
+        if (LittleTvList[slotIdx].TargetAudience != null)
         {
             return -1;
         }
-
-        EmptyTVList.Remove(slotIdx);
-
+        if (EmptyTVList.Contains(slotIdx))
+        {
+            EmptyTVList.Remove(slotIdx);
+        }
         LittleTvList[slotIdx].InitLittleTvView(audience);
 
         audience.state = eAudienceState.Normal;

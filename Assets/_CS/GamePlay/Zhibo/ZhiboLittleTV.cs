@@ -87,10 +87,15 @@ public class ZhiboLittleTV : MonoBehaviour
         {
             view.TimeLeftBlocks[i].fillAmount = 1;
         }
-        if(completeBlockCount < count && completeBlockCount >=0)
+        for(int i= completeBlockCount; i< count; i++)
+        {
+            view.TimeLeftBlocks[i].fillAmount = 0;
+        }
+        if (completeBlockCount < count && completeBlockCount >=0)
         {
             view.TimeLeftBlocks[completeBlockCount].fillAmount = extraRate;
         }
+        
 
     }
     public Vector3 GetPivotPos()
@@ -184,6 +189,7 @@ public class ZhiboLittleTV : MonoBehaviour
 
         //gameObject.SetActive(true);
         view.animator.Play("Empty");
+        view.animator.ResetTrigger("Disappear");
         view.animator.SetTrigger("Appear");
         this.TargetAudience = TargetAudience;
 
