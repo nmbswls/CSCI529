@@ -242,7 +242,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.SkillExpShow = root.Find("SkillExp").Find("Value").GetComponent<Text>();
         view.CardPowerShow = root.Find("CardPower").Find("Value").GetComponent<Text>();
 
-        view.moneyValue = root.Find("Header").Find("money bar").Find("Value").GetComponent<Text>();
+        view.moneyValue = root.Find("money bar").Find("Value").GetComponent<Text>();
 
         view.Properties = root.Find("Properties");
 
