@@ -177,6 +177,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
                 Debug.Log(isValidDrag);
                 if (isValidDrag)
                 {
+                    view.Reviews.gameObject.SetActive(false);
                     if (pWeiboMgr.IsShuable)
                     {
                         randomWeibo();
@@ -264,6 +265,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
                                     handleReviewEffect(tmp);
                                     isCardGot = true;
                                     pWeiboMgr.ReduceShuaTime();
+                                    view.Reviews.gameObject.SetActive(false);
                                 }
                             };
                         }
