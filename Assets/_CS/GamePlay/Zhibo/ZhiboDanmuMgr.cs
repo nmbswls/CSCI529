@@ -234,13 +234,23 @@ public class ZhiboDanmuMgr
 
     private string GenRandomDanmu()
     {
-        if(nowFengxiang == null)
+        List<string> pool = new List<string>();
+
+        if (nowFengxiang == null)
         {
+            if (!DanmuTagDict.ContainsKey("notag"))
+            {
+                LoadDanmuContent("notag");
+            }
+            if (DanmuTagDict.ContainsKey("notag"))
+            {
+                pool.AddRange(DanmuTagDict["notag"]);
+            }
+
             return danmuContents[Random.Range(0, danmuContents.Count)];
         }
         else
         {
-            List<string> pool = new List<string>();
             for(int i = 0; i < nowFengxiang.Count; i++)
             {
                 if (!DanmuTagDict.ContainsKey(nowFengxiang[i]))
@@ -255,11 +265,18 @@ public class ZhiboDanmuMgr
             }
             if(pool.Count == 0)
             {
-                return danmuContents[Random.Range(0, danmuContents.Count)];
+                if (!DanmuTagDict.ContainsKey("notag"))
+                {
+                    LoadDanmuContent("notag");
+                }
+                if (DanmuTagDict.ContainsKey("notag"))
+                {
+                    pool.AddRange(DanmuTagDict["notag"]);
+                }
             }
-            string ret = pool[Random.Range(0,pool.Count)];
-            return ret;
         }
+        string ret = pool[Random.Range(0, pool.Count)];
+        return ret;
     }
     private string GenRandomUserName()
     {

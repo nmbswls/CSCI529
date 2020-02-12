@@ -543,7 +543,7 @@ public class ZhiboGameMode : GameModeBase
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-
+            mZhiboDanmuMgr.UseCardWithTags("???");
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
@@ -1141,6 +1141,9 @@ public class ZhiboGameMode : GameModeBase
 
         mAudienceMgr.HandleGemHit(cinfo.OverrideGems, extra);
         RemoveCardToDiscarded(cinfo);
+
+        mZhiboDanmuMgr.UseCardWithTags(ca.TagString);
+
         return true;
     }
 
