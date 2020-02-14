@@ -146,6 +146,21 @@ public class ZhiboAudience
         return Level * 10;
     }
 
+    public void ConvertToHeizi()
+    {
+        int heiziHp = 0;
+        for(int i = 0; i < (int)eAudienceHpType.Max; i++)
+        {
+            int cha = MaxReq[i] - NowReq[i];
+            MaxReq[i] = 0;
+            NowReq[i] = 0;
+            heiziHp += cha;
+        }
+        BlackHp = heiziHp;
+        OriginTimeLast = -1;
+        TimeLeft = -1;
+        LastTurn = 2;
+    }
     public void addExtraHp(int type, int amount)
     {
         int totalReq = 0;

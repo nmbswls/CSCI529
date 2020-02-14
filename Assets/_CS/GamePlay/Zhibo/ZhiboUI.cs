@@ -12,6 +12,7 @@ public class ZhiboView : BaseView
     public Button NextTurnBtn;
 
     public Button RoleSkill;
+    public Button RoleSkill2;
 
     public Transform TVContainer;
     //public List<ZhiboLittleTV> LittleTvList = new List<ZhiboLittleTV>();
@@ -59,6 +60,8 @@ public class ZhiboView : BaseView
     public GameObject TokenDetailPanel;
 
     public Text targetValue;
+
+    public Button Settings;
 
 }
 //public class OperatorView
@@ -317,6 +320,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.TurnLeft = topField.Find("TurnLeft").Find("LeftTurn_value").GetComponentInChildren<Text>();
 
         view.RoleSkill = root.Find("RoleSkill").GetComponent<Button>();
+        view.RoleSkill2 = root.Find("RoleSkill2").GetComponent<Button>();
 
         Transform lbArea = root.Find("LeftBottom");
 
@@ -327,6 +331,9 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.HpValue = lbArea.Find("HpValue").GetComponent<Text>();
 
         view.TurnTimeBar = lbArea.Find("Timer").GetChild(0).GetComponent<Image>();
+
+
+        view.Settings = lbArea.Find("Settings").GetComponent<Button>();
 
         view.TiliBar = lbArea.Find("TiliBar");
         foreach(Transform child in view.TiliBar)
@@ -441,6 +448,10 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
     public  override void RegisterEvent()
     {
+        view.Settings.onClick.AddListener(delegate
+        {
+            gameMode.OpenSetting();
+        });
         {
             ClickEventListerner listener = view.Actions.gameObject.GetComponent<ClickEventListerner>();
             if (listener == null)
@@ -461,13 +472,52 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
 
         view.RoleSkill.onClick.AddListener(delegate
         {
-            gameMode.UseRoleSkill();
+            gameMode.UseRoleSkill(0);
         });
 
+        view.RoleSkill2.onClick.AddListener(delegate
+        {
+            gameMode.UseRoleSkill(1);
+        });
+        
+
     }
-    public void SKillBtnEnable(bool enable)
+    public void SKillBtnEnable(int index, bool enable)
     {
-        view.RoleSkill.interactable = enable;
+        if(index == 0)
+        {
+            view.RoleSkill.interactable = enable;
+        }
+        else
+        {
+            view.RoleSkill2.interactable = enable;
+        }
+        
+    }
+
+    public void FanmianSkillButton(GameObject skillBtn)
+    {
+        //DOTween.To
+        //(
+        //    () => view.Content.transform.localEulerAngles,
+        //    (x) => { view.Content.transform.localEulerAngles = x; },
+        //    new Vector3(0, 90, 0f),
+        //    0.075f
+        //).OnComplete(delegate {
+
+        //    view.Content.sprite = pResLoader.LoadResource<Sprite>("Zhibo/AudienceBG/heizi_bg");
+        //    UpdateHp();
+
+        //    DOTween.To
+        //    (
+        //        () => view.Content.transform.localEulerAngles,
+        //        (x) => { view.Content.transform.localEulerAngles = x; },
+        //        new Vector3(0, 0, 0f),
+        //        0.075f
+        //    ).OnComplete(delegate {
+
+        //    });
+        //});
     }
 
     private void NextTurn()

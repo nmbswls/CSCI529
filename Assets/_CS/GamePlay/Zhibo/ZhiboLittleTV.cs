@@ -46,6 +46,7 @@ public class ZhiboLittleTV : MonoBehaviour
 
     public ZhiboAudience TargetAudience;
 
+    public static string[] BlockColorArray = new string[] { "#8C2626", "#BFB706", "#778F15", "#77851F", "#4B8510"};
 
     public IResLoader pResLoader;
 
@@ -66,6 +67,7 @@ public class ZhiboLittleTV : MonoBehaviour
         audienceImage.Add(pResLoader.LoadResource<Sprite>("AudienceImage/" + "Heizi"));
         view.animator = GetComponent<Animator>();
         view.animator.Play("Empty");
+        view.Content.sprite = pResLoader.LoadResource<Sprite>("Zhibo/AudienceBG/normal1_bg"); ;
         gameObject.SetActive(false);
         view.rootCG.alpha = 1;
         isAttracted = false;
@@ -79,14 +81,37 @@ public class ZhiboLittleTV : MonoBehaviour
 
     public void UpdateTimeLeft()
     {
+
         int count = view.TimeLeftBlocks.Count;
+
+        if(TargetAudience.OriginTimeLast < 0)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                view.TimeLeftBlocks[i].fillAmount = 1;
+                view.TimeLeftBlocks[i].color = Color.black;
+            }
+            return;
+        }
+        else
+        {
+            for (int i = 0; i < count; i++)
+            {
+                view.TimeLeftBlocks[i].fillAmount = 1;
+                Color nowColor = Color.white;
+                ColorUtility.TryParseHtmlString(BlockColorArray[i], out nowColor);
+                view.TimeLeftBlocks[i].color = nowColor;
+            }
+        }
+
+
         float timePerBlock = TargetAudience.OriginTimeLast / count;
         int completeBlockCount = (int)(TargetAudience.TimeLeft / timePerBlock);
         float extraRate = (TargetAudience.TimeLeft - completeBlockCount * timePerBlock) / timePerBlock;
-        for(int i = 0; i < completeBlockCount; i++)
-        {
-            view.TimeLeftBlocks[i].fillAmount = 1;
-        }
+        //for(int i = 0; i < completeBlockCount; i++)
+        //{
+        //    view.TimeLeftBlocks[i].fillAmount = 1;
+        //}
         for(int i= completeBlockCount; i< count; i++)
         {
             view.TimeLeftBlocks[i].fillAmount = 0;
@@ -180,6 +205,34 @@ public class ZhiboLittleTV : MonoBehaviour
 
         }
     }
+
+
+    public void ConvertToHeizi()
+    {
+        DOTween.To
+        (
+            () => view.Content.transform.localEulerAngles,
+            (x) => { view.Content.transform.localEulerAngles = x; },
+            new Vector3(0, 90, 0f),
+            0.075f
+        ).OnComplete(delegate {
+            
+            view.Content.sprite = pResLoader.LoadResource<Sprite>("Zhibo/AudienceBG/heizi_bg");
+            UpdateHp();
+
+            DOTween.To
+            (
+                () => view.Content.transform.localEulerAngles,
+                (x) => { view.Content.transform.localEulerAngles = x; },
+                new Vector3(0, 0, 0f),
+                0.075f
+            ).OnComplete(delegate {
+
+            });
+        });
+    }
+
+    
 
 
 
@@ -346,11 +399,11 @@ public class ZhiboLittleTV : MonoBehaviour
 
             view.GemList[idx].root.SetActive(true);
             view.GemList[idx].bg.color = Color.white;
-            view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/6");
+            view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/6");
 
             view.GemList[idx].icon.enabled = true;
             view.GemList[idx].icon.color = Color.white;
-            view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/6");
+            view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/6");
 
             idx++;
         }
@@ -361,19 +414,19 @@ public class ZhiboLittleTV : MonoBehaviour
             {
                 view.GemList[idx].root.SetActive(true);
                 view.GemList[idx].bg.color = new Color(1,1,1,0.3f);
-                view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i + "_bg");
+                view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + i + "_bg");
                 if (j < TargetAudience.NowReq[i])
                 {
                     //有血量的部分
                     view.GemList[idx].icon.enabled = true;
                     view.GemList[idx].icon.color = Color.white;
-                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + i);
                 }
                 else
                 {
                     view.GemList[idx].icon.enabled = false;
                     view.GemList[idx].icon.color = Color.white;
-                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + i);
                 }
                 idx++;
             }

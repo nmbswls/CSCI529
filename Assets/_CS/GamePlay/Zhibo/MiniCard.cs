@@ -398,13 +398,21 @@ public class MiniCard : MonoBehaviour
             }
             if(nowValue >= TriggerValue)
             {
+                //if (isFaceUp)
+                //{
+                //    UseCard();
+                //}
+                //else
+                //{
+                //    UseCardGem();
+                //}
                 if (isFaceUp)
                 {
-                    UseCard();
+                    UseCardGem();
                 }
                 else
                 {
-                    UseCardGem();
+                    UseCard();
                 }
             }
             else

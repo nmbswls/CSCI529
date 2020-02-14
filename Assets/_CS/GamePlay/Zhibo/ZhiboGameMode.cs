@@ -88,6 +88,7 @@ public class ZhiboGameState
     public int NowTurn = 12;
 
 
+    public int[] skillCdArray = new int[2];
 
     public List<ZhiboBuff> ZhiboBuffs = new List<ZhiboBuff>();
 
@@ -386,14 +387,17 @@ public class ZhiboGameMode : GameModeBase
 
         mUICtrl.UpdateTili();
         mUICtrl.UpdateHp();
+        
 
-        skillCd -= 1;
-        if(skillCd <= 0)
+
+        for(int i = 0; i < state.skillCdArray.Length; i++)
         {
-            mUICtrl.SKillBtnEnable(true);
+            state.skillCdArray[i] -= 1;
+            if (state.skillCdArray[i] <= 0)
+            {
+                mUICtrl.SKillBtnEnable(i,true);
+            }
         }
-
-
 
     }
 
@@ -519,6 +523,12 @@ public class ZhiboGameMode : GameModeBase
 
     public override void Tick(float dTime)
     {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OpenSetting();
+        }
+
         if (Input.GetKeyDown(KeyCode.K))
         {
             AddCardFromDeck();
@@ -1101,6 +1111,21 @@ public class ZhiboGameMode : GameModeBase
         return true;
     }
 
+    public void OpenSetting()
+    {
+        Pause();
+        mUIMgr.ShowConfirmBox("确认退出？退出将失去或有热度.", delegate {
+
+            ZhiboGameMode gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as ZhiboGameMode;
+            Debug.Log(gameMode.mUICtrl == null);
+            mUIMgr.CloseCertainPanel(gameMode.mUICtrl);
+            mUIMgr.CloseCertainPanel(mUICtrl);
+            GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main");
+
+        },delegate {
+            Resume();
+        });
+    }
 
     public bool TryUseCardGem(int cardIdx)
     {
@@ -1148,11 +1173,16 @@ public class ZhiboGameMode : GameModeBase
     }
 
 
-    int skillCd;
 
-    public void UseRoleSkill()
+    public void UseRoleSkill(int skillIdx)
     {
-        if(skillCd > 0)
+        if(skillIdx < 0 || skillIdx >= state.skillCdArray.Length)
+        {
+            Debug.Log("Use skill wrong");
+        }
+        float cd = state.skillCdArray[skillIdx];
+
+        if (cd > 0)
         {
             return;
         }
@@ -1162,9 +1192,16 @@ public class ZhiboGameMode : GameModeBase
             return;
         }
         GenTili(-3);
-        Guopai(2);
-        skillCd = 2;
-        mUICtrl.SKillBtnEnable(false);
+        if(skillIdx == 0)
+        {
+            Guopai(2);
+        }else if (skillIdx == 1)
+        {
+            mAudienceMgr.ApplyBlackHit(3);
+        }
+        
+        state.skillCdArray[skillIdx] = 2;
+        mUICtrl.SKillBtnEnable(skillIdx,false);
     }
 
     public bool TryUseCard(int cardIdx)

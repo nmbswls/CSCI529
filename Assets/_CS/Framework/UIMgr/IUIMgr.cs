@@ -27,7 +27,7 @@ public interface IUIMgr : IModule
     Camera GetCamera();
 
     void ShowMsgBox(string content);
-    void ShowConfirmBox(string content, Action cb);
+    void ShowConfirmBox(string content, Action okCallback, Action cancelCallback = null);
 
     bool CanMaskClose { get; set; }
 }

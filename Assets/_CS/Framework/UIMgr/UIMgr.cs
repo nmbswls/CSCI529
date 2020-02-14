@@ -277,10 +277,10 @@ public class UIMgr : ModuleBase, IUIMgr
         msgBox.ShowMsg(content);
     }
 
-    public void ShowConfirmBox(string content, Action cb)
+    public void ShowConfirmBox(string content, Action okCallback, Action cancelCallback = null)
     {
         ConfirmBoxCtrl msgBox = ShowPanel("ConfirmBox") as ConfirmBoxCtrl;
-        msgBox.ShowMsg(content,cb);
+        msgBox.ShowMsg(content, okCallback, cancelCallback);
     }
 
 }

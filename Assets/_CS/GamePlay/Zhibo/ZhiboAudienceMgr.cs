@@ -145,6 +145,10 @@ public class ZhiboAudienceMgr
         timeLeftChangeInterval += dTime;
         for (int i = TargetList.Count -1; i >= 0; i--)
         {
+            if(TargetList[i].BlackHp > 0)
+            {
+                continue;
+            }
             if (timeLeftChangeInterval > 0.2f)
             {
                 if (TargetList[i].BindViewIdx != -1)
@@ -223,20 +227,30 @@ public class ZhiboAudienceMgr
     {
         for (int i = TargetList.Count - 1; i >= 0; i--)
         {
-            if(TargetList[i].BlackHp > 0)
+            if (TargetList[i].BlackHp > 0)
             {
                 TargetList[i].BlackHp -= damage;
                 TargetList[i].BlackHp = TargetList[i].BlackHp < 0 ? 0 : TargetList[i].BlackHp;
 
                 ShowAudienceHit(TargetList[i]);
                 UpdateAudienceHp(TargetList[i]);
+                if(TargetList[i].BlackHp == 0)
+                {
+                    //need fix fix fix 不优雅
+                    TargetList[i].state = eAudienceState.None;
+                    LittleTvList[TargetList[i].BindViewIdx].Disappear();
+                    TargetList.Remove(TargetList[i]);
+                    
+                }
             }
         }
+        CalculateAura();
     }
 
     Queue<ZhiboAudience> KilledAudience = new Queue<ZhiboAudience>();
 
 
+    
 
     public List<int> HandleGemHit(int[] damage, int extra = 0, AudienceToken token = null)
     {
@@ -524,7 +538,6 @@ public class ZhiboAudienceMgr
             return;
         }
 
-        CalculateAura();
 
 
 
@@ -538,6 +551,8 @@ public class ZhiboAudienceMgr
             LittleTvList[audience.BindViewIdx].Disappear();
             TargetList.Remove(audience);
         }
+        CalculateAura();
+
     }
 
     public void PutIntoChain(ZhiboAudience a)
@@ -634,14 +649,15 @@ public class ZhiboAudienceMgr
             {
                 ZhiboAudience audience = new ZhiboAudience();
                 audience.Level = originLevel + i / 3;
-                audience.OriginTimeLast = 40f;
-                audience.TimeLeft = 40f;
-                if (i % 4 == 2)
+                //4040
+                audience.OriginTimeLast = 5f;
+                audience.TimeLeft = 5f;
+                //if (i % 4 == 2)
                 {
-                    audience.Type = eAudienceType.Heizi;
-                    audience.BlackHp = audience.Level;
+                    //audience.Type = eAudienceType.Heizi;
+                    //audience.BlackHp = audience.Level;
                 }
-                else
+                //else
                 {
                     audience.Type = eAudienceType.Good;
                     int randI = Random.Range(0,rates.Count);
@@ -919,26 +935,40 @@ public class ZhiboAudienceMgr
         TargetList.Add(audience);
     }
 
+
+
     public void AudienceLeave(ZhiboAudience audience)
     {
+
+
+        if(audience.BlackHp > 0)
+        {
+            audience.state = eAudienceState.None;
+            LittleTvList[audience.BindViewIdx].Disappear();
+            TargetList.Remove(audience);
+            CalculateAura();
+            return;
+        }
+
+        float stfRate = audience.ReqRate();
+
+        if(stfRate < 0.6f)
+        {
+            LittleTvList[audience.BindViewIdx].ConvertToHeizi();
+            audience.ConvertToHeizi();
+            return;
+        }
 
         audience.state = eAudienceState.None;
         LittleTvList[audience.BindViewIdx].Disappear();
         TargetList.Remove(audience);
-
-
-        float stfRate = audience.ReqRate();
         if (stfRate >= 0.9f)
         {
             addExtraHp(1);
         }
-        else if (stfRate >= 0.6f)
-        {
-            gameMode.AddHp(-3);
-        }
         else
         {
-            GenHeifen(5, audience.BindViewIdx);
+            gameMode.AddHp(-3);
         }
 
         for(int i = 0; i < audience.Skills.Count; i++)
@@ -957,6 +987,7 @@ public class ZhiboAudienceMgr
                 }
             }
         }
+        CalculateAura();
     }
 
 
@@ -982,6 +1013,12 @@ public class ZhiboAudienceMgr
                 }
             }
         }
+    }
+
+
+    public void AudienceBecomeHeizi()
+    {
+        
     }
 
 
@@ -1074,27 +1111,27 @@ public class ZhiboAudienceMgr
     }
 
 
-    public void GenHeifen(int hp, int idx = -1)
-    {
-        ZhiboAudience audience = new ZhiboAudience();
-        {
-            audience.Type = eAudienceType.Heizi;
-            audience.BlackHp = hp;
-            audience.state = eAudienceState.Normal;
-        }
-        int realIdx = -1;
-        if(idx >= 0)
-        {
-            realIdx = ShowNewAudienceAtPos(audience,idx);
-        }
-        if (realIdx == -1)
-        {
-            realIdx = ShowNewAudience(audience);
-        }
+    //public void GenHeifen(int hp, int idx = -1)
+    //{
+    //    ZhiboAudience audience = new ZhiboAudience();
+    //    {
+    //        audience.Type = eAudienceType.Heizi;
+    //        audience.BlackHp = hp;
+    //        audience.state = eAudienceState.Normal;
+    //    }
+    //    int realIdx = -1;
+    //    if(idx >= 0)
+    //    {
+    //        realIdx = ShowNewAudienceAtPos(audience,idx);
+    //    }
+    //    if (realIdx == -1)
+    //    {
+    //        realIdx = ShowNewAudience(audience);
+    //    }
 
-        audience.BindViewIdx = idx;
-        TargetList.Add(audience);
-    }
+    //    audience.BindViewIdx = idx;
+    //    TargetList.Add(audience);
+    //}
 
 
     public int ShowNewAudienceAtPos(ZhiboAudience audience, int slotIdx)

@@ -22,6 +22,7 @@ public class ConfirmBoxCtrl : UIBaseCtrl<BaseModel, ConfirmBoxView>
     }
 
     private Action confirmCallback;
+    private Action cancelCallback;
 
     public override void RegisterEvent()
     {
@@ -40,6 +41,11 @@ public class ConfirmBoxCtrl : UIBaseCtrl<BaseModel, ConfirmBoxView>
         view.CancelBtn.onClick.AddListener(delegate
         {
             mUIMgr.CloseCertainPanel(this);
+            if(cancelCallback != null)
+            {
+                cancelCallback();
+                cancelCallback = null;
+            }
         });
     }
 
@@ -48,9 +54,10 @@ public class ConfirmBoxCtrl : UIBaseCtrl<BaseModel, ConfirmBoxView>
         base.PostInit();
     }
 
-    public void ShowMsg(string content, Action confirmCallback)
+    public void ShowMsg(string content, Action confirmCallback, Action cancelCallback)
     {
         view.Content.text = content;
         this.confirmCallback = confirmCallback;
+        this.cancelCallback = cancelCallback;
     }
 }
