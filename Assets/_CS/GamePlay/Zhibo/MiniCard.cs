@@ -178,7 +178,7 @@ public class MiniCard : MonoBehaviour
                 CardGemView vv = new CardGemView();
                 vv.BindView(go.transform);
                 view.CardGemList.Add(vv);
-                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems/" + i);
                 vv.Num.text = cardInfo.OverrideGems[i] + "";
             }
         }
@@ -201,7 +201,7 @@ public class MiniCard : MonoBehaviour
                 CardGemBackView vv = new CardGemBackView();
                 vv.BindView(go.transform);
                 view.CardGemBackList.Add(vv);
-                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("ZhiboMode2/Gems/" + i);
+                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems/" + i);
                 vv.Num.text = cardInfo.OverrideGems[i] + "";
                 types++;
 
