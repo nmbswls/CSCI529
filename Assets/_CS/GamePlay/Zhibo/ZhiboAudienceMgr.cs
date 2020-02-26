@@ -650,8 +650,8 @@ public class ZhiboAudienceMgr
                 ZhiboAudience audience = new ZhiboAudience();
                 audience.Level = originLevel + i / 3;
                 //4040
-                audience.OriginTimeLast = 5f;
-                audience.TimeLeft = 5f;
+                audience.OriginTimeLast = 40f;
+                audience.TimeLeft = 40f;
                 //if (i % 4 == 2)
                 {
                     //audience.Type = eAudienceType.Heizi;
