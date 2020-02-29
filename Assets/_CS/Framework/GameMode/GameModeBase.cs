@@ -12,15 +12,24 @@ public class HudBase
 
 }
 
+public class GameModeInitData
+{
+
+}
+
+
+
 public class GameModeBase
 {
     public Action GameFinishedCallback;
     public bool Initialized = false;
+    public GameModeInitData InitData;
 
-	public virtual void Tick(float dTime){
+    public virtual void Tick(float dTime){
 		return;
 	}
-	public virtual void Init(){
+	public virtual void Init(GameModeInitData InitData)
+    {
 		return;
 	}
 

@@ -60,7 +60,7 @@ public class DanmuMode2 : MonoBehaviour
 
     public DanmuView2 view = new DanmuView2();
 
-    ZhiboGameMode2 gameMode;
+    FightingDanmuGameMode gameMode;
 
 
     public float AvoidOffset = 200f;
@@ -80,7 +80,7 @@ public class DanmuMode2 : MonoBehaviour
 
     public CanvasGroup RootCanvasGroup;
 
-    public virtual void init(string txt, bool isBad, ZhiboGameMode2 gameMode)
+    public virtual void init(string txt, bool isBad, FightingDanmuGameMode gameMode)
     {
         rect = (RectTransform)transform;
 

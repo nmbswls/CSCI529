@@ -91,7 +91,12 @@ public class ZhiboGameMode2State
 }
 
 
-public class ZhiboGameMode2 : GameModeBase
+public class FightDanmuGMInitData : GameModeInitData
+{
+    public List<string> SkillList;
+}
+
+public class FightingDanmuGameMode : GameModeBase
 {
     public static int ActionNum = 4;
 
@@ -119,9 +124,13 @@ public class ZhiboGameMode2 : GameModeBase
 
 
     private Dictionary<string, List<string>> DanmuDict = new Dictionary<string, List<string>>();
-    public override void Init()
+    public override void Init(GameModeInitData initData)
     {
         fakeZhiboMode2Skill();
+
+
+
+
 
         mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
@@ -164,6 +173,14 @@ public class ZhiboGameMode2 : GameModeBase
         mUICtrl.UpdateTargetScore();
 
         InitSuperDanmu();
+
+
+        FightDanmuGMInitData realData = initData as FightDanmuGMInitData;
+        if(realData != null)
+        {
+            SetPresetInfo(realData.SkillList);
+        }
+
     }
 
     public void SetPresetInfo(List<string> skillList,string passive="4")

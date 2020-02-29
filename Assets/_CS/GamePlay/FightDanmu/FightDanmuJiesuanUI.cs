@@ -30,7 +30,7 @@ public class FightDanmuJiesuanUI : UIBaseCtrl<BaseModel, FightDanmuJiesunView>
     {
         base.RegisterEvent();
         view.OKBtn.onClick.AddListener(delegate {
-            ZhiboGameMode2 gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as ZhiboGameMode2;
+            FightingDanmuGameMode gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as FightingDanmuGameMode;
             Debug.Log(gameMode.mUICtrl == null);
             mUIMgr.CloseCertainPanel(gameMode.mUICtrl);
             mUIMgr.CloseCertainPanel(this);

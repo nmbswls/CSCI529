@@ -101,7 +101,7 @@ public class TravelGameMode : GameModeBase {
         mainCamera.transform.position = cameraPos;
     }
 
-    public override void Init()
+    public override void Init(GameModeInitData initData)
     {
         BindGameObject();
         InitCameraControl();

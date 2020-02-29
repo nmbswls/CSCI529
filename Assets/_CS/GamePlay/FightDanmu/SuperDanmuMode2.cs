@@ -23,7 +23,7 @@ public class SuperDanmuMode2 : MonoBehaviour
 
 
     public SuperDanmuView view = new SuperDanmuView();
-    ZhiboGameMode2 gameMode;
+    FightingDanmuGameMode gameMode;
 
     public RectTransform rect;
     public Animator anim;
@@ -46,7 +46,7 @@ public class SuperDanmuMode2 : MonoBehaviour
     int hengfuSize = 0;
 
     public eSuperDanmuType Type;
-    public void init(string txt, eSuperDanmuType type, ZhiboGameMode2 gameMode)
+    public void init(string txt, eSuperDanmuType type, FightingDanmuGameMode gameMode)
     {
         this.gameMode = gameMode;
         this.txt = txt;

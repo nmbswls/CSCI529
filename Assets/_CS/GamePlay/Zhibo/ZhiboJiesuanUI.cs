@@ -38,7 +38,10 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
             Debug.Log(gameMode.mUICtrl==null);
             mUIMgr.CloseCertainPanel(gameMode.mUICtrl);
             mUIMgr.CloseCertainPanel(this);
-            GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main");
+
+            MainGMInitData data = new MainGMInitData();
+            data.isNextTurn = true;
+            GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main", data);
         });
     }
 

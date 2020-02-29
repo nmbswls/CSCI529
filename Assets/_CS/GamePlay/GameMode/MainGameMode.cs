@@ -12,6 +12,11 @@ public class TurnMsg
         this.content = content;
     }
 }
+
+public class MainGMInitData : GameModeInitData
+{
+    public bool isNextTurn;
+}
 public class MainGameMode : GameModeBase
 {
 
@@ -39,16 +44,28 @@ public class MainGameMode : GameModeBase
 
     }
 
-	public override void Init(){
+	public override void Init(GameModeInitData initData)
+    {
 		pUIMgr = GameMain.GetInstance ().GetModule<UIMgr> ();
         rm = GameMain.GetInstance().GetModule<RoleModule>();
         pEventMgr = GameMain.GetInstance().GetModule<SpeEventMgr>();
         
         mainUI = pUIMgr.ShowPanel("UIMain") as UIMainCtrl;
+
+        MainGMInitData realData = initData as MainGMInitData;
+
+        if(realData != null)
+        {
+            if (realData.isNextTurn)
+            {
+                NextTurn();
+            }
+        }
     }
 
     public void NextTurn()
     {
+        Debug.Log("next turn");
         TurnInfos.Clear();
         rm.NextTurn();
         HandleEvents(pEventMgr.CheckEvent());

@@ -44,7 +44,7 @@ public class CoreManager : ModuleBase, ICoreManager
         SceneInfoDict["Main"] = new SceneInfo("Main", typeof(MainGameMode));
         SceneInfoDict["Home"] = new SceneInfo("Main", typeof(HomeGameMode));
         SceneInfoDict["Zhibo"] = new SceneInfo("Zhibo", typeof(ZhiboGameMode));
-        SceneInfoDict["FightDanmu"] = new SceneInfo("FightDanmu", typeof(ZhiboGameMode2));
+        SceneInfoDict["FightDanmu"] = new SceneInfo("FightDanmu", typeof(FightingDanmuGameMode));
     }
 
     private void LoadInit()
@@ -54,7 +54,9 @@ public class CoreManager : ModuleBase, ICoreManager
 
 
 
-    public void ChangeScene(string sname, Action onSceneChanged = null, Action onSceneFinished = null)
+
+
+    public void ChangeScene(string sname, GameModeInitData initData=null, Action onSceneFinished = null)
     {
         if (!SceneInfoDict.ContainsKey(sname))
         {
@@ -64,11 +66,8 @@ public class CoreManager : ModuleBase, ICoreManager
 
         mResLoader.LoadLevelSync("Scene/"+ SceneName, LoadSceneMode.Single, delegate (Scene scene, LoadSceneMode mode) {
             Type t = SceneInfoDict[sname].GameModeType;
-            GameModeBase gm = LoadGameMode(t);
-            if(onSceneChanged != null)
-            {
-                onSceneChanged();
-            }
+            GameModeBase gm = LoadGameMode(t, initData);
+
             gm.GameFinishedCallback = onSceneFinished;
         });
     }
@@ -77,7 +76,7 @@ public class CoreManager : ModuleBase, ICoreManager
 
 
 
-    public GameModeBase LoadGameMode(Type t)
+    public GameModeBase LoadGameMode(Type t, GameModeInitData initData)
     {
         if (!t.IsSubclassOf(typeof(GameModeBase)))
         {
@@ -99,7 +98,7 @@ public class CoreManager : ModuleBase, ICoreManager
             Debug.LogError("Load Game Mode " + t.FullName + " fail");
             return null;
         }
-        mGameMode.Init();
+        mGameMode.Init(initData);
 
         if (preGm != null)
         {
@@ -123,9 +122,9 @@ public class CoreManager : ModuleBase, ICoreManager
 
     }
 
-    public GameModeBase LoadGameMode<T>() where T : GameModeBase
+    public GameModeBase LoadGameMode<T>(GameModeInitData initData) where T : GameModeBase
     {
-        return LoadGameMode(typeof(T));
+        return LoadGameMode(typeof(T), initData);
     }
 
 
