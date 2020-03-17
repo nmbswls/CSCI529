@@ -336,7 +336,7 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.Settings = lbArea.Find("Settings").GetComponent<Button>();
 
         view.TiliBar = lbArea.Find("TiliBar");
-        foreach(Transform child in view.TiliBar)
+        foreach(Transform child in view.TiliBar.Find("Container"))
         {
             view.TiliPoints.Add(child.GetComponent<Image>());
         }

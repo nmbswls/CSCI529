@@ -18,14 +18,18 @@ public class MiniCardView
     public CanvasGroup CardCG;
     public Image Bg;
     public Image Picture;
+    public Image BackPicture;
     public Text Desp;
     public Text BackDesp;
     public Text Name;
+    public Text BackName;
     public Transform TimeLeftComp;
     public Text TimeLeft;
     public Animator ClockAnimator;
     public Text Cost;
 
+    public Transform GemsIncludeContainer;
+    public List<CardGemSingleIconView> CardGemSingleIconList = new List<CardGemSingleIconView>();
 
     public Transform GemContainer;
     public List<CardGemView> CardGemList = new List<CardGemView>();
@@ -57,6 +61,16 @@ public class CardGemView
     {
         Icon = root.Find("Icon").GetComponent<Image>();
         Num = root.Find("Text").GetComponent<Text>();
+    }
+}
+public class CardGemSingleIconView
+{
+    public Image Icon;
+
+    public void BindView(Transform root)
+    {
+        Debug.Log(root.name);
+        Icon = root.Find("Icon").GetComponent<Image>();
     }
 }
 
@@ -96,7 +110,7 @@ public class MiniCard : MonoBehaviour
     private static Vector3 MinimizeScale = new Vector3(0.7f, 0.7f, 0.7f);
     private static Vector3 NormalScale = new Vector3(1f, 1f, 1f);
 
-    private static float NormalYOffset = 150f;
+    private static float NormalYOffset = 200f;
     private static float DragScaleRate = 0.3f;
 
     private static float NowValueDecRate = 500f;
@@ -140,6 +154,7 @@ public class MiniCard : MonoBehaviour
 
         //初始化卡面
         view.Name.text = ca.CardName;
+        view.BackName.text = view.Name.text;
         view.Desp.text = ca.CardEffectDesp;
         view.BackDesp.text = ca.CardBackDesp;
         if (ca.cost == -1)
@@ -156,11 +171,12 @@ public class MiniCard : MonoBehaviour
         if (ca.CatdImageName == null || ca.CatdImageName == string.Empty)
         {
             view.Picture.sprite = ca.Picture;
+            view.BackPicture.sprite = ca.Picture;
         }
         else
         {
             view.Picture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardImage/" + ca.CatdImageName);
-
+            view.BackPicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardImage/" + ca.CatdImageName);
         }
 
         foreach(Transform child in view.GemContainer)
@@ -178,7 +194,8 @@ public class MiniCard : MonoBehaviour
                 CardGemView vv = new CardGemView();
                 vv.BindView(go.transform);
                 view.CardGemList.Add(vv);
-                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems/" + i);
+                //vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems/" + i);
+                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems_icon/" + i);    //icon skin
                 vv.Num.text = cardInfo.OverrideGems[i] + "";
             }
         }
@@ -201,7 +218,8 @@ public class MiniCard : MonoBehaviour
                 CardGemBackView vv = new CardGemBackView();
                 vv.BindView(go.transform);
                 view.CardGemBackList.Add(vv);
-                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems/" + i);
+                //vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems/" + i);
+                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems_icon/" + i);    //icon skin
                 vv.Num.text = cardInfo.OverrideGems[i] + "";
                 types++;
 
@@ -214,9 +232,29 @@ public class MiniCard : MonoBehaviour
         }
         for (int i=0;i< view.CardGemBackList.Count; i++)
         {
-            view.CardGemBackList[i].Content.localPosition = new Vector3(i * offset, 0, 0);
+            //view.CardGemBackList[i].Content.localPosition = new Vector3(i * offset, 0, 0);
         }
 
+        foreach (Transform child in view.GemsIncludeContainer)
+        {
+            container.mResLoader.ReleaseGO("Zhibo/CardGemSingleIcon", child.gameObject);
+        }
+
+        view.CardGemSingleIconList.Clear();
+        for (int i = 0; i < cardInfo.OverrideGems.Length; i++)
+        {
+            if (cardInfo.OverrideGems[i] > 0)
+            {
+
+                GameObject go = container.mResLoader.Instantiate("Zhibo/CardGemSingleIcon", view.GemsIncludeContainer);
+                CardGemSingleIconView vv = new CardGemSingleIconView();
+                vv.BindView(go.transform);
+                view.CardGemSingleIconList.Add(vv);
+                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems_icon/" + i);    //icon skin
+                types++;
+
+            }
+        }
 
         nowDegree = 20f;
         targetDegree = 20f;
@@ -334,9 +372,13 @@ public class MiniCard : MonoBehaviour
 
         view.Bg = view.CardFace.Find("Outline").GetComponent<Image>();
         view.Picture = view.CardFace.Find("Picture").GetComponent<Image>();
+        view.BackPicture = view.CardBack.Find("Picture").GetComponent<Image>();
         view.Name = view.CardFace.Find("Name").GetComponent<Text>();
+        view.BackName = view.CardBack.Find("Name").GetComponent<Text>();
         view.Desp = view.CardFace.Find("Desp").GetComponent<Text>();
         view.Cost = view.CardFace.Find("Cost").GetComponent<Text>();
+
+        view.GemsIncludeContainer = view.CardFace.Find("GemsInclude");
 
         view.GemContainer = view.CardFace.Find("Gems");
         view.GemBackContainer = view.CardBack.Find("Gems");
@@ -677,8 +719,8 @@ public class MiniCard : MonoBehaviour
         {
             return;
         }
-        view.CardFace.gameObject.SetActive(true);
-        view.CardBack.gameObject.SetActive(false);
+        view.CardFace.gameObject.SetActive(false);
+        view.CardBack.gameObject.SetActive(true);
         isFaceUp = !isFaceUp;
     }
 
@@ -688,8 +730,13 @@ public class MiniCard : MonoBehaviour
         {
             return;
         }
-        view.CardFace.gameObject.SetActive(false);
-        view.CardBack.gameObject.SetActive(true);
+        view.CardFace.gameObject.SetActive(true);
+        view.CardBack.gameObject.SetActive(false);
         isFaceUp = !isFaceUp;
+    }
+
+    public void ShowGemIncluded()
+    {
+
     }
 }

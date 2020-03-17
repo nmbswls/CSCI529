@@ -17,6 +17,7 @@ public class TVSuffixLoader
     public int Value3;
     public int Value4;
     public int Probability;
+    public string IsBoss;
 }
 
 public enum TVSuffixEffect
@@ -37,6 +38,7 @@ public class TVSuffix
     public string name;
     public string description;
     public int probability;
+    public bool isBoss;
 }
 
 public class TVSuffixList
@@ -52,8 +54,8 @@ public class TVSuffixList
             tvsf.name = c.Name;
             tvsf.description = c.Description;
             tvsf.probability = c.Probability;
-
-            if(c.Effect1 != "none" && c.Effect1.Length != 0)
+            tvsf.isBoss = c.IsBoss == "TRUE";
+            if (c.Effect1 != "none" && c.Effect1.Length != 0)
             {
                 TVSuffixEffect sufEffect = (TVSuffixEffect)System.Enum.Parse(typeof(TVSuffixEffect), c.Effect1);
                 tvsf.effects.Add(sufEffect);

@@ -952,11 +952,13 @@ public class ZhiboAudienceMgr
 
         float stfRate = audience.ReqRate();
 
-        if(stfRate < 0.6f)
+        int r = Random.Range(0, 100);
+        if (r >  (1 - stfRate) * 100)
+        //if(stfRate < 0.6f)
         {
-            LittleTvList[audience.BindViewIdx].ConvertToHeizi();
-            audience.ConvertToHeizi();
-            return;
+            //LittleTvList[audience.BindViewIdx].ConvertToHeizi();
+            //audience.ConvertToHeizi();
+            //return;
         }
 
         audience.state = eAudienceState.None;

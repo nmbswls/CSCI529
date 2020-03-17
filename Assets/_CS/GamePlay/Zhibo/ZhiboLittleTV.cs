@@ -166,7 +166,7 @@ public class ZhiboLittleTV : MonoBehaviour
             reqView.root = child.gameObject;
             reqView.bg = child.Find("BG").GetComponent<Image>();
             reqView.icon = child.Find("Front").GetComponent<Image>();
-            view.GemList.Add(reqView);
+            view.GemList.Add(reqView);  
         }
     }
 
@@ -415,6 +415,7 @@ public class ZhiboLittleTV : MonoBehaviour
                 view.GemList[idx].root.SetActive(true);
                 view.GemList[idx].bg.color = new Color(1,1,1,0.3f);
                 view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + i + "_bg");
+                if(j < 6) view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems_icon/" + i + "_bg");
                 if (j < TargetAudience.NowReq[i])
                 {
                     //有血量的部分
