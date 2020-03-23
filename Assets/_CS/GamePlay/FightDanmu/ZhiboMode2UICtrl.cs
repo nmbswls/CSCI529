@@ -100,7 +100,7 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
 
 
     IResLoader mResLoader;
-    public ZhiboGameMode2 gameMode;
+    public FightingDanmuGameMode gameMode;
 
     private int nowIdx = -2;
 
@@ -108,7 +108,7 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
     public override void Init()
     {
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
-        gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as ZhiboGameMode2;
+        gameMode = GameMain.GetInstance().GetModule<CoreManager>().GetGameMode() as FightingDanmuGameMode;
     }
 
     public override void PostInit()
@@ -136,7 +136,7 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
 
     public void UpdateActionCd()
     {
-        for (int i = 0; i < ZhiboGameMode2.ActionNum; i++)
+        for (int i = 0; i < FightingDanmuGameMode.ActionNum; i++)
         {
             OperatorView vv = view.Actions[i];
             if (i >= gameMode.state.PresetActions.Count || gameMode.state.PresetActions[i] == null)
@@ -149,7 +149,7 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
 
     public void UpdateActions()
     {
-        for(int i = 0; i < ZhiboGameMode2.ActionNum; i++)
+        for(int i = 0; i < FightingDanmuGameMode.ActionNum; i++)
         {
             OperatorView vv = view.Actions[i];
             if (i>=gameMode.state.PresetActions.Count || gameMode.state.PresetActions[i] == null)
@@ -237,7 +237,7 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
         Transform Actions = root.Find("Options");
 
         view.Actions.Clear();
-        for (int i = 0; i < ZhiboGameMode2.ActionNum; i++)
+        for (int i = 0; i < FightingDanmuGameMode.ActionNum; i++)
         {
             Transform child = Actions.GetChild(i);
             OperatorView vv = new OperatorView();
@@ -327,7 +327,7 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
 
     public override void RegisterEvent()
     {
-        for(int i=0;i< ZhiboGameMode2.ActionNum; i++)
+        for(int i=0;i< FightingDanmuGameMode.ActionNum; i++)
         {
             int idx = i;
             GameObject toBind = view.Actions[i].ActiveButton.gameObject;
@@ -393,7 +393,7 @@ public class ZhiboMode2UICtrl : UIBaseCtrl<BaseModel, ZhiboMode2View>
 
     public void ShowSkillDetail(int idx)
     {
-        if(idx < -1 || idx >= ZhiboGameMode2.ActionNum)
+        if(idx < -1 || idx >= FightingDanmuGameMode.ActionNum)
         {
             return;
         }

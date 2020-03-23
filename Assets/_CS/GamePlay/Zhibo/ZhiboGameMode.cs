@@ -209,7 +209,7 @@ public class ZhiboGameMode : GameModeBase
         0.14628f,
         0.18128f
         };
-    public override void Init()
+    public override void Init(GameModeInitData initData)
     {
         mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();

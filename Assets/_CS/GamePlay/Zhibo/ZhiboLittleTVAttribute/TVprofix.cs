@@ -15,6 +15,7 @@ public class TVProfixLoader
     public int Value2;
     public int Value3;
     public int Probability;
+    public string IsBoss;
 }
 
 public enum TVProfixEffect
@@ -32,6 +33,7 @@ public class TVProfix
     public string name;
     public string description;
     public int probability;
+    public bool isBoss;
 }
 
 public class TVProfixList
@@ -47,6 +49,7 @@ public class TVProfixList
             tvsf.name = c.Name;
             tvsf.description = c.Description;
             tvsf.probability = c.Probability;
+            tvsf.isBoss = c.IsBoss == "TRUE";
             if (c.Effect1 != "none" && c.Effect1.Length != 0)
             {
                 TVProfixEffect sufEffect = (TVProfixEffect)System.Enum.Parse(typeof(TVProfixEffect), c.Effect1);

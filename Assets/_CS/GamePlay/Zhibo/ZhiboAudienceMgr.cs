@@ -650,8 +650,8 @@ public class ZhiboAudienceMgr
                 ZhiboAudience audience = new ZhiboAudience();
                 audience.Level = originLevel + i / 3;
                 //4040
-                audience.OriginTimeLast = 5f;
-                audience.TimeLeft = 5f;
+                audience.OriginTimeLast = 40f;
+                audience.TimeLeft = 40f;
                 //if (i % 4 == 2)
                 {
                     //audience.Type = eAudienceType.Heizi;
@@ -996,11 +996,13 @@ public class ZhiboAudienceMgr
 
         float stfRate = audience.ReqRate();
 
-        if(stfRate < 0.6f)
+        int r = Random.Range(0, 100);
+        if (r >  (1 - stfRate) * 100)
+        //if(stfRate < 0.6f)
         {
-            LittleTvList[audience.BindViewIdx].ConvertToHeizi();
-            audience.ConvertToHeizi();
-            return;
+            //LittleTvList[audience.BindViewIdx].ConvertToHeizi();
+            //audience.ConvertToHeizi();
+            //return;
         }
 
         audience.state = eAudienceState.None;

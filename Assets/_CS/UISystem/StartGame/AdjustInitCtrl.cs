@@ -194,13 +194,10 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 		view.NextStage.onClick.AddListener (delegate() {
 			mUIMgr.CloseCertainPanel(this);
             SetupPlayerInfo();
-			
-            GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main",delegate {
-                ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
-                MainGameMode gm = cm.GetGameMode() as MainGameMode;
-                gm.NextTurn();
 
-            });
+            MainGMInitData data = new MainGMInitData();
+            data.isNextTurn = true;
+            GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main", data);
 
             //mUIMgr.ShowPanel("UIMain");	
         });

@@ -495,27 +495,13 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         {
             ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
             mUIMgr.CloseCertainPanel(this);
-            cm.ChangeScene("FightDanmu", delegate {
-                ZhiboGameMode2 gm = pCoreMgr.GetGameMode() as ZhiboGameMode2;
-                if (gm != null)
-                {
-                    List<string> ll = new List<string>();
-                    {
-                        ll.Add("0");
-                    }
-                    {
-                        ll.Add("1");
-                    }
-                    {
-                        ll.Add("2");
-                    }
-                    {
-                        ll.Add("3");
-                    }
-                    gm.SetPresetInfo(ll);
-                }
-
-            });
+            FightDanmuGMInitData data = new FightDanmuGMInitData();
+            data.SkillList = new List<string>();
+            data.SkillList.Add("0");
+            data.SkillList.Add("1");
+            data.SkillList.Add("2");
+            data.SkillList.Add("3");
+            cm.ChangeScene("FightDanmu", data);
         });
 
 
@@ -523,34 +509,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         {
             ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
             mUIMgr.CloseCertainPanel(this);
-            cm.ChangeScene("Zhibo", delegate {
-                //ZhiboGameMode gm = pCoreMgr.GetGameMode() as ZhiboGameMode;
-                //if(gm != null)
-                //{
-                //    List<string> ll = new List<string>();
-                //    {
-                //        ll.Add("0");
-                //    }
-                //    {
-                //        ll.Add("1");
-                //    }
-                //    {
-                //        ll.Add("2");
-                //    }
-                //    {
-                //        ll.Add("3");
-                //    }
-                //    gm.SetPresetInfo(ll);
-                //}
-
-            },delegate {
-                MainGameMode gm = pCoreMgr.GetGameMode() as MainGameMode;
-                if (gm == null)
-                {
-                    Debug.LogError("load gm error");
-                }
-                gm.NextTurn();
-            });
+            cm.ChangeScene("Zhibo", null ,null);
         });
 
         view.ScheduleBtn.onClick.AddListener(delegate ()
