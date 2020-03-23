@@ -18,11 +18,14 @@ public class AppInfo
 {
     public string ShowName;
     public string AppId;
+    public int UnlockTurn = 0;
+    public bool isNew = true;
 
-    public AppInfo(string ShowName,string AppId)
+    public AppInfo(string ShowName,string AppId,int UnlockTurn = 0)
     {
         this.ShowName = ShowName;
         this.AppId = AppId;
+        this.UnlockTurn = UnlockTurn;
     }
 }
 
@@ -233,11 +236,11 @@ public class RoleModule : ModuleBase, IRoleModule
 
     public override void Setup()
     {
-        unlockedApps.Add(new AppInfo("微信","wechat"));
+        unlockedApps.Add(new AppInfo("微信","wechat",3));
         unlockedApps.Add(new AppInfo("邮箱", "email"));
-        unlockedApps.Add(new AppInfo("地图", "maps"));
-        unlockedApps.Add(new AppInfo("购物", "taobao"));
-        unlockedApps.Add(new AppInfo("微博", "weibo"));
+        unlockedApps.Add(new AppInfo("地图", "maps",4));
+        unlockedApps.Add(new AppInfo("购物", "taobao",3));
+        unlockedApps.Add(new AppInfo("微博", "weibo",2));
 
 
 
@@ -298,7 +301,15 @@ public class RoleModule : ModuleBase, IRoleModule
 
     public List<AppInfo> GetApps()
     {
-        return unlockedApps;
+        List<AppInfo> ret = new List<AppInfo>();
+        foreach(var info in unlockedApps)
+        {
+            if(info.UnlockTurn <= TurnNum)
+            {
+                ret.Add(info);
+            }
+        }
+        return ret;
     }
 
     public List<ScheduleInfo> getAllScheduleChoises()

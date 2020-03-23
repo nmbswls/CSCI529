@@ -660,9 +660,11 @@ public class ZhiboAudienceMgr
                 //else
                 {
                     audience.Type = eAudienceType.Good;
-                    int randI = Random.Range(0,rates.Count);
-                    float[] rate = rates[randI];
-                    int[] req = GetHpTemplate(audience.Level, rate);
+
+                    
+
+                    int[] baseReq = GetBaseReq(audience.Level);
+                
                     audience.MaxReq = new int[6];
                     audience.NowReq = new int[6];
 
@@ -679,7 +681,7 @@ public class ZhiboAudienceMgr
                     TVProfix appliedPro = applyProfixEffect();
                     if(appliedPro!=null)
                     {
-                        AudienceProfixEffect audienceProfixEffect = loadProfixEffect(appliedPro, req);
+                        AudienceProfixEffect audienceProfixEffect = loadProfixEffect(appliedPro, baseReq);
                         tmpProHp = audienceProfixEffect.hp;
                         tmpWaitTime = audienceProfixEffect.waitTime;
                         audience.tvProfix = appliedPro;
@@ -687,7 +689,7 @@ public class ZhiboAudienceMgr
                    
                     for (int j = 0; j < 6; j++)
                     {
-                        int tmpMaxReq = req[j] + tmpProHp[j] + tmpSufHp[j];
+                        int tmpMaxReq = baseReq[j] + tmpProHp[j] + tmpSufHp[j];
                         if(audience.MaxReq[j] == 0 &&tmpMaxReq <=0)
                         {
                             audience.MaxReq[j] = 0;
@@ -744,6 +746,48 @@ public class ZhiboAudienceMgr
     }
 
 
+    public int[] GetBaseReq(int level)
+    {
+        int nowTurn = mRoleMgr.GetCurrentTurn();
+        if (nowTurn == 1)
+        {
+            return new int[] { 0, 2, 0, 0, 0, 0 };
+        }else if(nowTurn == 2)
+        {
+            float[] rate = new float[] {0,1,0,0,0,0};
+            int[] req = GetHpTemplate(level, rate);
+            return req;
+        }
+        else
+        {
+            float[] rate = GetReqDistribution();
+            int[] req = GetHpTemplate(level, rate);
+            return req;
+        }
+
+        
+    }
+
+    public float[] GetReqDistribution()
+    {
+        int turn = mRoleMgr.GetCurrentTurn();
+
+        if(turn <= 1)
+        {
+            return new float[] { 0, 1, 0, 0, 0, 0 };
+        }else if(turn <= 2)
+        {
+            float[] ret = new float[6];
+            ret[(int)(Random.value * 5) + 1] = 1;
+            return ret;
+        }
+
+        List<float[]> rates = reqDistributions[2].Distributions;
+
+        int randI = Random.Range(0, rates.Count);
+        float[] rate = rates[randI];
+        return rate;
+    }
 
     public int[] GetHpTemplate(int level, float[] rate)
     {
@@ -1175,58 +1219,93 @@ public class ZhiboAudienceMgr
         return idx;
     }
 
-
-
-    List<float[]> rates = new List<float[]>();
+    class AudienceReqDistributionInfo
+    {
+        public int Turn;
+        public List<float[]> Distributions = new List<float[]>();
+        public AudienceReqDistributionInfo(int Turn)
+        {
+            this.Turn = Turn;
+        }
+    }
+    List<AudienceReqDistributionInfo> reqDistributions = new List<AudienceReqDistributionInfo>();
+    //List<float[]> rates = new List<float[]>();
 
     public void GenAudienceMode()
     {
 
         {
-            //硬核观众
-            float[] rate = new float[] {0, 1f, 0f, 0f, 0f, 0f};
-            rates.Add(rate);
-        }
-        {
-            //不挑的观众
-            float[] rate = new float[] { 1, 0f, 0f, 0f, 0f, 0f, 0f};
-            rates.Add(rate);
-        }
-        {
-            //喜爱较专一
-            float[] rate = new float[] { 0, 0.8f, 0.2f, 0f, 0f, 0f};
-            rates.Add(rate);
-        }
-        {
-            //喜好一般专一
-            float[] rate = new float[] { 0, 0.6f, 0.2f, 0.2f, 0f ,0f};
-            rates.Add(rate);
-        }
-        {
+            AudienceReqDistributionInfo req1 = new AudienceReqDistributionInfo(1);
+            List<float[]> rates = req1.Distributions;
+            {
+                float[] rate = new float[] { 0, 1f, 0f, 0f, 0f, 0f };
+                rates.Add(rate);
+            }
 
-            float[] rate = new float[] { 0, 0.6f, 0.1f, 0.1f, 0.1f, 0.1f};
-            rates.Add(rate);
         }
         {
-            float[] rate = new float[] { 0, 0.5f, 0.5f,  0f, 0f, 0f};
-            rates.Add(rate);
+            AudienceReqDistributionInfo req2 = new AudienceReqDistributionInfo(2);
+            List<float[]> rates = req2.Distributions;
+            {
+                float[] rate = new float[] { 0, 1f, 0f, 0f, 0f, 0f };
+                rates.Add(rate);
+            }
         }
+
         {
-            float[] rate = new float[] { 0.5f, 0.5f,0f, 0f,0f,0f};
-            rates.Add(rate);
+            AudienceReqDistributionInfo req3 = new AudienceReqDistributionInfo(3);
+            List<float[]> rates = req3.Distributions;
+
+            {
+                //硬核观众
+                float[] rate = new float[] { 0, 1f, 0f, 0f, 0f, 0f };
+                rates.Add(rate);
+            }
+            {
+                //不挑的观众
+                float[] rate = new float[] { 1, 0f, 0f, 0f, 0f, 0f};
+                rates.Add(rate);
+            }
+            {
+                //喜爱较专一
+                float[] rate = new float[] { 0, 0.8f, 0.2f, 0f, 0f, 0f };
+                rates.Add(rate);
+            }
+            {
+                //喜好一般专一
+                float[] rate = new float[] { 0, 0.6f, 0.2f, 0.2f, 0f, 0f };
+                rates.Add(rate);
+            }
+            {
+
+                float[] rate = new float[] { 0, 0.6f, 0.1f, 0.1f, 0.1f, 0.1f };
+                rates.Add(rate);
+            }
+            {
+                float[] rate = new float[] { 0, 0.5f, 0.5f, 0f, 0f, 0f };
+                rates.Add(rate);
+            }
+            {
+                float[] rate = new float[] { 0.5f, 0.5f, 0f, 0f, 0f, 0f };
+                rates.Add(rate);
+            }
+            {
+                float[] rate = new float[] { 0.2f, 0.6f, 0.2f, 0f, 0f, 0f };
+                rates.Add(rate);
+            }
+            {
+                float[] rate = new float[] { 0f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f };
+                rates.Add(rate);
+            }
+            {
+                float[] rate = new float[] { 0f, 0.4f, 0.2f, 0.2f, 0.2f, 0f };
+                rates.Add(rate);
+            }
         }
-        {
-            float[] rate = new float[] { 0.2f, 0.6f, 0.2f, 0f,0f,0f};
-            rates.Add(rate);
-        }
-        {
-            float[] rate = new float[] { 0f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f };
-            rates.Add(rate);
-        }
-        {
-            float[] rate = new float[] { 0f, 0.4f, 0.2f, 0.2f, 0.2f, 0f };
-            rates.Add(rate);
-        }
+
+
+
+        
     }
 
     public void ShowTokenDetail(ZhiboLittleTV tvView)
