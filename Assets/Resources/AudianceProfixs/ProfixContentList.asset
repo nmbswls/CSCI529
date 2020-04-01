@@ -22,6 +22,10 @@ MonoBehaviour:
     Value2: 0
     Value3: 0
     Probability: 20
+    IsBoss: NO
+    Like: none
+    DisLike: none
+    WaitTime: none
   - Name: "\u61A8\u6279\u7684"
     Description: "\u89C2\u4F17\u6240\u6709\u7EF4\u5EA6\u9700\u6C42\u51CF\u534A"
     Effect1: addRequest
@@ -31,6 +35,10 @@ MonoBehaviour:
     Value2: 0
     Value3: 0
     Probability: 30
+    IsBoss: NO
+    Like: none
+    DisLike: none
+    WaitTime: none
   - Name: "\u6311\u5254\u7684"
     Description: "\u89C2\u4F17\u4F1A\u989D\u5916\u591A\u4E00\u4E2A\u7EF4\u5EA6\u7684\u9700\u6C42"
     Effect1: extraRequest
@@ -40,6 +48,10 @@ MonoBehaviour:
     Value2: 0
     Value3: 0
     Probability: 20
+    IsBoss: NO
+    Like: none
+    DisLike: none
+    WaitTime: none
   - Name: "\u8010\u5FC3\u7684"
     Description: "\u89C2\u4F17\u4F1A\u7B49\u5F85\u66F4\u4E45"
     Effect1: addWaitTime
@@ -49,3 +61,332 @@ MonoBehaviour:
     Value2: 0
     Value3: 0
     Probability: 10
+    IsBoss: NO
+    Like: none
+    DisLike: none
+    WaitTime: none
+  - Name: "\u52E4\u594B\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: caiyi
+    DisLike: kangya
+    WaitTime: none
+  - Name: "\u6E29\u548C\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: caiyi
+    DisLike: kangya
+    WaitTime: none
+  - Name: "\u6E29\u987A\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: caiyi
+    DisLike: kangya
+    WaitTime: none
+  - Name: "\u80C6\u5C0F\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: caiyi
+    DisLike: kangya
+    WaitTime: none
+  - Name: "\u5927\u80C6\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: jishu
+    DisLike: koucai
+    WaitTime: none
+  - Name: "\u9A6C\u864E\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: jishu
+    DisLike: koucai
+    WaitTime: none
+  - Name: "\u51B7\u9759\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: jishu
+    DisLike: koucai
+    WaitTime: none
+  - Name: "\u81EA\u5927\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: jishu
+    DisLike: koucai
+    WaitTime: none
+  - Name: "\u8BA4\u771F\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: jishu
+    DisLike: koucai
+    WaitTime: none
+  - Name: "\u56FA\u6267\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: kangya
+    DisLike: waiguan
+    WaitTime: none
+  - Name: "\u52C7\u6562\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: kangya
+    DisLike: waiguan
+    WaitTime: none
+  - Name: "\u6162\u541E\u541E\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: kangya
+    DisLike: waiguan
+    WaitTime: none
+  - Name: "\u614E\u91CD\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: kangya
+    DisLike: waiguan
+    WaitTime: none
+  - Name: "\u6025\u8E81\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: kangya
+    DisLike: waiguan
+    WaitTime: none
+  - Name: "\u6015\u5BC2\u5BDE\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: koucai
+    DisLike: caiyi
+    WaitTime: none
+  - Name: "\u987D\u76AE\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: koucai
+    DisLike: caiyi
+    WaitTime: none
+  - Name: "\u6DD8\u6C14\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: koucai
+    DisLike: caiyi
+    WaitTime: none
+  - Name: "\u5185\u655B\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: koucai
+    DisLike: caiyi
+    WaitTime: none
+  - Name: "\u6D6E\u8E81\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: koucai
+    DisLike: jishu
+    WaitTime: none
+  - Name: "\u723D\u6717\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: koucai
+    DisLike: jishu
+    WaitTime: none
+  - Name: "\u5766\u7387\u5730"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: waiguan
+    DisLike: jishu
+    WaitTime: none
+  - Name: "\u4E50\u5929\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: waiguan
+    DisLike: jishu
+    WaitTime: none
+  - Name: "\u6709\u9650\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: waiguan
+    DisLike: jishu
+    WaitTime: none
+  - Name: "\u5BB3\u7F9E\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: waiguan
+    DisLike: jishu
+    WaitTime: none
+  - Name: "\u5929\u771F\u7684"
+    Description: 
+    Effect1: none
+    Effect2: none
+    Effect3: none
+    Value1: 0
+    Value2: 0
+    Value3: 0
+    Probability: 10
+    IsBoss: NO
+    Like: waiguan
+    DisLike: jishu
+    WaitTime: none

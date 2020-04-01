@@ -16,6 +16,9 @@ public class TVProfixLoader
     public int Value3;
     public int Probability;
     public string IsBoss;
+    public string Like;
+    public string DisLike;
+    public string WaitTime;
 }
 
 public enum TVProfixEffect
@@ -26,6 +29,16 @@ public enum TVProfixEffect
     addWaitTime
 }
 
+public enum TVProfixLike
+{
+    none,
+    koucai,
+    caiyi,
+    jishu,
+    kangya,
+    waiguan
+}
+
 public class TVProfix
 {
     public List<TVProfixEffect> effects = new List<TVProfixEffect>();
@@ -34,6 +47,9 @@ public class TVProfix
     public string description;
     public int probability;
     public bool isBoss;
+    public TVProfixLike like;
+    public TVProfixLike dislike;
+    public string waitTime;
 }
 
 public class TVProfixList
@@ -49,7 +65,10 @@ public class TVProfixList
             tvsf.name = c.Name;
             tvsf.description = c.Description;
             tvsf.probability = c.Probability;
-            tvsf.isBoss = c.IsBoss == "TRUE";
+            tvsf.isBoss = c.IsBoss == "YES";
+            tvsf.like = (TVProfixLike)System.Enum.Parse(typeof(TVProfixLike), c.Like);
+            tvsf.dislike = (TVProfixLike)System.Enum.Parse(typeof(TVProfixLike), c.DisLike);
+            tvsf.waitTime = c.WaitTime;
             if (c.Effect1 != "none" && c.Effect1.Length != 0)
             {
                 TVProfixEffect sufEffect = (TVProfixEffect)System.Enum.Parse(typeof(TVProfixEffect), c.Effect1);

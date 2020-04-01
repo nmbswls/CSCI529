@@ -586,32 +586,28 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
     public void OpenApp(AppView vv)
     {
-        if (view.appViews.IndexOf(vv) == 2)
+        if (view.appViews.IndexOf(vv) == 3)
         {
             ICoreManager cm = GameMain.GetInstance().GetModule<CoreManager>();
             mUIMgr.CloseCertainPanel(this);
             cm.ChangeScene("Travel", null);
         }
-        else if (view.appViews.IndexOf(vv) == 4)
+        else if (view.appViews.IndexOf(vv) == 1)
         {
             //weibo
             //insert a card
             mUIMgr.ShowPanel("WeiboPanel");
         }
-        else if (view.appViews.IndexOf(vv) == 3)
+        else if (view.appViews.IndexOf(vv) == 2)
         {
             //taobao
             //insert a card with money paid
             mUIMgr.ShowPanel("TaobaoPanel");
         }
-        else if (view.appViews.IndexOf(vv) == 1)
+        else if (view.appViews.IndexOf(vv) == 0)
         {
             //mail
             mUIMgr.ShowPanel("MailPanel");
-        }
-        else if (view.appViews.IndexOf(vv) == 0)
-        {
-            //wechat
         }
         else
         {
