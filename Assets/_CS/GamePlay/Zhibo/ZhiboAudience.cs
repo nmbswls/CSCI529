@@ -237,9 +237,31 @@ public class ZhiboAudience
 
         int[] damage = new int[6];
 
+        //profixlike
+        int audienceLike = -1;
+        int audienceDislike = -1;
+        if (this.tvProfix!=null)
+        {
+            audienceLike = (int)this.tvProfix.like;
+            audienceDislike = (int)this.tvProfix.dislike;
+            if (audienceLike == 0) audienceLike = -1;
+            if (audienceDislike == 0) audienceDislike = -1;
+        }
+         
+
         for(int i = 0; i < 6; i++)
         {
             damage[i] = inputDamage[i];
+
+            //prefix like and dislike check
+            if(audienceLike == i)
+            {
+                if(damage[i] != 0)damage[i]++;
+            } 
+            if(audienceDislike == i)
+            {
+                if (damage[i] > 1) damage[i]--;
+            }
         }
 
         for (int i = 0; i < 6; i++)

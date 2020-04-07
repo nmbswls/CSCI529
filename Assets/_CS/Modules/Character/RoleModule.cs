@@ -236,7 +236,6 @@ public class RoleModule : ModuleBase, IRoleModule
 
     public override void Setup()
     {
-        unlockedApps.Add(new AppInfo("微信","wechat",3));
         unlockedApps.Add(new AppInfo("邮箱", "email"));
         unlockedApps.Add(new AppInfo("地图", "maps",4));
         unlockedApps.Add(new AppInfo("购物", "taobao",3));
