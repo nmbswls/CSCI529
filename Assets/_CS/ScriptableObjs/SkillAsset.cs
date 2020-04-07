@@ -63,7 +63,7 @@ public class ExtentSkillAsset : SkillAsset
 {
     public string BaseSkillId = null;
 
-    //每个等级的难度
+    //每个等级的难度 升级难度
     public List<int> Difficulties = new List<int>();
 
     //每个等级都会有相应的附加卡片

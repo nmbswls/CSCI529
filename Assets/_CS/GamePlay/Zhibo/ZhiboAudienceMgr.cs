@@ -1243,7 +1243,7 @@ public class ZhiboAudienceMgr
                 float[] rate = new float[] { 0, 1f, 0f, 0f, 0f, 0f };
                 rates.Add(rate);
             }
-
+            reqDistributions.Add(req1);
         }
         {
             AudienceReqDistributionInfo req2 = new AudienceReqDistributionInfo(2);
@@ -1252,6 +1252,7 @@ public class ZhiboAudienceMgr
                 float[] rate = new float[] { 0, 1f, 0f, 0f, 0f, 0f };
                 rates.Add(rate);
             }
+            reqDistributions.Add(req2);
         }
 
         {
@@ -1303,6 +1304,7 @@ public class ZhiboAudienceMgr
                 float[] rate = new float[] { 0f, 0.4f, 0.2f, 0.2f, 0.2f, 0f };
                 rates.Add(rate);
             }
+            reqDistributions.Add(req3);
         }
 
 
