@@ -488,7 +488,7 @@ public class MiniCard : MonoBehaviour
                 nowValue = 0;
             }
 
-
+            SetSibling();
             view.CardRoot.localScale = NormalScale;
             CardRootPosition = new Vector3(0,0+ NormalYOffset, 0);
         };
@@ -504,7 +504,7 @@ public class MiniCard : MonoBehaviour
                 return;
             }
 
-
+            CancelSibling();
             MinimizeIgnoreBacking();
 
         };
@@ -559,16 +559,32 @@ public class MiniCard : MonoBehaviour
         view.CardRoot.localScale = new Vector3(scaleRate, scaleRate,1);
     }
 
+    private int originSiblingIdx;
+
     public void SetHighLight()
     {
         //view.Bg.color = Color.red;
         view.Bg.enabled = true;
+        SetSibling();
     }
 
     public void CancelHighLight()
     {
         //view.Bg.color = Color.white;
         view.Bg.enabled = false;
+        CancelSibling();
+    }
+
+    public void SetSibling()
+    {
+        originSiblingIdx = transform.GetSiblingIndex();
+        transform.SetAsLastSibling();
+    }
+
+    public void CancelSibling()
+    {
+        transform.SetSiblingIndex(originSiblingIdx);
+        originSiblingIdx = -1;
     }
 
     private void UseCard()

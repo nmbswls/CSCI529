@@ -100,6 +100,7 @@ public class ZhiboAudienceMgr
     TVSuffixList SuffixList = new TVSuffixList();
     TVProfixList ProfixList = new TVProfixList();
 
+    public static string[] GiftCardIndex = new string[] { "c0014", "c0015", "c0016", "c0017", "c0018" };
 
     public ZhiboAudienceMgr(ZhiboGameMode gameMode)
     {
@@ -386,7 +387,7 @@ public class ZhiboAudienceMgr
                 PlaceToken(TargetList[i], token);
                 UpdateAudienceHp(TargetList[i]);
             }
-            if (TargetList[i].isSatisfied())
+            if (TargetList[i].isSatisfied()) //满足 消除killed audience
             {
                 //根据 观众血量类型 及 放置的代币 计算加成
 
@@ -434,7 +435,31 @@ public class ZhiboAudienceMgr
     //    }
     //}
 
-
+    public void HandleTimeLeftBonus(ZhiboAudience audience)
+    {
+        float totalTime = audience.OriginTimeLast;
+        if(audience.TimeLeft >= 0.8 * totalTime)
+        {
+            //gain card
+            int randomIndex = Random.Range(0, GiftCardIndex.Length - 1);
+            string randomCardIndex = GiftCardIndex[randomIndex];
+            gameMode.setCardAsGift(randomCardIndex);
+            gameMode.mUICtrl.ShowGift();
+        }
+        else if(audience.TimeLeft <= 0.3 * totalTime)
+        {
+            //add new audience
+            if (canAddNewReq())
+            {
+                Debug.Log("我加了一个怪");
+                ShowNextAudience();
+            }
+        }
+        else
+        {
+            gameMode.AddHp(3);
+        }
+    }
 
     public void HandleTurnLeftBonus(ZhiboAudience audience)
     {
@@ -544,6 +569,7 @@ public class ZhiboAudienceMgr
         HandleGetScore(audience);
         HandleTurnLeftBonus(audience);
         HandleAudiennceBonus(audience);
+        HandleTimeLeftBonus(audience);
         if (audience.BindViewIdx != -1)
         {
 
@@ -649,7 +675,7 @@ public class ZhiboAudienceMgr
             {
                 ZhiboAudience audience = new ZhiboAudience();
                 audience.Level = originLevel + i / 3;
-                //4040
+                //4040  TODO：changable time
                 audience.OriginTimeLast = 40f;
                 audience.TimeLeft = 40f;
                 //if (i % 4 == 2)
@@ -917,9 +943,11 @@ public class ZhiboAudienceMgr
             //EnemyIdx += 1;
         }
 
+        //更新彈幕
         gameMode.mZhiboDanmuMgr.ShowImportantDanmu(maxNum - nowCount, targetLittleTv);
-
     }
+
+    //仅由剩余时间满足触发
 
     public bool canAddNewReq()
     {
@@ -1011,6 +1039,9 @@ public class ZhiboAudienceMgr
         if (stfRate >= 0.9f)
         {
             addExtraHp(1);
+        } else if (stfRate <= 0.3f) {
+            //convertoHeizi
+            audience.ConvertToHeizi();
         }
         else
         {

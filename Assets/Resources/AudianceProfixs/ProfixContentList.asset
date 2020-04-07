@@ -57,10 +57,10 @@ MonoBehaviour:
     Effect1: addWaitTime
     Effect2: none
     Effect3: none
-    Value1: 10
+    Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: none
     DisLike: none
@@ -73,7 +73,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: caiyi
     DisLike: kangya
@@ -86,7 +86,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: caiyi
     DisLike: kangya
@@ -99,7 +99,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: caiyi
     DisLike: kangya
@@ -112,7 +112,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: caiyi
     DisLike: kangya
@@ -125,7 +125,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: jishu
     DisLike: koucai
@@ -138,7 +138,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: jishu
     DisLike: koucai
@@ -151,7 +151,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: jishu
     DisLike: koucai
@@ -164,7 +164,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: jishu
     DisLike: koucai
@@ -177,7 +177,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: jishu
     DisLike: koucai
@@ -190,7 +190,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: kangya
     DisLike: waiguan
@@ -203,7 +203,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: kangya
     DisLike: waiguan
@@ -216,7 +216,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: kangya
     DisLike: waiguan
@@ -229,7 +229,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: kangya
     DisLike: waiguan
@@ -242,7 +242,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: kangya
     DisLike: waiguan
@@ -255,7 +255,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: koucai
     DisLike: caiyi
@@ -268,7 +268,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: koucai
     DisLike: caiyi
@@ -281,7 +281,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: koucai
     DisLike: caiyi
@@ -294,7 +294,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: koucai
     DisLike: caiyi
@@ -307,7 +307,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: koucai
     DisLike: jishu
@@ -320,7 +320,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: koucai
     DisLike: jishu
@@ -333,7 +333,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: waiguan
     DisLike: jishu
@@ -346,7 +346,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: waiguan
     DisLike: jishu
@@ -359,7 +359,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: waiguan
     DisLike: jishu
@@ -372,7 +372,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: waiguan
     DisLike: jishu
@@ -385,7 +385,7 @@ MonoBehaviour:
     Value1: 0
     Value2: 0
     Value3: 0
-    Probability: 10
+    Probability: 30
     IsBoss: NO
     Like: waiguan
     DisLike: jishu

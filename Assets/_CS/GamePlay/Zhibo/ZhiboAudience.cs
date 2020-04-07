@@ -218,6 +218,7 @@ public class ZhiboAudience
         {
             return false;
         }
+        
         for (int i = 0; i < NowReq.Length; i++)
         {
             if (NowReq[i] < MaxReq[i])

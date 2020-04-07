@@ -63,6 +63,8 @@ public class ZhiboView : BaseView
 
     public Button Settings;
 
+    public Button OpenGift;
+
 }
 //public class OperatorView
 //{
@@ -322,6 +324,8 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.RoleSkill = root.Find("RoleSkill").GetComponent<Button>();
         view.RoleSkill2 = root.Find("RoleSkill2").GetComponent<Button>();
 
+        view.OpenGift = root.Find("OpenGift").GetComponent<Button>();
+
         Transform lbArea = root.Find("LeftBottom");
 
         view.QifenValue = lbArea.Find("QifenValue").GetComponent<Text>();
@@ -478,6 +482,12 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
         view.RoleSkill2.onClick.AddListener(delegate
         {
             gameMode.UseRoleSkill(1);
+        });
+
+        view.OpenGift.onClick.AddListener(delegate
+        {
+            gameMode.AddCardFromGift();// gainCard;
+            CloseGift();
         });
         
 
@@ -668,6 +678,16 @@ public class ZhiboUI : UIBaseCtrl<ZhiboModel, ZhiboView>
             view.targetValue.text = (int)(nowTarget) + "";
         }
         
+    }
+
+    public void CloseGift()
+    {
+        view.OpenGift.gameObject.SetActive(false);
+    }
+
+    public void ShowGift()
+    {
+        view.OpenGift.gameObject.SetActive(true);
     }
 
 }

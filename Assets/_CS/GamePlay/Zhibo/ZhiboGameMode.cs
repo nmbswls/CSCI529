@@ -289,7 +289,7 @@ public class ZhiboGameMode : GameModeBase
 
     IEnumerator NextTurn()
     {
-
+        //card
         if(state.Cards.Count > CardMaxMaintain)
         {
             for (int i = state.Cards.Count - CardMaxMaintain - 1; i >= 0; i--)
@@ -1852,16 +1852,49 @@ public class ZhiboGameMode : GameModeBase
         state.CardDeck.Add(card);
     }
 
+    private Queue<string> cardAsGift = new Queue<string>();
+    private Queue<string> cardAsGiftName = new Queue<string>();
+
+    private void AddCardToOutDeck(string cardId)
+    {
+        //TODO: add card to deck outside
+        string eid = cardId;
+        mCardMdl.GainNewCard(eid);
+        cardAsGift.Dequeue();
+    }
+
+    IEnumerator ShowCardNames()
+    {
+        while(cardAsGiftName.Count>0)
+        {
+            string cardName = cardAsGiftName.Peek();
+            mUIMgr.ShowHint("获得卡牌："+ " \"" + cardName + "\"");
+            cardAsGiftName.Dequeue();
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
 
 
+    public void setCardAsGift(string giftCardId)
+    {
+        cardAsGift.Enqueue(giftCardId);
+        CardAsset ca = mCardMdl.GetCardInfo(giftCardId);
+        cardAsGiftName.Enqueue(ca.CardName);
+    }
+
+    public void AddCardFromGift()
+    {
+        while (cardAsGift.Count>0)
+        {
+            AddCardToOutDeck(cardAsGift.Peek());
+        }
+        GameMain.GetInstance().RunCoroutine(ShowCardNames());
+    }
 
     public void AddDanmuGroup(string key, int totalNum = 50, int BadNum = 0)
     {
         state.danmuGroups.Add(new DanmuGroup(key, totalNum, BadNum));
     }
-
-
-
 
     public void GenSpecial(string specialType, int num=1)
     {
@@ -1871,7 +1904,6 @@ public class ZhiboGameMode : GameModeBase
             state.Specials.Add(spe);
         }
     }
-
 
     //float pNow = 0;
     //public void GenDanmu()

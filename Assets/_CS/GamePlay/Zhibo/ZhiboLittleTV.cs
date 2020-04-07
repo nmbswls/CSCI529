@@ -79,12 +79,12 @@ public class ZhiboLittleTV : MonoBehaviour
         //animator.ResetTrigger(""); 
     }
 
-    public void UpdateTimeLeft()
+    public void UpdateTimeLeft()    //UI show the time left 
     {
 
         int count = view.TimeLeftBlocks.Count;
 
-        if(TargetAudience.OriginTimeLast < 0)
+        if(TargetAudience.OriginTimeLast < 0) //heizi
         {
             for (int i = 0; i < count; i++)
             {
@@ -93,13 +93,13 @@ public class ZhiboLittleTV : MonoBehaviour
             }
             return;
         }
-        else
+        else //normal
         {
             for (int i = 0; i < count; i++)
             {
                 view.TimeLeftBlocks[i].fillAmount = 1;
                 Color nowColor = Color.white;
-                ColorUtility.TryParseHtmlString(BlockColorArray[i], out nowColor);
+                ColorUtility.TryParseHtmlString(BlockColorArray[i], out nowColor);  //color follow the hp
                 view.TimeLeftBlocks[i].color = nowColor;
             }
         }
