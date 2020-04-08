@@ -9,14 +9,31 @@ public class TaobaoItemInfo
     public int Cost;
     public string CardRelate;
     public int LeftInStock = 1;
+    public string Desp;
+    public string EffectDesp;
 
     public TaobaoItemInfo(string Name, int Cost, string CardRelate)
     {
         this.Name = Name;
         this.CardRelate = CardRelate;
+        this.Cost = Cost;
+    }
+
+    public TaobaoItemInfo(string Name, int Cost, string CardRelate, string Desp) : this(Name, Cost, CardRelate)
+    {
+        this.Desp = Desp;
+    }
+
+    public TaobaoItemInfo(string Name, int Cost, string CardRelate, string Desp, int LeftInStock) : this(Name, Cost, CardRelate, Desp)
+    {
+        this.LeftInStock = LeftInStock;
+    }
+
+    public TaobaoItemInfo(string Name, int Cost, string CardRelate, string Desp, int LeftInStock, string EffectDesp) : this(Name, Cost, CardRelate, Desp, LeftInStock)
+    {
+        this.EffectDesp = EffectDesp;
     }
 }
-
 
 public class TaobaoView : BaseView
 {
@@ -74,6 +91,10 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
     ICardDeckModule pCardMgr;
 
     List<TaobaoItemInfo> fakeList = new List<TaobaoItemInfo>();
+    List<TaobaoItemInfo> productList = new List<TaobaoItemInfo>();
+
+    Dictionary<int, List<TaobaoItemInfo>> levelBindItem = new Dictionary<int, List<TaobaoItemInfo>>();
+
     private int totalPage = 0;
     private int nowPage = 0;
 
@@ -156,7 +177,10 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
     {
         view.DetailPanel.gameObject.SetActive(true);
         view.DetailPanel.transform.position = view.ItemList[idx].root.transform.position + DetailOffset;
-        view.DetailName.text = fakeList[nowPage * PageFixItemNum + idx].Name;
+        //view.DetailName.text = fakeList[nowPage * PageFixItemNum + idx].Name;
+        view.DetailName.text = productList[nowPage * PageFixItemNum + idx].Name;
+        view.DetailDesp.text = productList[nowPage * PageFixItemNum + idx].Desp;
+        view.DetailEffectDesp.text = productList[nowPage * PageFixItemNum + idx].EffectDesp;
     }
 
     public void HidePopupInfo(int idx)
@@ -166,14 +190,14 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
 
 
 
-    public void FakeItems()
-    {
-        fakeList = new List<TaobaoItemInfo>();
-        for(int i = 0; i < 35; i++)
-        {
-            fakeList.Add(new TaobaoItemInfo("道具" + i, i * 50, string.Format("item_{0:00}", i + 1)));
-        }
-    }
+    //public void FakeItems()
+    //{
+    //    fakeList = new List<TaobaoItemInfo>();
+    //    for(int i = 0; i < 35; i++)
+    //    {
+    //        fakeList.Add(new TaobaoItemInfo("道具" + i, i * 50, string.Format("item_{0:00}", i + 1)));
+    //    }
+    //}
 
     public override void RegisterEvent()
     {
@@ -214,14 +238,22 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
 
     public override void PostInit()
     {
-        FakeItems();
-        if(fakeList.Count == 0)
+        LoadProductList();
+        //FakeItems();
+        //if (fakeList.Count == 0)
+        //{
+        //    totalPage = 1;
+        //}
+        //else
+        //{
+        //    totalPage = (fakeList.Count - 1) / 6 + 1;
+        //}
+        if(productList.Count == 0)
         {
             totalPage = 1;
-        }
-        else
+        } else
         {
-            totalPage = (fakeList.Count - 1) / 6 + 1;
+            totalPage = (productList.Count - 1) / 6 + 1;
         }
         ShowItems();
     }
@@ -230,11 +262,13 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
     {
 
         int from = nowPage * PageFixItemNum;
-        int to = Mathf.Min(nowPage * PageFixItemNum + 5,fakeList.Count-1);
+        int to = Mathf.Min(nowPage * PageFixItemNum + 5, productList.Count - 1);
+        //int to = Mathf.Min(nowPage * PageFixItemNum + 5,fakeList.Count-1);
         int idx = 0;
         for (int i= from; i<= to; i++)
         {
-            TaobaoItemInfo info = fakeList[i];
+            //TaobaoItemInfo info = fakeList[i];
+            TaobaoItemInfo info = productList[i];
             view.ItemList[idx].ItemName.text = info.Name;
             view.ItemList[idx].Price.text = info.Cost + "g";
             if(info.LeftInStock == 0)
@@ -269,8 +303,10 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
         int idxInList = nowPage * PageFixItemNum +idx;
 
 
-        int cost = fakeList[idxInList].Cost;
-        if(fakeList[idxInList].LeftInStock == 0)
+        //int cost = fakeList[idxInList].Cost;
+        int cost = productList[idxInList].Cost;
+        //if(fakeList[idxInList].LeftInStock == 0)
+        if (productList[idxInList].LeftInStock == 0)
         {
             mUIMgr.ShowHint("无货");
             return;
@@ -307,19 +343,53 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
 
     public void ConfirmBuy()
     {
-        if(wantBuyIdx<0|| wantBuyIdx >= fakeList.Count)
+        //if(wantBuyIdx<0|| wantBuyIdx >= fakeList.Count)
+        if (wantBuyIdx < 0 || wantBuyIdx >= productList.Count)
         {
             return;
         }
-        int cost = fakeList[wantBuyIdx].Cost;
+        //int cost = fakeList[wantBuyIdx].Cost;
+        int cost = productList[wantBuyIdx].Cost;
         pRoleMgr.GainMoney(-cost);
-        if(fakeList[wantBuyIdx].LeftInStock > 0)
+        //if(fakeList[wantBuyIdx].LeftInStock > 0)
+        if (productList[wantBuyIdx].LeftInStock > 0)
         {
-            fakeList[wantBuyIdx].LeftInStock -= 1;
+            //fakeList[wantBuyIdx].LeftInStock -= 1;
+            productList[wantBuyIdx].LeftInStock -= 1;
             ShowItems();
         }
 
-        pCardMgr.GainNewCard(fakeList[wantBuyIdx].CardRelate);
-        mUIMgr.ShowHint("buy card");
+        //pCardMgr.GainNewCard(fakeList[wantBuyIdx].CardRelate);
+        pCardMgr.GainNewCard(productList[wantBuyIdx].CardRelate);
+        CardAsset ca = pCardMgr.GetCardInfo(productList[wantBuyIdx].CardRelate);
+        mUIMgr.ShowHint("buy card: " + ca.CardName);
+    }
+
+    public void LoadProductList()
+    {
+        TaobaoProductList productExcel = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<TaobaoProductList>("TaobaoProduct/TaobaoProductList", false);
+        List<TaobaoProducts> products = productExcel.Entities;
+        foreach(TaobaoProducts p in products)
+        {
+            TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp);
+            if(p.LevelUnlock == 0)
+            {
+                productList.Add(t);
+            }
+            else
+            {
+                if(!levelBindItem.ContainsKey(p.LevelUnlock))
+                {
+                    levelBindItem[p.LevelUnlock] = new List<TaobaoItemInfo>();
+                    
+                }
+                levelBindItem[p.LevelUnlock].Add(t);
+            }
+        }
+    }
+
+    public void LoadProductInDifferentTurn()
+    {
+
     }
 }
