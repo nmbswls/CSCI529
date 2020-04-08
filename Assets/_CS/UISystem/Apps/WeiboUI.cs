@@ -37,6 +37,8 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
     WeiboModule pWeiboMgr;
     Weibo curWeibo;
 
+    UIMainCtrl pMainUI;
+
     int curWeiboIdx = -1;
     int lastWeiboIdx = -1;
 
@@ -57,6 +59,7 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
         pUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
         pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
         pWeiboMgr = GameMain.GetInstance().GetModule<WeiboModule>();
+        pMainUI = (UIMainCtrl)pUIMgr.GetCtrl("UIMain") as UIMainCtrl;
     }
     public override void PostInit()
     {
@@ -317,19 +320,19 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
         switch(curWeibo.reviews[idx].effect)
         {
             case WeiboReviewEffect.AddCaiyi:
-                pRoleMgr.AddFanying(value);
+                pRoleMgr.AddCaiyi(value);
                 mUIMgr.ShowHint("才艺 + " + value);
                 break;
             case WeiboReviewEffect.AddJishu:
-                pRoleMgr.AddJiyi(value);
+                pRoleMgr.AddJishu(value);
                 mUIMgr.ShowHint("技术 + " + value);
                 break;
             case WeiboReviewEffect.AddKangya:
-                pRoleMgr.AddTili(value);
+                pRoleMgr.AddKangya(value);
                 mUIMgr.ShowHint("抗压 + " + value);
                 break;
             case WeiboReviewEffect.AddWaiguan:
-                pRoleMgr.AddMeili(value);
+                pRoleMgr.AddWaiguan(value);
                 mUIMgr.ShowHint("外观 + " + value);
                 break;
             case WeiboReviewEffect.AddKoucai:
@@ -339,10 +342,10 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
                 break;
             case WeiboReviewEffect.AddAllState:
                 pRoleMgr.AddKoucai(value);
-                pRoleMgr.AddMeili(value);
-                pRoleMgr.AddTili(value);
-                pRoleMgr.AddJiyi(value);
-                pRoleMgr.AddFanying(value);
+                pRoleMgr.AddWaiguan(value);
+                pRoleMgr.AddKangya(value);
+                pRoleMgr.AddJishu(value);
+                pRoleMgr.AddCaiyi(value);
                 mUIMgr.ShowHint("所有属性 + " + value);
                 break;
             case WeiboReviewEffect.AddFensi:
@@ -352,8 +355,8 @@ public class WeiboUI : UIBaseCtrl<WeiboModel, WeiboView>
             case WeiboReviewEffect.none:
                 break;
         }
-        UIMainCtrl mainui = (UIMainCtrl)pUIMgr.GetCtrl("UIMain") as UIMainCtrl;
-        mainui.UpdateWords();
+        
+        pMainUI.UpdateWords();
     }
 
     //public string randomName()

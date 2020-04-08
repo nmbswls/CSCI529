@@ -14,6 +14,11 @@ public class TaobaoProducts
     public string CardRelate;
     public int LeftInStock;
     public int LevelUnlock;
+
+    public string ShuxingRelate;
+    public int ShuxingValue = 0;
+
+    public int LevelRemove;
 }
 
 public class TaobaoItemInfo
@@ -24,6 +29,11 @@ public class TaobaoItemInfo
     public int LeftInStock = 1;
     public string Desp;
     public string EffectDesp;
+
+    public string ShuxingRelate;
+    public int ShuxingValue = 0;
+
+    public int LevelRemove = 30;
 
     public TaobaoItemInfo(string Name, int Cost, string CardRelate)
     {
@@ -46,6 +56,17 @@ public class TaobaoItemInfo
     {
         this.EffectDesp = EffectDesp;
     }
+
+    public TaobaoItemInfo(string Name, int Cost, string CardRelate, string Desp, int LeftInStock, string EffectDesp, string ShuxingRelate, int ShuxingValue) : this(Name, Cost, CardRelate, Desp, LeftInStock, EffectDesp)
+    {
+        this.ShuxingRelate = ShuxingRelate;
+        this.ShuxingValue = ShuxingValue;
+    }
+
+    public TaobaoItemInfo(string Name, int Cost, string CardRelate, string Desp, int LeftInStock, string EffectDesp, string ShuxingRelate, int ShuxingValue, int LevelRemove) : this(Name, Cost, CardRelate, Desp, LeftInStock, EffectDesp, ShuxingRelate, ShuxingValue)
+    {
+        this.LevelRemove = LevelRemove;
+    }
 }
 
 
@@ -58,8 +79,10 @@ public class TaobaoModule : ModuleBase
     IUIMgr pUIMgr;
 
     List<TaobaoItemInfo> productList = new List<TaobaoItemInfo>();
-    Dictionary<int, List<TaobaoItemInfo>> levelBindItem = new Dictionary<int, List<TaobaoItemInfo>>();
+    Dictionary<int, List<TaobaoItemInfo>> levelBindAddItem = new Dictionary<int, List<TaobaoItemInfo>>();
     Dictionary<string, TaobaoItemInfo> nameToItem = new Dictionary<string, TaobaoItemInfo>();
+
+    Dictionary<int, List<TaobaoItemInfo>> levelBindRemoveItem = new Dictionary<int, List<TaobaoItemInfo>>();
 
     bool isUnloaded = true;
 
@@ -95,30 +118,41 @@ public class TaobaoModule : ModuleBase
             List<TaobaoProducts> products = productExcel.Entities;
             foreach (TaobaoProducts p in products)
             {
-            
                 if (p.LevelUnlock == 0)
                 {
                     //当有相同的卡时
                     if (nameToItem.ContainsKey(p.Name))
                     {
                         nameToItem[p.Name].LeftInStock+=p.LeftInStock;
+                        nameToItem[p.Name].Cost += p.Cost;
                     }
                     else
                     {
-                        TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp);
+                        TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp, p.ShuxingRelate, p.ShuxingValue, p.LevelRemove);
                         nameToItem.Add(p.Name, t);
                         productList.Add(t);
                     }
                 }
-                else
+                else //放到对应回合加入的表里面
                 {
-                    if (!levelBindItem.ContainsKey(p.LevelUnlock))
+                    if (!levelBindAddItem.ContainsKey(p.LevelUnlock))
                     {
-                        levelBindItem[p.LevelUnlock] = new List<TaobaoItemInfo>();
+                        levelBindAddItem[p.LevelUnlock] = new List<TaobaoItemInfo>();
                     }
-                    TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp);
-                    levelBindItem[p.LevelUnlock].Add(t);
+                    TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp, p.ShuxingRelate, p.ShuxingValue, p.LevelRemove);
+                    levelBindAddItem[p.LevelUnlock].Add(t);
                 }
+
+                //放到对应回合移除的表里面
+                {
+                    if (!levelBindRemoveItem.ContainsKey(p.LevelRemove))
+                    {
+                        levelBindRemoveItem[p.LevelRemove] = new List<TaobaoItemInfo>();
+                    }
+                    TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp, p.ShuxingRelate, p.ShuxingValue, p.LevelRemove);
+                    levelBindRemoveItem[p.LevelRemove].Add(t);
+                }
+                
             }
             isUnloaded = false;
         }
@@ -127,7 +161,9 @@ public class TaobaoModule : ModuleBase
     public void LoadProductInDifferentTurn()
     {
         int curTurn = pRoleMdl.GetCurrentTurn();
-        if(levelBindItem.ContainsKey(curTurn))
+
+        //add product
+        if(levelBindAddItem.ContainsKey(curTurn))
         {
             /**
              * 1. 把卡加进去
@@ -135,11 +171,12 @@ public class TaobaoModule : ModuleBase
              * 3. 标出最新的卡
              **/
              // 把卡加进去
-            foreach(TaobaoItemInfo t in levelBindItem[curTurn])
+            foreach(TaobaoItemInfo t in levelBindAddItem[curTurn])
             {
                 if (nameToItem.ContainsKey(t.Name))
                 {
                     nameToItem[t.Name].LeftInStock += t.LeftInStock;
+                    nameToItem[t.Name].Cost = t.Cost;
                 }
                 else
                 {
@@ -148,6 +185,21 @@ public class TaobaoModule : ModuleBase
                 }
             }
         }
+
+        //remove product
+        if(levelBindRemoveItem.ContainsKey(curTurn))
+        {
+            foreach (TaobaoItemInfo t in levelBindRemoveItem[curTurn])
+            {
+                if (nameToItem.ContainsKey(t.Name))
+                {
+                    productList.Remove(nameToItem[t.Name]);
+                    //clear the nameToItem map
+                    nameToItem.Remove(t.Name);
+                }
+            }
+        }
+
         Debug.Log("当前回合:" + curTurn +",商店物品数:" + productList.Count);
     }
 
@@ -166,5 +218,70 @@ public class TaobaoModule : ModuleBase
         return productList[index].LeftInStock > 0;
     }
 
+    public void ConfirmBuy(int wantBuyIdx)
+    {
+        //if(wantBuyIdx<0|| wantBuyIdx >= fakeList.Count)
+        if (wantBuyIdx < 0 || wantBuyIdx >= productList.Count)
+        {
+            return;
+        }
+        //int cost = fakeList[wantBuyIdx].Cost;
+        int cost = GetDetailItem(wantBuyIdx).Cost;
+        pRoleMdl.GainMoney(-cost);
+        //if(fakeList[wantBuyIdx].LeftInStock > 0)
+        if (CheckAvaiableLeftInStock(wantBuyIdx))
+        {
+            //fakeList[wantBuyIdx].LeftInStock -= 1;
+            //pTaobaoMgr.GetProductList()[wantBuyIdx].LeftInStock -= 1;
+            ReduceLeftInStock(wantBuyIdx);
+        }
+
+        //pCardMgr.GainNewCard(fakeList[wantBuyIdx].CardRelate);
+        
+    }
+
+    public string GainCard(int wantBuyIdx)
+    {
+        pCardMgr.GainNewCard(productList[wantBuyIdx].CardRelate);
+        CardAsset ca = pCardMgr.GetCardInfo(productList[wantBuyIdx].CardRelate);
+        if(ca!=null) return ca.CardName;
+        return "";
+    }
+
+    public string GainShuxing(int wantBuyIdx)
+    {
+        int val = productList[wantBuyIdx].ShuxingValue;
+        string shuxingInfo = "";
+        switch(productList[wantBuyIdx].ShuxingRelate)
+        {
+            case "jishu":
+                pRoleMdl.AddJishu(val);
+                shuxingInfo += "技术";
+                break;
+            case "koucai":
+                pRoleMdl.AddKoucai(val);
+                shuxingInfo += "口才";
+                break;
+            case "waiguan":
+                pRoleMdl.AddWaiguan(val);
+                shuxingInfo += "魅力";
+                break;
+            case "kangya":
+                pRoleMdl.AddKangya(val);
+                shuxingInfo += "抗压";
+                break;
+            case "caiyi":
+                pRoleMdl.AddCaiyi(val);
+                shuxingInfo += "才艺";
+                break;
+            default:
+                break;
+        }
+        if (shuxingInfo != "")
+        {
+            shuxingInfo += " + " + val.ToString();
+        }        
+        return shuxingInfo;
+    }
 
 }

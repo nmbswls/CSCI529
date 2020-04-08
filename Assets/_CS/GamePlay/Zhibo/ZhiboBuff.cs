@@ -9,8 +9,8 @@ using System.Collections.Generic;
 public enum eBuffType
 {
     None=0,
-    Meili_Add,
-    Meili_Add_P,
+    Waiguan_Add,
+    Waiguan_Add_P,
     Tili_Add,
     Tili_Add_P,
     Fanying_Add,

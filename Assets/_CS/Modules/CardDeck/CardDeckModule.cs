@@ -106,26 +106,26 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
                     switch (effect.type)
                     {
                         case eCardTurnEffectType.Jiyi:
-                            pRoleMdl.AddJiyi(effect.value);
+                            pRoleMdl.AddJishu(effect.value);
                             break;
 
                         case eCardTurnEffectType.Meili:
-                            pRoleMdl.AddMeili(effect.value);
+                            pRoleMdl.AddWaiguan(effect.value);
                             break;
                         case eCardTurnEffectType.Fanying:
-                            pRoleMdl.AddFanying(effect.value);
+                            pRoleMdl.AddCaiyi(effect.value);
                             break;
                         case eCardTurnEffectType.Tili:
-                            pRoleMdl.AddTili(effect.value);
+                            pRoleMdl.AddKangya(effect.value);
                             break;
                         case eCardTurnEffectType.Koucai:
                             pRoleMdl.AddKoucai(effect.value);
                             break;
                         case eCardTurnEffectType.Shuxing:
-                            pRoleMdl.AddJiyi(effect.value);
-                            pRoleMdl.AddMeili(effect.value);
-                            pRoleMdl.AddFanying(effect.value);
-                            pRoleMdl.AddTili(effect.value);
+                            pRoleMdl.AddJishu(effect.value);
+                            pRoleMdl.AddWaiguan(effect.value);
+                            pRoleMdl.AddCaiyi(effect.value);
+                            pRoleMdl.AddKangya(effect.value);
                             pRoleMdl.AddKoucai(effect.value);
                             break;
                         case eCardTurnEffectType.Fensi:

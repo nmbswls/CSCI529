@@ -53,11 +53,11 @@ public class ScheduleInfo
 public class RoleStats
 {
 
-    public float meili = 10;
+    public float waiguan = 10;
     public float koucai = 10;
-    public float tili = 10;
-    public float fanying = 10;
-    public float jiyi = 10;
+    public float kangya = 10;
+    public float caiyi = 10;
+    public float jishu = 10;
 
     public RoleStats()
     {
@@ -65,11 +65,11 @@ public class RoleStats
     }
     public RoleStats(RoleStats stats)
     {
-        this.meili = stats.meili;
+        this.waiguan = stats.waiguan;
         this.koucai = stats.koucai;
-        this.tili = stats.tili;
-        this.fanying = stats.fanying;
-        this.jiyi = stats.jiyi;
+        this.kangya = stats.kangya;
+        this.caiyi = stats.caiyi;
+        this.jishu = stats.jishu;
     }
 }
 
@@ -164,10 +164,10 @@ public class RoleModule : ModuleBase, IRoleModule
     public void InitRole(string roleId)
     {
         RoleStoryAsset ret = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<RoleStoryAsset>("Roles/role" + roleId);
-        roleStats.meili = ret.initProperties[0];
-        roleStats.fanying = ret.initProperties[1];
-        roleStats.tili = ret.initProperties[2];
-        roleStats.jiyi = ret.initProperties[3];
+        roleStats.waiguan = ret.initProperties[0];
+        roleStats.caiyi = ret.initProperties[1];
+        roleStats.kangya = ret.initProperties[2];
+        roleStats.jishu = ret.initProperties[3];
         roleStats.koucai = ret.initProperties[4];
 
         money = ret.initMoney+1000;
@@ -182,18 +182,19 @@ public class RoleModule : ModuleBase, IRoleModule
         NowPlatformId = "begin";
     }
 
+    //分配属性点
     public void AllocateStats(int[] extra)
     {
-        roleStats.meili += extra[0];
-        roleStats.fanying += extra[1];
-        roleStats.tili += extra[2];
-        roleStats.jiyi += extra[3];
-        roleStats.koucai += extra[4];
+        roleStats.waiguan += extra[0];
+        roleStats.jishu += extra[1];
+        roleStats.kangya += extra[2];
+        roleStats.koucai += extra[3];
+        roleStats.caiyi += extra[4];
     }
 
     public int GetFensiReward(int extraLiuliang, float addrate)
     {
-        float totalP = roleStats.fanying + roleStats.jiyi + roleStats.koucai + roleStats.meili + roleStats.tili;
+        float totalP = roleStats.caiyi + roleStats.jishu + roleStats.koucai + roleStats.waiguan + roleStats.kangya;
         return (int)((30 + TurnNum * 50 + (totalP * 10 + fen1Num * 0.2f + extraLiuliang) * 0.2f) *addrate);
     }
 
@@ -372,34 +373,34 @@ public class RoleModule : ModuleBase, IRoleModule
 
     }
 
-    public void AddMeili(float v)
+    public void AddWaiguan(float v)
     {
-        roleStats.meili += v;
+        roleStats.waiguan += v;
     }
-    public void AddTili(float v)
+    public void AddKangya(float v)
     {
-        roleStats.tili += v;
+        roleStats.kangya += v;
     }
     public void AddKoucai(float v)
     {
         roleStats.koucai += v;
     }
-    public void AddJiyi(float v)
+    public void AddJishu(float v)
     {
-        roleStats.jiyi += v;
+        roleStats.jishu += v;
     }
-    public void AddFanying(float v)
+    public void AddCaiyi(float v)
     {
-        roleStats.fanying += v;
+        roleStats.caiyi += v;
     }
 
     public void AddAllStatus(float v)
     {
-        AddMeili(v);
-        AddTili(v);
+        AddWaiguan(v);
+        AddKangya(v);
         AddKoucai(v);
-        AddJiyi(v);
-        AddFanying(v);
+        AddJishu(v);
+        AddCaiyi(v);
     }
 
 
@@ -426,7 +427,7 @@ public class RoleModule : ModuleBase, IRoleModule
                 string[] args = effectString.Split(',');
                 if (args[0] == "addM")
                 {
-                    roleStats.meili += int.Parse(args[1]);
+                    roleStats.waiguan += int.Parse(args[1]);
                 }else if (args[0] == "card")
                 {
                     pCardMdl.GainNewCard(args[1]);

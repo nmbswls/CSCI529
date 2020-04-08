@@ -59,6 +59,8 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
 
     TaobaoModule pTaobaoMgr;
 
+    UIMainCtrl pMainUI;
+
     //List<TaobaoItemInfo> fakeList = new List<TaobaoItemInfo>();
 
     private int totalPage = 0;
@@ -75,7 +77,7 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
 
         pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
         pTaobaoMgr = GameMain.GetInstance().GetModule<TaobaoModule>();
-
+        pMainUI = (UIMainCtrl)mUIMgr.GetCtrl("UIMain") as UIMainCtrl;
     }
 
     public override void BindView()
@@ -306,27 +308,21 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
 
     public void ConfirmBuy()
     {
-        //if(wantBuyIdx<0|| wantBuyIdx >= fakeList.Count)
-        if (wantBuyIdx < 0 || wantBuyIdx >= pTaobaoMgr.GetNumberOfProduct())
+        pTaobaoMgr.ConfirmBuy(wantBuyIdx);
+        
+
+        if (pTaobaoMgr.GetDetailItem(wantBuyIdx).CardRelate != "")
         {
-            return;
-        }
-        //int cost = fakeList[wantBuyIdx].Cost;
-        int cost = pTaobaoMgr.GetDetailItem(wantBuyIdx).Cost;
-        pRoleMgr.GainMoney(-cost);
-        //if(fakeList[wantBuyIdx].LeftInStock > 0)
-        if (pTaobaoMgr.CheckAvaiableLeftInStock(wantBuyIdx))
-        {
-            //fakeList[wantBuyIdx].LeftInStock -= 1;
-            //pTaobaoMgr.GetProductList()[wantBuyIdx].LeftInStock -= 1;
-            pTaobaoMgr.ReduceLeftInStock(wantBuyIdx);
-            ShowItems();
+            string cardName = pTaobaoMgr.GainCard(wantBuyIdx);
+            if(cardName!="") mUIMgr.ShowHint("获得卡牌: " + cardName);
         }
 
-        //pCardMgr.GainNewCard(fakeList[wantBuyIdx].CardRelate);
-        pCardMgr.GainNewCard(pTaobaoMgr.GetDetailItem(wantBuyIdx).CardRelate);
-        CardAsset ca = pCardMgr.GetCardInfo(pTaobaoMgr.GetDetailItem(wantBuyIdx).CardRelate);
-        mUIMgr.ShowHint("buy card: " + ca.CardName);
+        if (pTaobaoMgr.GetDetailItem(wantBuyIdx).ShuxingRelate != "")
+        {
+            string shuxingInfo = pTaobaoMgr.GainShuxing(wantBuyIdx);
+            if (shuxingInfo !="") mUIMgr.ShowHint("获得属性: " + shuxingInfo);
+        }
+        ShowItems();
+        pMainUI.UpdateWords();
     }
-    
 }

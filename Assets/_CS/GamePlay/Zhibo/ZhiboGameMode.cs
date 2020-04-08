@@ -722,19 +722,19 @@ public class ZhiboGameMode : GameModeBase
                 switch (pname)
                 {
                     case "m":
-                        finalValue += state.stats.meili * rate;
+                        finalValue += state.stats.waiguan * rate;
                         break;
                     case "k":
                         finalValue += state.stats.koucai * rate;
                         break;
                     case "t":
-                        finalValue += state.stats.tili * rate;
+                        finalValue += state.stats.kangya * rate;
                         break;
                     case "f":
-                        finalValue += state.stats.fanying * rate;
+                        finalValue += state.stats.caiyi * rate;
                         break;
                     case "j":
-                        finalValue += state.stats.jiyi * rate;
+                        finalValue += state.stats.jishu * rate;
                         break;
                     default:
                         Debug.Log("unknown property");
@@ -998,11 +998,11 @@ public class ZhiboGameMode : GameModeBase
 
             //根据打过的卡牌 增加主属性 和 经验值
 
-            pRoleMgr.AddMeili((float)getMoney * 0.1f);
-            pRoleMgr.AddFanying((float)getMoney * 0.1f);
-            pRoleMgr.AddTili((float)getMoney * 0.1f);
-            pRoleMgr.AddJiyi((float)getMoney * 0.1f);
-            pRoleMgr.AddKoucai((float)getMoney * 0.1f);
+            //pRoleMgr.AddMeili((float)getMoney * 0.1f);
+            //pRoleMgr.AddFanying((float)getMoney * 0.1f);
+            //pRoleMgr.AddKangya((float)getMoney * 0.1f);
+            //pRoleMgr.AddJiyi((float)getMoney * 0.1f);
+            //pRoleMgr.AddKoucai((float)getMoney * 0.1f);
 
             int[] bonus = new int[5];
             for (int i = 0; i < state.UsedCardsToGetBonus.Count; i++)

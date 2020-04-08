@@ -24,11 +24,11 @@ public interface IRoleModule : IModule{
 
     int GetFensiReward(int extraLiuliang, float addrate);
 
-    void AddMeili(float v);
-    void AddTili(float v);
+    void AddWaiguan(float v);
+    void AddKangya(float v);
     void AddKoucai(float v);
-    void AddJiyi(float v); 
-    void AddFanying(float v);
+    void AddJishu(float v); 
+    void AddCaiyi(float v);
 
     void AddAllStatus(float v);
 

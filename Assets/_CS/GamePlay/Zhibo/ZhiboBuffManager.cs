@@ -75,13 +75,13 @@ public class ZhiboBuffManager
 
     private void LoadBuff()
     {
-        BuffDesp.Add(eBuffType.Meili_Add.ToString(), "增加{0}点魅力");
+        BuffDesp.Add(eBuffType.Waiguan_Add.ToString(), "增加{0}点魅力");
         BuffDesp.Add(eBuffType.Tili_Add.ToString(), "增加{0}点体力");
         BuffDesp.Add(eBuffType.Koucai_Add.ToString(), "增加{0}点口才");
         BuffDesp.Add(eBuffType.Jiyi_Add.ToString(), "增加{0}点技艺");
         BuffDesp.Add(eBuffType.Fanying_Add.ToString(), "增加{0}点反应");
 
-        BuffDesp.Add(eBuffType.Meili_Add_P.ToString(), "增加百分比{0}的魅力");
+        BuffDesp.Add(eBuffType.Waiguan_Add_P.ToString(), "增加百分比{0}的魅力");
         BuffDesp.Add(eBuffType.Tili_Add_P.ToString(), "增加百分比{0}的体力");
         BuffDesp.Add(eBuffType.Koucai_Add_P.ToString(), "增加百分比{0}的口才");
         BuffDesp.Add(eBuffType.Jiyi_Add_P.ToString(), "增加百分比{0}的技艺");
@@ -151,10 +151,10 @@ public class ZhiboBuffManager
             ZhiboBuff buff = gameMode.state.ZhiboBuffs[i];
             switch (buff.bInfo.BuffType)
             {
-                case eBuffType.Meili_Add:
+                case eBuffType.Waiguan_Add:
                     BuffAddValue[0] += buff.bInfo.BuffLevel;
                     break;
-                case eBuffType.Meili_Add_P:
+                case eBuffType.Waiguan_Add_P:
                     BuffAddPercent[0] += buff.bInfo.BuffLevel;
                     break;
                 case eBuffType.Tili_Add:

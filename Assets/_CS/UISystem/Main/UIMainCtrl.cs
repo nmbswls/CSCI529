@@ -247,10 +247,10 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.Properties = root.Find("Properties");
 
         view.meili = view.Properties.Find("VBox").GetChild(0).GetChild(0).GetComponent<Text>();
-        view.fanying = view.Properties.Find("VBox").GetChild(1).GetChild(0).GetComponent<Text>();
+        view.jiyi = view.Properties.Find("VBox").GetChild(1).GetChild(0).GetComponent<Text>();
         view.tili = view.Properties.Find("VBox").GetChild(2).GetChild(0).GetComponent<Text>();
-        view.jiyi = view.Properties.Find("VBox").GetChild(3).GetChild(0).GetComponent<Text>();
-        view.koucai = view.Properties.Find("VBox").GetChild(4).GetChild(0).GetComponent<Text>();
+        view.koucai = view.Properties.Find("VBox").GetChild(3).GetChild(0).GetComponent<Text>();
+        view.fanying = view.Properties.Find("VBox").GetChild(4).GetChild(0).GetComponent<Text>();
 
 
         foreach (Transform child in view.Properties.Find("VBox"))
@@ -654,10 +654,10 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         RoleStats rs = rm.GetStats();
 
         view.FansShow.text = (int)(rm.Fensi) + "";
-        view.meili.text = (int)(rs.meili) + "";
-        view.fanying.text = (int)(rs.fanying) + "";
-        view.tili.text = (int)(rs.tili) + "";
-        view.jiyi.text = (int)(rs.jiyi) + "";
+        view.meili.text = (int)(rs.waiguan) + "";
+        view.fanying.text = (int)(rs.caiyi) + "";
+        view.tili.text = (int)(rs.kangya) + "";
+        view.jiyi.text = (int)(rs.jishu) + "";
         view.koucai.text = (int)(rs.koucai) + "";
 
     }
