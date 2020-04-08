@@ -56,7 +56,7 @@ public class GameMain : MonoBehaviour,IGameMain
         DefaultModuleList.ConfigList.Add(new ModuleConfig("WeiboModule"));
         DefaultModuleList.ConfigList.Add(new ModuleConfig("ShopMgr"));
 		DefaultModuleList.ConfigList.Add(new ModuleConfig("MailModule"));
-
+        DefaultModuleList.ConfigList.Add(new ModuleConfig("TaobaoModule"));
 
         mGameMainConfig.Config.Add(DefaultModuleList);
 		LoadInitModules();

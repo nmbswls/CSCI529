@@ -24,3 +24,4 @@ MonoBehaviour:
     Value3: 0
     Value4: 0
     Probability: 4
+    IsBoss: NO

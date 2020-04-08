@@ -687,8 +687,6 @@ public class ZhiboAudienceMgr
                 {
                     audience.Type = eAudienceType.Good;
 
-                    
-
                     int[] baseReq = GetBaseReq(audience.Level);
                 
                     audience.MaxReq = new int[6];
@@ -701,8 +699,11 @@ public class ZhiboAudienceMgr
                     int tmpWaitTime = 0;
                     
                     TVSuffix appliedSuf = applySuffixEffect();
-                    tmpSufHp = loadSuffixEffect(appliedSuf);
-                    audience.tvSuffix = appliedSuf;
+                    if (appliedSuf != null)
+                    {
+                        tmpSufHp = loadSuffixEffect(appliedSuf);
+                        audience.tvSuffix = appliedSuf;
+                    }
 
                     TVProfix appliedPro = applyProfixEffect();
                     if(appliedPro!=null)

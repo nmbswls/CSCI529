@@ -29,3 +29,19 @@ MonoBehaviour:
     CardRelate: c0030
     LeftInStock: 1
     LevelUnlock: 0
+  - Index: 2
+    Name: "\u54C8\u54C8\u54C8"
+    Cost: 200
+    Desp: "\u54C8\u54C8\u54C8\u54C8\u54C8\u554A\u54C8"
+    EffectDesp: "\u54C8\u54C8\u54C8\u54C8\u54C8\u54C8\u54C8\u54C8\u54C8"
+    CardRelate: c0029
+    LeftInStock: 1
+    LevelUnlock: 5
+  - Index: 3
+    Name: "\u54C8\u54C8\u54C8"
+    Cost: 200
+    Desp: "\u54C8\u54C8\u54C8\u54C8\u54C8\u554A\u54C8"
+    EffectDesp: "\u54C8\u54C8\u54C8\u54C8\u54C8\u54C8\u54C8\u54C8\u54C8"
+    CardRelate: c0029
+    LeftInStock: 6
+    LevelUnlock: 4

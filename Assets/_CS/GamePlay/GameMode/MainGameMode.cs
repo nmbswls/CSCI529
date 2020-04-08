@@ -74,6 +74,7 @@ public class MainGameMode : GameModeBase
         GameMain.GetInstance().GetModule<WeiboModule>().resetShua();
         GameMain.GetInstance().GetModule<WeiboModule>().enableRealRandom();
         GameMain.GetInstance().GetModule<MailModule>().checkTurnStartToBeSentEmail();
+        GameMain.GetInstance().GetModule<TaobaoModule>().LoadProductInDifferentTurn();
         mainUI.ShowMsg(new List<TurnMsg>());
         TurnPracticeNum = 0;
     }

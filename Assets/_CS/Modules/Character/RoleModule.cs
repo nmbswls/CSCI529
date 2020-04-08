@@ -59,8 +59,6 @@ public class RoleStats
     public float fanying = 10;
     public float jiyi = 10;
 
-
-
     public RoleStats()
     {
 
@@ -117,6 +115,8 @@ public class RoleModule : ModuleBase, IRoleModule
 
     private float ActionPoints;
     private float DefaultActionPoints;
+
+    private float yunqi = Random.Range(3, 10);
 
 
     List<AppInfo> unlockedApps = new List<AppInfo>();
