@@ -583,7 +583,10 @@ public class MiniCard : MonoBehaviour
 
     public void CancelSibling()
     {
-        transform.SetSiblingIndex(originSiblingIdx);
+        if(originSiblingIdx>=0)
+        {
+            transform.SetSiblingIndex(originSiblingIdx);
+        }
         originSiblingIdx = -1;
     }
 

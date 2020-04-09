@@ -46,7 +46,8 @@ public class ZhiboLittleTV : MonoBehaviour
 
     public ZhiboAudience TargetAudience;
 
-    public static string[] BlockColorArray = new string[] { "#8C2626", "#BFB706", "#778F15", "#77851F", "#4B8510"};
+    //public static string[] BlockColorArray = new string[] { "#8C2626", "#BFB706", "#778F15", "#77851F", "#4B8510"};
+    public static string[] BlockColorArray = new string[] { "#ffffff", "#ffffff", "#ffffff" };
 
     public IResLoader pResLoader;
 
@@ -67,7 +68,13 @@ public class ZhiboLittleTV : MonoBehaviour
         audienceImage.Add(pResLoader.LoadResource<Sprite>("AudienceImage/" + "Heizi"));
         view.animator = GetComponent<Animator>();
         view.animator.Play("Empty");
-        view.Content.sprite = pResLoader.LoadResource<Sprite>("Zhibo/AudienceBG/normal1_bg"); ;
+
+
+        //randomly choose bg
+        int bgType = Random.Range(1, 3);
+        view.Content.sprite = pResLoader.LoadResource<Sprite>("Zhibo/AudienceBG/normal"+ bgType+"_bg");
+
+
         gameObject.SetActive(false);
         view.rootCG.alpha = 1;
         isAttracted = false;
@@ -149,7 +156,10 @@ public class ZhiboLittleTV : MonoBehaviour
         Transform timeLeftBLocks = transform.Find("Bg").Find("TimeLeft");
         foreach(Transform child in timeLeftBLocks)
         {
-            view.TimeLeftBlocks.Add(child.GetComponent<Image>());
+            if(child.gameObject.active)
+            {
+                view.TimeLeftBlocks.Add(child.GetChild(0).GetComponent<Image>());
+            }
         }
 
         view.TokenList.Clear();
