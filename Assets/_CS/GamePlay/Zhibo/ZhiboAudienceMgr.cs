@@ -438,7 +438,7 @@ public class ZhiboAudienceMgr
     public void HandleTimeLeftBonus(ZhiboAudience audience)
     {
         float totalTime = audience.OriginTimeLast;
-        if(audience.TimeLeft >= 0.8 * totalTime)
+        if(audience.TimeLeft >= 0.66 * totalTime)
         {
             //gain card
             int randomIndex = Random.Range(0, GiftCardIndex.Length - 1);
@@ -446,7 +446,7 @@ public class ZhiboAudienceMgr
             gameMode.setCardAsGift(randomCardIndex);
             gameMode.mUICtrl.ShowGift();
         }
-        else if(audience.TimeLeft <= 0.3 * totalTime)
+        else if(audience.TimeLeft <= 0.33 * totalTime)
         {
             //add new audience
             if (canAddNewReq())
