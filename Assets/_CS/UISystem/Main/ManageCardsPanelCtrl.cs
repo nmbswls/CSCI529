@@ -79,11 +79,13 @@ public class CardsTabView : TabGroupChildView{
 
 	public Text Title;
 	public Image BG;
+    public Image TitlePic;
 	public override void BindView ()
 	{
 		base.BindView ();
 		Title = root.GetChild (0).GetComponent<Text>();
-		BG = root.GetComponent<Image> ();
+        TitlePic = root.GetChild(1).GetComponent<Image>();
+        BG = root.GetComponent<Image> ();
 	}
 }
 
@@ -95,10 +97,12 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 
     CardOutView preCardView;
 
+    List<Sprite> titlePicSprite = new List<Sprite>();
 
     public override void Init(){
         pCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
         pResLoader = GameMain.GetInstance().GetModule<ResLoader>();
+        loadSprite();
     }
 
 	public override void BindView(){
@@ -214,7 +218,7 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
             }
             else
             {
-                cardOutView.Picture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardImage/" + ca.CatdImageName);
+                cardOutView.Picture.sprite = pResLoader.LoadResource<Sprite>("CardImage/" + ca.CatdImageName);
             }
             //Debug.Log(ca.Picture.name);
         }
@@ -271,15 +275,18 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
 
         model.nowTab = newTab;
 
-
+        //TODO: 修改tag text显示颜色
         for (int i = 0; i < view.tabGroup.tabs.Count; i++) {
 			CardsTabView childView = view.tabGroup.tabs[i] as CardsTabView;
-			childView.BG.color = Color.white;
+            //childView.BG.color = Color.white;
+            childView.BG.transform.localScale = Vector3.one;
+            childView.TitlePic.sprite = titlePicSprite[i * 2];
 		}
 		{
 			CardsTabView childView = view.tabGroup.tabs [newTab] as CardsTabView;
-			childView.BG.color = Color.red;
-		}
+            childView.BG.transform.localScale = Vector3.Scale(childView.BG.transform.localScale, new Vector3(1.1f, 1.1f, 1.1f));
+            childView.TitlePic.sprite = titlePicSprite[newTab * 2 + 1];
+        }
 
         if (newTab == 0)
         {
@@ -298,6 +305,18 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
         }
         HideCardDetail();
 
+    }
+
+    public void loadSprite()
+    {
+        titlePicSprite.Add(pResLoader.LoadResource<Sprite>("CardDeck/CardDeckTagBg/" + "a_1"));
+        titlePicSprite.Add(pResLoader.LoadResource<Sprite>("CardDeck/CardDeckTagBg/" + "a_2"));
+        titlePicSprite.Add(pResLoader.LoadResource<Sprite>("CardDeck/CardDeckTagBg/" + "s_1"));
+        titlePicSprite.Add(pResLoader.LoadResource<Sprite>("CardDeck/CardDeckTagBg/" + "s_2"));
+        titlePicSprite.Add(pResLoader.LoadResource<Sprite>("CardDeck/CardDeckTagBg/" + "i_1"));
+        titlePicSprite.Add(pResLoader.LoadResource<Sprite>("CardDeck/CardDeckTagBg/" + "i_2"));
+        titlePicSprite.Add(pResLoader.LoadResource<Sprite>("CardDeck/CardDeckTagBg/" + "a_3"));
+        titlePicSprite.Add(pResLoader.LoadResource<Sprite>("CardDeck/CardDeckTagBg/" + "a_4"));
     }
 }
 

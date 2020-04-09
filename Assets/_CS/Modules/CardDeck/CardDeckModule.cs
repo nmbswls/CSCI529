@@ -44,7 +44,7 @@ public class CardDeckModule : ModuleBase, ICardDeckModule
 
     List<uint> UsedItemList = new List<uint>();
 
-
+    
 
     public override void Setup()
     {
