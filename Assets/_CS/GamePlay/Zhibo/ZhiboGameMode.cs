@@ -188,6 +188,7 @@ public class ZhiboGameMode : GameModeBase
     private int SecCount = 0;
     private float CardDelayTimer = 0;
 
+    private const int GOAL = 300;
 
 
 
@@ -991,10 +992,14 @@ public class ZhiboGameMode : GameModeBase
             //int fensi = pRoleMgr.GetFensiReward(state.ExtraLiuliang,1);
             int fensi = state.Score > 30 ? (int) (state.Score * 0.65) : 20;
             double getMoney = state.Score>state.MaxScore? (state.Score - state.MaxScore/2) * 0.6 : 10;
-            pRoleMgr.GainMoney((int)getMoney);
+            //TODO： 到达goal 给额外奖励 (finished)
+            int reachGoalMoney = state.Score > GOAL ? 100 : 0;
+
+            pRoleMgr.GainMoney((int)getMoney + reachGoalMoney);
             pRoleMgr.AddFensi(0, fensi);
             p.showFensi(fensi);
             p.showMoney((int)getMoney);
+            p.showReachGoalMoney(reachGoalMoney);
 
             //根据打过的卡牌 增加主属性 和 经验值
 
@@ -1857,7 +1862,6 @@ public class ZhiboGameMode : GameModeBase
 
     private void AddCardToOutDeck(string cardId)
     {
-        //TODO: add card to deck outside
         string eid = cardId;
         mCardMdl.GainNewCard(eid);
         cardAsGift.Dequeue();

@@ -49,6 +49,8 @@ public class ZhiboLittleTV : MonoBehaviour
     //public static string[] BlockColorArray = new string[] { "#8C2626", "#BFB706", "#778F15", "#77851F", "#4B8510"};
     public static string[] BlockColorArray = new string[] { "#ffffff", "#ffffff", "#ffffff" };
 
+    List<Sprite> timeleftImage = new List<Sprite>();
+
     public IResLoader pResLoader;
 
     public bool isAttracted = false;
@@ -68,7 +70,7 @@ public class ZhiboLittleTV : MonoBehaviour
         audienceImage.Add(pResLoader.LoadResource<Sprite>("AudienceImage/" + "Heizi"));
         view.animator = GetComponent<Animator>();
         view.animator.Play("Empty");
-
+        loadTimeLeftBlockImage();
 
         //randomly choose bg
         int bgType = Random.Range(1, 3);
@@ -97,6 +99,7 @@ public class ZhiboLittleTV : MonoBehaviour
             {
                 view.TimeLeftBlocks[i].fillAmount = 1;
                 view.TimeLeftBlocks[i].color = Color.black;
+                view.TimeLeftBlocks[i].sprite = timeleftImage[3];// gray
             }
             return;
         }
@@ -108,6 +111,8 @@ public class ZhiboLittleTV : MonoBehaviour
                 Color nowColor = Color.white;
                 ColorUtility.TryParseHtmlString(BlockColorArray[i], out nowColor);  //color follow the hp
                 view.TimeLeftBlocks[i].color = nowColor;
+                //TODO: now color
+                
             }
         }
 
@@ -123,9 +128,14 @@ public class ZhiboLittleTV : MonoBehaviour
         {
             view.TimeLeftBlocks[i].fillAmount = 0;
         }
+        for(int i = 0; i<completeBlockCount; i++)
+        {
+            view.TimeLeftBlocks[i].sprite = timeleftImage[completeBlockCount];
+        }
         if (completeBlockCount < count && completeBlockCount >=0)
         {
             view.TimeLeftBlocks[completeBlockCount].fillAmount = extraRate;
+            view.TimeLeftBlocks[completeBlockCount].sprite = timeleftImage[completeBlockCount];
         }
         
 
@@ -525,4 +535,11 @@ public class ZhiboLittleTV : MonoBehaviour
         originSiblingIdx = -1;
     }
 
+    private void loadTimeLeftBlockImage()
+    {
+        timeleftImage.Add(pResLoader.LoadResource<Sprite>("Zhibo/AudienceTimeLeftBg/djs_" + 1));
+        timeleftImage.Add(pResLoader.LoadResource<Sprite>("Zhibo/AudienceTimeLeftBg/djs_" + 2));
+        timeleftImage.Add(pResLoader.LoadResource<Sprite>("Zhibo/AudienceTimeLeftBg/djs_" + 3));
+        timeleftImage.Add(pResLoader.LoadResource<Sprite>("Zhibo/AudienceTimeLeftBg/djs_" + 4));
+    }
 }

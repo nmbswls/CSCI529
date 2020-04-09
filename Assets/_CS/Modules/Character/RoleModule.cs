@@ -170,7 +170,8 @@ public class RoleModule : ModuleBase, IRoleModule
         roleStats.jishu = ret.initProperties[3];
         roleStats.koucai = ret.initProperties[4];
 
-        money = ret.initMoney+1000;
+        //初始金钱
+        money = ret.initMoney+0;
 
         pCardMdl.AddCards(ret.initCards);
         pCardMdl.AddCards(ret.initOwning);

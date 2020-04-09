@@ -659,7 +659,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.tili.text = (int)(rs.kangya) + "";
         view.jiyi.text = (int)(rs.jishu) + "";
         view.koucai.text = (int)(rs.koucai) + "";
-
+        view.moneyValue.text = (int)(rm.Money) + "";
     }
 
 }

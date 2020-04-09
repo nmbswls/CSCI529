@@ -8,6 +8,8 @@ public class ZhiboJiesunView : BaseView
     public Text text;
     public Text fensi;
     public Text money;
+    public Text goal;
+    public Text REACHGOAL;
 }
 
 public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
@@ -29,6 +31,9 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
         view.text = root.Find("Text").GetComponent<Text>();
         view.fensi = root.Find("Fensi").GetComponent<Text>();
         view.money = root.Find("Money").GetComponent<Text>();
+        view.money = root.Find("Money").GetComponent<Text>();
+        view.REACHGOAL = root.Find("REACHGOAL").GetComponent<Text>();
+        view.goal = root.Find("Goal").GetComponent<Text>();
     }
     public override void RegisterEvent()
     {
@@ -59,5 +64,20 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
     public void showMoney(int score)
     {
         view.money.text = score + "";
+    }
+
+    public void showReachGoalMoney(int score)
+    {
+        if(score>0)
+        {
+            view.REACHGOAL.gameObject.SetActive(true);
+            view.goal.gameObject.SetActive(true);
+            view.goal.text = score + "";
+        } else
+        {
+            view.REACHGOAL.gameObject.SetActive(false);
+            view.goal.gameObject.SetActive(false);
+        }
+        
     }
 }

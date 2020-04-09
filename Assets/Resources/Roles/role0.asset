@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: "\u666E\u901A\u4EBA"
   Desp: "\u4F60\u662F\u4E00\u4E2A\u5076\u7136\u5BF9\u76F4\u64AD\u884C\u4E1A\u4EA7\u751F\u5174\u8DA3\u7684\u666E\u901A\u4EBA\u3002\n\u9664\u4E86\u521D\u6765\u4E4D\u5230\u7684\u70ED\u60C5\u5916\uFF0C\u4F60\u4E00\u65E0\u6240\u6709\u3002"
   initProperties: 0a0000000a0000000a0000000a0000000a000000
-  initMoney: 5
+  initMoney: 100
   initFreePoint: 10
   initSkillPoint: 15
   initOwning:
