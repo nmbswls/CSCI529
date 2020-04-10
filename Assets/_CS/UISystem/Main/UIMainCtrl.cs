@@ -67,6 +67,9 @@ public class MainView : BaseView
     // 3 bars
     public Text moneyValue;
 
+    //当前回合
+    public Text currentTurn;
+
 }
 
 public class PropertyMainView
@@ -311,6 +314,9 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             testUpdateWords();
             pSkillMgr.PrintSkills();
         });
+
+        view.currentTurn = root.Find("CurrentTurn").GetChild(0).GetComponent<Text>();
+
         //testUpdateWords();
         UpdateWords();
 
@@ -660,7 +666,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.jiyi.text = (int)(rs.jishu) + "";
         view.koucai.text = (int)(rs.koucai) + "";
         view.moneyValue.text = (int)(rm.Money) + "";
+        view.currentTurn.text = (int)(rm.GetCurrentTurn() + 1) + "";
     }
-
 }
 

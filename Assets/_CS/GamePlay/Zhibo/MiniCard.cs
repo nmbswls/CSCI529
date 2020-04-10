@@ -17,12 +17,25 @@ public class MiniCardView
 
     public CanvasGroup CardCG;
     public Image Bg;
+
+    public Image Background;
+    public Image BackBackground;
+
     public Image Picture;
     public Image BackPicture;
+    public Image PictureCover;
+    public Image BackPictureCover;
+
     public Text Desp;
     public Text BackDesp;
     public Text Name;
     public Text BackName;
+    public Image NamePicture;
+    public Image BackNamePicture;
+
+    public Image TypePicture;
+    public Image BackTypePicture;
+
     public Transform TimeLeftComp;
     public Text TimeLeft;
     public Animator ClockAnimator;
@@ -36,7 +49,7 @@ public class MiniCardView
 
     public Transform GemBackContainer;
     public List<CardGemBackView> CardGemBackList = new List<CardGemBackView>();
-    public Text CostBack;
+    public Text BackCost;
 }
 
 public class CardGemBackView
@@ -79,6 +92,8 @@ public class MiniCard : MonoBehaviour
 
     MiniCardView view = new MiniCardView();
     CardContainerLayout container;
+
+    public string[] CostColor = { "#eaff2d", "#21acc5", "#2ddfff" };
 
     public float nowDegree;
     public float targetDegree;
@@ -155,17 +170,21 @@ public class MiniCard : MonoBehaviour
         //初始化卡面
         view.Name.text = ca.CardName;
         view.BackName.text = view.Name.text;
+
+        view.NamePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardName/" + ca.CatdImageName);
+        view.BackNamePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardName/" + ca.CatdImageName);
+
         view.Desp.text = ca.CardEffectDesp;
         view.BackDesp.text = ca.CardBackDesp;
         if (ca.cost == -1)
         {
             view.Cost.text = "X";
-            view.CostBack.text = "1";
+            view.BackCost.text = "1";
         }
         else
         {
             view.Cost.text = ca.cost + "";
-            view.CostBack.text = ca.cost + "";
+            view.BackCost.text = ca.cost + "";
         }
 
         if (ca.CatdImageName == null || ca.CatdImageName == string.Empty)
@@ -179,7 +198,49 @@ public class MiniCard : MonoBehaviour
             view.BackPicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardImage/" + ca.CatdImageName);
         }
 
-        foreach(Transform child in view.GemContainer)
+        //调整card外壳
+        if(ca.CardType == eCardType.GENG)
+        {
+            view.PictureCover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Geng");
+            view.BackPictureCover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Geng");
+            view.Background.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Geng");
+            view.BackBackground.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Geng");
+            view.TypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Geng");
+            view.BackTypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Geng");
+            Color nowColor = Color.white;
+            ColorUtility.TryParseHtmlString(CostColor[2], out nowColor);  //color follow the type
+            view.Cost.color = nowColor;
+            view.BackCost.color = nowColor;
+        }
+        else if (ca.CardType == eCardType.ABILITY)
+        {
+            view.PictureCover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Ability");
+            view.BackPictureCover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Ability");
+            view.Background.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Ability");
+            view.BackBackground.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Ability");
+            view.TypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Ability");
+            view.BackTypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Ability");
+            Color nowColor = Color.white;
+            ColorUtility.TryParseHtmlString(CostColor[1], out nowColor);  //color follow the type
+            view.Cost.color = nowColor;
+            view.BackCost.color = nowColor;
+        }
+        else if (ca.CardType == eCardType.ITEM)
+        {
+            view.PictureCover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Item");
+            view.BackPictureCover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Item");
+            view.Background.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Item");
+            view.BackBackground.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Item");
+            view.TypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Item");
+            view.BackTypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Item");
+            Color nowColor = Color.white;
+            ColorUtility.TryParseHtmlString(CostColor[0], out nowColor);  //color follow the type
+            view.Cost.color = nowColor;
+            view.BackCost.color = nowColor;
+        }
+
+
+            foreach (Transform child in view.GemContainer)
         {
             container.mResLoader.ReleaseGO("Zhibo/CardGem",child.gameObject);
         }
@@ -373,8 +434,23 @@ public class MiniCard : MonoBehaviour
         view.Bg = view.CardFace.Find("Outline").GetComponent<Image>();
         view.Picture = view.CardFace.Find("Picture").GetComponent<Image>();
         view.BackPicture = view.CardBack.Find("Picture").GetComponent<Image>();
+
+        view.PictureCover = view.CardFace.Find("PictureCover").GetComponent<Image>();
+        view.BackPictureCover = view.CardBack.Find("PictureCover").GetComponent<Image>();
+
+        
+
         view.Name = view.CardFace.Find("Name").GetComponent<Text>();
+        view.NamePicture = view.Name.transform.GetChild(0).GetComponent<Image>();
         view.BackName = view.CardBack.Find("Name").GetComponent<Text>();
+        view.BackNamePicture = view.BackName.transform.GetChild(0).GetComponent<Image>();
+
+        view.TypePicture = view.CardFace.Find("CardType").GetComponent<Image>();
+        view.BackTypePicture = view.CardBack.Find("CardType").GetComponent<Image>();
+
+        view.Background = view.CardFace.Find("Background").GetComponent<Image>();
+        view.BackBackground = view.CardBack.Find("Background").GetComponent<Image>();
+
         view.Desp = view.CardFace.Find("Desp").GetComponent<Text>();
         view.Cost = view.CardFace.Find("Cost").GetComponent<Text>();
 
@@ -383,8 +459,10 @@ public class MiniCard : MonoBehaviour
         view.GemContainer = view.CardFace.Find("Gems");
         view.GemBackContainer = view.CardBack.Find("Gems");
 
-        view.CostBack = view.CardBack.Find("Cost").GetComponent<Text>();
+        view.BackCost = view.CardBack.Find("Cost").GetComponent<Text>();
         view.BackDesp = view.CardBack.Find("Desp").GetComponent<Text>();
+
+        
 
         view.TimeLeftComp = view.CardFace.Find("TimeLeft");
         view.TimeLeft = view.TimeLeftComp.Find("Text").GetComponent<Text>();

@@ -462,7 +462,7 @@ public class RoleModule : ModuleBase, IRoleModule
     {
         {
             PlatformInfo info = new PlatformInfo();
-            info.PlatformCards.Add("card9005");
+            //info.PlatformCards.Add("card9005");
             Platforms["begin"] = info;
         }
 

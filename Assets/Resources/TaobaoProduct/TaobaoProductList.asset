@@ -112,3 +112,179 @@ MonoBehaviour:
     ShuxingRelate: caiyi
     ShuxingValue: 5
     LevelRemove: 30
+  - Index: 9
+    Name: "\u6D2A\u8352\u5DE8\u5251"
+    Cost: 100
+    Desp: "\u6D2A\u8352\u65F6\u4EE3\u7684\u65B0\u624B\u5251  \u767D\u778E\u4E86\u8FD9\u540D\u5B57"
+    EffectDesp: "\u653B\u51FB\u529B\u589E\u52A010"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 5
+    ShuxingRelate: gongjili
+    ShuxingValue: 10
+    LevelRemove: 30
+  - Index: 10
+    Name: "\u751F\u9508\u7684\u94C1\u5200"
+    Cost: 10
+    Desp: "\u5200\u5982\u5176\u540D\uFF0C\u80FD\u589E\u52A0\u4F60\u4E22\u4E22\u7684\u653B\u51FB\u529B"
+    EffectDesp: "\u653B\u51FB\u529B\u589E\u52A01"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: gongjili
+    ShuxingValue: 1
+    LevelRemove: 30
+  - Index: 11
+    Name: "\u589E\u5E45\u6CD5\u5178"
+    Cost: 5
+    Desp: "\u5C11\u5E74\u7F3A\u84DD\u5417\uFF0C\u6765\u672C\u5C0F\u9EC4\u4E66\u5427"
+    EffectDesp: "mp\u56DE\u590D50"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: mp
+    ShuxingValue: 50
+    LevelRemove: 30
+  - Index: 12
+    Name: "\u87E0\u6843"
+    Cost: 100
+    Desp: "\u897F\u738B\u6BCD\u7684\u87E0\u6843\uFF0C\u60F3\u5403\u5417"
+    EffectDesp: "hp\u56DE\u590D100%"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: hp
+    ShuxingValue: 1
+    LevelRemove: 30
+  - Index: 13
+    Name: "\u65E0\u8272\u6C34\u6676"
+    Cost: 50
+    Desp: "\u80FD\u589E\u52A0\u6B66\u5668\u653B\u51FB\u529B\u7684\u6C34\u6676"
+    EffectDesp: "\u653B\u51FB\u529B5"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: gongjili
+    ShuxingValue: 5
+    LevelRemove: 30
+  - Index: 14
+    Name: "\u6BD4\u57FA\u5C3C"
+    Cost: 100
+    Desp: "\u6027\u611F\u7684\u6CF3\u8863\uFF0C\u6E38\u6CF3\u5FC5\u987B\u6F02\u4EAE"
+    EffectDesp: "\u88C5\u5907\u540E\u53EF\u4EE5\u4E0B\u6C34"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: 
+    ShuxingValue: 0
+    LevelRemove: 30
+  - Index: 15
+    Name: "\u6CD5\u62C9\u5229"
+    Cost: 1000
+    Desp: "\u70AB\u9177\u7684\u5916\u8868\uFF0C\u5954\u653E\u7684\u5FC3\uFF0C\u62C9\u98CE\u5EA7\u9A7E\uFF0C\u503C\u5F97\u62E5\u6709"
+    EffectDesp: "\u79FB\u901F\u589E\u52A010"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: yisu
+    ShuxingValue: 10
+    LevelRemove: 30
+  - Index: 16
+    Name: "\u5E7B\u5F71\u6597\u7BF7"
+    Cost: 1000
+    Desp: "\u770B\u4E0D\u89C1\u6211 \u770B\u4E0D\u89C1\u6211 \u770B\u4E0D\u89C1\u6211"
+    EffectDesp: "\u88C5\u5907\u540E\u9690\u8EAB"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: 
+    ShuxingValue: 0
+    LevelRemove: 30
+  - Index: 17
+    Name: AJ11
+    Cost: 500
+    Desp: "\u6253\u4E0D\u5230\u6211\uFF0C\u6253\u4E0D\u5230\u6211\uFF0C\u6253\u4E0D\u5230\u6211"
+    EffectDesp: "\u95EA\u907F\u589E\u52A010"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: shanbi
+    ShuxingValue: 10
+    LevelRemove: 30
+  - Index: 18
+    Name: "\u6B65\u6B65\u751F\u83B2"
+    Cost: 1000
+    Desp: "\u4E00\u6B65\u4E00\u6735\u83B2\u82B1\uFF0C\u597D\u770B\u5427"
+    EffectDesp: "\u811A\u5370\u7279\u6548"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: 
+    ShuxingValue: 0
+    LevelRemove: 30
+  - Index: 19
+    Name: "\u9EC4\u725B"
+    Cost: 1
+    Desp: "\u559D\u9EC4\u725B\u63D0\u795E\u53C8\u9192\u8111"
+    EffectDesp: "\u7CBE\u795E\u589E\u52A05"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: jingshen
+    ShuxingValue: 5
+    LevelRemove: 30
+  - Index: 20
+    Name: "\u5927\u54E5\u5927"
+    Cost: 500
+    Desp: "\u522B\u8FC7\u6765\uFF0C\u518D\u8FC7\u6765\u6211\u6447\u4EBA\u4E86\u554A"
+    EffectDesp: "\u53EC\u5524\u961F\u53CB\u8FDB\u573A"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: 
+    ShuxingValue: 0
+    LevelRemove: 30
+  - Index: 21
+    Name: "\u516D\u4E2A\u6838\u5F39"
+    Cost: 1
+    Desp: "\u7F3A\u5565\u8865\u5565\uFF0C\u667A\u5546\u4E0D\u591F\uFF0C\u591A\u559D\u516D\u4E2A\u6838\u5F39"
+    EffectDesp: "\u667A\u529B\u589E\u52A05"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: zhili
+    ShuxingValue: 5
+    LevelRemove: 30
+  - Index: 22
+    Name: "\u5587\u53ED\u88E4"
+    Cost: 10
+    Desp: "\u8FD9\u662F\u4E00\u6761\u6B63\u7ECF\u7684\u88E4\u5B50\uFF0C\u522B\u60F3\u7740\u80FD\u9632\u5FA1\u4EC0\u4E48"
+    EffectDesp: "\u9632\u5FA1\u589E\u52A01"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: fangyu
+    ShuxingValue: 1
+    LevelRemove: 30
+  - Index: 23
+    Name: "\u539F\u8C05\u5E3D"
+    Cost: 10
+    Desp: "\u8FD8\u80FD\u600E\u4E48\u529E\uFF0C\u5F53\u7136\u662F\u9009\u62E9\u539F\u8C05\u4ED6\u554A"
+    EffectDesp: "\u9632\u5FA1\u589E\u52A01"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 1
+    ShuxingRelate: fangyu
+    ShuxingValue: 1
+    LevelRemove: 30
+  - Index: 24
+    Name: "\u96E8\u4F1E"
+    Cost: 0
+    Desp: "\u9664\u4E86\u6321\u96E8\u5565\u90FD\u4E0D\u80FD\u5E72"
+    EffectDesp: "\u6321\u96E8"
+    CardRelate: 
+    LeftInStock: 1
+    LevelUnlock: 0
+    ShuxingRelate: 
+    ShuxingValue: 0
+    LevelRemove: 30
