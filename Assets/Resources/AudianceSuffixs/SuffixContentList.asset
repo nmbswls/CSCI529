@@ -16,12 +16,240 @@ MonoBehaviour:
   - Name: "\u9500\u552E\u5458"
     Description: "\u53E3\u624D\u7EF4\u5EA6\u9700\u6C42\u52A01"
     Effect1: requestKoucai
-    Effect2: none
-    Effect3: none
-    Effect4: none
+    Effect2: 
+    Effect3: 
+    Effect4: 
     Value1: 1
     Value2: 0
     Value3: 0
     Value4: 0
-    Probability: 4
-    IsBoss: NO
+    Probability: 50
+    IsBoss: No
+  - Name: "\u9053\u58EB"
+    Description: "\u53E3\u624D&\u624D\u827A\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestKoucai
+    Effect2: requestCaiyi
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u7B56\u5212"
+    Description: "\u53E3\u624D&\u6280\u672F\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestKoucai
+    Effect2: requestJishu
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u5F8B\u5E08"
+    Description: "\u53E3\u624D\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A02"
+    Effect1: requestKoucai
+    Effect2: 
+    Effect3: 
+    Effect4: 
+    Value1: 2
+    Value2: 0
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u516C\u52A1\u5458"
+    Description: "\u53E3\u624D&\u6297\u538B\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestKoucai
+    Effect2: requestKangya
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u778E\u5B50"
+    Description: "\u624D\u827A\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestCaiyi
+    Effect2: 
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 0
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u53A8\u5E08"
+    Description: "\u624D\u827A&\u6280\u672F\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestCaiyi
+    Effect2: requestJishu
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u58F0\u4F18"
+    Description: "\u624D\u827A&\u6297\u538B\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestCaiyi
+    Effect2: requestKangya
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u661F\u63A2"
+    Description: "\u624D\u827A&\u53E3\u624D\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestCaiyi
+    Effect2: requestKoucai
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u7CBE\u795E\u75C5\u9662\u957F"
+    Description: " \u624D\u827A&\u53E3\u624D&\u6297\u538B\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestCaiyi
+    Effect2: requestKoucai
+    Effect3: requestKangya
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 1
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u7EC5\u58EB"
+    Description: "\u5916\u89C2\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestWaiguan
+    Effect2: 
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 0
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u6574\u5BB9\u533B\u751F"
+    Description: "\u5916\u89C2\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A02"
+    Effect1: requestWaiguan
+    Effect2: 
+    Effect3: 
+    Effect4: 
+    Value1: 2
+    Value2: 0
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u7F51\u7EA2"
+    Description: "\u5916\u89C2&\u624D\u827A\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestWaiguan
+    Effect2: requestCaiyi
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u5C0F\u5B66\u751F"
+    Description: "\u5916\u89C2&\u624D\u827A&\u6280\u672F&\u6297\u538B\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestWaiguan
+    Effect2: requestCaiyi
+    Effect3: requestJishu
+    Effect4: requestKangya
+    Value1: 1
+    Value2: 1
+    Value3: 1
+    Value4: 1
+    Probability: 50
+    IsBoss: No
+  - Name: "\u5BCC\u4E8C\u4EE3"
+    Description: "\u5168\u7EF4\u5EA6\u9700\u6C42\u989D\u5916\u589E\u52A01"
+    Effect1: requestAll
+    Effect2: 
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 0
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u7A0B\u5E8F\u5458"
+    Description: "\u6280\u672F\u7EF4\u5EA6\u9700\u6C42\u589E\u52A01"
+    Effect1: requestJishu
+    Effect2: 
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 0
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u9B54\u6CD5\u5E08"
+    Description: "\u6280\u672F&\u6297\u538B\u7EF4\u5EA6\u9700\u6C42\u589E\u52A01"
+    Effect1: requestJishu
+    Effect2: requestKangya
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u51FA\u79DF\u8F66\u53F8\u673A"
+    Description: "\u6280\u672F&\u53E3\u624D\u7EF4\u5EA6\u9700\u6C42\u589E\u52A01"
+    Effect1: requestJishu
+    Effect2: requestKoucai
+    Effect3: 
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u9ED1\u5BA2"
+    Description: "\u6280\u672F\u7EF4\u5EA6\u9700\u6C42\u589E\u52A02"
+    Effect1: requestJishu
+    Effect2: 
+    Effect3: 
+    Effect4: 
+    Value1: 2
+    Value2: 0
+    Value3: 0
+    Value4: 0
+    Probability: 50
+    IsBoss: No
+  - Name: "\u5FEB\u9012\u5458"
+    Description: "\u6280\u672F&\u53E3\u624D&\u6297\u538B\u7EF4\u5EA6\u9700\u6C42\u589E\u52A01"
+    Effect1: requestJishu
+    Effect2: requestKoucai
+    Effect3: requestKangya
+    Effect4: 
+    Value1: 1
+    Value2: 1
+    Value3: 1
+    Value4: 0
+    Probability: 50
+    IsBoss: No
