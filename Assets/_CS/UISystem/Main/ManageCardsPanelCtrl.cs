@@ -41,7 +41,14 @@ public class CardOutView
     public Image Picture;
     public Text Desp;
     public Text Name;
+    public Image NamePicture;
+
     public Text TurnLeft;
+
+    public Image Cover;
+    public Image TypePicture;
+
+    public Text Cost;
 
     public Image Hint;
     public GameObject DaGou;
@@ -56,8 +63,13 @@ public class CardOutView
         Name = CardFace.Find("Name").GetComponent<Text>();
         Desp = CardFace.Find("Desp").GetComponent<Text>();
 
-        DaGou = root.Find("DaGou").gameObject;
+        NamePicture = Name.transform.GetChild(0).GetComponent<Image>();
+        Cover = CardFace.Find("Cover").GetComponent<Image>();
+        TypePicture = CardFace.Find("CardType").GetComponent<Image>();
 
+        Cost = CardFace.Find("Cost").GetComponent<Text>();
+
+        DaGou = root.Find("DaGou").gameObject;
 
         Hint = transform.Find("Hint").GetComponent<Image>();
     }
@@ -98,6 +110,8 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
     CardOutView preCardView;
 
     List<Sprite> titlePicSprite = new List<Sprite>();
+
+    public static string[] CostColor = { "#eaff2d", "#21acc5", "#2ddfff" };
 
     public override void Init(){
         pCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
@@ -211,6 +225,40 @@ public class ManageCardsPanelCtrl : UIBaseCtrl<ManageCardsModel, ManageCardsView
             CardAsset ca = pCardMgr.GetCardInfo(c.CardId);
             cardOutView.Name.text = ca.CardName;
             cardOutView.Desp.text = ca.CardEffectDesp;
+            cardOutView.Cost.text = ca.cost + "";
+
+            cardOutView.NamePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardName/" + ca.CatdImageName);
+
+            switch (ca.CardType)
+            {
+
+                case eCardType.GENG:
+                    cardOutView.Cover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Geng");
+                    cardOutView.Bg.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Geng");
+                    cardOutView.TypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Geng");
+                    Color nowColor1 = Color.white;
+                    ColorUtility.TryParseHtmlString(CostColor[2], out nowColor1);  //color follow the type
+                    cardOutView.Cost.color = nowColor1;
+                    break;
+                case eCardType.ABILITY:
+                    cardOutView.Cover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Ability");
+                    cardOutView.Bg.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Ability");
+                    cardOutView.TypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Ability");
+                    Color nowColor2 = Color.white;
+                    ColorUtility.TryParseHtmlString(CostColor[1], out nowColor2);  //color follow the type
+                    cardOutView.Cost.color = nowColor2;
+                    break;
+                case eCardType.ITEM:
+                    cardOutView.Cover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Item");
+                    cardOutView.Bg.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Item");
+                    cardOutView.TypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Item");
+                    Color nowColor3 = Color.white;
+                    ColorUtility.TryParseHtmlString(CostColor[0], out nowColor3);  //color follow the type
+                    cardOutView.Cost.color = nowColor3;
+                    break;
+            }
+
+
             cardOutView.DaGou.SetActive(!c.isDisabled);
             if (ca.CatdImageName == null || ca.CatdImageName == string.Empty)
             {

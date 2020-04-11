@@ -25,6 +25,8 @@ public class AdjustSkillCardCtrl : UIBaseCtrl<AdjustSKillCardModel, AdjustSKillC
     ISkillTreeMgr pSKillMgr;
     IResLoader pResLoader;
 
+    public static string[] CostColor = { "#eaff2d", "#21acc5", "#2ddfff" };
+
     public override void Init()
     {
         pCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
@@ -129,6 +131,38 @@ public class AdjustSkillCardCtrl : UIBaseCtrl<AdjustSKillCardModel, AdjustSKillC
             cardOutView.Desp.text = ca.CardEffectDesp;
             cardOutView.DaGou.SetActive(!cardInfo.isDisabled);
             cardOutView.Picture.sprite = ca.Picture;
+
+            //TODO: 质壁分离
+            cardOutView.NamePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardName/" + ca.CatdImageName);
+            cardOutView.Cost.text = ca.cost + "";
+            switch (ca.CardType)
+            {
+
+                case eCardType.GENG:
+                    cardOutView.Cover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Geng");
+                    cardOutView.Bg.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Geng");
+                    cardOutView.TypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Geng");
+                    Color nowColor1 = Color.white;
+                    ColorUtility.TryParseHtmlString(CostColor[2], out nowColor1);  //color follow the type
+                    cardOutView.Cost.color = nowColor1;
+                    break;
+                case eCardType.ABILITY:
+                    cardOutView.Cover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Ability");
+                    cardOutView.Bg.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Ability");
+                    cardOutView.TypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Ability");
+                    Color nowColor2 = Color.white;
+                    ColorUtility.TryParseHtmlString(CostColor[1], out nowColor1);  //color follow the type
+                    cardOutView.Cost.color = nowColor2;
+                    break;
+                case eCardType.ITEM:
+                    cardOutView.Cover.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardCover/Item");
+                    cardOutView.Bg.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardBackground/Item");
+                    cardOutView.TypePicture.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("CardType/Item");
+                    Color nowColor3 = Color.white;
+                    ColorUtility.TryParseHtmlString(CostColor[0], out nowColor3);  //color follow the type
+                    cardOutView.Cost.color = nowColor3;
+                    break;
+            }
         }
 
         UpdateUsedNumver();

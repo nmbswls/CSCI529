@@ -93,7 +93,7 @@ public class MiniCard : MonoBehaviour
     MiniCardView view = new MiniCardView();
     CardContainerLayout container;
 
-    public string[] CostColor = { "#eaff2d", "#21acc5", "#2ddfff" };
+    public static string[] CostColor = { "#eaff2d", "#21acc5", "#2ddfff" };
 
     public float nowDegree;
     public float targetDegree;
