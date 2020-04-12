@@ -256,7 +256,7 @@ public class MiniCard : MonoBehaviour
                 vv.BindView(go.transform);
                 view.CardGemList.Add(vv);
                 //vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems/" + i);
-                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems_icon/" + i);    //icon skin
+                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems_icon/" + "w_" + i);    //icon skin
                 vv.Num.text = cardInfo.OverrideGems[i] + "";
             }
         }
@@ -280,7 +280,7 @@ public class MiniCard : MonoBehaviour
                 vv.BindView(go.transform);
                 view.CardGemBackList.Add(vv);
                 //vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems/" + i);
-                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems_icon/" + i);    //icon skin
+                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems_icon/" + "w_" + i);    //icon skin
                 vv.Num.text = cardInfo.OverrideGems[i] + "";
                 types++;
 
@@ -311,7 +311,7 @@ public class MiniCard : MonoBehaviour
                 CardGemSingleIconView vv = new CardGemSingleIconView();
                 vv.BindView(go.transform);
                 view.CardGemSingleIconList.Add(vv);
-                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems_icon/" + i);    //icon skin
+                vv.Icon.sprite = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<Sprite>("Zhibo/Gems_icon/" + "w_" + i);    //icon skin
                 types++;
 
             }

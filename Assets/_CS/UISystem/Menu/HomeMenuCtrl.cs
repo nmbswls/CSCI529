@@ -8,6 +8,10 @@ public class HomeMenuModel:BaseModel{
 
 public class HomeMenuView:BaseView{
 	public Button NewGame;
+    public Button LoadGame;
+    public Button Setting;
+    public Button Quit;
+
 }
 
 public class HomeMenuCtrl : UIBaseCtrl<HomeMenuModel,HomeMenuView>
@@ -23,14 +27,37 @@ public class HomeMenuCtrl : UIBaseCtrl<HomeMenuModel,HomeMenuView>
 
 	// Use this for initialization
 	public override void BindView(){
-		view.NewGame = root.GetChild (0).GetComponent<Button> ();
-	}
+		view.NewGame = root.GetChild(0).GetComponent<Button> ();
+        view.LoadGame = root.GetChild(1).GetComponent<Button>();
+        view.Setting = root.GetChild(2).GetComponent<Button>();
+        view.Quit = root.GetChild(3).GetComponent<Button>();
+    }
 
 	public override void RegisterEvent(){
 		view.NewGame.onClick.AddListener (delegate() {
 			mUIMgr.CloseCertainPanel(this);
-			mUIMgr.ShowPanel("StartNewGame");
-		});
-	}
+			//mUIMgr.ShowPanel("StartNewGame");
+            //跳过选人直接开始
+            AdjustInitCtrl ctrl = mUIMgr.ShowPanel("AdjustPanel") as AdjustInitCtrl;
+            ctrl.SetRoleId(0);
+        });
+
+        view.LoadGame.onClick.AddListener(delegate () {
+            mUIMgr.CloseCertainPanel(this);
+            //mUIMgr.ShowPanel("StartNewGame");
+            //跳过选人直接开始
+            AdjustInitCtrl ctrl = mUIMgr.ShowPanel("AdjustPanel") as AdjustInitCtrl;
+            ctrl.SetRoleId(0);
+        });
+
+        view.Setting.onClick.AddListener(delegate () {
+            //setting
+
+        });
+
+        view.Quit.onClick.AddListener(delegate () {
+            Application.Quit();
+        });
+    }
 }
 

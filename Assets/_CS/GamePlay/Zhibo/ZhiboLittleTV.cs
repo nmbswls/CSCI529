@@ -434,20 +434,22 @@ public class ZhiboLittleTV : MonoBehaviour
             {
                 view.GemList[idx].root.SetActive(true);
                 view.GemList[idx].bg.color = new Color(1,1,1,0.3f);
-                view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + i + "_bg");
-                if(j < 6) view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems_icon/" + i + "_bg");
+                view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + "w_" + i);
+                //if(j < 6) view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems_icon/" + i + "_bg");
+                if (j < 6) view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems_icon/" + "w_" + i);
                 if (j < TargetAudience.NowReq[i])
                 {
                     //有血量的部分
                     view.GemList[idx].icon.enabled = true;
                     view.GemList[idx].icon.color = Color.white;
-                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + i);
+                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + "w_" + i);
+                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + "w_" + i);
                 }
                 else
                 {
                     view.GemList[idx].icon.enabled = false;
                     view.GemList[idx].icon.color = Color.white;
-                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + i);
+                    view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/" + "w_" + i);
                 }
                 idx++;
             }

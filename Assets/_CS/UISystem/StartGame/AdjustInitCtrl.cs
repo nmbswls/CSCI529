@@ -44,6 +44,9 @@ public class AdjustInitView : BaseView{
 
 
 	public Button NextStage;
+
+    public Toggle ToggleMan;
+    public Toggle ToggleWoman;
 }
 
 public class SpecilistView{
@@ -147,8 +150,10 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 		view.DetailName = root.Find ("SpeDetail").GetChild (0).GetComponent<Text>();
 		view.DetailDesp = root.Find ("SpeDetail").GetChild (1).GetComponent<Text>();
 
+        view.ToggleMan = root.Find("基本信息").Find("Toggle_Man").GetComponent<Toggle>();
+        view.ToggleWoman = root.Find("基本信息").Find("Toggle_Woman").GetComponent<Toggle>();
 
-		Transform pRoot = root.Find ("属性调整").GetChild(1);
+        Transform pRoot = root.Find ("属性调整").GetChild(1);
 
 		foreach (Transform child in pRoot) {
 			BasePropertyLineView vv = new BasePropertyLineView ();
@@ -249,9 +254,6 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 				}
 			}
 		}
-
-
-
 
 	}
 
