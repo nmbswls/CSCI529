@@ -173,6 +173,8 @@ public class ZhiboGameMode : GameModeBase
     public ZhiboAudienceMgr mAudienceMgr;
     public ZhiboDanmuMgr mZhiboDanmuMgr;
 
+    public ZhiboAudienceHpTempMgr mHpTempateMgr;
+
     public float spdRate = 1.0f;
     public bool isFirstTurn = true;
 
@@ -1001,13 +1003,16 @@ public class ZhiboGameMode : GameModeBase
             p.showMoney((int)getMoney);
             p.showReachGoalMoney(reachGoalMoney);
 
+            if (reachGoalMoney > 0) p.SetTitle("完美收官");
+            else p.SetTitle("意料之中");
+
             //根据打过的卡牌 增加主属性 和 经验值
 
-            //pRoleMgr.AddMeili((float)getMoney * 0.1f);
-            //pRoleMgr.AddFanying((float)getMoney * 0.1f);
-            //pRoleMgr.AddKangya((float)getMoney * 0.1f);
-            //pRoleMgr.AddJiyi((float)getMoney * 0.1f);
-            //pRoleMgr.AddKoucai((float)getMoney * 0.1f);
+                //pRoleMgr.AddMeili((float)getMoney * 0.1f);
+                //pRoleMgr.AddFanying((float)getMoney * 0.1f);
+                //pRoleMgr.AddKangya((float)getMoney * 0.1f);
+                //pRoleMgr.AddJiyi((float)getMoney * 0.1f);
+                //pRoleMgr.AddKoucai((float)getMoney * 0.1f);
 
             int[] bonus = new int[5];
             for (int i = 0; i < state.UsedCardsToGetBonus.Count; i++)

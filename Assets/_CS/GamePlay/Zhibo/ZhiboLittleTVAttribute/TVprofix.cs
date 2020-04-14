@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "new TVProfix", menuName = "Ctm/TVProfix")]
+[CreateAssetMenu(fileName = "new TVPrefix", menuName = "Ctm/TVPrefix")]
 public class TVProfixLoader
 {
     public string Name;
@@ -39,7 +39,7 @@ public enum TVProfixLike
     waiguan
 }
 
-public class TVProfix
+public class TVPrefix
 {
     public List<TVProfixEffect> effects = new List<TVProfixEffect>();
     public List<int> values = new List<int>();
@@ -54,14 +54,14 @@ public class TVProfix
 
 public class TVProfixList
 {
-    public List<TVProfix> profixs = new List<TVProfix>();
+    public List<TVPrefix> profixs = new List<TVPrefix>();
 
     public void loadProfix()
     {
         ProfixContentList ProfixContent = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<ProfixContentList>("AudianceProfixs/ProfixContentList", false);
         foreach (TVProfixLoader c in ProfixContent.Entities)
         {
-            TVProfix tvsf = new TVProfix();
+            TVPrefix tvsf = new TVPrefix();
             tvsf.name = c.Name;
             tvsf.description = c.Description;
             tvsf.probability = c.Probability;

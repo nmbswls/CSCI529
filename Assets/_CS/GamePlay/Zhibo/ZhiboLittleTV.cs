@@ -73,8 +73,7 @@ public class ZhiboLittleTV : MonoBehaviour
         loadTimeLeftBlockImage();
 
         //randomly choose bg
-        int bgType = Random.Range(1, 3);
-        view.Content.sprite = pResLoader.LoadResource<Sprite>("Zhibo/AudienceBG/normal"+ bgType+"_bg");
+//        changeToNormalBg();
 
 
         gameObject.SetActive(false);
@@ -92,7 +91,7 @@ public class ZhiboLittleTV : MonoBehaviour
     {
 
         int count = view.TimeLeftBlocks.Count;
-
+        if (TargetAudience == null) return;
         if(TargetAudience.OriginTimeLast < 0) //heizi
         {
             for (int i = 0; i < count; i++)
@@ -278,7 +277,7 @@ public class ZhiboLittleTV : MonoBehaviour
                 view.tvName.text = TargetAudience.showProfixName() + TargetAudience.showSuffixName();
             } else
             {
-                view.tvName.text = "New Audience";
+                view.tvName.text = "一位吃瓜观众";
             }
             
             //view.AvaContent.sprite = audienceImage[0];
@@ -292,6 +291,7 @@ public class ZhiboLittleTV : MonoBehaviour
     public void Show(float delay)
     {
         int a = 0;
+        changeToNormalBg();
         DOTween.To
         (
             () => a,
@@ -419,11 +419,11 @@ public class ZhiboLittleTV : MonoBehaviour
 
             view.GemList[idx].root.SetActive(true);
             view.GemList[idx].bg.color = Color.white;
-            view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/6");
+            view.GemList[idx].bg.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/w_6");
 
             view.GemList[idx].icon.enabled = true;
             view.GemList[idx].icon.color = Color.white;
-            view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/6");
+            view.GemList[idx].icon.sprite = pResLoader.LoadResource<Sprite>("Zhibo/Gems/w_6");
 
             idx++;
         }
@@ -543,5 +543,12 @@ public class ZhiboLittleTV : MonoBehaviour
         timeleftImage.Add(pResLoader.LoadResource<Sprite>("Zhibo/AudienceTimeLeftBg/djs_" + 2));
         timeleftImage.Add(pResLoader.LoadResource<Sprite>("Zhibo/AudienceTimeLeftBg/djs_" + 3));
         timeleftImage.Add(pResLoader.LoadResource<Sprite>("Zhibo/AudienceTimeLeftBg/djs_" + 4));
+    }
+
+    public void changeToNormalBg()
+    {
+        //randomly choose bg
+        int bgType = Random.Range(1, 4);
+        view.Content.sprite = pResLoader.LoadResource<Sprite>("Zhibo/AudienceBG/normal" + bgType + "_bg");
     }
 }

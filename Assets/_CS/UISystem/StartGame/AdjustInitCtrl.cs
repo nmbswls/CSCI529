@@ -47,6 +47,8 @@ public class AdjustInitView : BaseView{
 
     public Toggle ToggleMan;
     public Toggle ToggleWoman;
+
+    public Text WarningMsg;
 }
 
 public class SpecilistView{
@@ -81,6 +83,8 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 {
 
     IRoleModule pRoleMgr;
+
+    public static int RELOCATE_LIMIT = 6;
 
     public void SetRoleId(int idx)
     {
@@ -170,6 +174,8 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
             vv.Name.text = tezhi.Name;
             view.avalableList.Add(vv);
         }
+
+        view.WarningMsg = root.Find("属性调整").Find("提示").GetComponent<Text>();
     }
 
 	public override void PostInit(){
@@ -230,6 +236,14 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 						if(model.LeftPoint<=0){
 							return;
 						}
+                        if(model.extra[idx] >= RELOCATE_LIMIT)
+                        {
+                            view.WarningMsg.gameObject.SetActive(true);
+                            return;
+                        } else
+                        {
+                            view.WarningMsg.gameObject.SetActive(false);
+                        }
 						model.LeftPoint--;
 						model.extra[idx]++;
 						view.PointLeft.text = model.LeftPoint+"";
@@ -246,7 +260,10 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 						if(model.extra[idx]<=0){
 							return;
 						}
-						model.LeftPoint++;
+                        {
+                            view.WarningMsg.gameObject.SetActive(false);
+                        }
+                        model.LeftPoint++;
 						model.extra[idx]--;
 						view.PointLeft.text = model.LeftPoint+"";
 						view.baseLines[idx].ExtraValue.text = model.extra[idx] + "";

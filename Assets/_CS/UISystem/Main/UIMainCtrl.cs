@@ -136,12 +136,29 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         pSkillMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
 
         GetApps();
+        
     }
 
     public void GetApps()
     {
         //get from role 
         model.UnlockedApps = rm.GetApps();
+    }
+
+    public void GetUnlockedParts()
+    {
+        if (rm.GetCurrentTurn() > 1)
+        {
+            view.InspectBtn.gameObject.SetActive(true);
+        }
+        if (rm.GetCurrentTurn()>7)
+        {
+            view.ScheduleBtn.gameObject.SetActive(true);
+        }
+        if (rm.GetCurrentTurn() == 9)
+        {
+            view.FightDanmuBtn.gameObject.SetActive(true);
+        }
     }
 
     public void AddMsg(TurnMsg msg)
@@ -321,7 +338,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         UpdateWords();
 
         updateInitalData();
-
+        GetUnlockedParts();
     }
 
     //50点资源 = 每回合属性+1
@@ -507,6 +524,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
             data.SkillList.Add("1");
             data.SkillList.Add("2");
             data.SkillList.Add("3");
+            view.FightDanmuBtn.gameObject.SetActive(false);
             cm.ChangeScene("FightDanmu", data);
         });
 

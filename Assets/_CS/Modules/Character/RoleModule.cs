@@ -240,10 +240,10 @@ public class RoleModule : ModuleBase, IRoleModule
     {
         unlockedApps.Add(new AppInfo("邮箱", "email"));
         unlockedApps.Add(new AppInfo("微博", "weibo", 2));
-        unlockedApps.Add(new AppInfo("购物", "taobao", 3));
-        unlockedApps.Add(new AppInfo("地图", "maps",4));
+        unlockedApps.Add(new AppInfo("购物", "taobao", 4));
+        unlockedApps.Add(new AppInfo("地图", "maps",30));
         
-        
+        //unlock skilltree and fight troller
 
 
 

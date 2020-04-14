@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class ZhiboJiesunView : BaseView
 {
     public Button OKBtn;
+
+    public Text Title;
     public Text text;
     public Text fensi;
     public Text money;
@@ -27,6 +29,7 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
     }
     public override void BindView()
     {
+        view.Title = root.Find("Title").GetComponent<Text>();
         view.OKBtn = root.Find("OK").GetComponent<Button>();
         view.text = root.Find("Text").GetComponent<Text>();
         view.fensi = root.Find("Fensi").GetComponent<Text>();
@@ -48,6 +51,11 @@ public class ZhiboJiesuanUI : UIBaseCtrl<BaseModel, ZhiboJiesunView>
             data.isNextTurn = true;
             GameMain.GetInstance().GetModule<CoreManager>().ChangeScene("Main", data);
         });
+    }
+
+    public void SetTitle(string titleString)
+    {
+        view.Title.text = titleString;
     }
 
     public void SetContent(string bonusString)

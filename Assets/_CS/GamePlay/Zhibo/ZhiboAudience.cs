@@ -137,9 +137,12 @@ public class ZhiboAudience
 
     //prefix & Suffix
 
-    public TVProfix tvProfix;
+    public TVPrefix tvPrefix;
     public TVSuffix tvSuffix;
-    
+
+    public int probabilityOfPrefix = 0;
+    public int probabilityOfSuffix = 0;
+
 
     public float GetBaseBonus()
     {
@@ -241,10 +244,10 @@ public class ZhiboAudience
         //profixlike
         int audienceLike = -1;
         int audienceDislike = -1;
-        if (this.tvProfix!=null)
+        if (this.tvPrefix!=null)
         {
-            audienceLike = (int)this.tvProfix.like;
-            audienceDislike = (int)this.tvProfix.dislike;
+            audienceLike = (int)this.tvPrefix.like;
+            audienceDislike = (int)this.tvPrefix.dislike;
             if (audienceLike == 0) audienceLike = -1;
             if (audienceDislike == 0) audienceDislike = -1;
         }
@@ -378,11 +381,11 @@ public class ZhiboAudience
 
     public string showProfixName()
     {
-        if(tvProfix==null)
+        if(tvPrefix==null)
         {
-            return "";
+            return "某位";
         }
-        return tvProfix.name;
+        return tvPrefix.name;
     }
 
     public string showSuffixName()

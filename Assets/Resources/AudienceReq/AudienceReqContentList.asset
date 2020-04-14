@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 294806c8aeb25da4c82fa8945a2349bf, type: 3}
+  m_Name: AudienceReqContentList
+  m_EditorClassIdentifier: 
+  Requests:
+  - Index: 0
+    AudienceName: Audience
+    Gem: 1;1;1;1;1;1
+    Level: 1
+    LastTurn: 3
+    OriginTimeLast: 40
+    ProbabilityOfPrefix: 40
+    ProbabilityOfSuffix: 40
+    ApplyRandom: No
+    OuterTurnStart: 0
+    OuterTurnEnd: 30
+    ProbabilityOfBonus: 50
+    ApplyRandomBonus: Yes
+    BonusEffectId: 1
+    BonusValue: 1
+  HpTemplates:
+  - Index: 0
+    Gem1: 0
+    Gem2: 0
+    Gem3: 30
+    Gem4: 40
+    Gem5: 30
+    Gem6: 0
+    EffectOuterTurnlUnlock: 0
+    EffectOuterTurnlRemove: 30
+    EffectInnerTurnlUnlock: 1
+    EffectInnerTurnlRemove: 12

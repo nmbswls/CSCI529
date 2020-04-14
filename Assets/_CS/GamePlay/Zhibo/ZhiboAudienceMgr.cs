@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Newtonsoft.Json;
+using System;
+
+using Random = UnityEngine.Random;
+using System.Linq;
 
 public class AudienceToken
 {
@@ -34,6 +38,33 @@ public class TokenDetailView
     {
         this.root = root;
         this.Content = root.Find("Content").GetComponent<Text>();
+    }
+}
+
+public class AudienceReqDistributionInfo
+{
+    public int Turn;
+    public List<float[]> Distributions = new List<float[]>();
+    public AudienceReqDistributionInfo(int Turn)
+    {
+        this.Turn = Turn;
+    }
+
+    public AudienceReqDistributionInfo(int _turn, AudienceReqDistributionInfo another) : this(_turn)
+    {
+        another.Distributions.ForEach(i => this.Distributions.Add(i));
+    }
+    public void append(AudienceReqDistributionInfo AddIn)
+    {
+        Distributions.AddRange(AddIn.Distributions);
+    }
+
+    public void remove(AudienceReqDistributionInfo RemoveOut)
+    {
+        foreach(float[] ft in RemoveOut.Distributions)
+        {
+            Distributions.Remove(ft);
+        }
     }
 }
 
@@ -88,6 +119,8 @@ public class ZhiboAudienceMgr
     public IResLoader mResLoader;
     public List<ZhiboAudience> audienceSuq = new List<ZhiboAudience>();
 
+    public List<ZhiboAudience> loadedAudienceSuq = new List<ZhiboAudience>();
+
     IRoleModule mRoleMgr;
 
     private int[] EachTurnMaxEnemyNum;
@@ -118,11 +151,14 @@ public class ZhiboAudienceMgr
             Debug.Log("前缀加载成功 Count = " + ProfixList.profixs.Count);
         }
 
+        //加载audience素材
+        //loadAudienceReq();
+
         GenAudienceMode();
         GenAudienceSequence();
         //LoadSkillDespDict();
 
-        
+        Debug.Log("呼叫ZhiboAudienceMgr");
         InitUI();
     }
 
@@ -668,10 +704,14 @@ public class ZhiboAudienceMgr
         EachTurnMaxEnemyNum[4] = 4;
         EachTurnMaxEnemyNum[5] = 4;
         EachTurnMaxEnemyNum[6] = 5;
+        EachTurnMaxEnemyNum[7] = 5;
+        EachTurnMaxEnemyNum[8] = 5;
+        EachTurnMaxEnemyNum[9] = 5;
+        EachTurnMaxEnemyNum[10] = 5;
 
         int originLevel = 1;
         {
-            for(int i = 0; i < 50; i++)
+            for(int i = 0; i < 100; i++)
             {
                 ZhiboAudience audience = new ZhiboAudience();
                 audience.Level = originLevel + i / 3;
@@ -705,13 +745,13 @@ public class ZhiboAudienceMgr
                         audience.tvSuffix = appliedSuf;
                     }
 
-                    TVProfix appliedPro = applyProfixEffect();
+                    TVPrefix appliedPro = applyProfixEffect();
                     if(appliedPro!=null)
                     {
                         AudienceProfixEffect audienceProfixEffect = loadProfixEffect(appliedPro, baseReq);
                         tmpProHp = audienceProfixEffect.hp;
                         tmpWaitTime = audienceProfixEffect.waitTime;
-                        audience.tvProfix = appliedPro;
+                        audience.tvPrefix = appliedPro;
                     }
                    
                     for (int j = 0; j < 6; j++)
@@ -729,6 +769,7 @@ public class ZhiboAudienceMgr
                         }
                         //audience.NowReq[j] = hp[j] + tmpProHp[j] + tmpSufHp[j];
                     }
+
                     if (Random.value < 0.5f)
                     {
                         ZhiboAudienceSkill bonus = new ZhiboAudienceSkill(eZhiboAudienceSkillType.Bonus);
@@ -979,7 +1020,7 @@ public class ZhiboAudienceMgr
         if (proAndSuf)
         {
             TVSuffix appliedSuf = applySuffixEffect();
-            TVProfix appliedPro = applyProfixEffect();
+            TVPrefix appliedPro = applyProfixEffect();
             sufTmpHp = loadSuffixEffect(appliedSuf);
 
             if(appliedPro!=null)
@@ -987,7 +1028,7 @@ public class ZhiboAudienceMgr
                 AudienceProfixEffect audienceProfixEffect = loadProfixEffect(appliedPro, oriHp);
                 proTmpHp = audienceProfixEffect.hp;
                 tmpWaitTime = audienceProfixEffect.waitTime;
-                audience.tvProfix = appliedPro;
+                audience.tvPrefix = appliedPro;
             }
             
             audience.tvSuffix = appliedSuf;   
@@ -1025,14 +1066,19 @@ public class ZhiboAudienceMgr
 
         float stfRate = audience.ReqRate();
 
-        int r = Random.Range(0, 100);
-        if (r >  (1 - stfRate) * 100)
+
         //if(stfRate < 0.6f)
-        {
             //LittleTvList[audience.BindViewIdx].ConvertToHeizi();
             //audience.ConvertToHeizi();
             //return;
+       
+        if(stfRate <= 0.3f)
+        {
+            LittleTvList[audience.BindViewIdx].ConvertToHeizi();
+            audience.ConvertToHeizi();
+            return;
         }
+
 
         audience.state = eAudienceState.None;
         LittleTvList[audience.BindViewIdx].Disappear();
@@ -1042,7 +1088,9 @@ public class ZhiboAudienceMgr
             addExtraHp(1);
         } else if (stfRate <= 0.3f) {
             //convertoHeizi
-            audience.ConvertToHeizi();
+            //LittleTvList[audience.BindViewIdx].ConvertToHeizi();
+            //audience.ConvertToHeizi();
+            //return;
         }
         else
         {
@@ -1253,17 +1301,15 @@ public class ZhiboAudienceMgr
         return idx;
     }
 
-    class AudienceReqDistributionInfo
-    {
-        public int Turn;
-        public List<float[]> Distributions = new List<float[]>();
-        public AudienceReqDistributionInfo(int Turn)
-        {
-            this.Turn = Turn;
-        }
-    }
+    
     List<AudienceReqDistributionInfo> reqDistributions = new List<AudienceReqDistributionInfo>();
+
+    AudienceReqDistributionInfo loadedReqDistributions = new AudienceReqDistributionInfo(0);
+
+     
     //List<float[]> rates = new List<float[]>();
+
+
 
     public void GenAudienceMode()
     {
@@ -1529,9 +1575,9 @@ public class ZhiboAudienceMgr
         return ProfixList.profixs.Count > 0;
     }
 
-    public TVProfix applyProfixEffect(int idx = 0, bool rand = true)
+    public TVPrefix applyProfixEffect(int idx = 0, bool rand = true)
     {
-        TVProfix appliedPro;
+        TVPrefix appliedPro;
         if (ProfixList == null || ProfixList.profixs.Count == 0)
         {
             return null;
@@ -1547,7 +1593,7 @@ public class ZhiboAudienceMgr
         }
         return appliedPro;
     }
-    public AudienceProfixEffect loadProfixEffect(TVProfix appliedPro, int[] curReq)
+    public AudienceProfixEffect loadProfixEffect(TVPrefix appliedPro, int[] curReq)
     {
         
         AudienceProfixEffect audienceProfixEffect = new AudienceProfixEffect();
@@ -1563,13 +1609,13 @@ public class ZhiboAudienceMgr
         return audienceProfixEffect;
     }
 
-    public TVProfix randomProfixEffect()
+    public TVPrefix randomProfixEffect()
     {
         int idx = Random.Range(0, ProfixList.profixs.Count);
         return setProfixEffect(idx);
     }
 
-    public TVProfix setProfixEffect(int idx)
+    public TVPrefix setProfixEffect(int idx)
     {
         int prop = ProfixList.profixs[idx].probability;
         int randValue = Random.Range(0, 100);
@@ -1580,7 +1626,7 @@ public class ZhiboAudienceMgr
         return null;   
     }
 
-    public TVProfix setFixedProfixEffect(int idx)
+    public TVPrefix setFixedProfixEffect(int idx)
     {
         return ProfixList.profixs[idx];
     }
@@ -1629,6 +1675,139 @@ public class ZhiboAudienceMgr
         return audienceProfixEffect;
     }
 
-    
+    public void loadAudienceReq()
+    {
+        AudienceReqContentList audienceReqExcel = GameMain.GetInstance().GetModule<ResLoader>().LoadResource<AudienceReqContentList>("AudienceReq/AudienceReqContentList", false);
+        //load AudienceReq
+        { 
+            List<AudienceReqLoader> loader = audienceReqExcel.Requests;
+            foreach(AudienceReqLoader au in loader)
+            {
+                ZhiboAudience za = new ZhiboAudience();
+                za.Level = au.Level;
+                //TODO fill the audiences
+                za.TimeLeft = za.OriginTimeLast = au.OriginTimeLast;
+                za.LastTurn = au.LastTurn;
+                za.probabilityOfPrefix = au.ProbabilityOfPrefix;
+                za.probabilityOfSuffix = au.ProbabilityOfSuffix;
 
+                za.Type = eAudienceType.Good;
+
+                //load Gem
+
+                int[] tmpGem = new int[6];
+
+                //是否使用随机模板
+                if (au.ApplyRandom == "Yes")
+                {
+                    //TODO: follow the template
+                }
+                else
+                {
+                    //follow the gem
+                    string[] gems = au.Gem.Split(';');
+                    for (int i = 0; i < 6; i++)
+                    {
+                        tmpGem[i] = int.Parse(gems[i]);
+                    }
+                    za.NowReq = tmpGem;
+                    
+                }
+                int[] tmpSufHp = { 0, 0, 0, 0, 0, 0 };
+                int[] tmpProHp = { 0, 0, 0, 0, 0, 0 };
+                int tmpWaitTime = 0;
+
+                //profix
+                if (Random.value * 100 <= au.ProbabilityOfPrefix)
+                {
+                    TVPrefix appliedPro = applyProfixEffect();
+                    if (appliedPro != null)
+                    {
+                        AudienceProfixEffect audienceProfixEffect = loadProfixEffect(appliedPro, tmpGem);
+                        tmpProHp = audienceProfixEffect.hp;
+                        tmpWaitTime = audienceProfixEffect.waitTime;
+                        za.tvPrefix = appliedPro;
+                    }
+                }
+
+                //suffix
+                if (Random.value * 100 <= au.ProbabilityOfSuffix)
+                {
+                    TVSuffix appliedSuf = applySuffixEffect();
+                    if (appliedSuf != null)
+                    {
+                        tmpSufHp = loadSuffixEffect(appliedSuf);
+                        za.tvSuffix = appliedSuf;
+                    }
+                }
+
+                for (int j = 0; j < 6; j++)
+                {
+                    int tmpMaxReq = tmpGem[j] + tmpProHp[j] + tmpSufHp[j];
+                    if (za.MaxReq[j] == 0 && tmpMaxReq <= 0)
+                    {
+                        za.MaxReq[j] = 0;
+                    }
+                    else if (za.MaxReq[j] == -tmpMaxReq)
+                    {
+                        //如果之前颜色的需求不为0禁止将同一色完全归0;
+                        //先保存这种考虑，要是真的有，弄一下
+                    }
+                    else
+                    {
+                        za.MaxReq[j] = tmpMaxReq;
+                    }
+                }
+
+                if (Random.value * 100 <= au.ProbabilityOfBonus)
+                {
+                    ZhiboAudienceSkill bonus = new ZhiboAudienceSkill(eZhiboAudienceSkillType.Bonus);
+                    int bonusValue = 0;
+                    bool isRandomBonus = au.ApplyRandomBonus == "Yes";
+                    if(isRandomBonus)
+                    { 
+                        int randIdx = Random.Range(0, (int)eAudienceBonusType.Max);
+                        bonus.effectId = randIdx;
+                        bonusValue = za.Level;
+                    } 
+                    else
+                    {
+                        bonus.effectId = au.BonusEffectId;
+                        bonusValue = au.BonusValue;
+                    }
+                    switch ((eAudienceBonusType)bonus.effectId)
+                    {
+                        case eAudienceBonusType.AddHp:
+                            if(isRandomBonus) bonus.effectString = 1 + bonusValue/5 + "";
+                            else bonus.effectString = 1 + bonusValue + "";
+                            break;
+                        case eAudienceBonusType.Aoe:
+                            if (isRandomBonus) bonus.effectString = 1 + bonusValue/5 + ",0,0,0,0,0";
+                            else bonus.effectString = 1 + bonusValue + ",0,0,0,0,0";
+                            break;
+                        case eAudienceBonusType.Damage:
+                            if (isRandomBonus) bonus.effectString = 1 + bonusValue/3 + "";
+                            else bonus.effectString = 1 + bonusValue + "";
+                            break;
+                        case eAudienceBonusType.Discard:
+                            if (isRandomBonus) bonus.effectString = "1";
+                            else bonus.effectString = bonusValue + "";
+                            break;
+                        case eAudienceBonusType.Dual:
+                            if (isRandomBonus) bonus.effectString = "1";
+                            else bonus.effectString = bonusValue + "";
+                            break;
+                        case eAudienceBonusType.Score:
+                            if (isRandomBonus) bonus.effectString = Random.Range(20, 30) + "";
+                            else bonus.effectString = bonusValue + "";
+                            break;
+                        default:
+                            break;
+                    }
+                    za.Skills.Add(bonus);
+                }
+                loadedAudienceSuq.Add(za);
+            }
+        }
+    }
 }
