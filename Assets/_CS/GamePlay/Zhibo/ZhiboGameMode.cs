@@ -993,7 +993,7 @@ public class ZhiboGameMode : GameModeBase
         {
             //int fensi = pRoleMgr.GetFensiReward(state.ExtraLiuliang,1);
             int fensi = state.Score > 30 ? (int) (state.Score * 0.65) : 20;
-            double getMoney = state.Score>state.MaxScore? (state.Score - state.MaxScore/2) * 0.6 : 10;
+            double getMoney = state.Score>state.MaxScore? fensi * 0.03 + (state.Score - state.MaxScore/2) * 0.6 : 10;
             //TODO： 到达goal 给额外奖励 (finished)
             int reachGoalMoney = state.Score > GOAL ? 100 : 0;
 

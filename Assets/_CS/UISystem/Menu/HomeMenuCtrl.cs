@@ -11,7 +11,6 @@ public class HomeMenuView:BaseView{
     public Button LoadGame;
     public Button Setting;
     public Button Quit;
-
 }
 
 public class HomeMenuCtrl : UIBaseCtrl<HomeMenuModel,HomeMenuView>
@@ -27,10 +26,10 @@ public class HomeMenuCtrl : UIBaseCtrl<HomeMenuModel,HomeMenuView>
 
 	// Use this for initialization
 	public override void BindView(){
-		view.NewGame = root.GetChild(0).GetComponent<Button> ();
-        view.LoadGame = root.GetChild(1).GetComponent<Button>();
-        view.Setting = root.GetChild(2).GetComponent<Button>();
-        view.Quit = root.GetChild(3).GetComponent<Button>();
+		view.NewGame = root.Find("Setup").GetComponent<Button> ();
+        view.LoadGame = root.Find("Login").GetComponent<Button>();
+        view.Setting = root.Find("Set").GetComponent<Button>();
+        view.Quit = root.Find("Quit").GetComponent<Button>();
     }
 
 	public override void RegisterEvent(){
@@ -52,10 +51,10 @@ public class HomeMenuCtrl : UIBaseCtrl<HomeMenuModel,HomeMenuView>
 
         view.Setting.onClick.AddListener(delegate () {
             //setting
-
         });
 
         view.Quit.onClick.AddListener(delegate () {
+            Debug.Log("Quit Game");
             Application.Quit();
         });
     }
