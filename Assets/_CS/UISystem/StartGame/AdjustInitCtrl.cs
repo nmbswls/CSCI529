@@ -316,14 +316,15 @@ public class AdjustInitCtrl : UIBaseCtrl<AdjustInitModel,AdjustInitView>
 						if(model.LeftPoint<=0){
 							return;
 						}
-                        //if(model.extra[idx] >= RELOCATE_LIMIT)
-                        //{
-                        //    view.WarningMsg.gameObject.SetActive(true);
-                        //    return;
-                        //} else
-                        //{
-                        //    view.WarningMsg.gameObject.SetActive(false);
-                        //}
+                        if (model.extra[idx] >= RELOCATE_LIMIT)
+                        {
+                            view.WarningMsg.gameObject.SetActive(true);
+                            return;
+                        }
+                        else
+                        {
+                            view.WarningMsg.gameObject.SetActive(false);
+                        }
 
                         Debug.Log("+++++");
                         model.LeftPoint--;
