@@ -32,6 +32,11 @@ public interface IRoleModule : IModule{
 
     void AddAllStatus(float v);
 
+    void AddSkillPoint(int v);
+
+    int GetSkillPoint();
+
+
     void AddActionPoints(float v);
     void RestoreActionPoints(float v);
 

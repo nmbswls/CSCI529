@@ -74,7 +74,6 @@ public class TaobaoModule : ModuleBase
 {
 
     IRoleModule pRoleMdl;
-    ISkillTreeMgr pSKillMgr;
     ICardDeckModule pCardMgr;
     IUIMgr pUIMgr;
 
@@ -89,7 +88,6 @@ public class TaobaoModule : ModuleBase
     public override void Setup()
     {
         pRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
-        pSKillMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
         pCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
         pUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
         LoadProductList();

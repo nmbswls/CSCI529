@@ -39,6 +39,8 @@ public class ModuleMgr: IModuleMgr
 
         RegModuleList["SkillTreeMgr"] = typeof(SkillTreeMgr);
 
+        RegModuleList["SkillTreeMgr2"] = typeof(SkillTreeMgr2);
+
         RegModuleList["WeiboModule"] = typeof(WeiboModule);
         RegModuleList["ShopMgr"] = typeof(ShopMgr);
 

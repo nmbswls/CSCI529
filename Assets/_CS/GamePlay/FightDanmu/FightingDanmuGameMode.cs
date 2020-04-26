@@ -104,7 +104,7 @@ public class FightingDanmuGameMode : GameModeBase
     IResLoader mResLoader;
     IRoleModule pRoleMgr;
     ICardDeckModule mCardMdl;
-    ISkillTreeMgr mSkillMdl;
+    //ISkillTreeMgr mSkillMdl;
 
     public ZhiboGameMode2State state;
 
@@ -136,7 +136,7 @@ public class FightingDanmuGameMode : GameModeBase
         mResLoader = GameMain.GetInstance().GetModule<ResLoader>();
         mCardMdl = GameMain.GetInstance().GetModule<CardDeckModule>();
         pRoleMgr = GameMain.GetInstance().GetModule<RoleModule>();
-        mSkillMdl = GameMain.GetInstance().GetModule<SkillTreeMgr>();
+        //mSkillMdl = GameMain.GetInstance().GetModule<SkillTreeMgr>();
 
         state = new ZhiboGameMode2State();
 

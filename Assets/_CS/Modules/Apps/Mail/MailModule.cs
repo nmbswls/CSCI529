@@ -145,14 +145,12 @@ public class MailModule : ModuleBase
 {
 
     IRoleModule pRoleMdl;
-    ISkillTreeMgr pSKillMgr;
 
     public MailList mailList = new MailList();
     public override void Setup()
     {
         mailList.loadMail();
         pRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
-        pSKillMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
     }
 
     public void checkTurnStartToBeSentEmail()

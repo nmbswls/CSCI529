@@ -89,13 +89,14 @@ public class RoleModule : ModuleBase, IRoleModule
     private ISpeEventMgr pEventMgr;
     private ICardDeckModule pCardMdl;
     private ICoreManager pCoreMgr;
-    private ISkillTreeMgr pSkillTreeMgr;
 
     private RoleStats roleStats = new RoleStats();
 
     private float money;
 
     public float Money { get {return money; } protected set {money = value; } }
+
+    public int skillPoint = 0;
 
 
     //路人粉数量
@@ -270,7 +271,6 @@ public class RoleModule : ModuleBase, IRoleModule
         pEventMgr = GameMain.GetInstance().GetModule<SpeEventMgr>();
         pCardMdl = GameMain.GetInstance().GetModule<CardDeckModule>();
         pCoreMgr = GameMain.GetInstance().GetModule<CoreManager>();
-        pSkillTreeMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
     }
 
     public RoleStats GetStats()
@@ -402,6 +402,16 @@ public class RoleModule : ModuleBase, IRoleModule
         AddKoucai(v);
         AddJishu(v);
         AddCaiyi(v);
+    }
+
+    public void AddSkillPoint(int v)
+    {
+        skillPoint += v;
+    }
+
+    public int GetSkillPoint()
+    {
+        return skillPoint;
     }
 
 

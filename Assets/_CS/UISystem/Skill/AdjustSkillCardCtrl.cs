@@ -30,7 +30,6 @@ public class AdjustSkillCardCtrl : UIBaseCtrl<AdjustSKillCardModel, AdjustSKillC
     public override void Init()
     {
         pCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
-        pSKillMgr = GameMain.GetInstance().GetModule<SkillTreeMgr>();
         pResLoader = GameMain.GetInstance().GetModule<ResLoader>();
     }
 

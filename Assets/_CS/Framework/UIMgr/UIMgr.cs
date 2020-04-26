@@ -70,6 +70,8 @@ public class UIMgr : ModuleBase, IUIMgr
 		mUITypeMap["HomeMenuCtrl"] = typeof(HomeMenuCtrl);
 
         mUITypeMap["SchedulePanel"] = typeof(SKillCtrl);
+        mUITypeMap["SchedulePanel2"] = typeof(SkillCtrl2);
+
         mUITypeMap["WeiboPanel"] = typeof(WeiboUI);
         mUITypeMap["MailPanel"] = typeof(MailUI);
 

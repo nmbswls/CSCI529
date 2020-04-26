@@ -1696,9 +1696,12 @@ public class ZhiboGameMode : GameModeBase
                         }
 
                     }
+
+                    //TODO: SkillTree Logic
                     float originScore = GetScoreFromFormulation(args[0]);
-                    float finalScore = GetScoreAfterApplyingSkillBonus(NowExecuteCard, originScore);
-                    GainScore(finalScore, add);
+                    //float finalScore = GetScoreAfterApplyingSkillBonus(NowExecuteCard, originScore);
+                    //GainScore(finalScore, add);
+                    GainScore(originScore, add);
                 }
                 //mAudienceMgr.ShowRandomAudience();
                 //mUICtrl.ShowNewAudience();
