@@ -18,6 +18,7 @@ public class SkillTreeMgr2 : ModuleBase
 
     public Dictionary<int, Dictionary<int, string>> SkillBranchDict = new Dictionary<int, Dictionary<int, string>>();
 
+
     public HashSet<string> LearnedSkill = new HashSet<string>();
 
     public int[] branchLevel = { 0,0,0,0,0,0 };
@@ -150,6 +151,12 @@ public class SkillTreeMgr2 : ModuleBase
                 case SkillBonusType.addPower:
                     //加能量
                     break;
+                case SkillBonusType.addMoney:
+                    mUIMgr.ShowHint("金钱 + " + skill.Rewards.rewValue[i]);
+                    break;
+                case SkillBonusType.addFensi:
+                    mUIMgr.ShowHint("粉丝 + " + skill.Rewards.rewValue[i]);
+                    break;
             }
         }
 
@@ -199,6 +206,20 @@ public class SkillTreeMgr2 : ModuleBase
                         return false;
                     }
                     break;
+                case SkillReqType.fensi:
+                    if (mRoleMdl.GetStats().waiguan < skill.Requirements.reqValues[i])
+                    {
+                        mUIMgr.ShowHint("好像还没有那么火");
+                        return false;
+                    }
+                    break;
+                case SkillReqType.money:
+                    if (mRoleMdl.GetStats().waiguan < skill.Requirements.reqValues[i])
+                    {
+                        mUIMgr.ShowHint("目前还没有那么多钱");
+                        return false;
+                    }
+                    break;
             }
         }
         if(mRoleMdl.GetSkillPoint() < skill.Requirements.reqSkillPointValue)
@@ -211,11 +232,12 @@ public class SkillTreeMgr2 : ModuleBase
 
     public bool checkBranch(int branch, int level)
     {
-        if(branch >5)
+        if(branch>4)
         {
-            Debug.Log("invalid Branch");
-            return false;
+            Debug.Log("Special Branch");
+            return true;
         }
+
         if(branchLevel[branch] == level)
         {
             return true;

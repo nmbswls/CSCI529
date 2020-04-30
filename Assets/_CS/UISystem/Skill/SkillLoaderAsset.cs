@@ -9,7 +9,9 @@ public enum SkillReqType
     caiyi,
     jishu,
     kangya,
-    waiguan
+    waiguan,
+    fensi,
+    money
 }
 
 public enum SkillBonusType
@@ -20,7 +22,9 @@ public enum SkillBonusType
     addJishu,
     addKangya,
     addWaiguan,
-    addPower
+    addPower,
+    addFensi,
+    addMoney
 }
 
 [System.Serializable]

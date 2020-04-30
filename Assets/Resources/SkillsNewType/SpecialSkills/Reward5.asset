@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e820f038a87c094ea48ebd2d36cc31e, type: 3}
+  m_Name: Reward5
+  m_EditorClassIdentifier: 
+  SkillId: skt1004
+  SkillName: "\u5FAE\u535A\u5927V"
+  SkingDesp: "\u80FD\u8BF4\u4F1A\u9053\u662F\u4E00\u95E8\u827A\u672F\uFF0C\u53EA\u8981\u7528\u5BF9\u4E86\u5730\u65B9"
+  SkingEffectDesp: "\u8BA9\u81EA\u5DF1\u5728\u522B\u7684\u65B9\u9762\u66F4\u5F3A\u4E86"
+  Branch: 5
+  Level: 4
+  Requirements:
+    reqStats: 01000000
+    reqValues: 32000000
+    reqSkillPointValue: 0
+  Rewards:
+    bonus: 0200000004000000
+    rewValue: 1400000014000000
+  isReward: 1

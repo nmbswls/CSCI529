@@ -70,6 +70,12 @@ public class ScheduleView2 : BaseView
     public List<Transform> SkillPanels = new List<Transform>();
 
     public Button Close;
+
+    public Transform Pool2;
+    public Transform TreePanel2;
+
+    public Button Switcher1;
+    public Button Switcher2;
 }
 
 public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
@@ -115,6 +121,8 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
         view.Pool = root.Find("Pool");
         view.TreePanel = view.Pool.Find("TreePanel");
 
+        
+
         //TODO: Children
 
         //foreach (Transform child in view.TreePanel.Find("Tree"))
@@ -142,7 +150,7 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
             }
         }
 
-        view.Detail = view.Pool.Find("DetailPanel");
+        view.Detail = root.Find("DetailPanel");
         view.Title = view.Detail.Find("Title").GetComponent<Text>();
         view.Level = view.Detail.Find("Level").GetComponent<Text>();
         view.Learned = view.Detail.Find("Learned").GetComponent<Text>();
@@ -154,6 +162,26 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
         view.SkillPoint = root.Find("剩余点数").GetChild(0).GetComponent<Text>();
 
         view.Close = root.Find("Close").GetComponent<Button>();
+
+        //Bonus
+        view.Pool2 = root.Find("Pool2");
+        view.TreePanel2 = view.Pool2.Find("TreePanel");
+
+        for (int i = 0; i < view.TreePanel2.childCount; i++)
+        {
+            SingleSkillView singleSkill = new SingleSkillView(this);
+            singleSkill.Init(view.TreePanel2.GetChild(i));
+            if (!pSkillMgr.SkillBranchDict[5].ContainsKey(i))
+            {
+                continue;
+            }
+            singleSkill.SkillId = pSkillMgr.SkillBranchDict[5][i];
+            skillViewMap[singleSkill.SkillId] = singleSkill;
+        }
+
+        //Switcher
+        view.Switcher1 = root.Find("Switcher1").GetComponent<Button>();
+        view.Switcher2 = root.Find("Switcher2").GetComponent<Button>();
 
         UpdateSkillPoint();
 
@@ -218,6 +246,22 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
         view.Close.onClick.AddListener(delegate ()
         {
             mUIMgr.CloseCertainPanel(this);
+        });
+
+        view.Switcher1.onClick.AddListener(delegate ()
+        {
+            view.Switcher1.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+            view.Switcher2.transform.localScale = new Vector3(1f, 1f, 1f);
+            view.Pool.gameObject.SetActive(true);
+            view.Pool2.gameObject.SetActive(false);
+        });
+
+        view.Switcher2.onClick.AddListener(delegate ()
+        {
+            view.Switcher2.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+            view.Switcher1.transform.localScale = new Vector3(1f, 1f, 1f);
+            view.Pool2.gameObject.SetActive(true);
+            view.Pool.gameObject.SetActive(false);
         });
     }
 

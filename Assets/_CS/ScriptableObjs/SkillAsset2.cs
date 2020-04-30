@@ -24,4 +24,6 @@ public class SkillAsset2 : ScriptableObject
     public SkillReq Requirements;
 
     public SkillReward Rewards;
+
+    public bool isReward = false;
 }

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e6720f94a1fdfb40b3e2654dbfb349e, type: 3}
+  m_Name: RewardList
+  m_EditorClassIdentifier: 
+  SkillBranch:
+  - {fileID: 11400000, guid: 4c21b9111636cb147b730f716eb8aacb, type: 2}
+  - {fileID: 11400000, guid: 6588859998e753844b3c7e979adce1ee, type: 2}
+  - {fileID: 11400000, guid: 9b6fdc8133e4a93488cc498aec2e9711, type: 2}
+  - {fileID: 11400000, guid: b7d4e7412e3b4b64dae3baa2b74ac215, type: 2}
+  - {fileID: 11400000, guid: b9851d27c6049fd4987d1d18c65b2a7a, type: 2}
