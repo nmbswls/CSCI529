@@ -19,6 +19,8 @@ public class TaobaoProducts
     public int ShuxingValue = 0;
 
     public int LevelRemove;
+
+    public string Picture;
 }
 
 public class TaobaoItemInfo
@@ -34,6 +36,8 @@ public class TaobaoItemInfo
     public int ShuxingValue = 0;
 
     public int LevelRemove = 30;
+
+    public string Picture = "tb0000";
 
     public TaobaoItemInfo(string Name, int Cost, string CardRelate)
     {
@@ -66,6 +70,14 @@ public class TaobaoItemInfo
     public TaobaoItemInfo(string Name, int Cost, string CardRelate, string Desp, int LeftInStock, string EffectDesp, string ShuxingRelate, int ShuxingValue, int LevelRemove) : this(Name, Cost, CardRelate, Desp, LeftInStock, EffectDesp, ShuxingRelate, ShuxingValue)
     {
         this.LevelRemove = LevelRemove;
+    }
+
+    public TaobaoItemInfo(string Name, int Cost, string CardRelate, string Desp, int LeftInStock, string EffectDesp, string ShuxingRelate, int ShuxingValue, int LevelRemove, string Picture) : this(Name, Cost, CardRelate, Desp, LeftInStock, EffectDesp, ShuxingRelate, ShuxingValue, LevelRemove)
+    {
+        if(Picture!=null && Picture.Length>0)
+        {
+            this.Picture = Picture;
+        }
     }
 }
 
@@ -126,7 +138,7 @@ public class TaobaoModule : ModuleBase
                     }
                     else
                     {
-                        TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp, p.ShuxingRelate, p.ShuxingValue, p.LevelRemove);
+                        TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp, p.ShuxingRelate, p.ShuxingValue, p.LevelRemove, p.Picture);
                         nameToItem.Add(p.Name, t);
                         productList.Add(t);
                     }
@@ -137,7 +149,7 @@ public class TaobaoModule : ModuleBase
                     {
                         levelBindAddItem[p.LevelUnlock] = new List<TaobaoItemInfo>();
                     }
-                    TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp, p.ShuxingRelate, p.ShuxingValue, p.LevelRemove);
+                    TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp, p.ShuxingRelate, p.ShuxingValue, p.LevelRemove, p.Picture);
                     levelBindAddItem[p.LevelUnlock].Add(t);
                 }
 
@@ -147,7 +159,7 @@ public class TaobaoModule : ModuleBase
                     {
                         levelBindRemoveItem[p.LevelRemove] = new List<TaobaoItemInfo>();
                     }
-                    TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp, p.ShuxingRelate, p.ShuxingValue, p.LevelRemove);
+                    TaobaoItemInfo t = new TaobaoItemInfo(p.Name, p.Cost, p.CardRelate, p.Desp, p.LeftInStock, p.EffectDesp, p.ShuxingRelate, p.ShuxingValue, p.LevelRemove, p.Picture);
                     levelBindRemoveItem[p.LevelRemove].Add(t);
                 }
                 

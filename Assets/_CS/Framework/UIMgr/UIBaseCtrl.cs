@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public interface IUIBaseCtrl{
 	void Setup(string nameStr, IUIMgr mUIMgr);
@@ -14,6 +16,10 @@ public interface IUIBaseCtrl{
 	void Tick(float dTime);
 
     bool Zhiding { get; set; }
+
+    void CloseMasks();
+
+    void CloseLastMask();
 }
 public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : BaseView
 {
@@ -22,6 +28,8 @@ public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : Ba
 	protected T2 view;
 	protected IUIMgr mUIMgr;
 	public string nameStr{ get; set;}
+
+    protected Stack<Image> masks = new Stack<Image>();
 
     private bool zhiding;
     public bool Zhiding
@@ -93,5 +101,20 @@ public class UIBaseCtrl<T1, T2> : IUIBaseCtrl where T1 : BaseModel where T2 : Ba
 	public virtual void Tick(float dTime){
 	
 	}
+
+    public virtual void CloseMasks()
+    {
+
+    }
+
+    public virtual void CloseLastMask()
+    {
+
+    }
+
+    public virtual void AddMask(Image img)
+    {
+        
+    }
 }
 

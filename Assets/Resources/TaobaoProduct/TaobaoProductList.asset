@@ -15,7 +15,7 @@ MonoBehaviour:
   Entities:
   - Index: 0
     Name: "\u5973\u795E\u5F02\u95FB\u5F555"
-    Cost: 10
+    Cost: 100
     Desp: "\u975E\u5E38\u597D\u73A9\u7684\u4E00\u6B3E\u6E38\u620F\uFF0C\u4EBA\u89C1\u4EBA\u7231"
     EffectDesp: "\u5C06\u4E00\u5F20\u6DF1\u591C\u8001\u53F8\u673A\u52A0\u5165\u624B\u724C\u4E2D"
     CardRelate: c0014
@@ -24,6 +24,7 @@ MonoBehaviour:
     ShuxingRelate: 
     ShuxingValue: 0
     LevelRemove: 6
+    Picture: tb0000
   - Index: 1
     Name: "JK\u5236\u670D"
     Cost: 200
@@ -35,6 +36,7 @@ MonoBehaviour:
     ShuxingRelate: 
     ShuxingValue: 0
     LevelRemove: 7
+    Picture: tb0001
   - Index: 2
     Name: "\u54C8\u54C8\u54C8"
     Cost: 200
@@ -46,6 +48,7 @@ MonoBehaviour:
     ShuxingRelate: 
     ShuxingValue: 0
     LevelRemove: 8
+    Picture: 
   - Index: 3
     Name: "\u54C8\u54C8\u54C8"
     Cost: 200
@@ -57,9 +60,10 @@ MonoBehaviour:
     ShuxingRelate: 
     ShuxingValue: 0
     LevelRemove: 9
+    Picture: 
   - Index: 4
     Name: "\u91D1\u724C\u8BB2\u5E08\u5408\u96C6"
-    Cost: 1
+    Cost: 50
     Desp: "\u56E0\u4E3A\u4F60\u4E0D\u4F1A\uFF0C\u6240\u4EE5\u4F60\u624D\u4F1A"
     EffectDesp: "\u53E3\u624D\u589E\u52A05\u70B9"
     CardRelate: 
@@ -68,9 +72,10 @@ MonoBehaviour:
     ShuxingRelate: koucai
     ShuxingValue: 5
     LevelRemove: 30
+    Picture: tb0004
   - Index: 5
     Name: "\u5965\u91CC\u7ED9\u4E4B\u9B42"
-    Cost: 1
+    Cost: 50
     Desp: "\u6211\u4EEC\u9047\u5230\u4EC0\u4E48\u56F0\u96BE\u4E5F\u4E0D\u8981\u6015"
     EffectDesp: "\u9B45\u529B\u589E\u52A05\u70B9"
     CardRelate: 
@@ -79,9 +84,10 @@ MonoBehaviour:
     ShuxingRelate: waiguan
     ShuxingValue: 5
     LevelRemove: 30
+    Picture: tb0005
   - Index: 6
     Name: "\u7956\u5B89\u5B9D\u5178"
-    Cost: 1
+    Cost: 50
     Desp: "\u4E00\u5207\u90FD\u8981\u4ECE\u4E00\u6735\u82B1\u8BF4\u8D77"
     EffectDesp: "\u6297\u538B\u589E\u52A05\u70B9"
     CardRelate: 
@@ -90,9 +96,10 @@ MonoBehaviour:
     ShuxingRelate: kangya
     ShuxingValue: 5
     LevelRemove: 30
+    Picture: tb0006
   - Index: 7
     Name: "\u8352\u53E4\u5B9D\u5178"
-    Cost: 1
+    Cost: 50
     Desp: "\u589E\u5E45\u738B\uFF0C\u5F3A\u5316\u738B\uFF0C\u9ED1\u94C1\u592A\u4E0A\u7687"
     EffectDesp: "\u6280\u672F\u589E\u52A05\u70B9"
     CardRelate: 
@@ -101,9 +108,10 @@ MonoBehaviour:
     ShuxingRelate: jishu
     ShuxingValue: 5
     LevelRemove: 30
+    Picture: tb0007
   - Index: 8
     Name: "\u767D\u8272\u80CC\u5E26\u88E4"
-    Cost: 1
+    Cost: 200
     Desp: "\u5F53\u8FD9\u4E2A\u97F3\u4E50\u54CD\u8D77\u7684\u65F6\u5019\uFF0C\u5C31\u7A81\u7136\u5B66\u4F1A\u4E86\u5531\uFF0C\u8DF3\uFF0Crap\uFF0C\u7BEE\u7403"
     EffectDesp: "\u624D\u827A\u589E\u52A05\u70B9"
     CardRelate: 
@@ -112,6 +120,7 @@ MonoBehaviour:
     ShuxingRelate: caiyi
     ShuxingValue: 5
     LevelRemove: 30
+    Picture: 
   - Index: 9
     Name: "\u6D2A\u8352\u5DE8\u5251"
     Cost: 100
@@ -123,6 +132,7 @@ MonoBehaviour:
     ShuxingRelate: gongjili
     ShuxingValue: 10
     LevelRemove: 30
+    Picture: 
   - Index: 10
     Name: "\u751F\u9508\u7684\u94C1\u5200"
     Cost: 10
@@ -134,6 +144,7 @@ MonoBehaviour:
     ShuxingRelate: gongjili
     ShuxingValue: 1
     LevelRemove: 30
+    Picture: 
   - Index: 11
     Name: "\u589E\u5E45\u6CD5\u5178"
     Cost: 5
@@ -145,6 +156,7 @@ MonoBehaviour:
     ShuxingRelate: mp
     ShuxingValue: 50
     LevelRemove: 30
+    Picture: 
   - Index: 12
     Name: "\u87E0\u6843"
     Cost: 100
@@ -156,6 +168,7 @@ MonoBehaviour:
     ShuxingRelate: hp
     ShuxingValue: 1
     LevelRemove: 30
+    Picture: 
   - Index: 13
     Name: "\u65E0\u8272\u6C34\u6676"
     Cost: 50
@@ -167,6 +180,7 @@ MonoBehaviour:
     ShuxingRelate: gongjili
     ShuxingValue: 5
     LevelRemove: 30
+    Picture: 
   - Index: 14
     Name: "\u6BD4\u57FA\u5C3C"
     Cost: 100
@@ -178,6 +192,7 @@ MonoBehaviour:
     ShuxingRelate: 
     ShuxingValue: 0
     LevelRemove: 30
+    Picture: 
   - Index: 15
     Name: "\u6CD5\u62C9\u5229"
     Cost: 1000
@@ -189,6 +204,7 @@ MonoBehaviour:
     ShuxingRelate: yisu
     ShuxingValue: 10
     LevelRemove: 30
+    Picture: 
   - Index: 16
     Name: "\u5E7B\u5F71\u6597\u7BF7"
     Cost: 1000
@@ -200,6 +216,7 @@ MonoBehaviour:
     ShuxingRelate: 
     ShuxingValue: 0
     LevelRemove: 30
+    Picture: 
   - Index: 17
     Name: AJ11
     Cost: 500
@@ -211,6 +228,7 @@ MonoBehaviour:
     ShuxingRelate: shanbi
     ShuxingValue: 10
     LevelRemove: 30
+    Picture: 
   - Index: 18
     Name: "\u6B65\u6B65\u751F\u83B2"
     Cost: 1000
@@ -222,6 +240,7 @@ MonoBehaviour:
     ShuxingRelate: 
     ShuxingValue: 0
     LevelRemove: 30
+    Picture: 
   - Index: 19
     Name: "\u9EC4\u725B"
     Cost: 1
@@ -233,6 +252,7 @@ MonoBehaviour:
     ShuxingRelate: jingshen
     ShuxingValue: 5
     LevelRemove: 30
+    Picture: 
   - Index: 20
     Name: "\u5927\u54E5\u5927"
     Cost: 500
@@ -244,6 +264,7 @@ MonoBehaviour:
     ShuxingRelate: 
     ShuxingValue: 0
     LevelRemove: 30
+    Picture: 
   - Index: 21
     Name: "\u516D\u4E2A\u6838\u5F39"
     Cost: 1
@@ -255,6 +276,7 @@ MonoBehaviour:
     ShuxingRelate: zhili
     ShuxingValue: 5
     LevelRemove: 30
+    Picture: 
   - Index: 22
     Name: "\u5587\u53ED\u88E4"
     Cost: 10
@@ -266,6 +288,7 @@ MonoBehaviour:
     ShuxingRelate: fangyu
     ShuxingValue: 1
     LevelRemove: 30
+    Picture: 
   - Index: 23
     Name: "\u539F\u8C05\u5E3D"
     Cost: 10
@@ -277,6 +300,7 @@ MonoBehaviour:
     ShuxingRelate: fangyu
     ShuxingValue: 1
     LevelRemove: 30
+    Picture: 
   - Index: 24
     Name: "\u96E8\u4F1E"
     Cost: 0
@@ -288,3 +312,4 @@ MonoBehaviour:
     ShuxingRelate: 
     ShuxingValue: 0
     LevelRemove: 30
+    Picture: 

@@ -22,6 +22,9 @@ public class MailView : BaseView
     public Image MailBack;
     public Image MailDelete;
     public Image MailGetReward;
+
+    public Text DesTitle;
+    public Text Sender;
 }
 
 public class MailModel : BaseModel
@@ -72,6 +75,9 @@ public class MailUI : UIBaseCtrl<MailModel, MailView>
         view.MailDesView = root.Find("MailDesView");
         view.SimpleView = view.MailDesView.transform.Find("simpleView");
 
+        view.DesTitle = view.SimpleView.Find("Title").GetComponent<Text>();
+        view.Sender = view.SimpleView.Find("Sender").GetComponent<Text>();
+        
         view.FunctionView = view.MailDesView.transform.Find("FunctionView");
 
         view.MailContent = view.MailDesView.Find("Description").GetComponent<Text>();
@@ -80,6 +86,7 @@ public class MailUI : UIBaseCtrl<MailModel, MailView>
         view.MailBack = view.FunctionView.GetChild(0).GetComponent<Image>();
         view.MailDelete = view.FunctionView.GetChild(1).GetComponent<Image>();
         view.MailGetReward = view.FunctionView.GetChild(2).GetComponent<Image>();
+        
 
         //bind load email;
 
@@ -132,7 +139,10 @@ public class MailUI : UIBaseCtrl<MailModel, MailView>
             listener.OnClickEvent += delegate
             {
                 curMail = tmpMail;
-                view.SimpleView = child.transform;
+                //view.SimpleView = child.transform;
+
+                view.DesTitle.text = curMail.title;
+                view.Sender.text = curMail.fromPeople;
                 view.MailContent.text = curMail.content;
                 if (curMail.numOfBonus > 0)
                 {

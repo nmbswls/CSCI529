@@ -114,6 +114,14 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
             {
                 SingleSkillView singleSkill = new SingleSkillView(this);
                 singleSkill.Init(view.TreePanel.Find("Tree").GetChild(i).GetChild(j));
+                if (!pSkillMgr.SkillBranchDict.ContainsKey(i))
+                {
+                    continue;
+                }
+                if (!pSkillMgr.SkillBranchDict[i].ContainsKey(j))
+                {
+                    continue;
+                }
                 singleSkill.SkillId = pSkillMgr.SkillBranchDict[i][j];
             }
         }
@@ -126,6 +134,7 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
         view.Description = view.Detail.Find("Description").GetComponent<Text>();
         view.RequirmentText = view.Detail.Find("Requirement").GetComponent<Text>();
 
+        view.Learn = view.Detail.Find("LearnButton").GetComponent<Button>();
         view.SkillPoint = root.Find("剩余点数").GetChild(0).GetComponent<Text>();
 
         UpdateSKillPoint();

@@ -20,6 +20,11 @@ public class TaobaoView : BaseView
     public Text PageNum;
 
     public Button Buy;
+
+    public Image ConfirmBuyView;
+
+    public Button ConfirmBuy;
+    public Button ConfirmCancel;
 }
 
 public class TaobaoItemView
@@ -94,6 +99,10 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
         view.NextPage = root.Find("Next").GetComponent<Button>();
         view.PrePage = root.Find("Pre").GetComponent<Button>();
         view.PageNum = root.Find("PageNum").GetComponent<Text>();
+
+        view.ConfirmBuyView = root.Find("确认购买").GetComponent<Image>();
+        view.ConfirmBuy = view.ConfirmBuyView.transform.Find("Confirm").GetComponent<Button>();
+        view.ConfirmCancel = view.ConfirmBuyView.transform.Find("Cancel").GetComponent<Button>();
 
         //view.Buy = root.Find("Buy").GetComponent<Button>();
 
@@ -199,6 +208,17 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
         //    }
 
         //});
+
+        view.ConfirmBuy.onClick.AddListener(delegate ()
+        {
+            ConfirmBuy();
+            view.ConfirmBuyView.gameObject.SetActive(false);
+        });
+
+        view.ConfirmCancel.onClick.AddListener(delegate ()
+        {
+            view.ConfirmBuyView.gameObject.SetActive(false);
+        });
     }
 
     public override void PostInit()
@@ -235,16 +255,18 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
             //TaobaoItemInfo info = fakeList[i];
             TaobaoItemInfo info = pTaobaoMgr.GetDetailItem(i);
             view.ItemList[idx].ItemName.text = info.Name;
-            view.ItemList[idx].Price.text = info.Cost + "g";
+            view.ItemList[idx].Price.text = info.Cost + " G";
+            view.ItemList[idx].Picture.sprite = pResLoader.LoadResource<Sprite>("TaobaoItemImages/"+ info.Picture);
+            Debug.Log(info.Picture);
             if(info.LeftInStock == 0)
             {
                 view.ItemList[idx].SelloutMark.SetActive(true);
-                view.ItemList[idx].InStock.text = "库存"+info.LeftInStock;
+                view.ItemList[idx].InStock.text = "库存 "+info.LeftInStock;
             }
             else
             {
                 view.ItemList[idx].SelloutMark.SetActive(false);
-                view.ItemList[idx].InStock.text = "库存"+info.LeftInStock;
+                view.ItemList[idx].InStock.text = "库存 "+info.LeftInStock;
             }
 
             view.ItemList[idx].root.gameObject.SetActive(true);
@@ -279,7 +301,8 @@ public class TaobaoUI : UIBaseCtrl<BaseModel, TaobaoView>
         if (pRoleMgr.Money > cost)
         {
             wantBuyIdx = idxInList;
-            mUIMgr.ShowConfirmBox("确认购买？", ConfirmBuy);
+            view.ConfirmBuyView.gameObject.SetActive(true);
+            //mUIMgr.ShowConfirmBox("确认购买？", ConfirmBuy);
         }
         else
         {

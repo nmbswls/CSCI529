@@ -81,11 +81,22 @@ public class SkillTreeMgr2 : ModuleBase
         mCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
         mRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
         mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
+        //loadSkill2Asset();
     }
 
     public void loadSkill2Asset()
     {
         SkillAsset2Collection newSkillCollection  = mResLoader.LoadResource<SkillAsset2Collection>("SkillsNewType/Skills");
+
+        //for(int i = 0; i<5; i++)
+        //{
+        //    for(int j = 0; j<5; j++)
+        //    {
+        //        SkillAsset2 asset = mResLoader.LoadResource<SkillAsset2>("SkillsNewType/Skills/")
+        //    }
+           
+        //}
+
         foreach(SkillAsset2List list in newSkillCollection.SkillCollection) {
             foreach(SkillAsset2 asset in list.SkillBranch)
             {

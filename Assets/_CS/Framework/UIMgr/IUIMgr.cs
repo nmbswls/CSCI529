@@ -12,6 +12,9 @@ public interface IUIMgr : IModule
 	IUIBaseCtrl ShowPanel (string panelStr,bool modal = true, bool canClose = true);
 	void CloseFirstPanel();
 	void CloseCertainPanel (IUIBaseCtrl toClose);
+
+    void CloseMasks();
+    void CloseLastMask();
 	//mainMask
 	void ShowHint(string text);
     void CloseHint(HintCtrl hint);

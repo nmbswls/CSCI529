@@ -70,6 +70,11 @@ public class MainView : BaseView
     //当前回合
     public Text currentTurn;
 
+
+    //蒙版管理
+    public Image Mask1;
+    public Image Mask2;
+
 }
 
 public class PropertyMainView
@@ -271,6 +276,9 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.tili = view.Properties.Find("VBox").GetChild(2).GetChild(0).GetComponent<Text>();
         view.koucai = view.Properties.Find("VBox").GetChild(3).GetChild(0).GetComponent<Text>();
         view.fanying = view.Properties.Find("VBox").GetChild(4).GetChild(0).GetComponent<Text>();
+
+        view.Mask1 = root.Find("Mask#1").GetComponent<Image>();
+        view.Mask2 = root.Find("Mask#2").GetComponent<Image>();
 
 
         foreach (Transform child in view.Properties.Find("VBox"))
@@ -496,6 +504,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
     public override void PostInit()
     {
         view.PhoneBigPic.gameObject.SetActive(false);
+        CloseMasks();
         UpdateFumian();
         UpdateXintai();
         InitEvents();
@@ -538,7 +547,8 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
         view.ScheduleBtn.onClick.AddListener(delegate ()
         {
-            mUIMgr.ShowPanel("SchedulePanel");
+            //mUIMgr.ShowPanel("SchedulePanel");
+            mUIMgr.ShowPanel("SchedulePanel2");
         });
         view.InspectBtn.onClick.AddListener(delegate ()
         {
@@ -554,6 +564,8 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
                     view.PhoneBigPic.gameObject.SetActive(true);
                     view.PhoneMiniIcon.gameObject.SetActive(false);
+                    AddMask(view.Mask1);
+
                     view.PhoneBigPic.transform.localScale = new Vector3(0.3f, 0.3f, 1f);
                     Tween tween = DOTween.To
                         (
@@ -589,6 +601,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
                     }
                     view.PhoneBigPic.gameObject.SetActive(false);
                     view.PhoneMiniIcon.gameObject.SetActive(true);
+                    CloseLastMask();
                 };
             }
         }
@@ -601,6 +614,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
                 listener = vv.root.gameObject.AddComponent<ClickEventListerner>();
                 listener.OnClickEvent += delegate (PointerEventData eventData) {
                     OpenApp(vv);
+                    AddMask(view.Mask2);
                 };
             }
         }
@@ -685,6 +699,27 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         view.koucai.text = (int)(rs.koucai) + "";
         view.moneyValue.text = (int)(rm.Money) + "";
         view.currentTurn.text = (int)(rm.GetCurrentTurn() + 1) + "";
+    }
+
+    public override void CloseMasks()
+    {
+        for(int i = masks.Count; i>0; i--)
+        {
+            masks.Peek().gameObject.SetActive(false);
+            masks.Pop();
+        }
+    }
+
+    public override void AddMask(Image img)
+    {
+        masks.Push(img);
+        img.gameObject.SetActive(true);
+    }
+
+    public override void CloseLastMask()
+    {
+        masks.Peek().gameObject.SetActive(false);
+        masks.Pop();
     }
 }
 

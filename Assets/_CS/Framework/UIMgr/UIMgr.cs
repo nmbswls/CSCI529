@@ -137,6 +137,7 @@ public class UIMgr : ModuleBase, IUIMgr
             }
         }
         AdjustLayerOrder();
+        CloseLastMask();
     }
 
     public void ShowHint(string text)
@@ -234,7 +235,8 @@ public class UIMgr : ModuleBase, IUIMgr
 		mUILayerList.RemoveAt (mUILayerList.Count-1);
 		mUIPanelMap.Remove(ctrl.nameStr);
 		AdjustLayerOrder ();
-	}
+        CloseLastMask();
+    }
 
     public IUIBaseCtrl GetCtrl(string str)
     {
@@ -283,6 +285,26 @@ public class UIMgr : ModuleBase, IUIMgr
     {
         ConfirmBoxCtrl msgBox = ShowPanel("ConfirmBox") as ConfirmBoxCtrl;
         msgBox.ShowMsg(content, okCallback, cancelCallback);
+    }
+
+    public void CloseMasks()
+    {
+        if (mUILayerList.Count == 0)
+        {
+            return;
+        }
+        IUIBaseCtrl ctrl = mUILayerList[mUILayerList.Count - 1];
+        ctrl.CloseMasks();
+    }
+
+    public void CloseLastMask()
+    {
+        if (mUILayerList.Count == 0)
+        {
+            return;
+        }
+        IUIBaseCtrl ctrl = mUILayerList[mUILayerList.Count - 1];
+        ctrl.CloseLastMask();
     }
 
 }

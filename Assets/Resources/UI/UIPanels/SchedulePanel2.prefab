@@ -2636,7 +2636,7 @@ GameObject:
   - component: {fileID: 8938585750645593578}
   - component: {fileID: 1536250309026665805}
   m_Layer: 5
-  m_Name: 'EffectDesciption '
+  m_Name: EffectDescription
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
