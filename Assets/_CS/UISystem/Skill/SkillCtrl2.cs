@@ -8,6 +8,7 @@ public class SingleSkillView
     public string SkillId;
     public RectTransform root;
     private SkillCtrl2 pSkillCtrl;
+    public Image star;
 
     public SingleSkillView(SkillCtrl2 pSkillCtrl)
     {
@@ -17,6 +18,7 @@ public class SingleSkillView
     public void Init(Transform tf)
     {
         this.root = (RectTransform)tf;
+        this.star = tf.GetChild(0).GetComponent<Image>();
         RegisterEvent();
     }
 
@@ -32,6 +34,11 @@ public class SingleSkillView
         {
             pSkillCtrl.SelectSkill(this.SkillId);
         };
+    }
+
+    public void ShowStar()
+    {
+        this.star.gameObject.SetActive(true);
     }
 
 }
@@ -61,6 +68,8 @@ public class ScheduleView2 : BaseView
     public Button Learn;
 
     public List<Transform> SkillPanels = new List<Transform>();
+
+    public Button Close;
 }
 
 public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
@@ -69,7 +78,11 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
     SkillTreeMgr2 pSkillMgr;
     IResLoader resLoader;
 
+    UIMainCtrl pMainUI;
+
     MainGameMode mainGameMode;
+
+    Dictionary<string, SingleSkillView> skillViewMap = new Dictionary<string, SingleSkillView>();
 
     string selectedSkillId = "";
 
@@ -83,8 +96,10 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
 
         pSkillMgr = GameMain.GetInstance().GetModule<SkillTreeMgr2>();
 
-        //model.Choosavles = rmgr.getAllScheduleChoises();
+        pMainUI = (UIMainCtrl)mUIMgr.GetCtrl("UIMain") as UIMainCtrl;
 
+        //model.Choosavles = rmgr.getAllScheduleChoises();
+        
     }
 
     public override void BindView()
@@ -123,6 +138,7 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
                     continue;
                 }
                 singleSkill.SkillId = pSkillMgr.SkillBranchDict[i][j];
+                skillViewMap[singleSkill.SkillId] = singleSkill;
             }
         }
 
@@ -137,12 +153,17 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
         view.Learn = view.Detail.Find("LearnButton").GetComponent<Button>();
         view.SkillPoint = root.Find("剩余点数").GetChild(0).GetComponent<Text>();
 
-        UpdateSKillPoint();
+        view.Close = root.Find("Close").GetComponent<Button>();
+
+        UpdateSkillPoint();
+
+        ShowStarsOfLearnedSkill();
     }
 
     public void ShowDetail(string skillId)
     {
         SkillInfo2 si = pSkillMgr.GetSkillAsset(skillId);
+        
         if(si == null)
         {
             HideDetail();
@@ -176,6 +197,8 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
         reqText += "需要技能点数:";
         reqText += si.Requirements.reqSkillPointValue.ToString();
 
+        view.RequirmentText.text = reqText;
+
         view.Detail.gameObject.SetActive(true);
     }
 
@@ -191,6 +214,11 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
             //学技能
             LearnCurSkill();
         });
+
+        view.Close.onClick.AddListener(delegate ()
+        {
+            mUIMgr.CloseCertainPanel(this);
+        });
     }
 
     public void LearnCurSkill()
@@ -199,8 +227,14 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
         {
             return;
         }
-        pSkillMgr.learnSkill(selectedSkillId);
-        UpdateSKillPoint();
+        bool success = pSkillMgr.learnSkill(selectedSkillId);
+        if(success)
+        {
+            skillViewMap[selectedSkillId].ShowStar();
+            UpdateSkillPoint();
+            UpdateLearnedStatus(selectedSkillId);
+            pMainUI.UpdateWords();
+        }
     }
 
     public void SelectSkill(string vv)
@@ -209,8 +243,36 @@ public class SkillCtrl2 : UIBaseCtrl<ScheduleModel2, ScheduleView2>
         selectedSkillId = vv;
     }
 
-    public void UpdateSKillPoint()
+    public void UpdateSkillPoint()
     {
         view.SkillPoint.text = rmgr.GetSkillPoint() + "";
     }
+
+    public void UpdateLearnedStatus(string selectedSkillId)
+    {
+        SkillInfo2 skill = pSkillMgr.GetSkillAsset(selectedSkillId);
+        if (skill == null)
+        {
+            return;
+        }
+        if (skill.isLearned)
+        {
+            view.Learned.text = "已学会";
+            view.Learned.color = Color.green;
+        }
+        else
+        {
+            view.Learned.text = "未学会";
+            view.Learned.color = Color.red;
+        }
+    }
+
+    public void ShowStarsOfLearnedSkill()
+    {
+        foreach(string skillId in pSkillMgr.LearnedSkill)
+        {
+            skillViewMap[skillId].ShowStar();
+        }
+    }
+    
 }

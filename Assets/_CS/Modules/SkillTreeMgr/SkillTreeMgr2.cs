@@ -2,57 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public enum SkillReqType
-{
-    none,
-    koucai,
-    caiyi,
-    jishu,
-    kangya,
-    waiguan
-}
-
-public enum SkillBonusType
-{
-    none,
-    addKoucai,
-    addCaiyi,
-    addJishu,
-    addKangya,
-    addWaiguan,
-    addPower
-}
-
-[System.Serializable]
-public class SkillReq
-{
-    public List<SkillReqType> reqStats;
-    public List<int> reqValues;
-    public int reqSkillPointValue = 1;
-}
-
-[System.Serializable]
-public class SkillReward
-{
-    public List<SkillBonusType> bonus;
-    public List<int> rewValue;
-}
-
-
-public class SkillInfo2
-{
-    public string SkillId;
-    public string SkillName;
-    public string EffectDes;
-    public string Des;
-    public bool isLearned = false;
-    public int Branch;
-    public int Level;
-    public SkillReq Requirements;
-    public SkillReward Rewards;
-
-}
-
 
 
 public class SkillTreeMgr2 : ModuleBase
@@ -69,7 +18,9 @@ public class SkillTreeMgr2 : ModuleBase
 
     public Dictionary<int, Dictionary<int, string>> SkillBranchDict = new Dictionary<int, Dictionary<int, string>>();
 
+    public HashSet<string> LearnedSkill = new HashSet<string>();
 
+    public int[] branchLevel = { 0,0,0,0,0,0 };
 
     //private readonly static Dictionary<string, SkillAsset> SkillAssetDict = new Dictionary<string, SkillAsset>();
 
@@ -81,12 +32,12 @@ public class SkillTreeMgr2 : ModuleBase
         mCardMgr = GameMain.GetInstance().GetModule<CardDeckModule>();
         mRoleMdl = GameMain.GetInstance().GetModule<RoleModule>();
         mUIMgr = GameMain.GetInstance().GetModule<UIMgr>();
-        //loadSkill2Asset();
+        loadSkill2Asset();
     }
 
     public void loadSkill2Asset()
     {
-        SkillAsset2Collection newSkillCollection  = mResLoader.LoadResource<SkillAsset2Collection>("SkillsNewType/Skills");
+        SkillAsset2Collection newSkillCollection  = mResLoader.LoadResource<SkillAsset2Collection>("SkillsNewType/SkillAsset2Collection");
 
         //for(int i = 0; i<5; i++)
         //{
@@ -131,6 +82,8 @@ public class SkillTreeMgr2 : ModuleBase
 
     public SkillInfo2 GetSkillAsset(string skillId)
     {
+        if (skillId == null || skillId.Length == 0) return null;
+        Debug.Log("selected skill is " + skillId);
         if(!SkillAssetDict.ContainsKey(skillId))
         {
             return null;
@@ -138,26 +91,34 @@ public class SkillTreeMgr2 : ModuleBase
         return SkillAssetDict[skillId];
     }
 
-    public void learnSkill(string skillId)
+    public bool learnSkill(string skillId)
     {
 
         SkillInfo2 skill = GetSkillAsset(skillId);
         if (skill == null)
         {
-            return;
+            return false;
         }
         
         if(skill.isLearned)
         {
-            return;
+            mUIMgr.ShowHint("这个技能已经学会了");
+            return false;
         }
         
         if(!checkSkillRequirement(skill))
         {
-            return;
+            return false;
+        }
+
+        if(!checkBranch(skill.Branch, skill.Level))
+        {
+            mUIMgr.ShowHint("你需要先学习前一个技能");
+            return false;
         }
         
         skill.isLearned = true;
+        branchLevel[skill.Branch]++;
         // calculate requirement    
         mRoleMdl.AddSkillPoint(-skill.Requirements.reqSkillPointValue);
 
@@ -168,18 +129,23 @@ public class SkillTreeMgr2 : ModuleBase
             {
                 case SkillBonusType.addKoucai:
                     mRoleMdl.AddKoucai(skill.Rewards.rewValue[i]);
+                    mUIMgr.ShowHint("口才 + " + skill.Rewards.rewValue[i]);
                     break;
                 case SkillBonusType.addCaiyi:
                     mRoleMdl.AddCaiyi(skill.Rewards.rewValue[i]);
+                    mUIMgr.ShowHint("才艺 + " + skill.Rewards.rewValue[i]);
                     break;
                 case SkillBonusType.addJishu:
                     mRoleMdl.AddJishu(skill.Rewards.rewValue[i]);
+                    mUIMgr.ShowHint("技术 + " + skill.Rewards.rewValue[i]);
                     break;
                 case SkillBonusType.addKangya:
                     mRoleMdl.AddKangya(skill.Rewards.rewValue[i]);
+                    mUIMgr.ShowHint("抗压 + " + skill.Rewards.rewValue[i]);
                     break;
                 case SkillBonusType.addWaiguan:
                     mRoleMdl.AddWaiguan(skill.Rewards.rewValue[i]);
+                    mUIMgr.ShowHint("外观 + " + skill.Rewards.rewValue[i]);
                     break;
                 case SkillBonusType.addPower:
                     //加能量
@@ -187,6 +153,9 @@ public class SkillTreeMgr2 : ModuleBase
             }
         }
 
+        LearnedSkill.Add(skillId);
+
+        return true;
     }
 
     public bool checkSkillRequirement(SkillInfo2 skill)
@@ -238,6 +207,20 @@ public class SkillTreeMgr2 : ModuleBase
             return false;
         }
         return true;
+    }
+
+    public bool checkBranch(int branch, int level)
+    {
+        if(branch >5)
+        {
+            Debug.Log("invalid Branch");
+            return false;
+        }
+        if(branchLevel[branch] == level)
+        {
+            return true;
+        }
+        return false;
     }
 
 }

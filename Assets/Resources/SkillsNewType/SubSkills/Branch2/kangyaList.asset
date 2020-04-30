@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 2e6720f94a1fdfb40b3e2654dbfb349e, type: 3}
   m_Name: kangyaList
   m_EditorClassIdentifier: Assembly-CSharp::SkillAsset2List
   SkillBranch:
-  - {fileID: 11400000, guid: 65ccec10ff3181a4bb55029c7801ee5d, type: 2}
-  - {fileID: 11400000, guid: d8b19947c8372ac4c8284419a57b9a0b, type: 2}
-  - {fileID: 11400000, guid: 28bbaabfeec88c74db3d75af92dd17f9, type: 2}
-  - {fileID: 11400000, guid: 920495967cb93c145bf302e9836d57fb, type: 2}
+  - {fileID: 11400000, guid: fd059fcb063d1d3449b1532246af8e20, type: 2}
+  - {fileID: 11400000, guid: 2ab9f93dbf95a72449903a09629e2e3e, type: 2}
+  - {fileID: 11400000, guid: 4888ddea272fc554c9d39523578a96d2, type: 2}
+  - {fileID: 11400000, guid: e28c8c813649a12418429c3e8b9b6218, type: 2}
+  - {fileID: 11400000, guid: 5073ac556f0f8ee409257c7b8917169a, type: 2}
+  - {fileID: 11400000, guid: 58abbb53a71911148a7ccda188ec706c, type: 2}
+  - {fileID: 11400000, guid: 387e5607f551c1d448d136ff4a20e33d, type: 2}

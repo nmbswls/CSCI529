@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 2e6720f94a1fdfb40b3e2654dbfb349e, type: 3}
   m_Name: waiguanList
   m_EditorClassIdentifier: Assembly-CSharp::SkillAsset2List
   SkillBranch:
-  - {fileID: 11400000, guid: 65ccec10ff3181a4bb55029c7801ee5d, type: 2}
-  - {fileID: 11400000, guid: d8b19947c8372ac4c8284419a57b9a0b, type: 2}
-  - {fileID: 11400000, guid: 28bbaabfeec88c74db3d75af92dd17f9, type: 2}
-  - {fileID: 11400000, guid: 920495967cb93c145bf302e9836d57fb, type: 2}
+  - {fileID: 11400000, guid: 9bbd28a417a5acb43a631a5e8432492b, type: 2}
+  - {fileID: 11400000, guid: 4648b6276aa6f8b4184efdd78b5cdc6d, type: 2}
+  - {fileID: 11400000, guid: 629af0eb80cb8e242b0fdc9622594ac7, type: 2}
+  - {fileID: 11400000, guid: da0594dae7bf7ad49be10acd2c620427, type: 2}
+  - {fileID: 11400000, guid: 8ccad83dd37a4cf49a05d2b7598f9109, type: 2}
+  - {fileID: 11400000, guid: 3c30f5ff015d58449a568ce0e11eb0c1, type: 2}
+  - {fileID: 11400000, guid: 13bf678c8cc0c2a47b517fe8f7cc4ac9, type: 2}

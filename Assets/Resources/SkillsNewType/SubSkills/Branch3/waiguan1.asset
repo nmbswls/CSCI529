@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e820f038a87c094ea48ebd2d36cc31e, type: 3}
   m_Name: waiguan1
   m_EditorClassIdentifier: 
-  SkillId: skt0000
+  SkillId: skt0030
   SkillName: "\u4E00\u7EA7\u5916\u89C2"
   SkingDesp: xxxxxxxxx
   SkingEffectDesp: xxxxxx

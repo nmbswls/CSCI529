@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 2e6720f94a1fdfb40b3e2654dbfb349e, type: 3}
   m_Name: caiyiList
   m_EditorClassIdentifier: Assembly-CSharp::SkillAsset2List
   SkillBranch:
@@ -17,3 +17,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d8b19947c8372ac4c8284419a57b9a0b, type: 2}
   - {fileID: 11400000, guid: 28bbaabfeec88c74db3d75af92dd17f9, type: 2}
   - {fileID: 11400000, guid: 920495967cb93c145bf302e9836d57fb, type: 2}
+  - {fileID: 11400000, guid: 6b8078cc3ad5d7b4db2bf133fca8976a, type: 2}
+  - {fileID: 11400000, guid: 78766d526f8c97742804336aad53255b, type: 2}
+  - {fileID: 11400000, guid: e0b9f42a431788b48a4687874d0d19b8, type: 2}

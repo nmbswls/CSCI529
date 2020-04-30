@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e820f038a87c094ea48ebd2d36cc31e, type: 3}
   m_Name: koucai3
   m_EditorClassIdentifier: 
-  SkillId: skt0000
+  SkillId: skt0002
   SkillName: "\u4E09\u7EA7\u53E3\u624D"
   SkingDesp: xxxxxxxxx
   SkingEffectDesp: xxxxxx
   Branch: 0
   Level: 2
   Requirements:
-    reqStats: 01000000
-    reqValues: 14000000
-    reqSkillPointValue: 3
+    reqStats: 
+    reqValues: 
+    reqSkillPointValue: 1
   Rewards:
     bonus: 01000000
     rewValue: 05000000

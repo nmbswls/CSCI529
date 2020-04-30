@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Skills
+  m_Name: SkillAsset2Collection
   m_EditorClassIdentifier: Assembly-CSharp::SkillAsset2Collection
   SkillCollection:
   - {fileID: 11400000, guid: 0938553f880cb084ea56ad854b540660, type: 2}
   - {fileID: 11400000, guid: a1ba829b312cdb64caeae200d1db4e81, type: 2}
-  - {fileID: 11400000, guid: a1ba829b312cdb64caeae200d1db4e81, type: 2}
-  - {fileID: 11400000, guid: a1ba829b312cdb64caeae200d1db4e81, type: 2}
-  - {fileID: 11400000, guid: a1ba829b312cdb64caeae200d1db4e81, type: 2}
+  - {fileID: 11400000, guid: 28b55d4cddbee7f4aba807d28eb83512, type: 2}
+  - {fileID: 11400000, guid: 61d173cdcc8259d46972fd35c1900641, type: 2}
+  - {fileID: 11400000, guid: 2366fde3c26611b4a868f02f86e6dc6c, type: 2}

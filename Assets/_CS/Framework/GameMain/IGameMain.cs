@@ -7,6 +7,8 @@ public interface IGameMain
 	T GetModule<T>() where T : IModule;
 
     long GetTime(bool bflag = true);
+
+    void AdjustVolume(float vol);
 }
 
 public interface IModuleMgr

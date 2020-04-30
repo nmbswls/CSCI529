@@ -280,6 +280,7 @@ public class RoleModule : ModuleBase, IRoleModule
 
     public void NextTurn()
     {
+        if (TurnNum > 0) AddSkillPoint(1);
         TurnNum++;
         RestoreActionPoints();
         XinqingBodong();

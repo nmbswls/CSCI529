@@ -156,7 +156,8 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
         {
             view.InspectBtn.gameObject.SetActive(true);
         }
-        if (rm.GetCurrentTurn()>7)
+        //if (rm.GetCurrentTurn() > 7)
+        if (rm.GetCurrentTurn() > 0)
         {
             view.ScheduleBtn.gameObject.SetActive(true);
         }
@@ -718,6 +719,7 @@ public class UIMainCtrl : UIBaseCtrl<MainModel, MainView>
 
     public override void CloseLastMask()
     {
+        if (masks.Count == 0) return;
         masks.Peek().gameObject.SetActive(false);
         masks.Pop();
     }

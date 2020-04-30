@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 2e6720f94a1fdfb40b3e2654dbfb349e, type: 3}
   m_Name: koucaiList
-  m_EditorClassIdentifier: Assembly-CSharp::SkillAsset2List
+  m_EditorClassIdentifier: 
   SkillBranch:
   - {fileID: 11400000, guid: 2f0c0a94e6c36c947927c715b8eed3f6, type: 2}
   - {fileID: 11400000, guid: 980d0f3378900224abd75e1ba1df54c8, type: 2}
   - {fileID: 11400000, guid: 4946b69788684994791272b78db157e3, type: 2}
   - {fileID: 11400000, guid: 93ff0fcc100c9994ca21628ee268f4a8, type: 2}
+  - {fileID: 11400000, guid: 56f8b74887942ac4fbab0417e0e8190c, type: 2}
+  - {fileID: 11400000, guid: 8790e126e479f7d4ea545b43db40b58f, type: 2}
+  - {fileID: 11400000, guid: b19cd91e8d2b81144b0f2239668ff537, type: 2}

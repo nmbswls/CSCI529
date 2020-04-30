@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 2e6720f94a1fdfb40b3e2654dbfb349e, type: 3}
   m_Name: jishuList
   m_EditorClassIdentifier: Assembly-CSharp::SkillAsset2List
   SkillBranch:
-  - {fileID: 11400000, guid: 65ccec10ff3181a4bb55029c7801ee5d, type: 2}
-  - {fileID: 11400000, guid: d8b19947c8372ac4c8284419a57b9a0b, type: 2}
-  - {fileID: 11400000, guid: 28bbaabfeec88c74db3d75af92dd17f9, type: 2}
-  - {fileID: 11400000, guid: 920495967cb93c145bf302e9836d57fb, type: 2}
+  - {fileID: 11400000, guid: c3c6b54dda1a8de4a9fa769e25e3f70f, type: 2}
+  - {fileID: 11400000, guid: 4a13cae31917c794590808b3c5a025f9, type: 2}
+  - {fileID: 11400000, guid: 4ff837bcdd2f5984e82122a9b1181cda, type: 2}
+  - {fileID: 11400000, guid: b97eaca5df2a77749be60df8a9d2e516, type: 2}
+  - {fileID: 11400000, guid: ce017a61e00948f4396ddf9ab52516c1, type: 2}
+  - {fileID: 11400000, guid: f088d1f8122693c4199800021c7919d7, type: 2}
+  - {fileID: 11400000, guid: 609cc30a2f71d21458f9aa1cafebb5e8, type: 2}

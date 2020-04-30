@@ -10,6 +10,8 @@ public class GameMain : MonoBehaviour,IGameMain
 
 	private readonly IModuleMgr mModuleMgr = new ModuleMgr();
 
+    public AudioSource BGM;
+
 	private void Awake()
 	{
 		Init();
@@ -62,7 +64,9 @@ public class GameMain : MonoBehaviour,IGameMain
 
         mGameMainConfig.Config.Add(DefaultModuleList);
 		LoadInitModules();
-	}
+
+        BGM = this.GetComponent<AudioSource>();
+    }
 
 	public void Release()
 	{
@@ -123,5 +127,10 @@ public class GameMain : MonoBehaviour,IGameMain
         else
             ret = Convert.ToInt64(ts.TotalMilliseconds);
         return ret;
+    }
+
+    public void AdjustVolume(float vol)
+    {
+        this.BGM.volume = vol;
     }
 }

@@ -25,17 +25,3 @@ public class SkillAsset2 : ScriptableObject
 
     public SkillReward Rewards;
 }
-
-[CreateAssetMenu(fileName = "SkillAsset2List", menuName = "Ctm/SkillAsset2List")]
-[System.Serializable]
-public class SkillAsset2List : ScriptableObject
-{
-    public List<SkillAsset2> SkillBranch;
-}
-
-[CreateAssetMenu(fileName = "SkillAsset2Collection", menuName = "Ctm/SkillAsset2Collection")]
-[System.Serializable]
-public class SkillAsset2Collection : ScriptableObject
-{
-    public List<SkillAsset2List> SkillCollection;
-}
